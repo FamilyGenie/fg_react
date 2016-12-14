@@ -24,6 +24,9 @@ export default function reducer(state={
 					people: [...state.people, action.payload],
 				}
 			}
+			case "UPDATE_PERSON": {
+				return {...state, fetching: true}
+			}
 			case "UPDATE_PERSON_FULFILLED": {
 				// todo: throw error on invalid field???
 				const newPerson = action.payload;

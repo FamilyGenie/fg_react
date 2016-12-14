@@ -13,6 +13,7 @@ var axiosConfig = {
 
 export function fetchPeople() {
 	return function(dispatch) {
+    dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/people", axiosConfig)
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
@@ -34,7 +35,6 @@ export function addPerson(id, text) {
 }
 
 export function updatePerson(_id, field, value) {
-	
 	const body = {
 		objectType: 'person',
 		object: {
@@ -44,9 +44,9 @@ export function updatePerson(_id, field, value) {
 		}
 	};
 	return (dispatch) => {
+    dispatch({type: "UPDATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/update", body, axiosConfig)
 			.then((response) => {
-				console.log(response.data);
 				dispatch({type: "UPDATE_PERSON_FULFILLED", payload: response.data})
 			})
 			.catch((err) => {
