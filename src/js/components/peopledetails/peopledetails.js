@@ -14,7 +14,7 @@ import { updatePerson } from '../../actions/peopleActions';
 	}, 
 	(dispatch) => {
 		return {
-			onChange: (_id, field, value) => {
+			onBlur: (_id, field, value) => {
 				dispatch(updatePerson(_id, field, value));
 			}
 		}
@@ -22,15 +22,15 @@ import { updatePerson } from '../../actions/peopleActions';
 )
 export default class PeopleDetails extends React.Component {
 	
-	getOnChange = (field) => {
+	getOnBlur = (field) => {
 		return (evt) => {
-			this.props.onChange(this.props.person._id, field, evt.target.value)
+			this.props.onBlur(this.props.person._id, field, evt.target.value)
 		}
 	}
 
 	render = () => {
 		console.log("in PeopleDetails with: ", this.props);
-		const { person, onChange } = this.props;
+		const { person, onBlur } = this.props;
 
 		// put in code to test if person._id === 0, and then say person cannot be found
 		if (person) {
@@ -41,7 +41,7 @@ export default class PeopleDetails extends React.Component {
 							class="form-control"
 							type="text"
 							defaultValue={person.fName}
-							onChange={this.getOnChange('fName')}
+							onBlur={this.getOnBlur('fName')}
 						/>
 					</div>
 					<div class="col-xs-2 custom-input">

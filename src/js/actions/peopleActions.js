@@ -8,43 +8,61 @@ import config from "../config.js";
 const fgtoken = cookie.load('fg-access-token');
 
 var axiosConfig = {
-  headers: {'x-access-token': fgtoken}
+	headers: {'x-access-token': fgtoken}
 };
 
 export function fetchPeople() {
-  return function(dispatch) {
-    axios.get(config.api_url + "/people", axiosConfig)
-      .then((response) => {
-        console.log(response.data);
-        dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
-      })
-      .catch((err) => {
-        dispatch({type: "FETCH_PEOPLE_REJECTED", payload: err})
-      })
-  }
+	return function(dispatch) {
+		axios.get(config.api_url + "/people", axiosConfig)
+			.then((response) => {
+				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "FETCH_PEOPLE_REJECTED", payload: err})
+			})
+	}
 }
 
 export function addPerson(id, text) {
-  return {
-    type: 'ADD_PERSON',
-    payload: {
-      id,
-      text,
-    },
-  }
+	return {
+		type: 'ADD_PERSON',
+		payload: {
+			id,
+			text,
+		},
+	}
 }
 
 export function updatePerson(_id, field, value) {
-  return {
-    type: 'UPDATE_PERSON',
-    payload: {
-      _id,
-      field,
-      value
-    },
-  }
+	
+	const body = {
+		objectType: 'person',
+		object: {
+			_id,
+			field,
+			value
+		}
+	};
+	return (dispatch) => {
+		axios.post(config.api_url + "/api/v2/update", body, axiosConfig)
+			.then((response) => {
+				console.log(response.data);
+				dispatch({type: "UPDATE_PERSON_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "UPDATE_PERSON_REJECTED", payload: err})
+			})
+	}
+	// return {
+	//   type: 'UPDATE_PERSON',
+	//   payload: {
+	//     _id,
+	//     field,
+	//     value
+	//   },
+	// }
 }
 
 export function deletePerson(id) {
-  return { type: 'DELETE_PERSON', payload: id}
+	return { type: 'DELETE_PERSON', payload: id}
 }
