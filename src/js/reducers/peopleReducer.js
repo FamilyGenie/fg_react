@@ -26,17 +26,20 @@ export default function reducer(state={
           people: [...state.people, action.payload],
         }
       }
-      // case "UPDATE_PERSON": {
-      //   const { id, text } = action.payload
-      //   const newPeople = [...state.people]
-      //   const personToUpdate = newPeople.findIndex(tweet => tweet.id === id)
-      //   newpeople[tweetToUpdate] = action.payload;
+      case "UPDATE_PERSON": {
+        // todo: throw error on invalid field???
+        const { _id, field, value } = action.payload
+        const oldPersonIndex = state.people.findIndex(person => person._id === _id);
+        const oldPerson = state.people[oldPersonIndex];
+        const newPerson = {...oldPerson};
+        newPerson[field] = value;
+        const newPeople = [...state.people.slice(0, oldPersonIndex), newPerson, ...state.people.slice(oldPersonIndex+1)];
 
-      //   return {
-      //     ...state,
-      //     people: newpeople,
-      //   }
-      // }
+        return {
+          ...state,
+          people: newPeople,
+        }
+      }
       case "DELETE_PERSON": {
         return {
           ...state,

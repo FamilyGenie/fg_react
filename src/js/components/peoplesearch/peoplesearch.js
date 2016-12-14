@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import PeopleSearchLineItem from './peoplesearch-lineitem';
 
 @connect((store) => {
-  console.log("in PeopleSearch.js, @connect");
   return {
     user: store.user.user,
     userFetched: store.user.fetched,

@@ -13,7 +13,6 @@ var axiosConfig = {
 
 export function fetchPeople() {
   return function(dispatch) {
-    console.log("token from cookie: ", fgtoken);
     axios.get(config.api_url + "/people", axiosConfig)
       .then((response) => {
         console.log(response.data);
@@ -35,12 +34,13 @@ export function addPerson(id, text) {
   }
 }
 
-export function updatePerson(id, text) {
+export function updatePerson(_id, field, value) {
   return {
     type: 'UPDATE_PERSON',
     payload: {
-      id,
-      text,
+      _id,
+      field,
+      value
     },
   }
 }
