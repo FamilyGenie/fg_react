@@ -15,7 +15,7 @@ ReactDOM.render(<Provider store={store}>
 	<Router history={hashHistory}>
 		<Route path="/" component={Layout}>
 			<IndexRoute component={PeopleSearch}></IndexRoute>
-			<Route path="/peopledetails(/:id)" name="People Details" component={PeopleDetails}></Route>
+			<Route path="/peopledetails(/:_id)" name="People Details" component={PeopleDetails}></Route>
 		</Route>
 	</Router>
 </Provider>, app);
