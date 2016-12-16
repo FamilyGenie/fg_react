@@ -42,12 +42,10 @@ export default class PeopleDetails extends React.Component {
 	}
 
 	createPerson = () => {
-		console.log("create Person clicked");
 		this.props.createPerson();
 	}
 
 	render = () => {
-		// console.log("in PeopleDetails with: ", this.props);
 		const { person, onBlur } = this.props;
 
 		// put in code to test if person._id === 0, and then say person cannot be found

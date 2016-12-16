@@ -37,7 +37,6 @@ export function createPerson(fName, mName, lName, sexAtBirth, notes) {
 			notes
 		}
 	};
-	console.log("in peopleActions.createPerson");
 	return (dispatch) => {
 		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
 			.then((response) => {

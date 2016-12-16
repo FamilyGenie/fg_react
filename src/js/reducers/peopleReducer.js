@@ -25,11 +25,9 @@ export default function reducer(state={
 				}
 			}
 			case "CREATE_PERSON_FULFILLED": {
-				console.log("in peopleReducer.CREATE_PERSON_FULFILLED");
 				const newPerson = action.payload;
 				const newPeople = state.people;
 				newPeople.push(newPerson);
-				console.log("newPeople:", newPeople);
 				return {
 					...state,
 					fetching: false,
