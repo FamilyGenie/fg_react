@@ -12,6 +12,9 @@ var axiosConfig = {
 };
 
 export function fetchPeople() {
+
+	// TODO: need to put the dispatch to set Fetching to true;
+
 	return function(dispatch) {
     dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/people", axiosConfig)
@@ -24,25 +27,39 @@ export function fetchPeople() {
 	}
 }
 
-export function addPerson(id, text) {
-	return {
-		type: 'ADD_PERSON',
-		payload: {
-			id,
-			text,
-		},
+export function createPerson(fName, mName, lName, sexAtBirth, notes) {
+
+	const body = {
+		object: {
+			fName,
+			mName,
+			lName,
+			sexAtBirth,
+			notes
+		}
+	};
+	return (dispatch) => {
+		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "CREATE_PERSON_REJECTED", payload: err})
+			})
 	}
 }
 
 export function updatePerson(_id, field, value) {
 	const body = {
-		objectType: 'person',
 		object: {
 			_id,
 			field,
 			value
 		}
 	};
+
+	// TODO: need to put the dispatch to set Fetching to true;
+
 	return (dispatch) => {
     dispatch({type: "UPDATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/update", body, axiosConfig)
@@ -53,16 +70,26 @@ export function updatePerson(_id, field, value) {
 				dispatch({type: "UPDATE_PERSON_REJECTED", payload: err})
 			})
 	}
-	// return {
-	//   type: 'UPDATE_PERSON',
-	//   payload: {
-	//     _id,
-	//     field,
-	//     value
-	//   },
-	// }
 }
 
-export function deletePerson(id) {
-	return { type: 'DELETE_PERSON', payload: id}
+export function deletePerson(_id) {
+
+	const body = {
+		object: {
+			_id,
+		}
+	};
+
+	// TODO: need to put the dispatch to set Fetching to true;
+
+	return (dispatch) => {
+		axios.post(config.api_url + "/api/v2/person/delete", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "DELETE_PERSON_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "DELETE_PERSON_REJECTED", payload: err})
+			})
+	}
+
 }
