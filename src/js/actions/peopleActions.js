@@ -13,10 +13,8 @@ var axiosConfig = {
 
 export function fetchPeople() {
 
-	// TODO: need to put the dispatch to set Fetching to true;
-
 	return function(dispatch) {
-    dispatch({type: "FETCH_PEOPLE"});
+		dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/people", axiosConfig)
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
@@ -39,6 +37,7 @@ export function createPerson(fName, mName, lName, sexAtBirth, notes) {
 		}
 	};
 	return (dispatch) => {
+		dispatch({type: "CREATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
 			.then((response) => {
 				dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
@@ -58,11 +57,9 @@ export function updatePerson(_id, field, value) {
 		}
 	};
 
-	// TODO: need to put the dispatch to set Fetching to true;
-
 	return (dispatch) => {
-    dispatch({type: "UPDATE_PERSON"});
-		axios.post(config.api_url + "/api/v2/update", body, axiosConfig)
+		dispatch({type: "UPDATE_PERSON"});
+		axios.post(config.api_url + "/api/v2/person/update", body, axiosConfig)
 			.then((response) => {
 				dispatch({type: "UPDATE_PERSON_FULFILLED", payload: response.data})
 			})
@@ -80,9 +77,8 @@ export function deletePerson(_id) {
 		}
 	};
 
-	// TODO: need to put the dispatch to set Fetching to true;
-
 	return (dispatch) => {
+		dispatch({type: "DELETE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/delete", body, axiosConfig)
 			.then((response) => {
 				dispatch({type: "DELETE_PERSON_FULFILLED", payload: response.data})
