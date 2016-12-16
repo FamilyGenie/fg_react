@@ -36,6 +36,8 @@ export default function reducer(state={
 			}
 			case "CREATE_PERSON_REJECTED": {
 				return {...state, fetching: false, error: action.payload}
+			case "UPDATE_PERSON": {
+				return {...state, fetching: true}
 			}
 			case "UPDATE_PERSON_FULFILLED": {
 				// todo: throw error on invalid field???

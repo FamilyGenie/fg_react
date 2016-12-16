@@ -16,7 +16,8 @@ export function fetchPeople() {
 	// TODO: need to put the dispatch to set Fetching to true;
 
 	return function(dispatch) {
-		axios.get(config.api_url + "/api/v2/people", axiosConfig)
+    dispatch({type: "FETCH_PEOPLE"});
+		axios.get(config.api_url + "/people", axiosConfig)
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
 			})
@@ -49,7 +50,6 @@ export function createPerson(fName, mName, lName, sexAtBirth, notes) {
 }
 
 export function updatePerson(_id, field, value) {
-
 	const body = {
 		object: {
 			_id,
@@ -61,7 +61,8 @@ export function updatePerson(_id, field, value) {
 	// TODO: need to put the dispatch to set Fetching to true;
 
 	return (dispatch) => {
-		axios.post(config.api_url + "/api/v2/person/update", body, axiosConfig)
+    dispatch({type: "UPDATE_PERSON"});
+		axios.post(config.api_url + "/api/v2/update", body, axiosConfig)
 			.then((response) => {
 				dispatch({type: "UPDATE_PERSON_FULFILLED", payload: response.data})
 			})
