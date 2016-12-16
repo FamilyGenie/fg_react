@@ -67,6 +67,7 @@ export default class PeopleDetails extends React.Component {
 							class="form-control"
 							type="text"
 							defaultValue={person.mName}
+							onBlur={this.getOnBlur('mName')}
 						/>
 					</div>
 					<div class="col-xs-1 custom-input">
