@@ -19,10 +19,7 @@ export default function reducer(state={
 				}
 			}
 			case "CREATE_PERSON": {
-				return {
-					...state,
-					people: [...state.people, action.payload],
-				}
+				return {...state, fetching: true}
 			}
 			case "CREATE_PERSON_FULFILLED": {
 				const newPerson = action.payload;
@@ -36,6 +33,7 @@ export default function reducer(state={
 			}
 			case "CREATE_PERSON_REJECTED": {
 				return {...state, fetching: false, error: action.payload}
+			}
 			case "UPDATE_PERSON": {
 				return {...state, fetching: true}
 			}
@@ -55,10 +53,7 @@ export default function reducer(state={
 				return {...state, fetching: false, error: action.payload}
 			}
 			case "DELETE_PERSON": {
-				return {
-					...state,
-					people: state.people.filter(person => person._id !== action.payload),
-				}
+				return {...state, fetching: true}
 			}
 			case "DELETE_PERSON_FULFILLED": {
 				// todo: throw error on invalid field???
@@ -70,7 +65,6 @@ export default function reducer(state={
 					people: newPeople,
 				}
 			}
-			// TODO: What are we doing with this???
 			case "DELETE_PERSON_REJECTED": {
 				return {...state, fetching: false, error: action.payload}
 			}
