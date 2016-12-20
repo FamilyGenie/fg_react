@@ -22,6 +22,13 @@ export default class PeopleSearchLineItem extends React.Component {
 					defaultValue={this.props.person.mName}
 				/>
 			</div>
+			<div class="col-xs-2 custom-input">
+				<input
+					class="form-control"
+					type="text"
+					defaultValue={this.props.person.lName}
+				/>
+			</div>
 			<div class="col-xs-1 custom-input">
 				<button
 					class="form-control"

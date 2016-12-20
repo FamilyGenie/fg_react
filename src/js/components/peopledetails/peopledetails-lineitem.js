@@ -55,6 +55,14 @@ export default class PeopleDetailsLineItem extends React.Component {
 							onBlur={this.getOnBlur('mName')}
 						/>
 					</div>
+					<div class="col-xs-2 custom-input">
+						<input
+							class="form-control"
+							type="text"
+							defaultValue={person.lName}
+							onBlur={this.getOnBlur('lName')}
+						/>
+					</div>
 					<div class="col-xs-1 custom-input">
 						<button
 							class="form-control"
