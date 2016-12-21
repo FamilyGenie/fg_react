@@ -1,48 +1,89 @@
 import React from 'react';
 import { connect } from "react-redux";
+import Modal from 'react-modal';
 
-import EventsLineItem from './events-lineitem';
+import EventLineItem from './event-lineitem';
+import PairBondRelLineItem from './pairbondrel-lineitem';
+import ParentalRelLineItem from './parentalrel-lineitem';
 import PeopleDetailsLineItem from './peopledetails-lineitem';
 import { createPerson } from '../../actions/peopleActions';
+import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
-		console.log("in peopledetails @connect, with: ", ownProps.params._id, store.events.events);
-		// console.log(store.events.events.find(function(e) {
-		// 			return e._id === ownProps.params._id;}
+		console.log("in peopledetails@connect with: ", store);
 		return {
 			person:
 				store.people.people.find(function(p) {
 					return p._id === ownProps.params._id;
 				}),
 			events:
-				store.events.events.find(function(e) {
+				store.events.events.filter(function(e) {
 					return e.person_id === ownProps.params._id;
-				})
-			// need to add events here.
+				}),
+			// get all pair bonds where the star of the page is either personOne or personTwo
+			pairBondRels:
+				store.pairBondRels.pairBondRels.filter(function(r) {
+					return (r.personOne_id === ownProps.params._id ||
+						r.personTwo_id === ownProps.params._id);
+				}),
+			// only get the parental rels where the star of the page is the child in the relationship.
+			parentalRels:
+				store.parentalRels.parentalRels.filter(function(t) {
+					return (t.child_id === ownProps.params._id);
+				}),
+			modalIsOpen:
+				store.modal.modalIsOpen
 		};
 	},
 	(dispatch) => {
 		return {
 			createPerson: () => {
-				console.log("in dispatch.createPerson");
 				dispatch(createPerson());
+			},
+			openModal: () => {
+				dispatch(openModal());
+			},
+			closeModal: () => {
+				dispatch(closeModal());
 			}
-
 		}
 	}
 )
 export default class PeopleDetails extends React.Component {
 
 	createPerson = () => {
-		console.log("in peopledetails, createPerson, with: ", this.props);
 		this.props.createPerson();
+	}
+
+	openModal = () => {
+		this.props.openModal();
+	}
+
+	closeModal = () => {
+		this.props.closeModal();
 	}
 
 	render = () => {
 
-		console.log("in peopledetails.render with: ", this.props);
-		const { person, events } = this.props;
+		// var modalIsOpen = this.modalIsOpen;
+		console.log("in render with:", this.props.modalIsOpen);
+
+		const { person, events, pairBondRels, parentalRels, allDataIn, modalIsOpen } = this.props;
+
+		console.log("in render with:", modalIsOpen);
+
+		const mappedEvents = events.map(event =>
+			<EventLineItem event={event} key={event._id}/>
+		);
+
+		const mappedPairBondRels = pairBondRels.map(pairBondRel =>
+			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id}/>
+		);
+
+		const mappedParentalRels = parentalRels.map(parentalRel =>
+			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
+		);
 
 		var divStyle = {
 			borderWidth: "1px",
@@ -59,6 +100,16 @@ export default class PeopleDetails extends React.Component {
 			fontWeight: "bold",
 			fontSize: "1.25em",
 			marginBottom: 10,
+		}
+
+		var modalStyle = {
+			overlay: {
+			position: 'fixed',
+			top: 100,
+			left: 100,
+			right: 100,
+			bottom: 100,
+			}
 		}
 
 		return (<div>
@@ -100,14 +151,14 @@ export default class PeopleDetails extends React.Component {
 						fName
 					</div>
 					<div class="col-xs-4 title bold can-click">
-						lName
+						Type
 					</div>
 					<div class="col-xs-4 title bold can-click">
-						Type
+						subType
 					</div>
 				</div>
 				<div>
-					<EventsLineItem events={events} />
+					{mappedParentalRels}
 				</div>
 			</div>
 			<div class="container col-xs-4" style={divStyle}>
@@ -128,7 +179,7 @@ export default class PeopleDetails extends React.Component {
 					</div>
 				</div>
 				<div>
-					<EventsLineItem events={events} />
+					{mappedPairBondRels}
 				</div>
 			</div>
 			<div class="container col-xs-4" style={divStyle}>
@@ -149,9 +200,21 @@ export default class PeopleDetails extends React.Component {
 					</div>
 				</div>
 				<div>
-					<EventsLineItem events={events} />
+					{mappedEvents}
 				</div>
 			</div>
+			<div class="container col-xs-12" style={divStyle}>
+				<button onClick={this.openModal}>Open Modal</button>
+			</div>
+			<Modal
+				  isOpen={modalIsOpen}
+				  contentLabel="Modal"
+				  style={modalStyle}
+				>
+				  <h1>Modal Content</h1>
+				  <p>Etc. {modalIsOpen}</p>
+				  <button onClick={this.closeModal}>Close Modal</button>
+			</Modal>
 		</div>
 		);
 	}

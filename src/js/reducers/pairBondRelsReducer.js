@@ -1,22 +1,21 @@
 export default function reducer(state={
-		events: [],
-		fetched: false,
+		pairBondRels: [],
 		fetching: false,
 		error: null,
 	}, action) {
 
 		switch (action.type) {
-			case "FETCH_EVENTS": {
+			case "FETCH_PAIRBONDRELS": {
 				return {...state, fetching: true}
 			}
-			case "FETCH_EVENTS_REJECTED": {
+			case "FETCH_PAIRBONDRELS_REJECTED": {
 				return {...state, fetching: false, error: action.payload}
 			}
-			case "FETCH_EVENTS_FULFILLED": {
+			case "FETCH_PAIRBONDRELS_FULFILLED": {
 				return {
 					...state,
 					fetching: false,
-					events: action.payload,
+					pairBondRels: action.payload,
 				}
 			}
 		}

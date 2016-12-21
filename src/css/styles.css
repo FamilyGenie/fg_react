@@ -170,7 +170,7 @@ input.form-control:focus {
   outline: 0 none;
 }
 
-input.form-control.can-click:hover, can-click:hover, .navbar-nav>li>a:hover {
+input.form-control.canClick:hover, canClick:hover, .navbar-nav>li>a:hover {
 	cursor: pointer;
 }
 

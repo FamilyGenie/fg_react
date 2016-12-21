@@ -2,6 +2,8 @@ import React from "react"
 import { connect } from "react-redux"
 
 import { fetchEvents } from "../actions/eventsActions"
+import { fetchPairBondRels } from "../actions/pairBondRelsActions"
+import { fetchParentalRels } from "../actions/parentalRelsActions"
 import { fetchPeople } from "../actions/peopleActions"
 
 import PeopleSearch from './peoplesearch/peoplesearch';
@@ -10,9 +12,10 @@ import PeopleSearch from './peoplesearch/peoplesearch';
 export default class Layout extends React.Component {
 
 	componentWillMount() {
-		console.log("in layout.js, componentWillMount, with props: ", this.props);
-		this.props.dispatch(fetchPeople());
 		this.props.dispatch(fetchEvents());
+		this.props.dispatch(fetchPairBondRels());
+		this.props.dispatch(fetchParentalRels());
+		this.props.dispatch(fetchPeople());
 	}
 
 	render() {
