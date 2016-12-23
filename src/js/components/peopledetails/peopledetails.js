@@ -5,13 +5,14 @@ import Modal from 'react-modal';
 import EventLineItem from './event-lineitem';
 import PairBondRelLineItem from './pairbondrel-lineitem';
 import ParentalRelLineItem from './parentalrel-lineitem';
+import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import PeopleDetailsLineItem from './peopledetails-lineitem';
 import { createPerson } from '../../actions/peopleActions';
 import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
-		console.log("in peopledetails@connect with: ", store);
+		// console.log("in peopledetails@connect with: ", store);
 		return {
 			person:
 				store.people.people.find(function(p) {
@@ -67,11 +68,11 @@ export default class PeopleDetails extends React.Component {
 	render = () => {
 
 		// var modalIsOpen = this.modalIsOpen;
-		console.log("in render with:", this.props.modalIsOpen);
+		// console.log("in render with:", this.props.modalIsOpen);
 
 		const { person, events, pairBondRels, parentalRels, allDataIn, modalIsOpen } = this.props;
 
-		console.log("in render with:", modalIsOpen);
+		// console.log("in render with:", modalIsOpen);
 
 		const mappedEvents = events.map(event =>
 			<EventLineItem event={event} key={event._id}/>
@@ -84,6 +85,10 @@ export default class PeopleDetails extends React.Component {
 		const mappedParentalRels = parentalRels.map(parentalRel =>
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
 		);
+
+		// const mappedParentalRelsEdit = parentalRels.map(parentalRel =>
+		// 	<ParentalRelLineItemEdit parentalRel={parentalRel} key={parentalRel._id}/>
+		// );
 
 		var divStyle = {
 			borderWidth: "1px",
@@ -147,14 +152,8 @@ export default class PeopleDetails extends React.Component {
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-4 title bold can-click">
-						fName
-					</div>
-					<div class="col-xs-4 title bold can-click">
-						Type
-					</div>
-					<div class="col-xs-4 title bold can-click">
-						subType
+					<div class="col-xs-12">
+						Name & Type
 					</div>
 				</div>
 				<div>
@@ -202,19 +201,23 @@ export default class PeopleDetails extends React.Component {
 				<div>
 					{mappedEvents}
 				</div>
-			</div>
+			</div>'
+			{/*
 			<div class="container col-xs-12" style={divStyle}>
 				<button onClick={this.openModal}>Open Modal</button>
 			</div>
 			<Modal
-				  isOpen={modalIsOpen}
-				  contentLabel="Modal"
-				  style={modalStyle}
-				>
-				  <h1>Modal Content</h1>
-				  <p>Etc. {modalIsOpen}</p>
-				  <button onClick={this.closeModal}>Close Modal</button>
+				isOpen={modalIsOpen}
+				contentLabel="Modal"
+				style={modalStyle}
+			>
+				<h1>Modal Content</h1>
+				<div>
+					{mappedParentalRelsEdit}
+				</div>
+				<button onClick={this.closeModal}>Close Modal</button>
 			</Modal>
+			*/}
 		</div>
 		);
 	}

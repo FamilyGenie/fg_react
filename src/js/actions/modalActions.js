@@ -10,9 +10,11 @@ export function closeModal() {
 	}
 }
 
-export function openParentalRelModal() {
+export function openParentalRelModal(parentalRel) {
+	console.log("in modalActions with: ", parentalRel);
+	// set the type to tell the parentalrelmodal to open, and pass the object to be edited in the modal window as the payload
 	return function(dispatch) {
-		dispatch({type: "OPEN_PARENTALRELMODAL"});
+		dispatch({type: "OPEN_PARENTALRELMODAL", payload: parentalRel});
 	}
 }
 

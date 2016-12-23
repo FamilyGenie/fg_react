@@ -1,17 +1,14 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { hashHistory, Link } from 'react-router'
 import Modal from 'react-modal';
 
+import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import { openModal, openParentalRelModal, closeParentalRelModal } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
-		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now).
-		// console.log("in parentalrel lineitem @connect, with store:", store.people.people, ownProps);
-		console.log("in parentalrel @connect with:",
-				store.people.people.find(function(p) {
-					return p._id === ownProps.parentalRel.parent_id;
-				}));
+		// console.log("in parentalrel lineitem @connect, with store:", store, ownProps);
 		return {
 			parent:
 				store.people.people.find(function(p) {
@@ -20,13 +17,16 @@ import { openModal, openParentalRelModal, closeParentalRelModal } from '../../ac
 			parentalRel:
 				ownProps.parentalRel,
 			modalIsOpen:
-				store.modal.modalParentalRelIsOpen
+				store.modal.modalParentalRelIsOpen,
+			modalParentalRel:
+				store.modal.parentalRel
 		};
 	},
 	(dispatch) => {
 		return {
-			openModal: () => {
-				dispatch(openParentalRelModal());
+			// get the parentalRel object that needs to appear in the modal
+			openModal: (parentalRel) => {
+				dispatch(openParentalRelModal(parentalRel));
 			},
 			closeModal: () => {
 				dispatch(closeParentalRelModal());
@@ -37,17 +37,24 @@ import { openModal, openParentalRelModal, closeParentalRelModal } from '../../ac
 export default class ParentalRelLineItem extends React.Component {
 
 	openModal = () => {
-		this.props.openModal();
+		// console.log("in openModal with props: ", this.props.parent.fName, this.props.parentalRel._id);
+		// call OpenModal with the parentalRel that we want to show up in the modal window
+		this.props.openModal(this.props.parentalRel);
 	}
 
 	closeModal = () => {
 		this.props.closeModal();
 	}
 
+	openRecord = () => {
+		hashHistory.push('/parentalreledit/' + this.props.parentalRel._id);
+
+	}
+
 	render = () => {
 
-		// console.log("in ParentalRelLineItem with: ", this.props);
-		const { parent, parentalRel, modalIsOpen } = this.props;
+		// console.log("in ParentalRelLineItem Render with: ", this.props);
+		const { parent, parentalRel, modalIsOpen, modalParentalRel } = this.props;
 
 		var modalStyle = {
 			overlay: {
@@ -58,23 +65,55 @@ export default class ParentalRelLineItem extends React.Component {
 			bottom: 100,
 			}
 		}
+		var headingStyle = {
+			textAlign: "center",
+			color: "#333333",
+			fontWeight: "bold",
+			fontSize: "1.25em",
+			marginBottom: 10,
+		}
 
 		if (parentalRel) {
 			return (
 				<div>
 					<div class="row person-item">
-						<p onClick={this.openModal}>
-							{parent.fName} {parent.lName} {parentalRel.subType}
-						</p>
+						<div class="col-xs-12">
+							<p onClick={this.openModal.bind(this)}>
+								{parent.fName} {parent.lName} {parentalRel.subType} {parentalRel.relationshipType}
+							</p>
+						</div>
 					</div>
 					<Modal
 						isOpen={modalIsOpen}
 						contentLabel="Modal"
 						style={modalStyle}
 						>
-						<h1>Parental Rel Modal</h1>
-						<p>Etc. {modalIsOpen}</p>
-						<button onClick={this.closeModal}>Close Modal</button>
+						{/* Everything between here and <ParentalRelLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
+						<div class="row">
+							<div class="col-xs-12" style={headingStyle}>
+								Parental Relationship Edit
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-2 title bold">
+								Parent Name
+							</div>
+							<div class="col-xs-2 title bold">
+								Relationship
+							</div>
+							<div class="col-xs-2 title bold">
+								SubType
+							</div>
+							<div class="col-xs-2 title bold">
+								StartDate
+							</div>
+							<div class="col-xs-2 title bold">
+								EndDate
+							</div>
+						</div>
+						<ParentalRelLineItemEdit/>
+						<div><p></p></div>
+						<button onClick={this.closeModal}>Close</button>
 					</Modal>
 				</div>)
 		} else {

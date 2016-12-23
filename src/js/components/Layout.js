@@ -19,7 +19,6 @@ export default class Layout extends React.Component {
 	}
 
 	render() {
-		console.log("in layout.js, with props: ", this.props);
 		return <div>
 			{this.props.children}
 		</div>

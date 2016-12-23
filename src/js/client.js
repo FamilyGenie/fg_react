@@ -6,6 +6,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import Layout from './components/Layout'
 import PeopleSearch from './components/peoplesearch/peoplesearch';
 import PeopleDetails from './components/peopledetails/peopledetails';
+import ParentalRelsLineItemEdit from './components/peopledetails/parentalrel-lineitem-edit';
 import store from './store'
 
 const app = document.getElementById('app');
@@ -16,6 +17,7 @@ ReactDOM.render(<Provider store={store}>
 		<Route path="/" component={Layout}>
 			<IndexRoute component={PeopleSearch}></IndexRoute>
 			<Route path="/peopledetails(/:_id)" name="People Details" component={PeopleDetails}></Route>
+			<Route path="/parentalreledit(/:_id)" name="Parental Rel Edit" component={ParentalRelsLineItemEdit}></Route>
 		</Route>
 	</Router>
 </Provider>, app);
