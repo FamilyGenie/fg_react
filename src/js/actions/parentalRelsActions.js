@@ -22,3 +22,24 @@ export function fetchParentalRels() {
 			})
 	}
 }
+
+export function updateParentalRel(_id, field, value) {
+	const body = {
+		object: {
+			_id,
+			field,
+			value
+		}
+	};
+
+	return (dispatch) => {
+		dispatch({type: "UPDATE_PARENTALREL"});
+		axios.post(config.api_url + "/api/v2/parentalrel/update", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "UPDATE_PARENTALREL_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "UPDATE_PARENTALREL_REJECTED", payload: err})
+			})
+	}
+}
