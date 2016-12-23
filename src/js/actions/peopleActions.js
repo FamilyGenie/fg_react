@@ -15,7 +15,7 @@ export function fetchPeople() {
 
 	return function(dispatch) {
 		dispatch({type: "FETCH_PEOPLE"});
-		axios.get(config.api_url + "/people", axiosConfig)
+		axios.get(config.api_url + "/api/v2/people", axiosConfig)
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
 			})

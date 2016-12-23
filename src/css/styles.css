@@ -83,7 +83,7 @@ h3 {
 
 /* this is to accomodate for the poor icon I took from the internet. when we get a vector image, we will either change this or remove it */
 .navbar-li-padding {
-	padding-top: 8px 
+	padding-top: 8px
 }
 
 .coming-soon-home-page {
@@ -170,7 +170,7 @@ input.form-control:focus {
   outline: 0 none;
 }
 
-input.form-control.can-click:hover, can-click:hover, .navbar-nav>li>a:hover {
+input.form-control.canClick:hover, canClick:hover, .navbar-nav>li>a:hover {
 	cursor: pointer;
 }
 
