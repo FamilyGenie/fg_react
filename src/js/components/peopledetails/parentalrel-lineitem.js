@@ -4,7 +4,7 @@ import { hashHistory, Link } from 'react-router'
 import Modal from 'react-modal';
 
 import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
-import { openModal, openParentalRelModal, closeParentalRelModal } from '../../actions/modalActions';
+import { setParentalRel } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -16,34 +16,33 @@ import { openModal, openParentalRelModal, closeParentalRelModal } from '../../ac
 				}),
 			parentalRel:
 				ownProps.parentalRel,
-			modalIsOpen:
-				store.modal.modalParentalRelIsOpen,
-			modalParentalRel:
-				store.modal.parentalRel
 		};
 	},
 	(dispatch) => {
 		return {
 			// get the parentalRel object that needs to appear in the modal
-			openModal: (parentalRel) => {
-				dispatch(openParentalRelModal(parentalRel));
+			setParentalRel: (parentalRel) => {
+				dispatch(setParentalRel(parentalRel));
 			},
-			closeModal: () => {
-				dispatch(closeParentalRelModal());
-			}
 		}
 	}
 )
 export default class ParentalRelLineItem extends React.Component {
+	constructor (props) {
+		super(props);
+		// this variable will store whether the modal window is open or not
+		this.state = {modalIsOpen: false};
+	}
 
 	openModal = () => {
-		// console.log("in openModal with props: ", this.props.parent.fName, this.props.parentalRel._id);
-		// call OpenModal with the parentalRel that we want to show up in the modal window
-		this.props.openModal(this.props.parentalRel);
+		// As well as setting the variable for the modal to open, pass the parentalRel that we want to show up in the modal window to the Store. The parentalrelLineItemEdit component that shows in the modal will grab the parentalRel from the store.
+		this.props.setParentalRel(this.props.parentalRel);
+		this.setState({modalIsOpen: true});
 	}
 
 	closeModal = () => {
-		this.props.closeModal();
+		// this.props.closeModal();
+		this.setState({modalIsOpen: false});
 	}
 
 	openRecord = () => {
@@ -53,8 +52,8 @@ export default class ParentalRelLineItem extends React.Component {
 
 	render = () => {
 
-		// console.log("in ParentalRelLineItem Render with: ", this.props);
-		const { parent, parentalRel, modalIsOpen, modalParentalRel } = this.props;
+		const { parent, parentalRel, modalParentalRel } = this.props;
+		const { modalIsOpen } = this.state;
 
 		var modalStyle = {
 			overlay: {
@@ -73,6 +72,7 @@ export default class ParentalRelLineItem extends React.Component {
 			marginBottom: 10,
 		}
 
+		// The idea here is that this page will show a list of parents that is uneditable. If they click on the parent, a modal will open that will allow them to edit that parentalRel record.
 		if (parentalRel) {
 			return (
 				<div>
@@ -112,7 +112,7 @@ export default class ParentalRelLineItem extends React.Component {
 								EndDate
 							</div>
 						</div>
-						<ParentalRelLineItemEdit/>
+						<ParentalRelLineItemEdit parentalRel2={parentalRel}/>
 						<div><p></p></div>
 						<button onClick={this.closeModal}>Close</button>
 					</Modal>

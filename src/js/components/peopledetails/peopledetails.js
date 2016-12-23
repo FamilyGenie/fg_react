@@ -42,12 +42,6 @@ import { closeModal, openModal} from '../../actions/modalActions';
 			createPerson: () => {
 				dispatch(createPerson());
 			},
-			openModal: () => {
-				dispatch(openModal());
-			},
-			closeModal: () => {
-				dispatch(closeModal());
-			}
 		}
 	}
 )
@@ -57,22 +51,9 @@ export default class PeopleDetails extends React.Component {
 		this.props.createPerson();
 	}
 
-	openModal = () => {
-		this.props.openModal();
-	}
-
-	closeModal = () => {
-		this.props.closeModal();
-	}
-
 	render = () => {
 
-		// var modalIsOpen = this.modalIsOpen;
-		// console.log("in render with:", this.props.modalIsOpen);
-
 		const { person, events, pairBondRels, parentalRels, allDataIn, modalIsOpen } = this.props;
-
-		// console.log("in render with:", modalIsOpen);
 
 		const mappedEvents = events.map(event =>
 			<EventLineItem event={event} key={event._id}/>
@@ -85,10 +66,6 @@ export default class PeopleDetails extends React.Component {
 		const mappedParentalRels = parentalRels.map(parentalRel =>
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
 		);
-
-		// const mappedParentalRelsEdit = parentalRels.map(parentalRel =>
-		// 	<ParentalRelLineItemEdit parentalRel={parentalRel} key={parentalRel._id}/>
-		// );
 
 		var divStyle = {
 			borderWidth: "1px",
@@ -201,23 +178,7 @@ export default class PeopleDetails extends React.Component {
 				<div>
 					{mappedEvents}
 				</div>
-			</div>'
-			{/*
-			<div class="container col-xs-12" style={divStyle}>
-				<button onClick={this.openModal}>Open Modal</button>
 			</div>
-			<Modal
-				isOpen={modalIsOpen}
-				contentLabel="Modal"
-				style={modalStyle}
-			>
-				<h1>Modal Content</h1>
-				<div>
-					{mappedParentalRelsEdit}
-				</div>
-				<button onClick={this.closeModal}>Close Modal</button>
-			</Modal>
-			*/}
 		</div>
 		);
 	}
