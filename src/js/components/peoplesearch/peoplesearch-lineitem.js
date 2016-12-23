@@ -8,6 +8,12 @@ export default class PeopleSearchLineItem extends React.Component {
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
+	getUpdateDate = (field, displayDate, setDate) => {
+		return (field, displayDate, setDate) => {
+			console.log("In PeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
+		}
+	}
+
 	render = () => (
 		<div class="row person-item">
 			<div class="col-xs-2 custom-input">
@@ -32,7 +38,7 @@ export default class PeopleSearchLineItem extends React.Component {
 				/>
 			</div>
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue='12/31/1970' />
+				<DateInput defaultValue='12/31/1970' field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
 			</div>
 			<div class="col-xs-1 custom-input">
 				<button

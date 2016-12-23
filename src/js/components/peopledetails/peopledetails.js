@@ -60,7 +60,7 @@ export default class PeopleDetails extends React.Component {
 		);
 
 		const mappedPairBondRels = pairBondRels.map(pairBondRel =>
-			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id}/>
+			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id} person={person}/>
 		);
 
 		const mappedParentalRels = parentalRels.map(parentalRel =>

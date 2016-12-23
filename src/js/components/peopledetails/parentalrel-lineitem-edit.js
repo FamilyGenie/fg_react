@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import DateInput from '../date-input';
 import { updateParentalRel } from '../../actions/parentalRelsActions';
 
 @connect(
@@ -23,7 +24,7 @@ import { updateParentalRel } from '../../actions/parentalRelsActions';
 	},
 	(dispatch) => {
 		return {
-			onBlur: (_id, field, value) => {
+			updateParentalRel: (_id, field, value) => {
 				dispatch(updateParentalRel(_id, field, value));
 			}
 		}
@@ -35,7 +36,14 @@ export default class ParentalRelLineItemEdit extends React.Component {
 		// have to return a function, because we don't know what evt.target.value is when this page is rendered (and this function is called)
 		// console.log("in getOnBlur: ", this.props, field);
 		return (evt) => {
-			this.props.onBlur(this.props.parentalRel._id, field, evt.target.value)
+			this.props.updateParentalRel(this.props.parentalRel._id, field, evt.target.value)
+		}
+	}
+
+	getUpdateDate = (field, displayDate, setDate) => {
+		return (field, displayDate, setDate) => {
+			console.log("In parentalRel lineitem updateDate, with: ", field,displayDate, setDate);
+			// next, you just need to call this.props.updateParentalRel and update both the setDate and the displayDate
 		}
 	}
 
@@ -64,12 +72,15 @@ export default class ParentalRelLineItemEdit extends React.Component {
 						/>
 					</div>
 					<div class="col-xs-2 custom-input">
+						<DateInput defaultValue={parentalRel.startDate} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+						{/*
 						<input
 							class="form-control"
 							type="text"
 							defaultValue={parentalRel.startDate}
 							onBlur={this.getOnBlur('startDate')}
 						/>
+						*/}
 					</div>
 					<div class="col-xs-2 custom-input">
 						<input

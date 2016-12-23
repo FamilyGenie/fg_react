@@ -45,11 +45,6 @@ export default class ParentalRelLineItem extends React.Component {
 		this.setState({modalIsOpen: false});
 	}
 
-	openRecord = () => {
-		hashHistory.push('/parentalreledit/' + this.props.parentalRel._id);
-
-	}
-
 	render = () => {
 
 		const { parent, parentalRel, modalParentalRel } = this.props;
@@ -78,7 +73,7 @@ export default class ParentalRelLineItem extends React.Component {
 				<div>
 					<div class="row person-item">
 						<div class="col-xs-12">
-							<p onClick={this.openModal.bind(this)}>
+							<p onClick={this.openModal}>
 								{parent.fName} {parent.lName} {parentalRel.subType} {parentalRel.relationshipType}
 							</p>
 						</div>
@@ -112,7 +107,7 @@ export default class ParentalRelLineItem extends React.Component {
 								EndDate
 							</div>
 						</div>
-						<ParentalRelLineItemEdit parentalRel2={parentalRel}/>
+						<ParentalRelLineItemEdit />
 						<div><p></p></div>
 						<button onClick={this.closeModal}>Close</button>
 					</Modal>
