@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 
 import DateInput from '../date-input';
-import { updatePairBondRel } from '../../actions/pairBondRelsActions';
+import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRelsActions';
 
 @connect(
 	(store, ownProps) => {
@@ -47,6 +47,9 @@ import { updatePairBondRel } from '../../actions/pairBondRelsActions';
 		return {
 			updatePairBondRel: (_id, field, value) => {
 				dispatch(updatePairBondRel(_id, field, value));
+			},
+			deletePairBondRel: (_id) => {
+				dispatch(deletePairBondRel(_id));
 			}
 		}
 	}
@@ -90,6 +93,11 @@ constructor(props) {
 			console.log("In parentalRel lineitem updateDate, with: ", field,displayDate, setDate);
 			// next, you just need to call this.props.updateParentalRel and update both the setDate and the displayDate
 		}
+	}
+
+	deleteRecord = () => {
+		console.log('Deleting Record', this.props.pairBondRel._id);
+		this.props.deletePairBondRel(this.props.pairBondRel._id);
 	}
 
 	render = () => {

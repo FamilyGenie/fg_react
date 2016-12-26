@@ -41,7 +41,7 @@ export default function reducer(state={
 			}
 			case "CREATE_PAIRBONDREL_FULFILLED": {
 				const newObject = action.payload;
-				const newArray = state.people;
+				const newArray = state.pairBondRels;
 				newArray.push(newObject);
 				return {
 					...state,
@@ -59,6 +59,7 @@ export default function reducer(state={
 				// todo: throw error on invalid field???
 				// the delete person api returns all people, so just set the newPeople array to the payload that is returned
 				const newArray = action.payload;
+				console.log('before return pairbondrels after delete', newArray)
 				return {
 					...state,
 					fetching: false,
