@@ -8,13 +8,14 @@ import ParentalRelLineItem from './parentalrel-lineitem';
 import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import PeopleDetailsLineItem from './peopledetails-lineitem';
 import { createPerson } from '../../actions/peopleActions';
+import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
 		// console.log("in peopledetails@connect with: ", store);
 		return {
-			person:
+			star:
 				store.people.people.find(function(p) {
 					return p._id === ownProps.params._id;
 				}),
@@ -42,6 +43,9 @@ import { closeModal, openModal} from '../../actions/modalActions';
 			createPerson: () => {
 				dispatch(createPerson());
 			},
+			createPairBondRel: (star_id) => {
+				dispatch(createPairBondRel(star_id, null, "", "", "", "", ""));
+			}
 		}
 	}
 )
@@ -51,17 +55,30 @@ export default class PeopleDetails extends React.Component {
 		this.props.createPerson();
 	}
 
+	// createPairBondRel = (star_id) => {
+	// 	return (star_id) => {
+	// 		this.props.createPairBondRel(star_id);
+	// 	}
+	// }
+
+	createPairBondRel = () => {
+		console.log("in create Pair Bond Rel with: ", this.props.star._id);
+		this.props.createPairBondRel(this.props.star._id);
+	}
+
 	render = () => {
 
-		const { person, events, pairBondRels, parentalRels, allDataIn, modalIsOpen } = this.props;
+		const { star, events, pairBondRels, parentalRels, allDataIn, modalIsOpen } = this.props;
 
 		const mappedEvents = events.map(event =>
 			<EventLineItem event={event} key={event._id}/>
 		);
 
 		const mappedPairBondRels = pairBondRels.map(pairBondRel =>
-			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id} person={person}/>
+			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id} person={star}/>
 		);
+
+		console.log("mappedPairBondRels: ", mappedPairBondRels);
 
 		const mappedParentalRels = parentalRels.map(parentalRel =>
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
@@ -72,13 +89,14 @@ export default class PeopleDetails extends React.Component {
 			borderColor: "gray",
 			borderStyle: "solid",
 			marginTop: "30px",
-			marginRight: "0px",
+			marginRight: "10px",
+			marginLeft: "10px",
 			paddingBottom: "5px",
 		}
 
 		var headingStyle = {
 			textAlign: "center",
-			color: "#333333",
+			color: "#444444",
 			fontWeight: "bold",
 			fontSize: "1.25em",
 			marginBottom: 10,
@@ -120,9 +138,9 @@ export default class PeopleDetails extends React.Component {
 				</div>
 			</div>
 			<div>
-				<PeopleDetailsLineItem person={person} />
+				<PeopleDetailsLineItem person={star} />
 			</div>
-			<div class="container col-xs-4" style={divStyle}>
+			<div class="container col-xs-3" style={divStyle}>
 				<div class="row">
 					<div class="col-xs-12" style={headingStyle}>
 						Parents
@@ -137,7 +155,7 @@ export default class PeopleDetails extends React.Component {
 					{mappedParentalRels}
 				</div>
 			</div>
-			<div class="container col-xs-4" style={divStyle}>
+			<div class="container col-xs-3" style={divStyle}>
 				<div class="row">
 					<div class="col-xs-12" style={headingStyle}>
 						PairBonds
@@ -157,8 +175,18 @@ export default class PeopleDetails extends React.Component {
 				<div>
 					{mappedPairBondRels}
 				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<button
+							class="btn"
+							onClick={this.createPairBondRel}
+						>
+							Create New
+						</button>
+					</div>
+				</div>
 			</div>
-			<div class="container col-xs-4" style={divStyle}>
+			<div class="container col-xs-3" style={divStyle}>
 				<div class="row">
 					<div class="col-xs-12" style={headingStyle}>
 						Person Chronology
