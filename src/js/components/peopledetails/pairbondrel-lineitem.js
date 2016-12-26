@@ -2,10 +2,13 @@ import React from 'react';
 import { connect } from "react-redux";
 import Modal from 'react-modal';
 
+import PairBondRelLineItemEdit from './pairbondrel-lineitem-edit';
+import { setPairBondRel } from '../../actions/modalActions';
+
 @connect(
 	(store, ownProps) => {
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now).
-		console.log("in pairbondRel @connect, with: ", ownProps);
+		// console.log("in pairbondRel @connect, with: ", ownProps);
 		// return ownProps;
 		var pairBondPerson_id;
 		// ownProps.person._id is the id of the person who is being edited in the personDetails page. Figure out if they are personOne or personTwo of the pairBond recorpairBondP, and set the variable pairBondPerson as the other id
@@ -21,7 +24,17 @@ import Modal from 'react-modal';
 				}),
 			pairBondRel:
 				ownProps.pairBondRel,
+			star:
+				ownProps.person,
 		};
+	},
+	(dispatch) => {
+		return {
+			// get the parentalRel object that needs to appear in the modal
+			setPairBondRel: (pairBondRel) => {
+				dispatch(setPairBondRel(pairBondRel));
+			},
+		}
 	}
 )
 export default class PairBondRelLineItem extends React.Component {
@@ -33,7 +46,7 @@ export default class PairBondRelLineItem extends React.Component {
 
 	openModal = () => {
 		// As well as setting the variable for the modal to open, pass the parentalRel that we want to show up in the modal window to the Store. The parentalrelLineItemEdit component that shows in the modal will grab the parentalRel from the store.
-		// this.props.setPairBondRel(this.props.pairBondRel);
+		this.props.setPairBondRel(this.props.pairBondRel);
 		this.setState({modalIsOpen: true});
 	}
 
@@ -44,7 +57,7 @@ export default class PairBondRelLineItem extends React.Component {
 
 	render = () => {
 
-		const { pairBondRel, pairBondPerson } = this.props;
+		const { pairBondRel, pairBondPerson, star } = this.props;
 		const { modalIsOpen } = this.state;
 
 
@@ -73,29 +86,6 @@ export default class PairBondRelLineItem extends React.Component {
 							{pairBondPerson.fName} {pairBondPerson.lName} {pairBondRel.relationshipType}
 						</p>
 					</div>
-					{/*
-					<div class="col-xs-4 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={pairBondRel.personOne_id}
-						/>
-					</div>
-					<div class="col-xs-4 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={pairBondRel.personTwo_id}
-						/>
-					</div>
-					<div class="col-xs-4 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={pairBondRel.relationshipType}
-						/>
-					</div>
-					*/}
 					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}
 					<Modal
 						isOpen={modalIsOpen}
@@ -110,10 +100,7 @@ export default class PairBondRelLineItem extends React.Component {
 						</div>
 						<div class="row">
 							<div class="col-xs-2 title bold">
-								PersonOne
-							</div>
-							<div class="col-xs-2 title bold">
-								PersonTwo
+								Person
 							</div>
 							<div class="col-xs-2 title bold">
 								RelationshipType
@@ -125,7 +112,7 @@ export default class PairBondRelLineItem extends React.Component {
 								EndDate
 							</div>
 						</div>
-						{/* <PairBondRelLineItemEdit pairBondRel={pairBondRel}/> */}
+						<PairBondRelLineItemEdit pairBondRel={pairBondRel} star={star}/>
 						<div><p></p></div>
 						<button onClick={this.closeModal}>Close</button>
 					</Modal>

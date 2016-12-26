@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { hashHistory, Link } from 'react-router'
 import Modal from 'react-modal';
 
 import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
