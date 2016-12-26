@@ -51,11 +51,11 @@ export default class ParentalRelLineItem extends React.Component {
 
 		var modalStyle = {
 			overlay: {
-			position: 'fixed',
-			top: 100,
-			left: 100,
-			right: 100,
-			bottom: 100,
+				position: 'fixed',
+				top: 100,
+				left: 100,
+				right: 100,
+				bottom: 100,
 			}
 		}
 		var headingStyle = {

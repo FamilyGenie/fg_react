@@ -44,7 +44,7 @@ export function updatePairBondRel(_id, field, value) {
 	}
 }
 
-export function createPairBondRel(personOne_id, personTwo_id, relationshipType, startDate, startDateSort, endDate, endDateSort) {
+export function createPairBondRel(personOne_id, personTwo_id, relationshipType, startDate, startDateUser, endDate, endDateUser) {
 
 	const body = {
 		object: {

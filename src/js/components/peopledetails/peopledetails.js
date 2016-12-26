@@ -43,8 +43,8 @@ import { closeModal, openModal} from '../../actions/modalActions';
 			createPerson: () => {
 				dispatch(createPerson());
 			},
-			createPairBondRel: () => {
-				dispatch(createPairBondRel());
+			createPairBondRel: (star_id) => {
+				dispatch(createPairBondRel(star_id, null, "", "", "", "", ""));
 			}
 		}
 	}
@@ -55,8 +55,15 @@ export default class PeopleDetails extends React.Component {
 		this.props.createPerson();
 	}
 
+	// createPairBondRel = (star_id) => {
+	// 	return (star_id) => {
+	// 		this.props.createPairBondRel(star_id);
+	// 	}
+	// }
+
 	createPairBondRel = () => {
-		this.props.createPairBondRel();
+		console.log("in create Pair Bond Rel with: ", this.props.star._id);
+		this.props.createPairBondRel(this.props.star._id);
 	}
 
 	render = () => {
@@ -70,6 +77,8 @@ export default class PeopleDetails extends React.Component {
 		const mappedPairBondRels = pairBondRels.map(pairBondRel =>
 			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id} person={star}/>
 		);
+
+		console.log("mappedPairBondRels: ", mappedPairBondRels);
 
 		const mappedParentalRels = parentalRels.map(parentalRel =>
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
@@ -169,7 +178,7 @@ export default class PeopleDetails extends React.Component {
 				<div class="row">
 					<div class="col-xs-12">
 						<button
-							class="btn btn-primary btn-round"
+							class="btn"
 							onClick={this.createPairBondRel}
 						>
 							Create New

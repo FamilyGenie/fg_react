@@ -9,7 +9,6 @@ import { updatePairBondRel } from '../../actions/pairBondRelsActions';
 	(store, ownProps) => {
 		// for the modal to work, we need to put the parentalRel in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no parentalRel object in the store, so check for that condition. If there is no parentalRel object found in the store, then just send through ownProps
-		// console.log("in PairBondRelLineItemEdit @connect, with: ", ownProps);
 		if (store.modal.pairBondRel) {
 			var pairBondPerson_id;
 			// ownProps.person._id is the id of the person who is being edited in the personDetails page. Figure out if they are personOne or personTwo of the pairBond recorpairBondP, and set the variable pairBondPerson as the other id
@@ -18,7 +17,6 @@ import { updatePairBondRel } from '../../actions/pairBondRelsActions';
 			} else {
 				pairBondPerson_id = store.modal.pairBondRel.personOne_id
 			}
-			console.log("in PairBondRelLineItemEdit @connect with: ", pairBondPerson_id);
 			return {
 				pairBondPerson:
 					store.people.people.find(function(p) {
@@ -31,6 +29,15 @@ import { updatePairBondRel } from '../../actions/pairBondRelsActions';
 				fetching:
 					// if we are fetching the pairBondRels, reflect that in this prop
 					store.pairBondRels.fetching,
+				peopleArray:
+					store.people.people.map(function(person) {
+						var newObj = {};
+						var label = person.fName + ' ' + person.lName;
+						var value = person._id;
+						newObj["value"] = value;
+						newObj["label"] = label;
+						return newObj;
+					}),
 			}
 		} else {
 			return ownProps
@@ -48,27 +55,34 @@ export default class PairBondRelLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
-	this.state = {relType: this.props.pairBondRel.relationshipType}
+	this.state = {
+		relType: this.props.pairBondRel.relationshipType,
+		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
+		pairPerson_id: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+	};
 }
+	// these are the different types of pairBonds.
 	relTypes = [
 		{ value: 'Marriage', label: 'Marriage' },
 		{ value: 'Informal', label: 'Informal'}
 	];
 
-	getOnBlur = (field) => {
-		// have to return a function, because we don't know what evt.target.value is when this page is rendered (and this function is called)
-		// console.log("in getOnBlur: ", this.props, field);
-		return (evt) => {
-			// this.props.updateParentalRel(this.props.pairBondRel._id, field, evt.target.value)
-			console.log("In onChange, with: ", field, evt.value);
-		}
-	}
-
 	onRelTypeChange = (evt) => {
-		// console.log("in onRelTypeChange, with: ", this.props.pairBondRel._id, "relationshipType", evt.value);
 		this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
 		this.setState({relType: evt.value});
+	}
+
+	onPersonChange = (evt) => {
+		console.log("in onPersonChange with: ", evt.value, this.props.pairBondRel);
+		// find out if star is personOne or personTwo in the pairBondRel record, and then update the other field with the id of the newly selected person
+		if (this.props.star._id === this.props.pairBondRel.personOne_id) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", evt.value);
+		} else {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", evt.value);
+		}
+		// As well as updating the database and the store, update the state variable so the display shows the new value.
+		this.setState({pairPerson_id: evt.value})
 	}
 
 	getUpdateDate = (field, displayDate, setDate) => {
@@ -80,8 +94,7 @@ constructor(props) {
 
 	render = () => {
 
-		const { pairBondRel, pairBondPerson, fetching } = this.props;
-		// console.log("in pairbondrel edit render with: ", pairBondRel.relationshipType);
+		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
 
 		var buttonStyle = {
 		}
@@ -91,17 +104,12 @@ constructor(props) {
 			return (
 				<div class="row person-item">
 					<div class="col-xs-2 custom-input">
-						{pairBondPerson.fName} {pairBondPerson.lName}
-					</div>
-					{/*}
-					<div class="col-xs-2 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={pairBondRel.relationshipType}
+						<Select
+							options={peopleArray}
+							onChange={this.onPersonChange}
+							value={this.state.pairPerson_id}
 						/>
 					</div>
-					*/}
 					<div class="col-xs-2 custom-input">
 						<Select
 							options={this.relTypes}

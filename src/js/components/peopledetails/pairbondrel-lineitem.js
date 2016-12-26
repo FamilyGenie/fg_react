@@ -41,7 +41,9 @@ export default class PairBondRelLineItem extends React.Component {
 	constructor (props) {
 		super(props);
 		// this variable will store whether the modal window is open or not
-		this.state = {modalIsOpen: false};
+		this.state = {
+			modalIsOpen: false,
+		};
 	}
 
 	openModal = () => {
@@ -60,7 +62,6 @@ export default class PairBondRelLineItem extends React.Component {
 		const { pairBondRel, pairBondPerson, star } = this.props;
 		const { modalIsOpen } = this.state;
 
-
 		var modalStyle = {
 			overlay: {
 			position: 'fixed',
@@ -78,12 +79,16 @@ export default class PairBondRelLineItem extends React.Component {
 			marginBottom: 10,
 		}
 
+		// check to see if the pairBondPerson exists, if not, then set the value to "Click to Edit" for the end user to see.
+		const pairBondPersonFName = ( pairBondPerson ? pairBondPerson.fName : "Click to Edit" );
+		const pairBondPersonLName = ( pairBondPerson ? pairBondPerson.lName : " " );
+
 		if (pairBondRel) {
 			return (
 				<div class="row person-item">
 					<div class="col-xs-12">
 						<p onClick={this.openModal}>
-							{pairBondPerson.fName} {pairBondPerson.lName} {pairBondRel.relationshipType}
+							{pairBondPersonFName} {pairBondPersonLName} {pairBondRel.relationshipType}
 						</p>
 					</div>
 					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}

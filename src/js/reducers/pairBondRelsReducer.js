@@ -42,7 +42,7 @@ export default function reducer(state={
 			case "CREATE_PAIRBONDREL_FULFILLED": {
 				const newObject = action.payload;
 				const newArray = state.people;
-				newObject.push(newArray);
+				newArray.push(newObject);
 				return {
 					...state,
 					fetching: false,
