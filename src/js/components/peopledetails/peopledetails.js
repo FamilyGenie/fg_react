@@ -13,7 +13,7 @@ import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
-		// console.log("in peopledetails@connect with: ", store);
+		console.log("in peopledetails@connect with: ", store);
 		return {
 			star:
 				store.people.people.find(function(p) {
@@ -55,12 +55,6 @@ export default class PeopleDetails extends React.Component {
 		this.props.createPerson();
 	}
 
-	// createPairBondRel = (star_id) => {
-	// 	return (star_id) => {
-	// 		this.props.createPairBondRel(star_id);
-	// 	}
-	// }
-
 	createPairBondRel = () => {
 		console.log("in create Pair Bond Rel with: ", this.props.star._id);
 		this.props.createPairBondRel(this.props.star._id);
@@ -78,7 +72,6 @@ export default class PeopleDetails extends React.Component {
 			<PairBondRelLineItem pairBondRel={pairBondRel} key={pairBondRel._id} person={star}/>
 		);
 
-		console.log("mappedPairBondRels: ", mappedPairBondRels);
 
 		const mappedParentalRels = parentalRels.map(parentalRel =>
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
