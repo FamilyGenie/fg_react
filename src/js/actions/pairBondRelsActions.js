@@ -15,6 +15,7 @@ export function fetchPairBondRels() {
 		dispatch({type: "FETCH_PAIRBONDRELS"});
 		axios.get(config.api_url + "/api/v2/pairbondrels", axiosConfig)
 			.then((response) => {
+				console.log("in pairBondRelsActions, fetch done with: ", response.data);
 				dispatch({type: "FETCH_PAIRBONDRELS_FULFILLED", payload: response.data})
 			})
 			.catch((err) => {

@@ -67,7 +67,7 @@ export default class ParentalRelLineItem extends React.Component {
 		}
 
 		// The idea here is that this page will show a list of parents that is uneditable. If they click on the parent, a modal will open that will allow them to edit that parentalRel record.
-		if (parentalRel) {
+		if (parentalRel && parent) {
 			return (
 				<div>
 					<div class="row person-item">

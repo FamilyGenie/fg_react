@@ -58,10 +58,14 @@ export default class PairBondRelLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
+	console.log("in PairBondRelLineItemEdit constructor with: ", this.props);
 	this.state = {
 		relType: this.props.pairBondRel.relationshipType,
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
 		pairPerson_id: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
+		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
+		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
 	};
 }
 	// these are the different types of pairBonds.
@@ -88,10 +92,16 @@ constructor(props) {
 		this.setState({pairPerson_id: evt.value})
 	}
 
-	getUpdateDate = (field, displayDate, setDate) => {
-		return (field, displayDate, setDate) => {
-			console.log("In parentalRel lineitem updateDate, with: ", field,displayDate, setDate);
-			// next, you just need to call this.props.updateParentalRel and update both the setDate and the displayDate
+	getUpdateDate = (field, dateUser, dateSet) => {
+		return (field, dateUser, dateSet) => {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
+			this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
+			if (field === "startDate") {
+				this.setState({startDateUser: dateUser});
+			} else {
+				this.setState({endDateUser: dateUser})
+			}
+			// next, you just need to call this.props.updatePairBondRel and update both the setDate and the displayDate
 		}
 	}
 
@@ -126,10 +136,10 @@ constructor(props) {
 						/>
 					</div>
 					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={pairBondRel.startDate} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+						<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
 					</div>
 					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={pairBondRel.endDate} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
+						<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
 					</div>
 					<div class="col-xs-1 custom-input">
 						<button
