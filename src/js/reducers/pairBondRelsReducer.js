@@ -59,7 +59,6 @@ export default function reducer(state={
 				// todo: throw error on invalid field???
 				// the delete person api returns all people, so just set the newPeople array to the payload that is returned
 				const newArray = action.payload;
-				console.log('before return pairbondrels after delete', newArray)
 				return {
 					...state,
 					fetching: false,

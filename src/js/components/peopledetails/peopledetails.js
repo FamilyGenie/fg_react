@@ -9,6 +9,7 @@ import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import PeopleDetailsLineItem from './peopledetails-lineitem';
 import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
+import { createParentalRel } from '../../actions/parentalRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
@@ -44,6 +45,9 @@ import { closeModal, openModal} from '../../actions/modalActions';
 			},
 			createPairBondRel: (star_id) => {
 				dispatch(createPairBondRel(star_id, null, "", "", "", "", ""));
+			},
+			createParentalRel: (star_id) => {
+				dispatch(createParentalRel(star_id, null, "", "", "", "", "", ""));
 			}
 		}
 	}
@@ -57,6 +61,11 @@ export default class PeopleDetails extends React.Component {
 	createPairBondRel = () => {
 		console.log("in create Pair Bond Rel with: ", this.props.star._id);
 		this.props.createPairBondRel(this.props.star._id);
+	}
+
+	createParentalRel = () => {
+		console.log("in create Parental Rel with: ", this.props.star._id);
+		this.props.createParentalRel(this.props.star._id);
 	}
 
 	render = () => {
@@ -139,6 +148,9 @@ export default class PeopleDetails extends React.Component {
 					</div>
 					<div>
 						{mappedParentalRels}
+					</div>
+					<div class="buttonRow">
+						<i class="fa fa-plus-square buttonSize" onClick={this.createParentalRel}></i>
 					</div>
 				</div>
 				<div class="innerInfo" style={divStyle}>

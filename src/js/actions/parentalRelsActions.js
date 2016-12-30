@@ -43,3 +43,50 @@ export function updateParentalRel(_id, field, value) {
 			})
 	}
 }
+
+export function createParentalRel(child_id, parent_id, relationshipType, subType, startDateUser, startDate, endDateUser, endDate) {
+
+	const body = {
+		object: {
+			child_id,
+			parent_id,
+			relationshipType,
+			subType,
+			startDateUser,
+			startDate,
+			endDateUser,
+			endDate,
+		}
+	};
+	return (dispatch) => {
+		dispatch({type: "CREATE_PARENTALREL"});
+		axios.post(config.api_url + "/api/v2/parentalrel/create", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+			})
+	}
+}
+
+export function deleteParentalRel(_id) {
+
+	const body = {
+		object: {
+			_id,
+		}
+	};
+
+	return (dispatch) => {
+		dispatch({type: "DELETE_PARENTALREL"});
+		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "DELETE_PARENTALREL_REJECTED", payload: err})
+			})
+	}
+
+}

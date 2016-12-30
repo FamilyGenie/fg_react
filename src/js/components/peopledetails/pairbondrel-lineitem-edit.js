@@ -107,7 +107,6 @@ constructor(props) {
 	}
 
 	deleteRecord = () => {
-		console.log('Deleting Record', this.props.pairBondRel._id);
 		this.props.deletePairBondRel(this.props.pairBondRel._id);
 	}
 

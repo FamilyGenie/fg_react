@@ -66,8 +66,12 @@ export default class ParentalRelLineItem extends React.Component {
 			marginBottom: 10,
 		}
 
+		// check to see if the pairBondPerson exists, if not, then set the value to "Click to Edit" for the end user to see.
+		const parentFName = ( parent ? parent.fName : "Click to Edit" );
+		const parentLName = ( parent ? parent.lName : " " );
+
 		// The idea here is that this page will show a list of parents that is uneditable. If they click on the parent, a modal will open that will allow them to edit that parentalRel record.
-		if (parentalRel && parent) {
+		if (parentalRel) {
 			return (
 				<div>
 					<div class="infoRow">
@@ -75,7 +79,7 @@ export default class ParentalRelLineItem extends React.Component {
 							<i class="fa fa-pencil-square-o"></i>
 						</div>
 						<div class="nameCol" onClick={this.openModal}>
-								{parent.fName} {parent.lName}
+								{parentFName} {parentLName}
 						</div>
 						<div class="relTypeCol">
 							{parentalRel.subType} {parentalRel.relationshipType}
