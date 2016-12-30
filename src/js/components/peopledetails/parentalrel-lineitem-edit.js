@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Select from 'react-select';
 
 import DateInput from '../date-input';
 import { updateParentalRel } from '../../actions/parentalRelsActions';
@@ -13,9 +14,22 @@ import { updateParentalRel } from '../../actions/parentalRelsActions';
 				parentalRel:
 					store.modal.parentalRel,
 				// with the parent_id from the parentalRel object, get the details of the person who is the parent
+				parentalRelTypes:
+					store.parentalRelTypes.parentalRelTypes,
+				parentalRelSubTypes:
+					store.parentalRelSubTypes.parentalRelSubTypes,
 				parent:
 					store.people.people.find(function(p) {
 						return p._id === store.modal.parentalRel.parent_id;
+					}),
+				peopleArray:
+					store.people.people.map(function(person) {
+						var newObj = {};
+						var label = person.fName + ' ' + person.lName;
+						var value = person._id;
+						newObj["value"] = value;
+						newObj["label"] = label;
+						return newObj;
 					}),
 			}
 		} else {
@@ -31,63 +45,124 @@ import { updateParentalRel } from '../../actions/parentalRelsActions';
 	}
 )
 export default class ParentalRelLineItemEdit extends React.Component {
+constructor(props) {
+	super(props);
+	// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
+	this.state = {
+		parent_id: ( this.props.parent ? this.props.parent._id : " "),
+		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : " "),
+		subType: ( this.props.parentalRel ? this.props.parentalRel.subType : " "),
+		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
+		startDateUser: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser : this.props.parentalRel.startDate),
+		endDateUser: ( this.props.parentalRel.endDateUser ? this.props.parentalRel.endDateUser : this.props.parentalRel.endDate),
+	}
+}
 
 	getOnBlur = (field) => {
 		// have to return a function, because we don't know what evt.target.value is when this page is rendered (and this function is called)
-		// console.log("in getOnBlur: ", this.props, field);
 		return (evt) => {
 			this.props.updateParentalRel(this.props.parentalRel._id, field, evt.target.value)
 		}
 	}
 
-	getUpdateDate = (field, displayDate, setDate) => {
-		return (field, displayDate, setDate) => {
-			console.log("In parentalRel lineitem updateDate, with: ", field,displayDate, setDate);
-			// next, you just need to call this.props.updateParentalRel and update both the setDate and the displayDate
+	// this call returns a function, so that when the field is updated, the fuction will execute.
+	getUpdateDate = (field, dateUser, dateSet) => {
+		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
+		return (field, dateUser, dateSet) => {
+			this.props.updateParentalRel(this.props.parentalRel._id, field + "User", dateUser);
+			// only update the dateSet if the field has data in it. If the field is left empty by the end user, then the dateSet field is set to "Invalid date", and we don't want to update it
+			if (dateSet !== "Invalid date") {
+				this.props.updateParentalRel(this.props.parentalRel._id, field, dateSet);
+			}
+			// set the appropriate state variable
+			if (field === "startDate") {
+				this.setState({startDateUser: dateUser});
+			} else {
+				this.setState({endDateUser: dateUser})
+			}
 		}
+	}
+
+	onParentChange = (evt) => {
+		// Update the record with the newly selected parent
+		this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", evt.value);
+		// As well as updating the database and the store, update the state variable so the display shows the new value.
+		this.setState({parent_id: evt.value});
+	}
+
+	onRelTypeChange = (evt) => {
+		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
+		// Update the record with the newly selected parent
+		this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
+		// As well as updating the database and the store, update the state variable so the display shows the new value.
+		this.setState({relationshipType: evt.value});
+	}
+
+	onSubTypeChange = (evt) => {
+		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
+		// Update the record with the newly selected parent
+		this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
+		// As well as updating the database and the store, update the state variable so the display shows the new value.
+		this.setState({subType: evt.value});
 	}
 
 	render = () => {
 
-		const { parentalRel, parent } = this.props;
+		console.log("in ParentalRelLineItemEdit render");
+
+		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
+
+		var nameCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var relCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var dateCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var buttonCol = {
+			width: "5%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
 
 		if (parentalRel) {
 			return (
-				<div class="row person-item">
-					<div class="col-xs-2 custom-input">
-						{parent.fName} {parent.lName}
-					</div>
-					<div class="col-xs-2 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={parentalRel.relationshipType}
+				<div class="infoRow">
+					<div class="custom-input" style={nameCol}>
+						<Select
+							options={peopleArray}
+							onChange={this.onParentChange}
+							value={this.state.parent_id}
 						/>
 					</div>
 					<div class="col-xs-2 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={parentalRel.subType}
+						<Select
+							options={parentalRelTypes}
+							onChange={this.onRelTypeChange}
+							value={this.state.relationshipType}
 						/>
 					</div>
 					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={parentalRel.startDate} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
-						{/*
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={parentalRel.startDate}
-							onBlur={this.getOnBlur('startDate')}
+						<Select
+							options={parentalRelSubTypes}
+							onChange={this.onSubTypeChange}
+							value={this.state.subType}
 						/>
-						*/}
 					</div>
 					<div class="col-xs-2 custom-input">
-						<input
-							class="form-control"
-							type="text"
-							defaultValue={parentalRel.endDate}
-							onBlur={this.getOnBlur('endDate')}
+						<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
+						/>
+					</div>
+					<div class="col-xs-2 custom-input">
+						<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
 						/>
 					</div>
 				</div>)

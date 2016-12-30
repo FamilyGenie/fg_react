@@ -70,11 +70,15 @@ export default class ParentalRelLineItem extends React.Component {
 		if (parentalRel && parent) {
 			return (
 				<div>
-					<div class="row person-item">
-						<div class="col-xs-12">
-							<p onClick={this.openModal}>
-								{parent.fName} {parent.lName} {parentalRel.subType} {parentalRel.relationshipType}
-							</p>
+					<div class="infoRow">
+						<div class="buttonCol" onClick={this.openModal}>
+							<i class="fa fa-pencil-square-o"></i>
+						</div>
+						<div class="nameCol" onClick={this.openModal}>
+								{parent.fName} {parent.lName}
+						</div>
+						<div class="relTypeCol">
+							{parentalRel.subType} {parentalRel.relationshipType}
 						</div>
 					</div>
 					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}

@@ -13,7 +13,6 @@ import { closeModal, openModal} from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
-		console.log("in peopledetails@connect with: ", store);
 		return {
 			star:
 				store.people.people.find(function(p) {
@@ -84,7 +83,7 @@ export default class PeopleDetails extends React.Component {
 			marginTop: "30px",
 			marginRight: "10px",
 			marginLeft: "10px",
-			paddingBottom: "5px",
+			paddingBottom: "5px"
 		}
 
 		var headingStyle = {
@@ -133,71 +132,44 @@ export default class PeopleDetails extends React.Component {
 			<div>
 				<PeopleDetailsLineItem person={star} />
 			</div>
-			<div class="container col-xs-3" style={divStyle}>
-				<div class="row">
-					<div class="col-xs-12" style={headingStyle}>
+			<div class="outerContainer">
+				<div class="innerInfo" style={divStyle}>
+					<div class="titleRow" style={headingStyle}>
 						Parents
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						Name & Type
+					<div>
+						{mappedParentalRels}
 					</div>
 				</div>
-				<div>
-					{mappedParentalRels}
-				</div>
-			</div>
-			<div class="container col-xs-3" style={divStyle}>
-				<div class="row">
-					<div class="col-xs-12" style={headingStyle}>
-						PairBonds
+				<div class="innerInfo" style={divStyle}>
+					<div class="titleRow" style={headingStyle}>
+						Pair Bonds
+					</div>
+					<div>
+						{mappedPairBondRels}
+					</div>
+					<div class="buttonRow">
+						<i class="fa fa-plus-square buttonSize" onClick={this.createPairBondRel}></i>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-4 title bold can-click">
-						fName
+				<div class="innerInfo" style={divStyle}>
+					<div class="titleRow" style={headingStyle}>
+						Chronology
 					</div>
-					<div class="col-xs-4 title bold can-click">
-						lName
+					<div class="row">
+						<div class="col-xs-4 title bold can-click">
+							Date
+						</div>
+						<div class="col-xs-4 title bold can-click">
+							Event
+						</div>
+						<div class="col-xs-4 title bold can-click">
+							Place
+						</div>
 					</div>
-					<div class="col-xs-4 title bold can-click">
-						Type
+					<div>
+						{mappedEvents}
 					</div>
-				</div>
-				<div>
-					{mappedPairBondRels}
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<button
-							class="btn"
-							onClick={this.createPairBondRel}
-						>
-							Create New
-						</button>
-					</div>
-				</div>
-			</div>
-			<div class="container col-xs-3" style={divStyle}>
-				<div class="row">
-					<div class="col-xs-12" style={headingStyle}>
-						Person Chronology
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-4 title bold can-click">
-						Date
-					</div>
-					<div class="col-xs-4 title bold can-click">
-						Event
-					</div>
-					<div class="col-xs-4 title bold can-click">
-						Place
-					</div>
-				</div>
-				<div>
-					{mappedEvents}
 				</div>
 			</div>
 		</div>
