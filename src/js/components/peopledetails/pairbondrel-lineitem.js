@@ -90,11 +90,15 @@ export default class PairBondRelLineItem extends React.Component {
 
 		if (pairBondRel && star) {
 			return (
-				<div class="row person-item">
-					<div class="col-xs-12">
-						<p onClick={this.openModal}>
-							{pairBondPersonFName} {pairBondPersonLName} {pairBondRel.relationshipType}
-						</p>
+				<div class="infoRow">
+					<div class="buttonCol" onClick={this.openModal}>
+						<i class="fa fa-pencil-square-o"></i>
+					</div>
+					<div class="nameCol" onClick={this.openModal}>
+							{pairBondPersonFName} {pairBondPersonLName}
+					</div>
+					<div class="relTypeCol">
+						{pairBondRel.relationshipType}
 					</div>
 					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}
 					<Modal
