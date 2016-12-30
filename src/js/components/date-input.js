@@ -16,13 +16,11 @@ export default class DateInput extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {setDate: props.defaultValue};
+		var newDate = this.parseDate(props.defaultValue);
+		this.state = {setDate: newDate};
 	}
 
-	getOnChange = () => {
-		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
-		return (evt) => {
-			function parseDate(date) {
+	parseDate = (date) => {
 		    var dateFormat = [
 		      'M/D/YY', 'M/D/YYYY', 'MM/DD/YY', 'MM/DD/YYYY', 'MMM/D/YY',
 		        'MMM/DD/YY', 'MMM/D/YYYY', 'MMM/DD/YYYY', 'MMMM/D/YY', 'MMMM/DD/YY',
@@ -48,14 +46,18 @@ export default class DateInput extends React.Component {
 				var isoDate = moment(date, dateFormat).format('YYYY-MM-DD');
 				return(isoDate.toString().replace('00:00:00', ''));
 			}
-			var newDate = parseDate(evt.target.value);
+
+	getOnChange = () => {
+		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
+		return (evt) => {
+			var newDate = this.parseDate(evt.target.value);
 			this.setState( {setDate: newDate} );
 		}
 	}
 
 	getOnBlur = () => {
 		return (evt) => {
-			console.log("Need to call update here. The function to update needs to come through the props.", this.props.field);
+			// Need to call update here. The function to update needs to come through the props
 			this.props.updateFunction(this.props.field, evt.target.value, this.state.setDate);
 		}
 	}

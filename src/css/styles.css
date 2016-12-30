@@ -1,6 +1,67 @@
-my-date-picker {
-  font-weight: 100;
+/***************
+The following is for the flexbox styling
+**************/
+
+.outerContainer {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+.innerInfo {
+  display: flex;
+  flex-direction: column;
+  width: 33.3%;
+}
+
+.titleRow {
+  text-align: center;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.buttonCol {
+  width: 8%;
+}
+
+.nameCol {
+  width: 43%;
+}
+
+.relTypeCol {
+  width: 49%;
+}
+
+.personCol {
+  width: 25%;
+}
+
+.buttonSize {
+  font-size: 1.5em;
+}
+
+.buttonRow {
+  width: 95%;
+  text-align: right;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/***************
+This ends the flexbox styling
+
+For centering:
+justify-content: center;
+align-items: center;
+**************/
 
 /* Master Styles */
 .arrow-icons {
@@ -258,3 +319,20 @@ body {
 .footer-container {
   padding-top: 5px;
 }
+
+/***************
+The following is for the flexbox styling
+**************/
+
+@media (max-width: 1000px) {
+     .outerContainer {
+        flex-direction: column;
+     }
+     .innerInfo {
+      width: 95%;
+     }
+}
+
+/***************
+This ends the flexbox styling
+**************/

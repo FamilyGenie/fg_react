@@ -58,10 +58,14 @@ export default class PairBondRelLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
+	console.log("in PairBondRelLineItemEdit constructor with: ", this.props);
 	this.state = {
 		relType: this.props.pairBondRel.relationshipType,
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
 		pairPerson_id: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
+		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
+		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
 	};
 }
 	// these are the different types of pairBonds.
@@ -77,7 +81,6 @@ constructor(props) {
 	}
 
 	onPersonChange = (evt) => {
-		console.log("in onPersonChange with: ", evt.value, this.props.pairBondRel);
 		// find out if star is personOne or personTwo in the pairBondRel record, and then update the other field with the id of the newly selected person
 		if (this.props.star._id === this.props.pairBondRel.personOne_id) {
 			this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", evt.value);
@@ -88,10 +91,18 @@ constructor(props) {
 		this.setState({pairPerson_id: evt.value})
 	}
 
-	getUpdateDate = (field, displayDate, setDate) => {
-		return (field, displayDate, setDate) => {
-			console.log("In parentalRel lineitem updateDate, with: ", field,displayDate, setDate);
-			// next, you just need to call this.props.updateParentalRel and update both the setDate and the displayDate
+	// this call returns a function, so that when the field is updated, the fuction will execute.
+	getUpdateDate = (field, dateUser, dateSet) => {
+		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
+		return (field, dateUser, dateSet) => {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
+			this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
+			if (field === "startDate") {
+				this.setState({startDateUser: dateUser});
+			} else {
+				this.setState({endDateUser: dateUser})
+			}
+			// next, you just need to call this.props.updatePairBondRel and update both the setDate and the displayDate
 		}
 	}
 
@@ -102,43 +113,57 @@ constructor(props) {
 
 	render = () => {
 
+		console.log("in PairBondRelLineItemEdit render");
+
 		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
 
-		var buttonStyle = {
+		var nameCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var relCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var dateCol = {
+			width: "15%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
+		var buttonCol = {
+			width: "5%",
+			marginLeft: "5px",
+			marginRight: "5px",
 		}
 
 		// only render if we are not fetching data
-		if (!fetching) {
+		if (pairBondRel) {
 			return (
-				<div class="row person-item">
-					<div class="col-xs-2 custom-input">
+				<div class="infoRow">
+					<div class="custom-input" style={nameCol}>
 						<Select
 							options={peopleArray}
 							onChange={this.onPersonChange}
 							value={this.state.pairPerson_id}
 						/>
 					</div>
-					<div class="col-xs-2 custom-input">
+					<div class="custom-input" style={relCol}>
 						<Select
 							options={this.relTypes}
 							onChange={this.onRelTypeChange}
 							value={this.state.relType}
 						/>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={pairBondRel.startDate} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+					<div class="custom-input" style={dateCol}>
+						<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={pairBondRel.endDate} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
+					<div class="custom-input" style={dateCol}>
+						<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
 					</div>
-					<div class="col-xs-1 custom-input">
-						<button
-							class="btn btn-primary btn-round"
-							style={buttonStyle}
-							onClick={this.deleteRecord}
-						>
-							-
-						</button>
+					<div class="custom-input" style={buttonCol}>
+						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
 					</div>
 				</div>)
 		} else {
