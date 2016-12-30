@@ -1,5 +1,6 @@
 // this is just storing static values, so no need for actions
-export default function reducer(state={
+export default function reducer(
+	state = {
 		parentalRelTypes: [
 			{ value: 'Mother', label: 'Mother' },
 			{ value: 'Father', label: 'Father'}
@@ -7,6 +8,8 @@ export default function reducer(state={
 		fetched: true,
 		fetching: false,
 		error: null,
-	}, action) {
+	},
+	action = ""
+) {
 	return state;
 }
