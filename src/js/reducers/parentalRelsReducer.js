@@ -36,6 +36,39 @@ export default function reducer(state={
 			case "UPDATE_PARENTALREL_REJECTED": {
 				return {...state, fetching: false, error: action.payload}
 			}
+			case "CREATE_PARENTALREL": {
+				return {...state, fetching: true}
+			}
+			case "CREATE_PARENTALREL_FULFILLED": {
+				const newObject = action.payload;
+				const newArray = state.parentalRels;
+				newArray.push(newObject);
+				return {
+					...state,
+					fetching: false,
+					parentalRels: newArray,
+				}
+			}
+			case "CREATE_PARENTALREL_REJECTED": {
+				return {...state, fetching: false, error: action.payload}
+			}
+			case "DELETE_PARENTALREL": {
+				return {...state, fetching: true}
+			}
+			case "DELETE_PARENTALREL_FULFILLED": {
+				// todo: throw error on invalid field???
+				// the delete person api returns all people, so just set the newPeople array to the payload that is returned
+				const newArray = action.payload;
+				console.log('before return parentalRels after delete', newArray);
+				return {
+					...state,
+					fetching: false,
+					parentalRels: newArray,
+				}
+			}
+			case "DELETE_PARENTALREL_REJECTED": {
+				return {...state, fetching: false, error: action.payload}
+			}
 		}
 		return state
 }

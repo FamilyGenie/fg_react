@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 
 import DateInput from '../date-input';
-import { updateParentalRel } from '../../actions/parentalRelsActions';
+import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRelsActions';
 
 @connect(
 	(store, ownProps) => {
@@ -40,6 +40,9 @@ import { updateParentalRel } from '../../actions/parentalRelsActions';
 		return {
 			updateParentalRel: (_id, field, value) => {
 				dispatch(updateParentalRel(_id, field, value));
+			},
+			deleteParentalRel: (_id) => {
+				dispatch(deleteParentalRel(_id));
 			}
 		}
 	}
@@ -106,6 +109,10 @@ constructor(props) {
 		this.setState({subType: evt.value});
 	}
 
+	deleteRecord = () => {
+		this.props.deleteParentalRel(this.props.parentalRel._id);
+	}
+
 	render = () => {
 
 		console.log("in ParentalRelLineItemEdit render");
@@ -164,6 +171,9 @@ constructor(props) {
 					<div class="col-xs-2 custom-input">
 						<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
 						/>
+					</div>
+					<div class="custom-input" style={buttonCol}>
+						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
 					</div>
 				</div>)
 		} else {
