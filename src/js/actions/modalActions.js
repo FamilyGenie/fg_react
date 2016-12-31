@@ -7,8 +7,15 @@ export function setParentalRel(parentalRel) {
 }
 
 export function setPairBondRel(pairBondRel) {
-	// set the type to tell the parentalrelmodal to open, and pass the object to be edited in the modal window as the payload
+	// set the type to tell the pairBondrelmodal to open, and pass the object to be edited in the modal window as the payload
 	return function(dispatch) {
 		dispatch({type: "SET_PAIRBONDREL", payload: pairBondRel});
+	}
+}
+
+export function setEvent(event) {
+	// set the type to tell the eventModal to open, and pass the object to be edited in the modal window as the payload
+	return function(dispatch) {
+		dispatch({type: "SET_EVENT", payload: event});
 	}
 }

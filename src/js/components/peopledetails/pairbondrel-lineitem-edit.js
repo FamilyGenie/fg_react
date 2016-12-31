@@ -69,6 +69,7 @@ constructor(props) {
 	};
 }
 	// these are the different types of pairBonds.
+	// this needs to be moved into a reducer - use the parentalRelTypes reducer as an example, and how the parentalRelEdit modal accesses that data
 	relTypes = [
 		{ value: 'Marriage', label: 'Marriage' },
 		{ value: 'Informal', label: 'Informal'}
@@ -102,7 +103,6 @@ constructor(props) {
 			} else {
 				this.setState({endDateUser: dateUser})
 			}
-			// next, you just need to call this.props.updatePairBondRel and update both the setDate and the displayDate
 		}
 	}
 
@@ -111,8 +111,6 @@ constructor(props) {
 	}
 
 	render = () => {
-
-		console.log("in PairBondRelLineItemEdit render");
 
 		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
 

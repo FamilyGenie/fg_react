@@ -115,8 +115,6 @@ constructor(props) {
 
 	render = () => {
 
-		console.log("in ParentalRelLineItemEdit render");
-
 		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
 
 		var nameCol = {

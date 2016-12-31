@@ -22,3 +22,24 @@ export function fetchEvents() {
 			})
 	}
 }
+
+export function updateEvent(_id, field, value) {
+	const body = {
+		object: {
+			_id,
+			field,
+			value
+		}
+	};
+
+	return (dispatch) => {
+		dispatch({type: "UPDATE_EVENT"});
+		axios.post(config.api_url + "/api/v2/event/update", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "UPDATE_EVENT_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "UPDATE_EVENT_REJECTED", payload: err})
+			})
+	}
+}
