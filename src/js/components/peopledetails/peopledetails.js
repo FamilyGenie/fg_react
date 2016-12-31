@@ -7,6 +7,7 @@ import PairBondRelLineItem from './pairbondrel-lineitem';
 import ParentalRelLineItem from './parentalrel-lineitem';
 import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import PeopleDetailsLineItem from './peopledetails-lineitem';
+import { createEvent } from '../../actions/eventsActions';
 import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { createParentalRel } from '../../actions/parentalRelsActions';
@@ -40,15 +41,18 @@ import { closeModal, openModal} from '../../actions/modalActions';
 	},
 	(dispatch) => {
 		return {
-			createPerson: () => {
-				dispatch(createPerson());
+			createEvent: (star_id) => {
+				dispatch(createEvent("", null, star_id, "", "", "", "", ""));
 			},
 			createPairBondRel: (star_id) => {
 				dispatch(createPairBondRel(star_id, null, "", "", "", "", ""));
 			},
 			createParentalRel: (star_id) => {
 				dispatch(createParentalRel(star_id, null, "", "", "", "", "", ""));
-			}
+			},
+			createPerson: () => {
+				dispatch(createPerson());
+			},
 		}
 	}
 )
@@ -59,13 +63,15 @@ export default class PeopleDetails extends React.Component {
 	}
 
 	createPairBondRel = () => {
-		console.log("in create Pair Bond Rel with: ", this.props.star._id);
 		this.props.createPairBondRel(this.props.star._id);
 	}
 
 	createParentalRel = () => {
-		console.log("in create Parental Rel with: ", this.props.star._id);
 		this.props.createParentalRel(this.props.star._id);
+	}
+
+	createEvent = () => {
+		this.props.createEvent(this.props.star._id);
 	}
 
 	render = () => {
@@ -168,19 +174,11 @@ export default class PeopleDetails extends React.Component {
 					<div class="titleRow" style={headingStyle}>
 						Chronology
 					</div>
-					<div class="row">
-						<div class="col-xs-4 title bold can-click">
-							Date
-						</div>
-						<div class="col-xs-4 title bold can-click">
-							Event
-						</div>
-						<div class="col-xs-4 title bold can-click">
-							Place
-						</div>
-					</div>
 					<div>
 						{mappedEvents}
+					</div>
+					<div class="buttonRow">
+						<i class="fa fa-plus-square buttonSize" onClick={this.createEvent}></i>
 					</div>
 				</div>
 			</div>

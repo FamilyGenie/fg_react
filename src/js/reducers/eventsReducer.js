@@ -50,6 +50,52 @@ export default function reducer(state={
 					error: action.payload
 				};
 			}
+			case "CREATE_EVENT": {
+				return {
+					...state,
+					fetching: true
+				};
+			}
+			case "CREATE_EVENT_FULFILLED": {
+				return {
+					...state,
+					fetching: false,
+					events: [
+						...state.events,
+						action.payload
+					]
+				};
+			}
+			case "CREATE_EVENT_REJECTED": {
+				return {
+					...state,
+					fetching: false,
+					error: action.payload
+				};
+			}
+			case "DELETE_EVENT": {
+				return {
+					...state,
+					fetching: true
+				};
+			}
+			case "DELETE_EVENT_FULFILLED": {
+				// todo: throw error on invalid field???
+				// the delete event api returns all people, so just set the
+				// new events array to the payload that is returned
+				return {
+					...state,
+					fetching: false,
+					events: action.payload,
+				};
+			}
+			case "DELETE_EVENT_REJECTED": {
+				return {
+					...state,
+					fetching: false,
+					error: action.payload
+				};
+			}
 		}
 		return state
 }

@@ -8,8 +8,6 @@ import { setPairBondRel } from '../../actions/modalActions';
 @connect(
 	(store, ownProps) => {
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now).
-		// console.log("in pairbondRel @connect, with: ", ownProps);
-		// return ownProps;
 		var pairBondPerson_id;
 		var star;
 		// ownProps.person._id is the id of the person who is being edited in the personDetails page. Figure out if they are personOne or personTwo of the pairBond recorpairBondP, and set the variable pairBondPerson as the other id

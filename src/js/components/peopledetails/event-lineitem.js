@@ -61,6 +61,9 @@ export default class EventLineItem extends React.Component {
 			marginBottom: 10,
 		}
 
+		// check to see if there is an eventType. If not, then set the value to "Click to Edit" for the end user to see.
+		const eventDateUser = ( event.eventDateUser ? event.eventDateUser : "Click to Edit" );
+
 		if (event) {
 			return (
 				<div class="infoRow">
@@ -68,7 +71,7 @@ export default class EventLineItem extends React.Component {
 						<i class="fa fa-pencil-square-o"></i>
 					</div>
 					<div class="nameCol" onClick={this.openModal}>
-							{event.eventDate}
+							{eventDateUser}
 					</div>
 					<div class="nameCol">
 						{event.type}
@@ -86,26 +89,6 @@ export default class EventLineItem extends React.Component {
 						<div class="row">
 							<div class="col-xs-12" style={headingStyle}>
 								Event Edit
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-2 title bold">
-								Date
-							</div>
-							<div class="col-xs-2 title bold">
-								Type
-							</div>
-							<div class="col-xs-2 title bold">
-								Place
-							</div>
-							<div class="col-xs-2 title bold">
-								Family Context
-							</div>
-							<div class="col-xs-2 title bold">
-								Local Context
-							</div>
-							<div class="col-xs-2 title bold">
-								World Context
 							</div>
 						</div>
 						<EventLineItemEdit event={event} star={event.person_id}/>

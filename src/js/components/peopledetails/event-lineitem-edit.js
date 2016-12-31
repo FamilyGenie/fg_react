@@ -18,15 +18,6 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 					store.eventTypes.eventTypes,
 				star:
 					store.modal.event.person_id,
-				// peopleArray:
-				// 	store.people.people.map(function(person) {
-				// 		var newObj = {};
-				// 		var label = person.fName + ' ' + person.lName;
-				// 		var value = person._id;
-				// 		newObj["value"] = value;
-				// 		newObj["label"] = label;
-				// 		return newObj;
-				// 	}),
 			}
 		} else {
 			return ownProps
@@ -51,7 +42,6 @@ constructor(props) {
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-// 		star_id: this.props.event.person_id,
 		eventType: this.props.event.type,
 	};
 }
@@ -62,13 +52,6 @@ constructor(props) {
 		this.setState({eventType: evt.value});
 	}
 
-	// onPersonChange = (evt) => {
-	// 	// Update the record with the newly selected parent
-	// 	this.props.updateEvent(this.props.event._id, "person_id", evt.value);
-	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
-	// 	this.setState({person_id: evt.value});
-	// }
-
 	// this call returns a function, so that when the field is updated, the fuction will execute.
 	getUpdateDate = (field, dateUser, dateSet) => {
 		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
@@ -76,6 +59,13 @@ constructor(props) {
 			this.props.updateEvent(this.props.event._id, field, dateSet);
 			this.props.updateEvent(this.props.event._id, field + "User", dateUser);
 			this.setState({startDateUser: dateUser});
+		}
+	}
+
+	getUpdateEvent = (field) => {
+		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
+		return (evt) => {
+			this.props.updateEvent(this.props.event._id, field, evt.target.value);
 		}
 	}
 
@@ -88,6 +78,11 @@ constructor(props) {
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
+		var contextCol = {
+			width: "30%",
+			marginLeft: "5px",
+			marginRight: "5px",
+		}
 		var nameCol = {
 			width: "15%",
 			marginLeft: "5px",
@@ -111,20 +106,22 @@ constructor(props) {
 
 		// only render if we have data to show
 		if (event) {
-			return (
+			return ( <div>
+				<div class="infoRow">
+					<div class="title bold" style={dateCol}>
+						Date
+					</div>
+					<div class="title bold" style={relCol}>
+						Type
+					</div>
+					<div class="title bold" style={relCol}>
+						Place
+					</div>
+				</div>
 				<div class="infoRow">
 					<div class="custom-input" style={dateCol}>
 						<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
 					</div>
-					{/*
-					<div class="custom-input" style={nameCol}>
-						<Select
-							options={peopleArray}
-							onChange={this.onPersonChange}
-							value={star_id}
-						/>
-					</div>
-					*/}
 					<div class="custom-input" style={relCol}>
 						<Select
 							options={eventTypes}
@@ -132,10 +129,56 @@ constructor(props) {
 							value={eventType}
 						/>
 					</div>
+					<div class="custom-input" style={relCol}>
+						<input
+								class="form-control"
+								type="text"
+								defaultValue={event.place}
+								onBlur={this.getUpdateEvent('place')}
+						/>
+					</div>
 					<div class="custom-input" style={buttonCol}>
 						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
 					</div>
-				</div>)
+				</div>
+				<div class="infoRow">
+					<div class="title bold" style={contextCol}>
+						Family Context
+					</div>
+					<div class="title bold" style={contextCol}>
+						Local Context
+					</div>
+					<div class="title bold" style={contextCol}>
+						World Context
+					</div>
+				</div>
+				<div class="infoRow">
+					<div class="custom-input" style={contextCol}>
+						<input
+								class="form-control"
+								type="text"
+								defaultValue={event.familyContext}
+								onBlur={this.getUpdateEvent('familyContext')}
+						/>
+					</div>
+					<div class="custom-input" style={contextCol}>
+						<input
+								class="form-control"
+								type="text"
+								defaultValue={event.localContext}
+								onBlur={this.getUpdateEvent('localContext')}
+						/>
+					</div>
+					<div class="custom-input" style={contextCol}>
+						<input
+								class="form-control"
+								type="text"
+								defaultValue={event.worldContext}
+								onBlur={this.getUpdateEvent('worldContext')}
+						/>
+					</div>
+				</div>
+			</div>)
 		} else {
 			return (<p>Loading Event Info...</p>);
 		}
