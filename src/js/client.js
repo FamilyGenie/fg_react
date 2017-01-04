@@ -10,6 +10,7 @@ import ParentalRelsLineItemEdit from './components/peopledetails/parentalrel-lin
 import store from './store';
 import GedcomImport from './components/gedcomimport/upload-gedcom';
 import StagedPeopleSearch from './components/gedcomimport/staged-peoplesearch';
+import StagedPeopleDetails from './components/gedcomimport/staged-peopledetails';
 
 const app = document.getElementById('app');
 
@@ -21,7 +22,8 @@ ReactDOM.render(<Provider store={store}>
 			<Route path="/peopledetails(/:_id)" name="People Details" component={PeopleDetails}></Route>
 			<Route path="/parentalreledit(/:_id)" name="Parental Rel Edit" component={ParentalRelsLineItemEdit}></Route>
 			<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
-			<Route path='/stagedpeoplesearch' name='StagedPeopleSearch' component={StagedPeopleSearch}></Route>
+			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
+			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
 		</Route>
 	</Router>
 </Provider>, app);

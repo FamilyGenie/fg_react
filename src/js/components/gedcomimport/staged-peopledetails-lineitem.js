@@ -4,10 +4,6 @@ import { hashHistory } from 'react-router'
 import DateInput from '../date-input';
 
 export default class StagedPeopleSearchLineItem extends React.Component {
-	openDetails = () => {
-		hashHistory.push('/stagedpeopledetails/' + this.props.stagedPerson._id);
-	}
-
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
 			console.log("In StagedPeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
@@ -24,13 +20,14 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 	}
 
 	render = () => (
+
 		<div class="row person-item">
 
 			<div class="col-xs-2 custom-input">
 				<input
 					class="form-control"
 					type="text"
-					defaultValue={this.props.stagedPerson.fName}
+					defaultValue={this.props.person.fName}
 				/>
 			</div>
 
@@ -38,7 +35,7 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 				<input
 					class="form-control"
 					type="text"
-					defaultValue={this.props.stagedPerson.lName}
+					defaultValue={this.props.person.lName}
 				/>
 			</div>
 
@@ -46,16 +43,16 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 				<input
 					class="form-control"
 					type="text"
-					defaultValue={this.props.stagedPerson.sexAtBirth}
+					defaultValue={this.props.person.sexAtBirth}
 				/>
 			</div>
 
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue={this.newDate(this.props.stagedPerson.birthDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
+				<DateInput defaultValue={this.newDate(this.props.person.birthDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
 			</div>
 
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue={this.newDate(this.props.stagedPerson.deathDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
+				<DateInput defaultValue={this.newDate(this.props.person.deathDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
 			</div>
 
 			<div class="col-xs-1 custom-input">

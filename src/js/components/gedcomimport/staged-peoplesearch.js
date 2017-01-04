@@ -24,7 +24,7 @@ export default class StagedPeopleSearch extends React.Component {
 
     return (<div>
     <div class='container'>
-      <h1> Family Members </h1>
+      <h1> Staged Family Members </h1>
     </div>
     <div>
       <div class='row'>
@@ -34,8 +34,14 @@ export default class StagedPeopleSearch extends React.Component {
         <div class='col-xs-2 title bold can-click'>
           Last Name
         </div>
+        <div class="col-xs-1 title bold can-click">
+          Sex At Birth
+        </div>
         <div class="col-xs-2 title bold can-click">
           Date of Birth
+        </div>
+        <div class="col-xs-2 title bold can-click">
+          Date of Death*
         </div>
     </div>
     </div>
