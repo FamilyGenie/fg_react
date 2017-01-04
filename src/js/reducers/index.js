@@ -6,6 +6,7 @@ import pairBondRels from "./pairBondRelsReducer"
 import parentalRels from "./parentalRelsReducer"
 import people from "./peopleReducer"
 import user from "./userReducer"
+import stagedPeople from "./stagedPeopleReducer"
 
 
 export default combineReducers({
@@ -15,4 +16,5 @@ export default combineReducers({
   parentalRels,
   people,
   user,
+  stagedPeople,
 })

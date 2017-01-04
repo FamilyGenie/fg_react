@@ -1,19 +1,20 @@
 export default function reducer(state={
-  stagedEvents : [],
+  stagedPeople : [],
   fetched : false,
   fetching : false,
   error : null,
 }, action) {
 
   switch(action.type) {
-    case "FETCH_STAGING_PEOPLE": {
+    case "FETCH_STAGINGPEOPLE": {
       return {...state, fetching: true}
     }
-    case "FETCH_STAGING_PEOPLE_REJECTED": {
+    case "FETCH_STAGINGPEOPLE_REJECTED": {
       return {...state, fetching: false, error: action.payload}
     }
-    case "FETCH_STAGING_PEOPLE_FULFILLED": {
-      return {...state, fetching: false, events: action.payload}
+    case "FETCH_STAGINGPEOPLE_FULFILLED": {
+      console.log('fulfilled fetching', action.payload)
+      return {...state, fetching: false, stagedPeople: action.payload}
     }
   }
   return state

@@ -17,65 +17,40 @@ const fgtoken = cookie.load('fg-access-token');
 
 export default class GedcomImport extends React.Component {
 
-    handleChange(event) {
-      console.log('Selected file:', event.target);
+
+    // this is specifically for the gedcom file upload process
+    xhr_post(xhrToSend, url, formData) {
+        xhrToSend.open("POST", url, true);
+        xhrToSend.setRequestHeader("x-access-token", fgtoken);
+        xhrToSend.send(formData);
     }
 
-    onDrop(files){
-      var file = files[0];
-      axios.post('http://localhost:3500/uploads', {
-        filename : file.name,
-        filetype : file.type
-      })
-      .then((result) => {
-        var signedUrl = result.data.signedUrl;
-        console.log('SIGNED',  signedUrl)
-
-        var options = {
-          headers: {
-            'x-access-token': fgtoken
+    onDrop = (files) => {
+      var formData = new FormData();
+      var xhr = new XMLHttpRequest();
+      formData.append('gedcom', files[0]);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            alert('File Upload Successful');
+          } else {
+            alert('File Upload Unsuccessful');
           }
-        };
-
-        return axios.put(signedUrl, file, options);
-      })
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+        }
+      }
+      this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
     }
-
-    sendFile() {
-      var xhttp = new XMLHttpRequest();
-      console.log('sending xhttp');
-      xhttp.open('POST', 'http://localhost:3500/uploads')
-      xhttp.setRequestHeader('x-access-token', fgtoken)
-      xhttp.send()
-    }
-
 
     render = () => {
       return (
         <div>
-            <Dropzone ref={(node) => { this.dropzone = node; }} onDrop={this.onDrop}>
-                <div>Try dropping some files here, or click to select files to upload.</div>
-            </Dropzone>
-            <button type="button" onClick={this.onDrop}>
-              Upload
-            </button>
-
-            <button type='button' onClick={this.sendFile}></button>
+        <Dropzone onDrop={this.onDrop}>
+          <div>
+            Drop a file or click to browse
+          </div>
+        </Dropzone>
         </div>
 
       );
     }
-  // render = () => {
-  //   return (
-  //     <div>
-  //       Upload Here
-  //       </div>
-  //   );
-  // }
 }
