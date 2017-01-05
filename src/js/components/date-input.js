@@ -39,7 +39,6 @@ export default class DateInput extends React.Component {
 		    ];
 				var isoDate = moment(date, dateFormat).format('YYYY-MM-DD');
 				var newDate = isoDate.toString();
-				console.log("NEW DATE", newDate)
 				return newDate
 			}
 			var newDate = parseDate(evt.target.value);

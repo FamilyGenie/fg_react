@@ -1,9 +1,36 @@
 import React from 'react';
-import { hashHistory } from 'react-router'
+import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
+import moment from 'moment';
+import { createPerson, deletePerson } from '../../actions/peopleActions';
 
 import DateInput from '../date-input';
 
+@connect(
+	(store, ownProps) => {
+		// console.log('in staged-peoplesearch-lineitem@connect with: ', store);
+		return {}
+	},
+	(dispatch) => {
+		return {
+			createPerson: () => {
+				dispatch(createPerson());
+			},
+			deletePerson: (_id) => {
+				dispatch(deletePerson());
+			}
+		}
+	}
+)
+
 export default class StagedPeopleSearchLineItem extends React.Component {
+
+	addToRecords = () => {
+		console.log(this.props)
+		this.props.createPerson();
+		this.props.deletePerson(this.props.stagedPerson._id);
+	}
+
 	openDetails = () => {
 		hashHistory.push('/stagedpeopledetails/' + this.props.stagedPerson._id);
 	}
@@ -16,7 +43,11 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 
 	newDate = (date) => {
 		try {
-			return date.substring(0,10);
+			var nDate = moment(date).format('MMM DD YYYY');
+			if (nDate === 'Invalid date') {
+				nDate = '';
+			}
+			return nDate
 		}
 		catch(TypeError) {
 			return '';
@@ -64,6 +95,15 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 					onClick={this.openDetails}
 				>
 					Import Details
+				</button>
+			</div>
+
+			<div class="col-xs-1 custom-input">
+				<button
+					class="form-control"
+					onClick={this.addToRecords}
+				>
+					Add To DB
 				</button>
 			</div>
 		</div>

@@ -55,14 +55,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 				<DateInput defaultValue={this.newDate(this.props.person.deathDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
 			</div>
 
-			<div class="col-xs-1 custom-input">
-				<button
-					class="form-control"
-					onClick={this.openDetails}
-				>
-					Import Details
-				</button>
-			</div>
 		</div>
 	);
 }

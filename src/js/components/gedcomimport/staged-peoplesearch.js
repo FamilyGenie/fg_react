@@ -20,7 +20,6 @@ export default class StagedPeopleSearch extends React.Component {
     const mappedStagedPeople = stagedPeople.map(stagedPerson =>
       <StagedPeopleSearchLineItem stagedPerson={stagedPerson} key={stagedPerson._id}/>
     );
-    console.log(this.props)
 
     return (<div>
     <div class='container'>

@@ -15,11 +15,8 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
         stagedStar,
       // get all people existing in the FG DB that match our stagedStar
       starMatches:
-        store.people.people.find(function(m) {
-          console.log('MMMM',m,'SSSS',stagedStar)
-          if (m.fName === stagedStar.fName) {
-            return m
-          }
+        store.people.people.filter(function(m) {
+          return (m.fName === stagedStar.fName && m.lName === stagedStar.lName && m.sexAtBirth === stagedStar.sexAtBirth)
         })
     };
   },
@@ -29,8 +26,6 @@ export default class StagedPeopleDetails extends React.Component {
   render = () => {
 
     const { stagedStar, starMatches } = this.props;
-
-    console.log('HERE', this.props.starMatches)
 
     const mappedMatches = starMatches.map(starMatch =>
       <PeopleDetailsLineItem starMatch={starMatch} key={starMatch._id} person={stagedStar}/>
@@ -67,9 +62,7 @@ export default class StagedPeopleDetails extends React.Component {
           <h1> Matching People </h1>
         </div>
         <div>
-      {/*
           {mappedMatches}
-          */}
         </div>
       </div>
     </div>
