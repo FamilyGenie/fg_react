@@ -1,6 +1,7 @@
 import { combineReducers } from "redux"
 
 import events from "./eventsReducer"
+import eventTypes from "./eventTypesReducer"
 import modal from "./modalReducer"
 import pairBondRels from "./pairBondRelsReducer"
 import parentalRels from "./parentalRelsReducer"
@@ -12,6 +13,7 @@ import user from "./userReducer"
 
 export default combineReducers({
   events,
+  eventTypes,
   modal,
   pairBondRels,
   parentalRels,
