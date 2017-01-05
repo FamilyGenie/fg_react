@@ -18,22 +18,22 @@ import { closeModal, openModal} from '../../actions/modalActions';
 		return {
 			star:
 				store.people.people.find(function(p) {
-					return p._id === ownProps.params._id;
+					return p._id === ownProps.params.star_id;
 				}),
 			events:
 				store.events.events.filter(function(e) {
-					return e.person_id === ownProps.params._id;
+					return e.person_id === ownProps.params.star_id;
 				}),
 			// get all pair bonds where the star of the page is either personOne or personTwo
 			pairBondRels:
 				store.pairBondRels.pairBondRels.filter(function(r) {
-					return (r.personOne_id === ownProps.params._id ||
-						r.personTwo_id === ownProps.params._id);
+					return (r.personOne_id === ownProps.params.star_id ||
+						r.personTwo_id === ownProps.params.star_id);
 				}),
 			// only get the parental rels where the star of the page is the child in the relationship.
 			parentalRels:
 				store.parentalRels.parentalRels.filter(function(t) {
-					return (t.child_id === ownProps.params._id);
+					return (t.child_id === ownProps.params.star_id);
 				}),
 			modalIsOpen:
 				store.modal.modalIsOpen
