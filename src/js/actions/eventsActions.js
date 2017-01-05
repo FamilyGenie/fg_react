@@ -22,3 +22,71 @@ export function fetchEvents() {
 			})
 	}
 }
+
+export function updateEvent(_id, field, value) {
+	const body = {
+		object: {
+			_id,
+			field,
+			value
+		}
+	};
+
+	return (dispatch) => {
+		dispatch({type: "UPDATE_EVENT"});
+		axios.post(config.api_url + "/api/v2/event/update", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "UPDATE_EVENT_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "UPDATE_EVENT_REJECTED", payload: err})
+			})
+	}
+}
+
+export function createEvent(eventDateUser, eventDate, person_id, type, place, familyContext, localContext, worldContext) {
+
+	const body = {
+		object: {
+			eventDateUser,
+			eventDate,
+			person_id,
+			type,
+			place,
+			familyContext,
+			localContext,
+			worldContext,
+		}
+	};
+	return (dispatch) => {
+		dispatch({type: "CREATE_EVENT"});
+		axios.post(config.api_url + "/api/v2/event/create", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
+			})
+	}
+}
+
+export function deleteEvent(_id) {
+
+	const body = {
+		object: {
+			_id,
+		}
+	};
+
+	return (dispatch) => {
+		dispatch({type: "DELETE_EVENT"});
+		axios.post(config.api_url + "/api/v2/event/delete", body, axiosConfig)
+			.then((response) => {
+				dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
+			})
+			.catch((err) => {
+				dispatch({type: "DELETE_EVENT_REJECTED", payload: err})
+			})
+	}
+
+}

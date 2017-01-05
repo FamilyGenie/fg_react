@@ -8,14 +8,17 @@ import { setPairBondRel } from '../../actions/modalActions';
 @connect(
 	(store, ownProps) => {
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now).
-		// console.log("in pairbondRel @connect, with: ", ownProps);
-		// return ownProps;
 		var pairBondPerson_id;
+		var star;
 		// ownProps.person._id is the id of the person who is being edited in the personDetails page. Figure out if they are personOne or personTwo of the pairBond recorpairBondP, and set the variable pairBondPerson as the other id
-		if (ownProps.person._id === ownProps.pairBondRel.personOne_id) {
-			pairBondPerson_id = ownProps.pairBondRel.personTwo_id
-		} else {
-			pairBondPerson_id = ownProps.pairBondRel.personOne_id
+
+		// If there is no person passed, then don't set anything. I'm not sure if this is the right thing to do. Experimenting.
+		if (ownProps.person) {
+			if (ownProps.person._id === ownProps.pairBondRel.personOne_id) {
+				pairBondPerson_id = ownProps.pairBondRel.personTwo_id;
+			} else {
+				pairBondPerson_id = ownProps.pairBondRel.personOne_id
+			}
 		}
 		return {
 			pairBondPerson:
@@ -83,15 +86,19 @@ export default class PairBondRelLineItem extends React.Component {
 		const pairBondPersonFName = ( pairBondPerson ? pairBondPerson.fName : "Click to Edit" );
 		const pairBondPersonLName = ( pairBondPerson ? pairBondPerson.lName : " " );
 
-		if (pairBondRel) {
+		if (pairBondRel && star) {
 			return (
-				<div class="row person-item">
-					<div class="col-xs-12">
-						<p onClick={this.openModal}>
-							{pairBondPersonFName} {pairBondPersonLName} {pairBondRel.relationshipType}
-						</p>
+				<div class="infoRow">
+					<div class="buttonCol" onClick={this.openModal}>
+						<i class="fa fa-pencil-square-o"></i>
 					</div>
-					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}
+					<div class="nameCol" onClick={this.openModal}>
+							{pairBondPersonFName} {pairBondPersonLName}
+					</div>
+					<div class="relTypeCol">
+						{pairBondRel.relationshipType}
+					</div>
+					{/* This modal is what opens when you click on one of the pairbond records that is displayed. The modalIsOpen variable is accessed via the state, by the openModal call (and set to false in the closeModal call). When set, the new state triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the pairBondRel record that should be opened in the modal in the Store, so it can be accessed */}
 					<Modal
 						isOpen={modalIsOpen}
 						contentLabel="Modal"
