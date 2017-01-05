@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux"
+import { hashHistory } from 'react-router'
 import moment from 'moment';
 
 import { fetchPeople } from '../../actions/peopleActions';
@@ -42,6 +43,8 @@ export default class FamilyMap extends React.Component {
 			alreadyDrawn: [],
 			drawnCoords: [],
 			dateFilterString: "",
+			firstChildYDistance: 0,
+			firstChildYWithAdoptions: 0,
 		};
 	}
 	// starAge: number;
@@ -108,7 +111,6 @@ export default class FamilyMap extends React.Component {
 		// this.getAllStarParents();
 		this.getAllParentsOfChildren();
 		console.log("After getAllParents: ", this.state.parents);
-		debugger;
 		if (this.state.parents.length === 0) {
 			alert("No parents for this person, map will not be drawn.");
 			// this.router.navigate([
@@ -124,8 +126,98 @@ export default class FamilyMap extends React.Component {
 		this.getAllParentsOfChildren();
 		console.log("After getAllParents second call: ", this.state.parents);
 
+		// need some looping here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
+
+		if ( !this.getAllPairBonds() ) {
+			alert("There was an error in drawing the map. You are being re-directid to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
+			//  this.router.navigate([
+			//     "peoplesearch"
+			// ]);
+			hashHistory.push('/');
+		}
+		console.log("all pair bonds:", this.state.pairBonds);
 
 	}
+
+	getAllPairBonds(): boolean {
+		let pairBondTemp = [];
+		let oneRel, twoRel;
+
+		// for each parent
+		for (let parentObj of this.state.parents) {
+			// get all pair bonds
+			pairBondTemp = this.props.pairBondRelationships.filter(
+				function(pairBond) {
+					return (pairBond.personOne_id === parentObj._id ||
+						pairBond.personTwo_id === parentObj._id) &&
+						pairBond.startDate.substr(0,10) <= this.state.dateFilterString;
+				}.bind(this)
+			);
+
+			// for each pair bond of each parent
+			for (let pairBond of pairBondTemp) {
+				// check to see if both parents are adoptive parents of the star, if so, specify them as an adoptive pair bond, so they can be drawn appropriately
+				// if both parents are adopted parents, then modify the Y position
+				// first, get the mom Relationship and the dad relationship
+				oneRel = this.state.parentRels.find(
+					function(parentRel) {
+					return parentRel.parent_id === pairBond.personOne_id &&
+					parentRel.child_id === this.state.star_id;
+					}.bind(this)
+				);
+				twoRel = this.state.parentRels.find(
+					function (parentRel) {
+					return parentRel.parent_id === pairBond.personTwo_id &&
+					parentRel.child_id === this.state.star_id;
+					}.bind(this)
+				);
+
+				// now, test to see if both the mom and dad in this pair bond are parents of the star (they may be parents of the star's half or step parents).
+				if (oneRel && twoRel) {
+					// if they are parents of the star, then check to see if they are both adoptive parents. If so, mark the pairBond record as adoptive and also modify the Y position of where the first child will be drawn so there is room for the adoptive parents to be drawn lower that the biological and step parents
+					if ( /[Aa]dopted/.test(oneRel.subType) && /[Aa]dopted/.test(twoRel.subType) ) {
+						pairBond.subTypeToStar = "Adopted";
+						// if there is an adoptive parent, then move the first child drawn further down the map so there is room for the adoptive relationship to be below the other relationships
+						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+					}
+				} else if (!oneRel && !twoRel) {
+					// neither is a parent, this means that this is a pair bond that only has parental relationships with some of the children on the star's map, but not the star.
+					// do nothing for now.
+				} else if ( oneRel && !twoRel ) {
+					// if only one in the pair is a parent of the star (and we wouldn't get here unless that is the case)
+					// then if the one parent is an adopted parent, go on the adopted line. Also, since there is a parent on the adoptive line, move the first child drawn down.
+
+					if ( /[Aa]dopted/.test(oneRel.subType) ) {
+						pairBond.subTypeToStar = "Adopted";
+						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+					}
+				} else if ( !oneRel && twoRel ) {
+					// if only one in the pair is a parent of the star (and we wouldn't get here unless that is the case)
+					// then if the one parent is an adopted parent, go on the adopted line. Also, since there is a parent on the adoptive line, move the first child drawn down.
+
+					if ( /[Aa]dopted/.test(twoRel.subType) ) {
+						pairBond.subTypeToStar = "Adopted";
+						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+					}
+				}
+
+				// put the pairBond into the array, if it doesn't yet exist
+				// this.pairBonds = this.dataService.addToArray(this.pairBonds, pairBond);
+				if (!this.state.pairBonds.includes(pairBond)) {
+					this.state.pairBonds.push(pairBond);
+				}
+			} // end for pairbond
+		} // end for parentObj
+
+		if (!this.state.pairBonds.length) {
+			let star = this.getPersonById(this.state.star_id);
+			alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
+			return false;
+		}
+
+		// if we got here, everything was executed successfully, so return true so map drawing can continue.
+		return true;
+	} // end function getAllPairBonds
 
 	getAllParentsOfChildren = () => {
 		let parentalRelTemp = [];
@@ -191,27 +283,6 @@ export default class FamilyMap extends React.Component {
 					}
 				}
 			}
-		}
-	}
-
-	// addToArray = (arr, element) => {
-	// 	console.log("in addToArray with ", arr, element);
-	// 	if ( !arr.includes(element) ) {
-	// 		arr.push(element);
-	// 	}
-	// 	return arr;
-	// }
-
-	getAllStarParents = () => {
-		this.state.parentRels = this.props.parentalRelationships.filter(
-			function(parentRel) {
-				return parentRel.child_id === this.state.star_id &&
-				parentRel.startDate.substr(0,10) <= this.state.dateFilterString;
-			}.bind(this)
-		);
-
-		for (let parentRel of this.state.parentRels){
-			this.state.parents.push(this.getPersonById(parentRel.parent_id));
 		}
 	}
 
