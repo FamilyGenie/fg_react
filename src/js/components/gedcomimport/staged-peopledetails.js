@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import PeopleDetailsLineItem from '../peopledetails/peopledetails-lineitem';
+import MatchedPeopleDetailsLineItem from './matched-people-lineitem';
 import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
 
 @connect(
@@ -16,7 +16,7 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
       // get all people existing in the FG DB that match our stagedStar
       starMatches:
         store.people.people.filter(function(m) {
-          return (m.fName === stagedStar.fName && m.lName === stagedStar.lName && m.sexAtBirth === stagedStar.sexAtBirth)
+          return (m.fName === stagedStar.fName || m.lName === stagedStar.lName || m.birthDate === stagedStar.birthDate)
         })
     };
   },
@@ -28,7 +28,7 @@ export default class StagedPeopleDetails extends React.Component {
     const { stagedStar, starMatches } = this.props;
 
     const mappedMatches = starMatches.map(starMatch =>
-      <PeopleDetailsLineItem starMatch={starMatch} key={starMatch._id} person={stagedStar}/>
+      <MatchedPeopleDetailsLineItem person={starMatch} key={starMatch._id}/>
     );
 
     return (<div>
@@ -40,6 +40,9 @@ export default class StagedPeopleDetails extends React.Component {
       <div class="row">
         <div class="col-xs-2 title bold can-click">
           First name
+        </div>
+        <div class="col-xs-2 title bold can-click">
+          Middle name
         </div>
         <div class="col-xs-2 title bold can-click">
           Last Name

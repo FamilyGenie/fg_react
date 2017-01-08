@@ -8,7 +8,6 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
     console.log("in staged-peoplesearch@connect with: ", store);
     return {
       user: store.user.user,
-      userFetched: store.user.fetched,
       stagedPeople: store.stagedPeople.stagedPeople,
     };
 })
