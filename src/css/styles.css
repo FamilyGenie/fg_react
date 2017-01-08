@@ -63,6 +63,10 @@ justify-content: center;
 align-items: center;
 **************/
 
+.lampimg {
+  height: 50px
+}
+
 /* Master Styles */
 .arrow-icons {
   font-size: 2.5em;
