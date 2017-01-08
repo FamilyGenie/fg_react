@@ -67,6 +67,11 @@ export default class Layout extends React.Component {
 			<div>
 				{this.props.children}
 			</div>
+			<footer class="footer navbar-fixed-bottom">
+				<div class="container footer-container">
+					copyright &copy;2016 PsychoGenealogical Research
+				</div>
+			</footer>
 		</div>
 		);
 	}
