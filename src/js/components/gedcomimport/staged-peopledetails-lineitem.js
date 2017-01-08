@@ -1,39 +1,35 @@
 import React from 'react';
 import { hashHistory } from 'react-router'
-import { createPerson, deletePerson } from '../../actions/peopleActions';
 import { connect } from 'react-redux';
+import { importPerson } from '../../actions/importActions';
 
 import DateInput from '../date-input';
 
 @connect(
 	(store, ownProps) => {
-	console.log('IN stagedpeopledetailslineitem@CONNECT', store, ownProps);
 		return {
       person: ownProps.person,
-      lastAdd: store.people.lastAdd 
+      lastAdd: store.people.lastAdd
     };
 	},
 	(dispatch) => {
 		return {
-			createPerson: (fName, mName, lName, sexAtBirth, notes) => {
-				dispatch(createPerson(fName, mName, lName, sexAtBirth, notes));
-			},
-			deletePerson: (_id) => {
-				dispatch(deletePerson());
-			}
+      importPerson: (fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes) => {
+        dispatch(importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes))
+      }
 		}
 	}
 )
 
-export default class StagedPeopleSearchLineItem extends React.Component {
+export default class StagedPeopleDetailsLineItem extends React.Component {
 
-	addToRecords = () => {
-    // axios call
-	}
+  importPerson = () => {
+    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes)
+  }
 
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
-			console.log("In StagedPeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
+			console.log("In StagedPeopleDetailsLineItem updateDate, with: ", field, displayDate, setDate);
 		}
 	}
 
@@ -51,50 +47,39 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 		<div class="row person-item">
 
 			<div class="col-xs-2 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue={this.props.person.fName}
-				/>
+        <div>
+					{this.props.person.fName}
+        </div>
 			</div>
 
 			<div class="col-xs-2 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue="No Name Provided"
-          />
-			</div>
-
-			<div class="col-xs-2 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue={this.props.person.lName}
-
-				/>
+        <div>
+					{this.props.person.lName}
+        </div>
 			</div>
 
 			<div class="col-xs-1 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue={this.props.person.sexAtBirth}
-				/>
+        <div>
+					{this.props.person.sexAtBirth}
+        </div>
 			</div>
 
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue={this.newDate(this.props.person.birthDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
+        <div>
+          {this.props.person.birthDate.toString().substr(0,10)}
+        </div>
 			</div>
 
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue={this.newDate(this.props.person.deathDate)} field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
+        <div>
+          {(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}
+        </div>
 			</div>
 
-			<div class="col-xs-1 custom-input">
+			<div class="col-xs-3 custom-input">
 				<button
 					class="form-control"
-					onClick={this.addToRecords}
+					onClick={this.importPerson}
 				>
 					Add To DB
 				</button>

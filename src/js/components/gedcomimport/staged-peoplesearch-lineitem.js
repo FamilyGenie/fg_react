@@ -7,7 +7,6 @@ import DateInput from '../date-input';
 
 @connect(
 	(store, ownProps) => {
-		// console.log('in staged-peoplesearch-lineitem@connect with: ', store);
 		return ownProps;
 	},
 )
