@@ -33,21 +33,8 @@ export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			// star_id: this.props.star_id,
-			peopleCount: this.props.people.length,
-			// starAge: 0,
-			// parents: [],
-			// parentRels: [],
-			children: [],
-			pairBonds: [],
-			alreadyDrawn: [],
-			drawnCoords: [],
+			// store this state value for display purposes
 			dateFilterString: "",
-			firstChildYDistance: 0,
-			firstChildYWithAdoptions: 0,
-			textLineSpacing: 18,
-			textSize: '.9em',
-			fullName: "",
 		};
 	}
 
@@ -59,17 +46,25 @@ export default class FamilyMap extends React.Component {
 	pairBonds = [];
 	alreadyDrawn = [];
 	drawnCoords = [];
+	dateFilterString;
+	firstChildYDistance = 0;
+	firstChildYWithAdoptions = 0;
+	textLineSpacing = 18;
+	textSize = '.9em';
+	fullName;
 
-
-	drawMap = (evt) => {
-		this.state.dateFilterString = evt.target.value;
+	subtractYear = () => {
+		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
+		// also set the state variable
+		this.setState({dateFilterString: this.dateFilterString});
 		this.componentDidMount();
 	}
 
-	getChangeMap = (changeVal) => {
-		return (changeVal) => {
-			console.log('Value: ', changeVal);
-		}
+	addYear = () => {
+		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
+		// also set the state variable
+		this.setState({dateFilterString: this.dateFilterString});
+		this.componentDidMount();
 	}
 
 	render = () => {
@@ -79,22 +74,13 @@ export default class FamilyMap extends React.Component {
 			return (<div>
 				<div class="container">
 					<h1>Family Map</h1>
-					<button onClick={this.drawMap}>
-						Draw map
-					</button>
 					<div>
 						Date: {this.state.dateFilterString}
 					</div>
-					<input
-						class="form-control"
-						type="text"
-						defaultValue={this.state.dateFilterString}
-						onBlur={this.drawMap}
-					/>
 					<div>
 						Star's Age: {this.starAge}
-						<i class="fa fa-arrow-circle-down buttonSize" onClick={() => this.getChangeMap('sub')}></i>
-						<i class="fa fa-arrow-circle-up buttonSize" onClick={this.getChangeMap('add').bind(this)}></i>
+						<i class="fa fa-arrow-circle-down buttonSize" onClick={this.subtractYear.bind(this)}></i>
+						<i class="fa fa-arrow-circle-up buttonSize" onClick={this.addYear}></i>
 					</div>
 					<div>
 					</div>
@@ -115,7 +101,7 @@ export default class FamilyMap extends React.Component {
 
 		// I can't get setState to work here. Setting the dateFilterString to a value for testing purposes
 		// this.setState({dateFilterString: "1947-08-29"});
-		// this.state.dateFilterString = '1990-08-27';
+		// this.dateFilterString = '1990-08-27';
 
 
 		this.initializeVariables();
@@ -179,7 +165,7 @@ export default class FamilyMap extends React.Component {
 
 	drawAllChildren (startY, childDistance): void {
 		// note that we are assuming that each kid will have one and only one biological mother and one and only one biological father. Need to eventually accomodate for this not being true (like don't have some bio parent info)
-		let nextChildY = startY + childDistance + this.state.firstChildYDistance;
+		let nextChildY = startY + childDistance + this.firstChildYDistance;
 		let mom, momRel, dad, dadRel;
 		let momRels = [];
 		let dadRels = [];
@@ -232,18 +218,18 @@ export default class FamilyMap extends React.Component {
 				// draw parental lines first, so the circle and text goes on top of the lines
 				child.d3MomLine = this.drawParentalLine(mom, child, "mom", "0. Biological");
 				// if there is an endDate of the mother relationship, draw hash marks in the middle of it
-				if ((momRel.endDate ? momRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+				if ((momRel.endDate ? momRel.endDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 					this.drawParentRightHash (child, mom, 'blue');
 				}
 
 				child.d3DadLine = this.drawParentalLine(dad, child, "dad", "0. Biological");
 				// if there is an endDate of the father relationship, draw hash marks in the middle of it
-				if ((dadRel.endDate ? dadRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+				if ((dadRel.endDate ? dadRel.endDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 					this.drawParentLeftHash (child, dad, 'blue');
 				}
 
 				child.d3Circle = this.drawCircle(child);
-				if ((child.deathDate ? child.deathDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+				if ((child.deathDate ? child.deathDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 					this.drawCircleHash(child);
 				}
 
@@ -334,7 +320,7 @@ export default class FamilyMap extends React.Component {
 				dad.d3Circle = this.drawCircle(dad);
 				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
 				if (dad.deathDate) {
-					if (dad.deathDate.substr(0,10) <= this.state.dateFilterString) {
+					if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
 						this.drawCircleHash(dad);
 					}
 				}
@@ -355,7 +341,7 @@ export default class FamilyMap extends React.Component {
 				mom.d3Circle = this.drawCircle(mom);
 				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
 				if (mom.deathDate) {
-					if (mom.deathDate.substr(0,10) <= this.state.dateFilterString) {
+					if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
 						this.drawCircleHash(mom);
 					}
 				}
@@ -383,7 +369,7 @@ export default class FamilyMap extends React.Component {
 					this.drawAdoptiveRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
 					this.drawRelText(mom, dad, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
-					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.state.dateFilterString) {
+					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
 						this.drawAdoptiveRelHash(mom, dad, pairBond, pairBond.color);
 					}
 				} else {
@@ -391,7 +377,7 @@ export default class FamilyMap extends React.Component {
 					this.drawRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
 					this.drawRelText(mom, dad, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
-					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.state.dateFilterString) {
+					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
 						this.drawRelHash(mom, dad, pairBond, pairBond.color);
 					}
 				}
@@ -465,7 +451,7 @@ export default class FamilyMap extends React.Component {
 					return (pairBond.personOne_id === parentObj._id ||
 						pairBond.personTwo_id === parentObj._id) &&
 						// if there is a startDate, then return the substr of it. If not, put in null, and then this test condition will evaluate true (null less than a string will evaluate to true), which is what we want. If the user did not put in a pairBond start date, then do show that relationship on the map
-						(pairBond.startDate ? pairBond.startDate.substr(0,10) : null) <= this.state.dateFilterString;
+						(pairBond.startDate ? pairBond.startDate.substr(0,10) : null) <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -493,7 +479,7 @@ export default class FamilyMap extends React.Component {
 					if ( /[Aa]dopted/.test(oneRel.subType) && /[Aa]dopted/.test(twoRel.subType) ) {
 						pairBond.subTypeToStar = "Adopted";
 						// if there is an adoptive parent, then move the first child drawn further down the map so there is room for the adoptive relationship to be below the other relationships
-						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+						this.firstChildYDistance = this.firstChildYWithAdoptions;
 					}
 				} else if (!oneRel && !twoRel) {
 					// neither is a parent, this means that this is a pair bond that only has parental relationships with some of the children on the star's map, but not the star.
@@ -504,7 +490,7 @@ export default class FamilyMap extends React.Component {
 
 					if ( /[Aa]dopted/.test(oneRel.subType) ) {
 						pairBond.subTypeToStar = "Adopted";
-						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+						this.firstChildYDistance = this.firstChildYWithAdoptions;
 					}
 				} else if ( !oneRel && twoRel ) {
 					// if only one in the pair is a parent of the star (and we wouldn't get here unless that is the case)
@@ -512,7 +498,7 @@ export default class FamilyMap extends React.Component {
 
 					if ( /[Aa]dopted/.test(twoRel.subType) ) {
 						pairBond.subTypeToStar = "Adopted";
-						this.state.firstChildYDistance = this.state.firstChildYWithAdoptions;
+						this.firstChildYDistance = this.firstChildYWithAdoptions;
 					}
 				}
 
@@ -543,7 +529,7 @@ export default class FamilyMap extends React.Component {
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.child_id === child._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.state.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
 				}.bind(this)
 			);
 			// console.log("in getAllParents, parentalRelTemp: ", parentalRelTemp);
@@ -583,7 +569,7 @@ export default class FamilyMap extends React.Component {
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.parent_id === parent._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.state.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -594,7 +580,7 @@ export default class FamilyMap extends React.Component {
 				let child = this.getPersonById(parentRel.child_id);
 				// console.log("Child Found: ", child);
 				// if child was born on or before the dateFilter
-				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.state.dateFilterString) {
+				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.dateFilterString) {
 					// console.log("Child Found with birthdate: ", child);
 					// if child does not yet exist in children array, push onto it
 					// this.children = addToArray(this.children, child);
@@ -641,19 +627,20 @@ export default class FamilyMap extends React.Component {
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
-		this.state.firstChildYDistance = 20;
-		this.state.firstChildYWithAdoptions = 130;
+		this.firstChildYDistance = 20;
+		this.firstChildYWithAdoptions = 130;
 		// console.log("in initializeVariables", this.state.star_id);
 		var star = this.getPersonById(this.star_id);
 		console.log("star: ", star);
-		this.state.fullName = star.fName + " " + star.lName;
+		this.fullName = star.fName + " " + star.lName;
 		// if dateFilter not yet set, set it to Star's 18th birthday
-		console.log("date to draw: ", this.state.dateFilterString);
-		if (!this.state.dateFilterString) {
+		console.log("date to draw: ", this.dateFilterString);
+		if (!this.dateFilterString) {
 			this.starAge = 18;
-			this.state.dateFilterString = moment(star.birthDate).add(18,'y').format('YYYY-MM-DD');
+			this.dateFilterString = moment(star.birthDate).add(18,'y').format('YYYY-MM-DD');
 		}
-		console.log('Date to draw: ', this.state.dateFilterString);
+		// update the display as well
+		this.setState({dateFilterString: this.dateFilterString});
 	}
 
 	getPersonById = (_id) => {
@@ -666,7 +653,7 @@ export default class FamilyMap extends React.Component {
 		// console.log("in draw circle for:", person);
 		let circle = d3.select("svg")
 			.append("svg:a")
-			.attr("xlink:href", "/peopledetails/" + person._id)
+			.attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("circle")
 			.attr("cx", person.mapXPos)
 			.attr("cy", person.mapYPos)
@@ -688,19 +675,19 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.state.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
-				{"x": cx, "y": cy + (this.state.textLineSpacing * 2), "txt": person.birthPlace},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.state.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("MM/DD/YYYY")},
-				{"x": cx, "y": cy + (this.state.textLineSpacing * 4), "txt": person.deathPlace}
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
 			textData = [
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.state.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
-				{"x": cx, "y": cy + (this.state.textLineSpacing * 2), "txt": person.birthPlace}
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}
 
@@ -715,7 +702,7 @@ export default class FamilyMap extends React.Component {
 			.attr("y", function(d) { return d.y; })
 			.text(function(d)     { return d.txt; })
 			.attr("font-family", "sans-serif")
-			.attr("font-size", this.state.textSize)
+			.attr("font-size", this.textSize)
 			.attr("fill", "black")
 			.attr("font-weight", "600");
 	}
@@ -805,7 +792,7 @@ export default class FamilyMap extends React.Component {
 				// apart info
 				{
 					"x": cx + 3,
-					"y": cy + this.state.textLineSpacing,
+					"y": cy + this.textLineSpacing,
 					"txt": this.getRelTextEndPrefix(pairBondRel.relationshipType) +
 					moment(pairBondRel.endDate).format("MM/DD/YYYY")
 				},
@@ -841,7 +828,7 @@ export default class FamilyMap extends React.Component {
 			.attr("y", function(d) { return d.y; })
 			.text(function(d)     { return d.txt; })
 			.attr("font-family", "sans-serif")
-			.attr("font-size", this.state.textSize)
+			.attr("font-size", this.textSize)
 			.attr("fill", pairBondRel.color)
 			.attr("font-weight", "600");
 	}
@@ -1103,7 +1090,7 @@ export default class FamilyMap extends React.Component {
 				if ( this.alreadyDrawn.includes(mom) ) {
 					this.drawParentalLine(mom, child, "mom", momRel.subType);
 					// if the relationship has an end date, and the relationship has an end date <= the filterDate, put hash mark on line
-					if ((momRel.endDate ? momRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+					if ((momRel.endDate ? momRel.endDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 						this.drawParentRightHash (child, mom, "blue");
 					}
 				} else {
@@ -1126,7 +1113,7 @@ export default class FamilyMap extends React.Component {
 				if ( this.alreadyDrawn.includes(dad) ) {
 					this.drawParentalLine(dad, child, "dad", dadRel.subType);
 					// if the relationship has an end date, and the relationship has an end date <= the filterDate, put hash mark on line
-					if ((dadRel.endDate ? dadRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+					if ((dadRel.endDate ? dadRel.endDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 						this.drawParentRightHash (child, dad, "blue");
 					}
 				} else {
@@ -1329,7 +1316,7 @@ export default class FamilyMap extends React.Component {
 
 		return d3.select("svg")
 			.append("svg:a")
-			.attr("xlink:href", "/peopledetails/" + person._id)
+			.attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("id", person._id)
@@ -1353,7 +1340,7 @@ export default class FamilyMap extends React.Component {
 			// bringing the circle to front is not working, so going to draw it again
 			if (child.mapXPos && child.mapYPos) {
 				this.drawCircle(child);
-				if ((child.deathDate ? child.deathDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
+				if ((child.deathDate ? child.deathDate.substr(0,10) : '9999-99-99') <= this.dateFilterString) {
 					this.drawCircleHash(child);
 				}
 				if (child.d3Symbol) { child.d3Symbol.moveToFront(); }
