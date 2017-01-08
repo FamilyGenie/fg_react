@@ -44,15 +44,15 @@ export function updateEvent(_id, field, value) {
 	}
 }
 
-export function createEvent(eventDateUser, eventDate, person_id, type, place, familyContext, localContext, worldContext) {
+export function createEvent(eventDateUser, eventDate, person_id, eventType, eventPlace, familyContext, localContext, worldContext) {
 
 	const body = {
 		object: {
 			eventDateUser,
 			eventDate,
 			person_id,
-			type,
-			place,
+			eventType,
+			eventPlace,
 			familyContext,
 			localContext,
 			worldContext,

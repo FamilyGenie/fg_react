@@ -42,12 +42,13 @@ constructor(props) {
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		eventType: this.props.event.type,
+		eventType: this.props.event.eventType,
 	};
 }
 
 	onEventTypeChange = (evt) => {
-		this.props.updateEvent(this.props.event._id, "type", evt.value);
+    console.log("in onEventTypeChange with: ", evt.value)
+		this.props.updateEvent(this.props.event._id, "eventType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
 		this.setState({eventType: evt.value});
 	}
@@ -133,8 +134,8 @@ constructor(props) {
 						<input
 								class="form-control"
 								type="text"
-								defaultValue={event.place}
-								onBlur={this.getUpdateEvent('place')}
+								defaultValue={event.eventPlace}
+								onBlur={this.getUpdateEvent('eventPlace')}
 						/>
 					</div>
 					<div class="custom-input" style={buttonCol}>

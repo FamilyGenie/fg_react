@@ -3,6 +3,7 @@ export default function reducer(
 		people: [],
 		fetching: false,
 		error: null,
+    lastAdd: null,
 	},
 	action = ""
 ) {
@@ -41,7 +42,8 @@ export default function reducer(
 				people: [
 					...state.people,
 					action.payload
-				]
+				],
+        lastAdd: action.payload
 			};
 		}
 		case "CREATE_PERSON_REJECTED": {

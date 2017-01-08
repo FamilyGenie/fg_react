@@ -5,6 +5,7 @@ import { fetchEvents } from "../actions/eventsActions"
 import { fetchPairBondRels } from "../actions/pairBondRelsActions"
 import { fetchParentalRels } from "../actions/parentalRelsActions"
 import { fetchPeople } from "../actions/peopleActions"
+import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 
 import PeopleSearch from './peoplesearch/peoplesearch';
 
@@ -16,6 +17,7 @@ export default class Layout extends React.Component {
 		this.props.dispatch(fetchPairBondRels());
 		this.props.dispatch(fetchParentalRels());
 		this.props.dispatch(fetchPeople());
+		this.props.dispatch(fetchStagedPeople());
 	}
 
 	render() {

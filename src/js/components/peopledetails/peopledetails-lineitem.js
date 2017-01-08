@@ -24,6 +24,7 @@ export default class PeopleDetailsLineItem extends React.Component {
 	getOnBlur = (field) => {
 		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
 		return (evt) => {
+			console.log(this.props.person._id)
 			this.props.onBlur(this.props.person._id, field, evt.target.value);
 		}
 	}
