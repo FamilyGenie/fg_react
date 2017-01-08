@@ -33,11 +33,11 @@ export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			star_id: this.props.star_id,
+			// star_id: this.props.star_id,
 			peopleCount: this.props.people.length,
-			starAge: 0,
-			parents: [],
-			parentRels: [],
+			// starAge: 0,
+			// parents: [],
+			// parentRels: [],
 			children: [],
 			pairBonds: [],
 			alreadyDrawn: [],
@@ -51,6 +51,27 @@ export default class FamilyMap extends React.Component {
 		};
 	}
 
+	starAge;
+	star_id = this.props.star_id;
+	parents = [];
+	parentRels = [];
+	children = [];
+	pairBonds = [];
+	alreadyDrawn = [];
+	drawnCoords = [];
+
+
+	drawMap = (evt) => {
+		this.state.dateFilterString = evt.target.value;
+		this.componentDidMount();
+	}
+
+	getChangeMap = (changeVal) => {
+		return (changeVal) => {
+			console.log('Value: ', changeVal);
+		}
+	}
+
 	render = () => {
 		// console.log("in Family Map Render, with state: ", this.state);
 
@@ -62,7 +83,20 @@ export default class FamilyMap extends React.Component {
 						Draw map
 					</button>
 					<div>
-						{this.state.peopleCount}
+						Date: {this.state.dateFilterString}
+					</div>
+					<input
+						class="form-control"
+						type="text"
+						defaultValue={this.state.dateFilterString}
+						onBlur={this.drawMap}
+					/>
+					<div>
+						Star's Age: {this.starAge}
+						<i class="fa fa-arrow-circle-down buttonSize" onClick={() => this.getChangeMap('sub')}></i>
+						<i class="fa fa-arrow-circle-up buttonSize" onClick={this.getChangeMap('add').bind(this)}></i>
+					</div>
+					<div>
 					</div>
 				</div>
 				<svg class="svg-map">
@@ -81,7 +115,7 @@ export default class FamilyMap extends React.Component {
 
 		// I can't get setState to work here. Setting the dateFilterString to a value for testing purposes
 		// this.setState({dateFilterString: "1947-08-29"});
-		this.state.dateFilterString = '1990-08-27';
+		// this.state.dateFilterString = '1990-08-27';
 
 
 		this.initializeVariables();
@@ -90,30 +124,30 @@ export default class FamilyMap extends React.Component {
 		this.clearMapData();
 
 		// push the star onto the empty children array, because we know they will be a child on the map
-		this.state.children.push(this.getPersonById(this.state.star_id));
+		this.children.push(this.getPersonById(this.star_id));
 
 		// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
 		if ( !this.getAllParentsOfChildren() ) {
 			hashHistory.push('/');
 			return;
 		}
-		console.log("After getAllParents: ", this.state.parents);
+		console.log("After getAllParents: ", this.parents);
 
-		if (this.state.parents.length === 0) {
+		if (this.parents.length === 0) {
 			alert("No parents for this person, map will not be drawn.");
 			hashHistory.push('/');
 			return;
 		}
 
 		this.getAllChildrenOfParents();
-		console.log("children:", this.state.children);
+		console.log("children:", this.children);
 
 		// then call getAllParents of Children again to get all the parents of all the children, not just parents of the star. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
 		if ( !this.getAllParentsOfChildren() ) {
 			hashHistory.push('/');
 			return;
 		}
-		console.log("After getAllParents second call: ", this.state.parents);
+		console.log("After getAllParents second call: ", this.parents);
 
 		// need some looping here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
 
@@ -122,7 +156,7 @@ export default class FamilyMap extends React.Component {
 			hashHistory.push('/');
 			return;
 		}
-		console.log("all pair bonds:", this.state.pairBonds);
+		console.log("all pair bonds:", this.pairBonds);
 
 		// this includes drawing the parents in the pair bonds. this currently
 		// if neither parent is biological or step, then draw both parents down a level vertically
@@ -151,12 +185,12 @@ export default class FamilyMap extends React.Component {
 		let dadRels = [];
 		let xPos: number;
 
-		// console.log("in drawAllChildren", this.state.children);
+		// console.log("in drawAllChildren", this.children);
 
 		// sort children by birthdate
-		this.state.children.sort(birthDateCompare);
+		this.children.sort(birthDateCompare);
 
-		for (let child of this.state.children) {
+		for (let child of this.children) {
 			// get mom relationship record
 
 			// find biological mother relationship
@@ -177,10 +211,10 @@ export default class FamilyMap extends React.Component {
 
 			// if we found both bio mom and bio dad, draw child halfway between them
 			if ( momRel && dadRel ) {
-				mom = this.state.parents.find(function(parent){
+				mom = this.parents.find(function(parent){
 					return parent._id === momRel.parent_id;
 				});
-				dad = this.state.parents.find(function(parent){
+				dad = this.parents.find(function(parent){
 					return parent._id === dadRel.parent_id;
 				});
 
@@ -219,7 +253,7 @@ export default class FamilyMap extends React.Component {
 					child.d3Symbol = this.drawFemaleSymbol(xPos, nextChildY);
 				}
 				// check to see if this is the star of the map. If so, draw the star inside of circle
-				if (child._id === this.state.star_id) {
+				if (child._id === this.star_id) {
 					child.d3Star = this.drawStar(xPos, nextChildY, child);
 				}
 				child.d3TextBox = this.drawTextBox(xPos, nextChildY);
@@ -255,11 +289,11 @@ export default class FamilyMap extends React.Component {
 		let YPos;
 
 		// sort pair bonds by start date
-		this.state.pairBonds.sort(startDateCompare);
+		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
-		this.state.pairBonds.sort(subTypeCompare);
+		this.pairBonds.sort(subTypeCompare);
 
-		for (let pairBond of this.state.pairBonds) {
+		for (let pairBond of this.pairBonds) {
 
 			parent = this.getPersonById(pairBond.personOne_id);
 			// console.log("parent is ", parent, parent.sexAtBirth);
@@ -293,7 +327,7 @@ export default class FamilyMap extends React.Component {
 			}
 
 			// if dad is not yet drawn, then draw and add to alreadyDrawn
-			if ( dad && !this.state.alreadyDrawn.includes(dad) ) {
+			if ( dad && !this.alreadyDrawn.includes(dad) ) {
 				// The following two variables are stored in the array object, and don't go back to the database.
 				dad.mapXPos = nextMaleX;
 				dad.mapYPos = YPos;
@@ -307,14 +341,14 @@ export default class FamilyMap extends React.Component {
 				dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
 				dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
 				nextMaleX -= parentDistance;
-				this.state.alreadyDrawn.push(dad);
+				this.alreadyDrawn.push(dad);
 			} else if ( !dad ) {
 				// throw error
 				console.log("no dad in this pairbond to draw:", pairBond);
 			}
 
 			// if mom is not yet drawn, then draw and add to alreadyDrawn
-			if ( mom && !this.state.alreadyDrawn.includes(mom) ) {
+			if ( mom && !this.alreadyDrawn.includes(mom) ) {
 				// The following two variables are stored in the array object, and don't go back to the database.
 				mom.mapXPos = nextFemaleX;
 				mom.mapYPos = YPos;
@@ -328,7 +362,7 @@ export default class FamilyMap extends React.Component {
 				mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
 				mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
 				nextFemaleX += parentDistance;
-				this.state.alreadyDrawn.push(mom);
+				this.alreadyDrawn.push(mom);
 			} else if ( !mom ) {
 				// throw error
 				console.log("no mom in this pairbond to draw:", pairBond);
@@ -338,7 +372,7 @@ export default class FamilyMap extends React.Component {
 				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
 				// the checkForExistingRel function returns the color of the existing relationship if it is found
-				pairBond.color = checkForExistingRel(pairBond, this.state.pairBonds);
+				pairBond.color = checkForExistingRel(pairBond, this.pairBonds);
 				if ( !pairBond.color ) {
 					// if there is no existing relationship, then set the color to the next color in the color index
 					pairBond.color = colorArray[colorIndex];
@@ -424,7 +458,7 @@ export default class FamilyMap extends React.Component {
 		let oneRel, twoRel;
 
 		// for each parent
-		for (let parentObj of this.state.parents) {
+		for (let parentObj of this.parents) {
 			// get all pair bonds
 			pairBondTemp = this.props.pairBondRelationships.filter(
 				function(pairBond) {
@@ -440,16 +474,16 @@ export default class FamilyMap extends React.Component {
 				// check to see if both parents are adoptive parents of the star, if so, specify them as an adoptive pair bond, so they can be drawn appropriately
 				// if both parents are adopted parents, then modify the Y position
 				// first, get the mom Relationship and the dad relationship
-				oneRel = this.state.parentRels.find(
+				oneRel = this.parentRels.find(
 					function(parentRel) {
 					return parentRel.parent_id === pairBond.personOne_id &&
-					parentRel.child_id === this.state.star_id;
+					parentRel.child_id === this.star_id;
 					}.bind(this)
 				);
-				twoRel = this.state.parentRels.find(
+				twoRel = this.parentRels.find(
 					function (parentRel) {
 					return parentRel.parent_id === pairBond.personTwo_id &&
-					parentRel.child_id === this.state.star_id;
+					parentRel.child_id === this.star_id;
 					}.bind(this)
 				);
 
@@ -484,14 +518,14 @@ export default class FamilyMap extends React.Component {
 
 				// put the pairBond into the array, if it doesn't yet exist
 				// this.pairBonds = this.dataService.addToArray(this.pairBonds, pairBond);
-				if (!this.state.pairBonds.includes(pairBond)) {
-					this.state.pairBonds.push(pairBond);
+				if (!this.pairBonds.includes(pairBond)) {
+					this.pairBonds.push(pairBond);
 				}
 			} // end for pairbond
 		} // end for parentObj
 
-		if (!this.state.pairBonds.length) {
-			let star = this.getPersonById(this.state.star_id);
+		if (!this.pairBonds.length) {
+			let star = this.getPersonById(this.star_id);
 			alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
 			return false;
 		}
@@ -504,7 +538,7 @@ export default class FamilyMap extends React.Component {
 		let parentalRelTemp = [];
 
 		// for each child
-		for (let child of this.state.children) {
+		for (let child of this.children) {
 			// get all parental relationships. if there is no start date, then make value null, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
@@ -517,8 +551,8 @@ export default class FamilyMap extends React.Component {
 			for (let parentRel of parentalRelTemp) {
 				// first, push parentRel onto array of relationships to track
 				// this.parentRels = this.addToArray(this.parentRels, parentRel);
-				if (!this.state.parentRels.includes(parentRel)) {
-						this.state.parentRels.push(parentRel);
+				if (!this.parentRels.includes(parentRel)) {
+						this.parentRels.push(parentRel);
 					}
 				// find the parent
 				let parent = this.getPersonById(parentRel.parent_id);
@@ -529,8 +563,8 @@ export default class FamilyMap extends React.Component {
 				}
 				// put the parent into the parents array, if they don't yet exist
 				// this.parents = this.dataService.addToArray(this.parents, parent);
-				if (!this.state.parents.includes(parent)) {
-						this.state.parents.push(parent);
+				if (!this.parents.includes(parent)) {
+						this.parents.push(parent);
 					}
 			}
 		}
@@ -544,7 +578,7 @@ export default class FamilyMap extends React.Component {
 		let parentalRelTemp = [];
 
 		// for each parent of star
-		for (let parent of this.state.parents) {
+		for (let parent of this.parents) {
 			// find every parental relationship (including those that do not have the star as child)
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
@@ -563,9 +597,9 @@ export default class FamilyMap extends React.Component {
 				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.state.dateFilterString) {
 					// console.log("Child Found with birthdate: ", child);
 					// if child does not yet exist in children array, push onto it
-					// this.state.children = addToArray(this.state.children, child);
-					if (!this.state.children.includes(child)) {
-						this.state.children.push(child);
+					// this.children = addToArray(this.children, child);
+					if (!this.children.includes(child)) {
+						this.children.push(child);
 					}
 				}
 			}
@@ -600,31 +634,26 @@ export default class FamilyMap extends React.Component {
 		// do we need to initialize the xPos and yPos of each person?
 		// remove d3 drawn objects
 		d3.select("svg").selectAll("*").remove();
-		this.state.parents = [];
-		this.state.parentRels = [];
-		this.state.children = [];
-		this.state.pairBonds = [];
-		this.state.alreadyDrawn = [];
-		this.state.drawnCoords = [];
+		this.parents = [];
+		this.parentRels = [];
+		this.children = [];
+		this.pairBonds = [];
+		this.alreadyDrawn = [];
+		this.drawnCoords = [];
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
 		this.state.firstChildYDistance = 20;
 		this.state.firstChildYWithAdoptions = 130;
 		// console.log("in initializeVariables", this.state.star_id);
-		var star = this.getPersonById(this.state.star_id);
+		var star = this.getPersonById(this.star_id);
 		console.log("star: ", star);
 		this.state.fullName = star.fName + " " + star.lName;
 		// if dateFilter not yet set, set it to Star's 18th birthday
+		console.log("date to draw: ", this.state.dateFilterString);
 		if (!this.state.dateFilterString) {
-			this.state.starAge = 18;
-			// this.dateFilterString = this.dataService.dateCalculator(star.birthDate, "addYear", this.starAge);
-			// I can't get moment to add 18 years to the birthdate here. Ask Eddie about this.
-			// moment(star.birthDate);
-			// console.log("birthDate: ", star.birthDate);
-			var newDate = moment("12/01/1970", "MM/DD/YYYY");
-			console.log("newDate: ", newDate);
-			newDate.add(18, 'y');
-			console.log('newDate + 18 ', newDate);
+			this.starAge = 18;
+			this.state.dateFilterString = moment(star.birthDate).add(18,'y').format('YYYY-MM-DD');
 		}
+		console.log('Date to draw: ', this.state.dateFilterString);
 	}
 
 	getPersonById = (_id) => {
@@ -748,7 +777,7 @@ export default class FamilyMap extends React.Component {
 		}
 
 		// check to see if there is already a text box drawn near here
-		let coord = this.state.drawnCoords.find(
+		let coord = this.drawnCoords.find(
 				function(coord) {
 					return Math.abs(cx - coord.x) < 120 && Math.abs(cy - coord.y) < 25;
 				}
@@ -756,7 +785,7 @@ export default class FamilyMap extends React.Component {
 		// until there is not a text box here, continue to push the text box until there is room for it
 		while ( coord ) {
 			cx += 1;
-			coord = this.state.drawnCoords.find(
+			coord = this.drawnCoords.find(
 				function(coord) {
 					return Math.abs(cx - coord.x) < 120 && Math.abs(cy - coord.y) < 25;
 				}
@@ -794,7 +823,7 @@ export default class FamilyMap extends React.Component {
 		}
 
 		// push the box coordinates that will be drawn
-		this.state.drawnCoords.push(
+		this.drawnCoords.push(
 			{
 				x: cx,
 				y: cy
@@ -1057,11 +1086,11 @@ export default class FamilyMap extends React.Component {
 		let dadRels = [];
 		let mom, dad, momRel, dadRel;
 
-		for (let child of this.state.children) {
+		for (let child of this.children) {
 			// find parents that are not biological parents and draw those relationship lines
 			// find non-biological mother relationships
 			// momRels = this.dataService.parentalRelationships.filter(function(parentRel){
-			momRels = this.state.parentRels.filter(function(parentRel){
+			momRels = this.parentRels.filter(function(parentRel){
 			   return /[Mm]other/.test(parentRel.relationshipType) &&
 					!/[Bb]iological/.test(parentRel.subType) &&
 					parentRel.child_id === child._id;
@@ -1071,7 +1100,7 @@ export default class FamilyMap extends React.Component {
 			for (momRel of momRels) {
 				mom = this.getPersonById(momRel.parent_id);
 				// draw parental line only if the mom in the relationship has been drawn. Sometimes, if the mom has not been drawn, then give a warning to the user
-				if ( this.state.alreadyDrawn.includes(mom) ) {
+				if ( this.alreadyDrawn.includes(mom) ) {
 					this.drawParentalLine(mom, child, "mom", momRel.subType);
 					// if the relationship has an end date, and the relationship has an end date <= the filterDate, put hash mark on line
 					if ((momRel.endDate ? momRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
@@ -1085,7 +1114,7 @@ export default class FamilyMap extends React.Component {
 
 			// find non-bio father relationships
 			// dadRels = this.dataService.parentalRelationships.filter(function(parentRel){
-			dadRels = this.state.parentRels.filter(function(parentRel){
+			dadRels = this.parentRels.filter(function(parentRel){
 				return /[Ff]ather/.test(parentRel.relationshipType) &&
 					!/[Bb]iological/.test(parentRel.subType) &&
 					parentRel.child_id === child._id;
@@ -1094,7 +1123,7 @@ export default class FamilyMap extends React.Component {
 			for (dadRel of dadRels) {
 				dad = this.getPersonById(dadRel.parent_id);
 				// draw parental line only if the mom in the relationship has been drawn. Sometimes, if the mom has not been drawn, then give a warning to the user
-				if ( this.state.alreadyDrawn.includes(dad) ) {
+				if ( this.alreadyDrawn.includes(dad) ) {
 					this.drawParentalLine(dad, child, "dad", dadRel.subType);
 					// if the relationship has an end date, and the relationship has an end date <= the filterDate, put hash mark on line
 					if ((dadRel.endDate ? dadRel.endDate.substr(0,10) : '9999-99-99') <= this.state.dateFilterString) {
@@ -1319,7 +1348,7 @@ export default class FamilyMap extends React.Component {
 		    });
 		};
 
-		for (let child of this.state.children) {
+		for (let child of this.children) {
 			// console.log("bring to front", child);
 			// bringing the circle to front is not working, so going to draw it again
 			if (child.mapXPos && child.mapYPos) {
@@ -1329,7 +1358,7 @@ export default class FamilyMap extends React.Component {
 				}
 				if (child.d3Symbol) { child.d3Symbol.moveToFront(); }
 				// bringing Star to the front did not work with it being a hyper-link, so re-drawing it
-				if (child._id === this.state.star_id) { this.drawStar(child.mapXPos, child.mapYPos, child); }
+				if (child._id === this.star_id) { this.drawStar(child.mapXPos, child.mapYPos, child); }
 				child.d3TextBox.moveToFront();
 				child.d3Text.moveToFront();
 			}
