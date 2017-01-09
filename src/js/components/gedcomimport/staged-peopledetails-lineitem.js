@@ -9,7 +9,6 @@ import DateInput from '../date-input';
 	(store, ownProps) => {
 		return {
       person: ownProps.person,
-      lastAdd: store.people.lastAdd
     };
 	},
 	(dispatch) => {
