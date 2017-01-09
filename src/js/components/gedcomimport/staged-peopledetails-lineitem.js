@@ -2,6 +2,7 @@ import React from 'react';
 import { hashHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { importPerson } from '../../actions/importActions';
+import { deletPerson } from '../../actions/peopleActions';
 
 import DateInput from '../date-input';
 
@@ -64,7 +65,7 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 
 			<div class="col-xs-2 custom-input">
         <div>
-          {this.props.person.birthDate.toString().substr(0,10)}
+          {this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}
         </div>
 			</div>
 

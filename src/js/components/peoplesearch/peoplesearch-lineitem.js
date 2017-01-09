@@ -1,21 +1,42 @@
 import React from 'react';
 import { hashHistory } from 'react-router';
+import { connect } from 'react-redux';
 
 import DateInput from '../date-input';
 
+@connect(
+  (store, ownProps) => {
+    // console.log('in peoplesearch-lineitem@connect with: ', store, ownProps)
+    return {
+      event: store.events.events.find(function(e) {
+        return (e.person_id === ownProps.person._id);
+      }),
+    }
+  }
+)
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
 	openMap = () => {
-		hashHistory.push('/familymap/' + this.props.person._id);
+    hashHistory.push('/familymap/' + this.props.person._id);
 	}
 
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
 		}
 	}
+
+  birthDate = () => {
+    try {
+      return this.props.event.eventDate.toString().substr(0,10)
+    } catch (TypeError) {
+      return "no birthDate"
+    }
+  }
+
+
 
 	render = () => (
 		<div class="row person-item">
@@ -41,7 +62,7 @@ export default class PeopleSearchLineItem extends React.Component {
 				/>
 			</div>
 			<div class="col-xs-2 custom-input">
-				<DateInput defaultValue='12/31/1970' field="testDate" updateFunction={this.getUpdateDate().bind(this)} />
+        {this.birthDate()}
 			</div>
 			<div class="col-xs-1 custom-input">
 				<button
