@@ -39,7 +39,6 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 				dispatch({type: "CREATE_EVENT"});
 				axios.post(config.api_url + "/api/v2/event/create", bodyBirth, axiosConfig)
 					.then((response) => {
-						console.log('in importAction-createPerson-createEvent with: ', response.data);
 						dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
 					})
 					.catch((err) => {
@@ -56,11 +55,9 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 							eventPlace: deathPlace,
 						}
 					}
-					console.log('in import_Person, about to call create_event for death ', bodyDeath);
 					dispatch({type: "CREATE_EVENT"});
 					axios.post(config.api_url + "/api/v2/event/create", bodyDeath, axiosConfig)
 						.then((response) => {
-							console.log('in importAction-createPerson-createEvent with: ', response.data);
 							dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
 						})
 						.catch((err) => {
@@ -69,7 +66,6 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 					}
 			})
 			.catch((err) => {
-				console.log('create_person.catch: ', err);
 				dispatch({type: "CREATE_PERSON_REJECTED", payload: err})
 			})
 	}
