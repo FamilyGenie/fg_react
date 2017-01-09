@@ -5,7 +5,6 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 
 @connect(
   (store, ownProps) => {
-    console.log("in staged-peoplesearch@connect with: ", store);
     return {
       user: store.user.user,
       stagedPeople: store.stagedPeople.stagedPeople,

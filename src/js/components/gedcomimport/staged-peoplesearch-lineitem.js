@@ -7,7 +7,6 @@ import DateInput from '../date-input';
 
 @connect(
 	(store, ownProps) => {
-		// console.log('in staged-peoplesearch-lineitem@connect with: ', store);
 		return ownProps;
 	},
 )
@@ -19,7 +18,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
-			console.log("In StagedPeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
 		}
 	}
 

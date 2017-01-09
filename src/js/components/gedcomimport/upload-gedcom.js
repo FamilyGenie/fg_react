@@ -10,7 +10,6 @@ const fgtoken = cookie.load('fg-access-token');
 
 @connect(
   (store, ownProps) => {
-    console.log('in upload-gedcom@connect with:', store);
     return ownProps;
   }
 )

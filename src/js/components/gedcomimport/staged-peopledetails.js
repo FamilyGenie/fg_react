@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import MatchedPeopleDetailsLineItem from './matched-people-lineitem';
+import MatchedPeopleDetails from './matched-peopledetails';
 import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
 
 @connect(
   (store, ownProps) => {
-    console.log('in staged-peopledetails@connect with: ', store);
     var stagedStar = store.stagedPeople.stagedPeople.find(function(p) {
       return p._id === ownProps.params._id;
     });
@@ -28,7 +27,7 @@ export default class StagedPeopleDetails extends React.Component {
     const { stagedStar, starMatches } = this.props;
 
     const mappedMatches = starMatches.map(starMatch =>
-      <MatchedPeopleDetailsLineItem person={starMatch} key={starMatch._id}/>
+      <MatchedPeopleDetails person={starMatch} key={starMatch._id}/>
     );
 
     return (<div>
@@ -39,16 +38,11 @@ export default class StagedPeopleDetails extends React.Component {
       </div>
       <div class="row">
         <div class="col-xs-2 title bold can-click">
-          First name
         </div>
         <div class="col-xs-2 title bold can-click">
-          Middle name
-        </div>
-        <div class="col-xs-2 title bold can-click">
-          Last Name
         </div>
         <div class="col-xs-1 title bold can-click">
-          Sex At Birth
+          Gender
         </div>
         <div class="col-xs-2 title bold can-click">
           Birth Date

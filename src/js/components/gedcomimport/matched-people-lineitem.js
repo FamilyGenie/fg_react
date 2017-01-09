@@ -5,7 +5,16 @@ import { updatePerson } from '../../actions/peopleActions';
 
 @connect(
   (store, ownProps) => {
-    return ownProps;
+    for (event in store.events.events) {
+      if (event.person_id === ownProps.person._id) {
+
+      }
+    }
+    return {
+      person: ownProps.person,
+      events: store.events,
+      people: store.people
+    };
   },
   (dispatch) => {
     return {
@@ -20,19 +29,18 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
 
   getOnBlur = (field) => {
     return (evt) => {
-      console.log(this.props.person._id);
       this.props.onBlur(this.props.person._id, field, evt.target.value);
     }
   }
 
   render = () => {
-    const { person, onBlur } = this.props;
+    const { person, events, onBlur } = this.props;
 
     if (person) {
       return(
         <div class="row person-item">
           <div class="col-xs-2 custom-input">
-            <input 
+            <input
               class="form-control"
               type="text"
               defaultValue={person.fName}
@@ -41,7 +49,7 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
           </div>
 
           <div class="col-xs-2 custom-input">
-            <input 
+            <input
               class="form-control"
               type="text"
               defaultValue={person.mName}
@@ -50,7 +58,7 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
           </div>
 
           <div class="col-xs-2 custom-input">
-            <input 
+            <input
               class="form-control"
               type="text"
               defaultValue={person.lName}
@@ -59,33 +67,13 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
           </div>
 
           <div class="col-xs-1 custom-input">
-            <input 
+            <input
               class="form-control"
               type="text"
               defaultValue={person.sexAtBirth}
               onBlur={this.getOnBlur('sexAtBirth')}
             />
           </div>
-          
-          <div class="col-xs-2 custom-input">
-            <input 
-              class="form-control"
-              type="text"
-              defaultValue={person.birthDate}
-              onBlur={this.getOnBlur('birthDate')}
-            />
-          </div>
-
-          <div class="col-xs-2 custom-input">
-            <input 
-              class="form-control"
-              type="text"
-              defaultValue={person.deathDate}
-              onBlur={this.getOnBlur('deathDate')}
-            />
-          </div>
-
-          <div class="col-xs-1 custom-input">
             <button
               class="form-control"
             >
