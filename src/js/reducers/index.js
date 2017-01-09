@@ -11,7 +11,7 @@ import people from "./peopleReducer"
 import user from "./userReducer"
 import stagedPeople from "./stagedPeopleReducer"
 import importPeople from "./importPeopleReducer"
-
+import stagedParentalRels from "./stagedParentalRelsReducer"
 
 export default combineReducers({
   events,
@@ -25,4 +25,5 @@ export default combineReducers({
   user,
   stagedPeople,
   importPeople,
+  stagedParentalRels,
 })

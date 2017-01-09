@@ -37,7 +37,7 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
     const { person, events, onBlur } = this.props;
 
     if (person) {
-      return(
+      return(<div>
         <div class="row person-item">
           <div class="col-xs-2 custom-input">
             <input
@@ -79,9 +79,8 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
             >
               Use This Person
             </button>
-          </div>
         </div>
-      );
+      </div>);
     } else {
       return (<p>Loading...</p>);
     }

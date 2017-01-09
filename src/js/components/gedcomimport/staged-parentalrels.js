@@ -4,26 +4,31 @@ import { connect } from 'react-redux';
 import { fetchParentalRels } from '../../actions/stagedParentalRelActions';
 // import MatchedParentalRelLineItem from './matched-parentalrel-lineitem';
 // import StagedParentalRelLineItem from './staged-parentalrel-lineitem';
+import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
 
 @connect(
   (store, ownProps) => {
     console.log('in staged-parentalrel@connect with: ', store, ownProps);
 
-    var stagedStar = store.stagedParentalRels.stagedParentalRels.find(function(c) {
+    var stagedStar = store.people.people.find(function(c) {
       return c._id === ownProps.params._id;
     });
 
     var stagedParents = store.stagedParentalRels.stagedParentalRels.filter(function(p) {
-      return p._id === ownProps.params.parent_id;
+      return
+      return p.child_id === stagedStar._id;
+    });
+
+    var starMatches = store.parentalRels.parentalRels.filter(function(m) {
+      return
+      return m.child_id === stagedStar._id;
     });
 
     return {
       stagedStar:
         stagedStar,
       starMatches:
-        store.parentalRels.parentalRels.filter(function(m) {
-          return (m.child_id === stagedStar.child_id || m.parent_id === stagedStart.parent_id)
-        }),
+        starMatches,
       stagedParents:
         stagedParents,
     };
@@ -31,9 +36,12 @@ import { fetchParentalRels } from '../../actions/stagedParentalRelActions';
 )
 
 export default class StagedParentalRels extends React.Component {
+
   render = () => {
 
-    const { stagedStar, starMatches } = this.props;
+    const { stagedStar, starMatches, stagedParents } = this.props;
+
+    console.log('stagedstar', starMatches, 'prop', this.props)
 
     /*
      * const mappedMatcheParents = starMatches.map(starMatch =>
@@ -66,18 +74,9 @@ export default class StagedParentalRels extends React.Component {
         </div>
       </div>
       <div>
-      <div class="col-xs-4">
-        Edward
-      </div>
-      <div class="col-xs-4">
-        Vetter-Drake
-      </div>
-      <div class="col-xs-4">
-        1995-06-28
-      </div>
-      {/*
-        <StagedChildLineItem child={stagedStar}/>
-      */}
+        {/*
+          <StagedPeopleDetailsLineItem child={stagedStar}/>
+        */}
       </div>
       <div class="container">
         <div class="col-xs-12">

@@ -20,14 +20,12 @@ export default class StagedParentalRelLineItem extends React.Component {
 
     const { stagedParent, parentalRel } this.props;
 
-    const parentFName = (stagedParent ? parent.fName : 'Click to Edit');
-    const parentLName = (stagedParent ? parent.lName : ' ');
 
     if (parentalRel) {
       return(<div>
         <div class="infoRow">
           <div class="nameCol">
-            {parentFName} {parentLName}
+            {(stagedParent ? stagedParent.fName : 'Click to Edit')} {(stagedParent ? stagedParent.lName : ' ')}
           </div>
           <div class="relTypeCol">
             {parentalRel.subType} {parentalRel.relationshipType}

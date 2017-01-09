@@ -24,7 +24,8 @@ import DateInput from '../date-input';
 export default class StagedPeopleDetailsLineItem extends React.Component {
 
   importPerson = () => {
-    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes)
+    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes);
+    hashHistory.push('/stagedparentalrels/' + this.props.person._id);
   }
 
 	getUpdateDate = (field, displayDate, setDate) => {
