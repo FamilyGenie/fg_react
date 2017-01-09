@@ -95,8 +95,13 @@ constructor(props) {
 	getUpdateDate = (field, dateUser, dateSet) => {
 		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
 		return (field, dateUser, dateSet) => {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
 			this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
+			// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
+			if (dateSet === "Invalid date") {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, field, null);
+			} else {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
+			}
 			if (field === "startDate") {
 				this.setState({startDateUser: dateUser});
 			} else {
