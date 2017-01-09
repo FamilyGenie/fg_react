@@ -18,26 +18,29 @@ export default class PeopleSearch extends React.Component {
             <PeopleSearchLineItem person={person} key={person._id}/>
         );
 
-        return (<div>
-    		<div class="container">
-                <h1>Family Members</h1>
+        return (
+      <div id="outer-search">
+    		<div class="header-div">
+          <h1 class="h1">Family Members</h1>
+        </div>
+        <div id="family-content">
+          <div id="people-info">
+          </div>
+          <div id="family">
+            <div id="add-family">
+              <div class="add-button">
+        				<button
+          					class="form-control add btn-info btn"
+        					onClick={this.openDetails}>
+        					Add Family Member
+        				</button>
+        			</div>
             </div>
-            <div>
-                <div class="row">
-                    <div class="col-xs-2 title bold can-click">
-                        First Name
-                    </div>
-                    <div class="col-xs-2 title bold can-click">
-                        Middle Name
-                    </div>
-                    <div class="col-xs-2 title bold can-click">
-                        Last Name
-                    </div>
-                </div>
+            <div id="buffer-div">
             </div>
-            <div>
-            	{mappedPeople}
-            </div>
-        </div>);
+          	{mappedPeople}
+          </div>
+        </div>
+      </div>);
     }
 }
