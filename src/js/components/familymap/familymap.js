@@ -3,9 +3,6 @@ import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
 
-import { fetchPeople } from '../../actions/peopleActions';
-import { addToArray } from '../../actions/functions';
-
 @connect(
 	(store, ownProps) => {
 		// console.log("in familymap @connect, with: ", store);
@@ -21,13 +18,6 @@ import { addToArray } from '../../actions/functions';
 			};
 		// }
 	},
-	(dispatch) => {
-		return {
-			fetchPeople: () => {
-				dispatch(fetchPeople());
-			},
-		};
-	}
 )
 export default class FamilyMap extends React.Component {
 	constructor(props) {
