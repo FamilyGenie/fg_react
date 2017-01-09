@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { hashHistory } from 'react-router';
 
 import { createPerson, deletePerson, updatePerson } from '../../actions/peopleActions';
 
@@ -30,6 +31,10 @@ export default class PeopleDetailsLineItem extends React.Component {
 
 	deletePerson = () => {
 		this.props.deletePerson(this.props.person._id);
+	}
+
+	openMap = () => {
+		hashHistory.push('/familymap/' + this.props.person._id);
 	}
 
 	render = () => {
@@ -69,6 +74,14 @@ export default class PeopleDetailsLineItem extends React.Component {
 							onClick={this.deletePerson}
 						>
 							Delete
+						</button>
+					</div>
+					<div class="col-xs-1 custom-input">
+						<button
+							class="form-control"
+							onClick={this.openMap}
+						>
+							Map
 						</button>
 					</div>
 				</div>

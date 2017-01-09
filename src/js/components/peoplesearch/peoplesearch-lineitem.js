@@ -1,5 +1,5 @@
 import React from 'react';
-import { hashHistory } from 'react-router'
+import { hashHistory } from 'react-router';
 
 import DateInput from '../date-input';
 
@@ -9,9 +9,12 @@ export default class PeopleSearchLineItem extends React.Component {
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
+	openMap = () => {
+		hashHistory.push('/familymap/' + this.props.person._id);
+	}
+
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
-			console.log("In PeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
 		}
 	}
 
@@ -37,6 +40,12 @@ export default class PeopleSearchLineItem extends React.Component {
 					class="form-control detail"
 					onClick={this.openDetails}>
 					Details
+				</button>
+				<button
+					class="form-control"
+					onClick={this.openMap}
+				>
+					Map
 				</button>
 			</div>
 		</div>

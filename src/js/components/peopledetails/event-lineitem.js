@@ -8,7 +8,6 @@ import { setEvent } from '../../actions/modalActions';
 @connect(
 	(store, ownProps) => {
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now).
-		console.log("in events lineitem, @connect, with: ", ownProps);
 		return ownProps;
 	},
 	(dispatch) => {
@@ -30,13 +29,12 @@ export default class EventLineItem extends React.Component {
 	}
 
 	openModal = () => {
-		// As well as setting the variable for the modal to open, pass the parentalRel that we want to show up in the modal window to the Store. The parentalrelLineItemEdit component that shows in the modal will grab the parentalRel from the store.
+		// As well as setting the variable for the modal to open, pass the event that we want to show up in the modal window to the Store. The EventLineItemEdit component that shows in the modal will grab the event from the store.
 		this.props.setEvent(this.props.event);
 		this.setState({modalIsOpen: true});
 	}
 
 	closeModal = () => {
-		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
 
@@ -61,8 +59,8 @@ export default class EventLineItem extends React.Component {
 			marginBottom: 10,
 		}
 
-		// check to see if there is an eventType. If not, then set the value to "Click to Edit" for the end user to see.
-		const eventDateUser = ( event.eventDateUser ? event.eventDateUser : "Click to Edit" );
+    // check for an event date entered by the user, if there is not one, use the date from the database, if no event from db, display 'click to edit'
+		const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : "Click to Edit") );
 
 		if (event) {
 			return (
@@ -74,10 +72,10 @@ export default class EventLineItem extends React.Component {
 							{eventDateUser}
 					</div>
 					<div class="nameCol">
-						{event.type}
+						{event.eventType}
 					</div>
 					<div class="nameCol">
-						{event.place}
+						{event.eventPlace}
 					</div>
 					{/* This modal is what opens when you click on one of the event records that is displayed. The modalIsOpen variable is accessed via the state, by the openModal call (and set to false in the closeModal call). When set, the new state triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the event record that should be opened in the modal in the Store, so it can be accessed */}
 					<Modal

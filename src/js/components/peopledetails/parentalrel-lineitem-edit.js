@@ -73,8 +73,10 @@ constructor(props) {
 		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
 		return (field, dateUser, dateSet) => {
 			this.props.updateParentalRel(this.props.parentalRel._id, field + "User", dateUser);
-			// only update the dateSet if the field has data in it. If the field is left empty by the end user, then the dateSet field is set to "Invalid date", and we don't want to update it
-			if (dateSet !== "Invalid date") {
+			// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
+			if (dateSet === "Invalid date") {
+				this.props.updateParentalRel(this.props.parentalRel._id, field, null);
+			} else {
 				this.props.updateParentalRel(this.props.parentalRel._id, field, dateSet);
 			}
 			// set the appropriate state variable
@@ -94,7 +96,6 @@ constructor(props) {
 	}
 
 	onRelTypeChange = (evt) => {
-		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
 		// Update the record with the newly selected parent
 		this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
@@ -102,7 +103,6 @@ constructor(props) {
 	}
 
 	onSubTypeChange = (evt) => {
-		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
 		// Update the record with the newly selected parent
 		this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
