@@ -7,7 +7,6 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 
 @connect(
 	(store, ownProps) => {
-		console.log("In EventLineItemEdit @connect with Store:", store);
 		// for the modal to work, we previously put the event in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no event object in the store, so check for that condition. If there is no event object found in the store, then just send through ownProps
 		if (store.modal.event) {
@@ -38,16 +37,15 @@ export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
-	console.log("in EventLineItemEdit constructor with: ", this.props);
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		eventType: this.props.event.type,
+		eventType: this.props.event.eventType,
 	};
 }
 
 	onEventTypeChange = (evt) => {
-		this.props.updateEvent(this.props.event._id, "type", evt.value);
+		this.props.updateEvent(this.props.event._id, "eventType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
 		this.setState({eventType: evt.value});
 	}
@@ -133,8 +131,8 @@ constructor(props) {
 						<input
 								class="form-control"
 								type="text"
-								defaultValue={event.place}
-								onBlur={this.getUpdateEvent('place')}
+								defaultValue={event.eventPlace}
+								onBlur={this.getUpdateEvent('eventPlace')}
 						/>
 					</div>
 					<div class="custom-input" style={buttonCol}>

@@ -94,7 +94,6 @@ constructor(props) {
 	}
 
 	onRelTypeChange = (evt) => {
-		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
 		// Update the record with the newly selected parent
 		this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
@@ -102,7 +101,6 @@ constructor(props) {
 	}
 
 	onSubTypeChange = (evt) => {
-		// console.log("in onRelTypeChange with: ", evt.value, this.props.parentalRel);
 		// Update the record with the newly selected parent
 		this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.

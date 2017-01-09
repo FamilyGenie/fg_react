@@ -33,6 +33,9 @@ export default class PeopleSearch extends React.Component {
                     <div class="col-xs-2 title bold can-click">
                         Last Name
                     </div>
+                    <div class="col-xs-2 title bold can-click">
+                        Birth Date
+                    </div>
                 </div>
             </div>
             <div>
