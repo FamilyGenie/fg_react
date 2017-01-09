@@ -14,7 +14,6 @@ export default class PeopleSearchLineItem extends React.Component {
 
 	getUpdateDate = (field, displayDate, setDate) => {
 		return (field, displayDate, setDate) => {
-			console.log("In PeopleSearchLineItem updateDate, with: ", field, displayDate, setDate);
 		}
 	}
 
