@@ -29,13 +29,12 @@ export default class EventLineItem extends React.Component {
 	}
 
 	openModal = () => {
-		// As well as setting the variable for the modal to open, pass the parentalRel that we want to show up in the modal window to the Store. The parentalrelLineItemEdit component that shows in the modal will grab the parentalRel from the store.
+		// As well as setting the variable for the modal to open, pass the event that we want to show up in the modal window to the Store. The EventLineItemEdit component that shows in the modal will grab the event from the store.
 		this.props.setEvent(this.props.event);
 		this.setState({modalIsOpen: true});
 	}
 
 	closeModal = () => {
-		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
 
