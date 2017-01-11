@@ -21,32 +21,32 @@ export default class PeopleSearchLineItem extends React.Component {
 
 	render = () => (
 		<div id="person-div">
-			<div class="custom-input">
-				<p class="person-text">
-					{this.props.person.fName}
-				</p>
-				<p class="person-text">
-					{this.props.person.mName}
-				</p>
-				<p class="person-text">
-					{this.props.person.lName}
-				</p>
+			<div id="name-date">
+				<div class="custom-input">
+					<p class="person-text">
+						{this.props.person.fName}
+					</p>
+					<p class="person-text">
+						{this.props.person.mName}
+					</p>
+					<p class="person-text">
+						{this.props.person.lName}
+					</p>
+				</div>
+				<div class="date-div">
+					<p class="person-text">Added: 12/31/1971</p>
+				</div>
 			</div>
-			<div class="date-div">
-				<p class="person-text">Added: 12/31/1971</p>
-			</div>
-			<div class="details-button">
-				<button
-					class="form-control detail"
+			<div id="details-map">
+				<i
+					class="fa fa-pencil-square-o"
 					onClick={this.openDetails}>
-					Details
-				</button>
-				<button
-					class="form-control"
+				</i>
+				<i
+					class="fa fa-sitemap"
 					onClick={this.openMap}
 				>
-					Map
-				</button>
+			</i>
 			</div>
 		</div>
 	);

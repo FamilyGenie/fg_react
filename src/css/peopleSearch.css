@@ -2,18 +2,27 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #BDCDFD;
 }
-
+#search-instruction {
+  width: 100%;
+  height: 100px;
+  border: 1px solid black;
+}
 .header-div {
   display: flex;
   justify-content: center;
+  margin-top: 50px;
 }
-
-.h1 {
-
+.family-header {
+  color: black;
+  font-weight: 400;
+  font-size: 40px;
 }
-
-
+#below-family {
+ width: 100%;
+ height: 100px;
+}
 #family-content {
   display: flex;
   width: 100%;
@@ -36,11 +45,13 @@
   border: 1px solid silver;
   border-radius: 5px;
   position: relative;
+  background-color: white;
 }
 #person-div {
   display: flex;
   flex-direction: row;
   width: 100%;
+  height: 30px;
   align-items: center;
   border-bottom: 1px solid silver;
 }
@@ -55,9 +66,8 @@
 
 .custom-input {
   display: flex;
-  margin-left: 10px;
+  margin-left: 20px;
   margin-right: 10px;
-  justify-content: center;
   align-items: center;
 }
 
@@ -68,26 +78,60 @@
   height: 500px;
   border: 1px solid silver;
   border-radius: 5px;
+  background-color: white;
 }
 .person-text {
   padding-right: 5px;
   margin-bottom: 0;
+  font-family: 'Cabin', sans-serif;
+  font-size: 18px;
 }
-.details-button {
 
-}
 #add-family {
   width: 100%;
+  background-color: #0000e6;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
 }
 .date-div {
   margin-left: auto;
   margin-right: 35px;
 }
-.detail {
+.add {
   border-bottom: 0;
   border-top: 0;
-  background-color: #4d79ff;
+  color: silver;
+  font-size: 30px;
+  padding: 0;
   color: white;
+  margin-left: 160px;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+#buffer-div {
+  width: 100%;
+  height: 10px;
+  background-color: silver;
+}
+.fa {
+  color: #640FF3;
+}
+.fa-sitemap {
+  margin-right: 17px;
+  font-size: 22px;
+}
+.fa-plus-square {
+  color: white;
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: 17px;
+  margin-bottom: auto;
+  font-size: 28px;
+}
+.fa-pencil-square-o {
+  border-bottom: 0;
+  border-top: 0;
   border-radius: 3px;
   font-size: 25px;
   padding-top: 0;
@@ -95,26 +139,56 @@
   padding-right: 13px;
   padding-left: 13px;
 }
-.add {
-  border-bottom: 0;
-  border-top: 0;
-  background-color: #6600ff;
-  color: silver;
-  font-size: 30px;
-  padding: 0;
-  color: white;
+#details-map {
+  display: flex;
+  margin-left: auto;
 }
-#buffer-div {
+#name-date {
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  height: 10px;
-  background-color: silver;
 }
 
-
-@media (max-width: 800px) {
-  #family-content {
+@media (max-width: 1300px) {
+  #people-info {
+    width: 95%;
+    margin-bottom: 60px;
+  }
+  #family {
+    width: 45%;
+  }
+  #people-info {
+    width: 45%;
+  }
+  #name-date {
     flex-direction: column;
   }
+  #person-div {
+    height: 60px;
+  }
+  .date-div {
+    margin-left: 20px;
+  }
+  .details-button {
+    margin-left: auto;
+  }
+
+}
+@media (max-width: 1080px) {
+  .add {
+    margin-left: 120px;
+  }
+
+}
+@media (max-width: 1000px) {
+  .add {
+    margin-left: auto;
+  }
+
+}
+
+@media (max-width: 800px) {
+
   #people-info {
     width: 95%;
     margin-bottom: 60px;
@@ -122,13 +196,29 @@
   #family {
     width: 95%;
   }
-
-}
-@media (max-width: 600px) {
   .date-div {
-    display: none;
+    margin-left: auto;
   }
   .details-button {
     margin-left: auto;
   }
+  #name-date {
+    flex-direction: row;
+  }
+  #person-div {
+    height: 60px;
+  }
+  #family-content {
+    flex-direction: column;
+  }
+
+}
+@media (max-width: 600px) {
+  #name-date {
+    flex-direction: column;
+  }
+  .date-div {
+    margin-left: 20px;
+  }
+
 }

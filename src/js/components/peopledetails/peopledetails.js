@@ -119,38 +119,20 @@ export default class PeopleDetails extends React.Component {
 			}
 		}
 
-		return (<div>
-			<div class="container">
-				<div class="col-xs-10">
-					<h1>Family Members</h1>
-				</div>
-				<div class="col-xs-2 custom-input">
-					<button
-						class="form-control"
-						onClick={this.createPerson}
-					>
-						Create New
-					</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-2 title bold can-click">
-					First Name
-				</div>
-				<div class="col-xs-2 title bold can-click">
-					Middle Name
-				</div>
-				<div class="col-xs-2 title bold can-click">
-					Last Name
-				</div>
-			</div>
+		return (
+		<div class="main-detail" ref={(ref) => this._div = ref}>
 			<div>
+				<div class="header-div">
+					<h1 class="family-header">Personal Connections</h1>
+				</div>
+			</div>
+			<div id="detail-name">
 				<PeopleDetailsLineItem person={star} />
 			</div>
 			<div class="outerContainer">
-				<div class="innerInfo" style={divStyle}>
-					<div class="titleRow" style={headingStyle}>
-						Parents
+				<div class="innerInfo">
+					<div class="titleRow">
+						<p class="detail-title">Parents</p>
 					</div>
 					<div>
 						{mappedParentalRels}
@@ -159,9 +141,9 @@ export default class PeopleDetails extends React.Component {
 						<i class="fa fa-plus-square buttonSize" onClick={this.createParentalRel}></i>
 					</div>
 				</div>
-				<div class="innerInfo" style={divStyle}>
-					<div class="titleRow" style={headingStyle}>
-						Pair Bonds
+				<div class="innerInfo">
+					<div class="titleRow">
+						<p class="detail-title">Pair Bonds</p>
 					</div>
 					<div>
 						{mappedPairBondRels}
@@ -170,9 +152,9 @@ export default class PeopleDetails extends React.Component {
 						<i class="fa fa-plus-square buttonSize" onClick={this.createPairBondRel}></i>
 					</div>
 				</div>
-				<div class="innerInfo" style={divStyle}>
-					<div class="titleRow" style={headingStyle}>
-						Chronology
+				<div class="innerInfo">
+					<div class="titleRow">
+						<p class="detail-title">Chronology</p>
 					</div>
 					<div>
 						{mappedEvents}
@@ -184,5 +166,8 @@ export default class PeopleDetails extends React.Component {
 			</div>
 		</div>
 		);
+	}
+	componentDidMount() {
+		this._div.scrollTop = 0;
 	}
 }

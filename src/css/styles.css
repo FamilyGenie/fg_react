@@ -2,31 +2,6 @@
 The following is for the flexbox styling
 **************/
 
-.outerContainer {
-  display: flex;
-  flex-direction: row;
-  width: 95%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.innerInfo {
-  display: flex;
-  flex-direction: column;
-  width: 33.3%;
-}
-
-.titleRow {
-  text-align: center;
-}
-
-.infoRow {
-  display: flex;
-  flex-direction: row;
-  width: 95%;
-  margin-right: auto;
-  margin-left: auto;
-}
 
 .buttonCol {
   width: 8%;
@@ -296,12 +271,12 @@ html {
   min-height: 100%;
 }
 
-body {
+/*body {
   margin: 2em;
   padding-top: 60px;
   padding-bottom: 30px;
   font-size: 18px;
-}
+}*/
 
 .footer {
     position: absolute;
@@ -319,6 +294,11 @@ body {
 .footer-container {
   padding-top: 5px;
 }
+
+/*New Fonts*/
+font-family: 'Frank Ruhl Libre', sans-serif;
+font-family: 'Source Sans Pro', sans-serif;
+font-family: 'Cabin', sans-serif;
 
 /***************
 The following is for the flexbox styling
