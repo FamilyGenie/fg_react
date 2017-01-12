@@ -16,6 +16,7 @@ import DateInput from '../date-input';
 )
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
+		console.log(this.props.person);
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
@@ -36,23 +37,18 @@ export default class PeopleSearchLineItem extends React.Component {
     }
   }
 
-
-
 	render = () => (
-		<div class="row person-item">
-			<div class="col-xs-2 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue={this.props.person.fName}
-				/>
-			</div>
-			<div class="col-xs-2 custom-input">
-				<input
-					class="form-control"
-					type="text"
-					defaultValue={this.props.person.mName}
-				/>
+		<div id="person-div">
+			<div class="custom-input">
+				<p class="person-text">
+					{this.props.person.fName}
+				</p>
+				<p class="person-text">
+					{this.props.person.mName}
+				</p>
+				<p class="person-text">
+					{this.props.person.lName}
+				</p>
 			</div>
 			<div class="col-xs-2 custom-input">
 				<input
@@ -63,12 +59,11 @@ export default class PeopleSearchLineItem extends React.Component {
 			</div>
 			<div class="col-xs-2 custom-input">
         {this.birthDate()}
-			</div>
-			<div class="col-xs-1 custom-input">
+      </div>
+			<div class="details-button">
 				<button
-					class="form-control"
-					onClick={this.openDetails}
-				>
+					class="form-control detail"
+					onClick={this.openDetails}>
 					Details
 				</button>
 				<button
