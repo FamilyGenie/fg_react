@@ -684,7 +684,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		console.log("Draw text for: ", person.fName, person.birthDate, moment(person.birthDate).format("L"));
 		let textData = [];
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
@@ -692,10 +691,10 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("L")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("L")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("MM/DD/YYYY")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
