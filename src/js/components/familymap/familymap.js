@@ -3,14 +3,39 @@ import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
 
+import PeopleSearchLineItem from '../peoplesearch/peoplesearch-lineitem';
+
 @connect(
 	(store, ownProps) => {
-		// console.log("in familymap @connect, with: ", store);
+
 			return {
 				star_id:
 					ownProps.params.star_id,
+				// people:
+				// 	store.people.people,
+				// this prop stores the people with their birth info and death info in the object with the person. Makes the logic to draw the map easier.
 				people:
-					store.people.people,
+					store.people.people.map(function(person) {
+						 var birth = store.events.events.find(function(e) {
+								return person._id === e.person_id && e.eventType === "Birth";
+						 });
+						 if (birth) {
+							 person.birthDate = birth.eventDate;
+							 person.birthPlace = birth.eventPlace;
+						 }
+
+						 var death = store.events.events.find(function(e) {
+								return person._id === e.person_id && e.eventType === "Death";
+						 });
+
+						 if (death) {
+							 person.deathDate = death.eventDate;
+							 person.deathPlace = death.eventPlace;
+						 }
+
+						return person;
+					}
+				),
 				pairBondRelationships:
 					store.pairBondRels.pairBondRels,
 				parentalRelationships:
@@ -22,6 +47,7 @@ import moment from 'moment';
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log("PeopleWithDates: ", this.props.people);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -193,7 +219,7 @@ export default class FamilyMap extends React.Component {
 				dad = this.parents.find(function(parent){
 					return parent._id === dadRel.parent_id;
 				});
-
+				console.log("drawing kid for mom and dad: ", mom, dad);
 				// calculate xPos of child
 				// find the amount that is halfway between the two parents
 				xPos = Math.abs(mom.mapXPos - dad.mapXPos) / 2;
@@ -658,6 +684,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
+		console.log("Draw text for: ", person.fName, person.birthDate, moment(person.birthDate).format("L"));
 		let textData = [];
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
@@ -665,10 +692,10 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("L")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("L")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
