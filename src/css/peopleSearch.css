@@ -2,7 +2,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #BDCDFD;
+  background-color: #EDF0FF;
 }
 #search-instruction {
   width: 100%;
@@ -105,7 +105,8 @@
   font-size: 30px;
   padding: 0;
   color: white;
-  margin-left: 160px;
+  margin-right: auto;
+  margin-left: auto;
   margin-bottom: auto;
   margin-top: auto;
 }
@@ -114,7 +115,8 @@
   height: 10px;
   background-color: silver;
 }
-.fa {
+
+.button2 {
   color: #640FF3;
 }
 .fa-sitemap {
@@ -122,12 +124,14 @@
   font-size: 22px;
 }
 .fa-plus-square {
-  color: white;
   margin-top: auto;
   margin-left: auto;
-  margin-right: 17px;
+  margin-right: 15px;
   margin-bottom: auto;
   font-size: 28px;
+}
+#create-person {
+  color: white;
 }
 .fa-pencil-square-o {
   border-bottom: 0;
@@ -136,8 +140,7 @@
   font-size: 25px;
   padding-top: 0;
   padding-bottom: 0;
-  padding-right: 13px;
-  padding-left: 13px;
+  margin-left: 4px;
 }
 #details-map {
   display: flex;

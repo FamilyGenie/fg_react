@@ -49,10 +49,12 @@ export default class PeopleSearch extends React.Component {
           </div>
           <div id="family">
             <div id="add-family">
+              <div class="blank-person-header">
+  						</div>
       				<p class="add">
       					Family Members
       				</p>
-              <i class="fa fa-plus-square" aria-hidden="true" onClick={this.createPerson}>
+              <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createPerson}>
               </i>
             </div>
             <div id="buffer-div">

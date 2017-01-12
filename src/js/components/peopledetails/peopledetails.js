@@ -132,35 +132,45 @@ export default class PeopleDetails extends React.Component {
 			<div class="outerContainer">
 				<div class="innerInfo">
 					<div class="titleRow">
+						<div class="blank-person-header">
+						</div>
 						<p class="detail-title">Parents</p>
+						<div class="buttonSize">
+							<i class="fa-plus-square fa" onClick={this.createParentalRel}>
+							</i>
+						</div>
 					</div>
 					<div>
 						{mappedParentalRels}
 					</div>
-					<div class="buttonRow">
-						<i class="fa fa-plus-square buttonSize" onClick={this.createParentalRel}></i>
-					</div>
 				</div>
 				<div class="innerInfo">
 					<div class="titleRow">
+						<div class="blank-person-header">
+						</div>
 						<p class="detail-title">Pair Bonds</p>
+						<div class="buttonSize">
+							<i class="fa-plus-square fa" onClick={this.createPairBondRel}></i>
+						</div>
 					</div>
 					<div>
 						{mappedPairBondRels}
 					</div>
-					<div class="buttonRow">
-						<i class="fa fa-plus-square buttonSize" onClick={this.createPairBondRel}></i>
-					</div>
+
 				</div>
 				<div class="innerInfo">
 					<div class="titleRow">
+						<div class="blank-person-header">
+						</div>
 						<p class="detail-title">Chronology</p>
+						<div class="buttonSize">
+							<i class="fa-plus-square fa"
+							onClick={this.createEvent}>
+							</i>
+						</div>
 					</div>
 					<div>
 						{mappedEvents}
-					</div>
-					<div class="buttonRow">
-						<i class="fa fa-plus-square buttonSize" onClick={this.createEvent}></i>
 					</div>
 				</div>
 			</div>

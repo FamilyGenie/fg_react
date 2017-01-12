@@ -1,7 +1,7 @@
 .main-detail {
   width: 100%;
   height: 100vh;
-  background-color: #BDCDFD;
+  background-color: #EDF0FF;
 }
 
 .outerContainer {
@@ -14,7 +14,6 @@
 }
 
 .innerInfo {
-  display: flex;
   flex-direction: column;
   width: 30%;
   background-color: white;
@@ -31,6 +30,8 @@
   background-color: #0000e6;
   height: 35px;
   color: white;
+  display: flex;
+  flex-direction: row;
 }
 
 .infoRow {
@@ -40,18 +41,42 @@
   margin-right: auto;
   margin-left: auto;
 }
+.blank-person-header {
+  width: 15%;
+}
 .detail-title {
   font-size: 25px;
   font-weight: 550;
-  width: 100%;
+  width: 60%;
   margin-top: auto;
   margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.buttonSize {
+  font-size: 1.5em;
+  width: 15%;
+  display: flex;
 }
 #detail-name {
   margin-right: auto;
   margin-left: auto;
   width: 95%;
 }
+.buttonRow {
+  width: 30px;
+  text-align: right;
+  margin-right: 15px;
+  margin-left: auto;
+}
+.infoRow {
+  display: flex;
+  flex-direction: row;
+}
+.buttonCol {
+  width: 50px;
+}
+
 
 @media (max-width: 800px) {
   .outerContainer {
