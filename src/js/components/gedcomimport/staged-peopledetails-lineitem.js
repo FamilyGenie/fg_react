@@ -2,7 +2,6 @@ import React from 'react';
 import { hashHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { importPerson } from '../../actions/importActions';
-import { deletPerson } from '../../actions/peopleActions';
 
 import DateInput from '../date-input';
 
