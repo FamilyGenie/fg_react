@@ -51,6 +51,7 @@ export default class FamilyMap extends React.Component {
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
+			starAge: 18
 		};
 	}
 
@@ -71,15 +72,23 @@ export default class FamilyMap extends React.Component {
 
 	subtractYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
+		this.starAge--;
 		// also set the state variable
-		this.setState({dateFilterString: this.dateFilterString});
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: this.starAge
+		});
 		this.componentDidMount();
 	}
 
 	addYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
+		this.starAge++;
 		// also set the state variable
-		this.setState({dateFilterString: this.dateFilterString});
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: this.starAge
+		});
 		this.componentDidMount();
 	}
 
@@ -653,10 +662,14 @@ export default class FamilyMap extends React.Component {
 		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
 			this.starAge = 18;
-			this.dateFilterString = moment(star.birthDate).add(18,'y').format('YYYY-MM-DD');
+			this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
 		}
 		// update the display as well
-		this.setState({dateFilterString: this.dateFilterString});
+		console.log("Date: ", this.dateFilterString);
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: this.starAge
+		});
 	}
 
 	getPersonById = (_id) => {
@@ -691,10 +704,10 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
 				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
@@ -702,7 +715,7 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate).format("MM/DD/YYYY")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}
