@@ -1,7 +1,7 @@
 .main-detail {
   width: 100%;
   height: 100vh;
-  background-color: #EDF0FF;
+  background-color: white;
 }
 
 .outerContainer {
@@ -22,6 +22,9 @@
   border-radius: 3px;
   margin-left: auto;
   margin-right: auto;
+  border-bottom: 1px solid silver;
+  border-right: 1px solid silver;
+  border-left: 1px solid silver;
 }
 
 .titleRow {
@@ -90,4 +93,7 @@
   .main-detail {
     height: 100%;
   }
+}
+@media (max-width: 600px) {
+
 }
