@@ -11,6 +11,7 @@ import PeopleSearchLineItem from './peoplesearch-lineitem';
   };
 })
 export default class PeopleSearch extends React.Component {
+
 	render = () => {
         const { people } = this.props;
 

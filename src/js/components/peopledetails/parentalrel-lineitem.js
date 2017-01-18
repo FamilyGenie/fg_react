@@ -7,6 +7,7 @@ import { setParentalRel } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
+    console.log('in parentalrel@connect with: ', ownProps)
 		return {
 			parent:
 				store.people.people.find(function(p) {
