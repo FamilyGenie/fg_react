@@ -31,11 +31,14 @@ export default class PeopleDetailsLineItem extends React.Component {
 
 	deletePerson = () => {
 		this.props.deletePerson(this.props.person._id);
+		hashHistory.push('/');
 	}
 
 	openMap = () => {
 		hashHistory.push('/familymap/' + this.props.person._id);
 	}
+
+
 
 	render = () => {
 		const { person, onBlur } = this.props;
@@ -49,6 +52,7 @@ export default class PeopleDetailsLineItem extends React.Component {
 							class="form-control"
 							type="text"
 							defaultValue={person.fName}
+							placeholder="Enter First Name"
 							onBlur={this.getOnBlur('fName')}
 						/>
 					</div>
@@ -57,6 +61,7 @@ export default class PeopleDetailsLineItem extends React.Component {
 							class="form-control"
 							type="text"
 							defaultValue={person.mName}
+							placeholder="Enter Middle Name"
 							onBlur={this.getOnBlur('mName')}
 						/>
 					</div>
@@ -65,7 +70,17 @@ export default class PeopleDetailsLineItem extends React.Component {
 							class="form-control"
 							type="text"
 							defaultValue={person.lName}
+							placeholder="Enter Last Name"
 							onBlur={this.getOnBlur('lName')}
+						/>
+					</div>
+					<div class="col-xs-2 custom-input">
+						<input
+							class="form-control"
+							type="text"
+							defaultValue={person.sexAtBirth}
+							placeholder="Enter Gender"
+							onBlur={this.getOnBlur('sexAtBirth')}
 						/>
 					</div>
 					<div class="col-xs-1 custom-input">
