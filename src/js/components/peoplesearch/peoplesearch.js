@@ -1,7 +1,9 @@
 import React from 'react';
-import { connect } from "react-redux"
+import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
+import { newPerson } from '../../actions/newPersonActions';
 
 @connect((store) => {
   return {
@@ -9,8 +11,22 @@ import PeopleSearchLineItem from './peoplesearch-lineitem';
     userFetched: store.user.fetched,
     people: store.people.people,
   };
-})
+},
+(dispatch) => {
+  return {
+    newPerson: () => {
+      dispatch(newPerson());
+    },
+  }
+}
+)
 export default class PeopleSearch extends React.Component {
+
+  createNewPerson = () => {
+    this.props.newPerson();
+
+    hashHistory.push('/peopledetails/' + this.props.people[this.props.people.length - 1]._id)
+  }
 
 	render = () => {
         const { people } = this.props;
@@ -32,7 +48,7 @@ export default class PeopleSearch extends React.Component {
               <div class="add-button">
         				<button
           					class="form-control add btn-info btn"
-        					onClick={this.openDetails}>
+        					onClick={this.createNewPerson}>
         					Add Family Member
         				</button>
         			</div>

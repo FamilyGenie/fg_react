@@ -26,7 +26,7 @@ export default class TestNewPerson extends React.Component {
   createNewPerson = () => {
     this.props.newPerson();
 
-    hashHistory.push('/newperson/' + this.props.people[this.props.people.length - 1]._id)
+    hashHistory.push('/peopledetails/' + this.props.people[this.props.people.length - 1]._id)
   }
 
 
