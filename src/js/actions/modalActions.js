@@ -19,3 +19,17 @@ export function setEvent(event) {
 		dispatch({type: "SET_EVENT", payload: event});
 	}
 }
+
+export function setNewPerson(newPerson) {
+	// set the type to tell the newPersonModal to open, and pass the object to be edited in the modal window as the payload
+	return function(dispatch) {
+		dispatch({type: "SET_NEWPERSON", payload: newPerson});
+	}
+}
+
+export function closeNewPersonModal() {
+  // close the global modal by changing the `modalIsOpen` variable in the store
+  return function(dispatch) {
+    dispatch({type: "CLOSE_NEWPERSON_MODAL_FULFILLED"})
+  }
+}
