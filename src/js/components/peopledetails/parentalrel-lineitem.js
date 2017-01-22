@@ -77,11 +77,15 @@ export default class ParentalRelLineItem extends React.Component {
 						<div class="buttonCol" onClick={this.openModal}>
 							<i class="fa fa-pencil-square-o button2"></i>
 						</div>
-						<div class="nameCol" onClick={this.openModal}>
-								{parentFName} {parentLName}
-						</div>
-						<div class="relTypeCol">
-							{parentalRel.subType} {parentalRel.relationshipType}
+						<div class="inner-name-div">
+							<div class="nameCol" onClick={this.openModal}>
+									<div class="relTypeWord">{parentFName}</div>
+									<div class="relTypeWord">{parentLName}</div>
+							</div>
+							<div class="relTypeCol">
+								<div class="relTypeWord ital">{parentalRel.subType}</div> <div class="relTypeWord ital">{parentalRel.relationshipType}
+								</div>
+							</div>
 						</div>
 					</div>
 					{/* This modal is what opens when you click on one of the parent records that is displayed. The modalIsOpen variable is accessed via the Store, and is updated in the store, by the openModal call (and set to false in the closeModal call). The new state of the Store triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the parentalRel record that should be opened in the modal in the Store, so it can be easily accessed */}

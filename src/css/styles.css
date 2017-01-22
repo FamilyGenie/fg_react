@@ -5,22 +5,6 @@ The following is for the flexbox styling
   color: #478652;
 }
 
-.nameCol {
-  width: 43%;
-}
-
-.relTypeCol {
-  width: 49%;
-}
-
-.personCol {
-  width: 25%;
-}
-
-
-
-
-
 /***************
 This ends the flexbox styling
 
@@ -114,6 +98,7 @@ h3 {
 	text-align: left;
 	color: #640FF3;
 	font-size: 2.5em;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 /* this is to accomodate for the poor icon I took from the internet. when we get a vector image, we will either change this or remove it */
@@ -158,14 +143,9 @@ div.container.select-container {
 
 /* this makes the fields square corners and increases font-size */
 .form-control {
-  border-radius: 0;
   font-size: 18px;
 }
 
-/* this makes the button square corners */
-.btn {
-	border-radius: 0;
-}
 
 /* change the color of the buttons */
 .btn-primary {

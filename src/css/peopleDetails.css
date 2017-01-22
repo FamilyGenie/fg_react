@@ -1,9 +1,29 @@
+@font-face {
+   font-family: CabinMI;
+   src: url("./fonts/Cabin/Cabin-MediumItalic.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+@font-face {
+   font-family: SSP-Light;
+   src: url("./fonts/Source_Sans_Pro/SourceSansPro-Light.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+@font-face {
+   font-family: SSP-LI;
+   src: url("./fonts/Source_Sans_Pro/SourceSansPro-LightItalic.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+
+
+
 .main-detail {
   width: 100%;
   height: 100vh;
   background-color: #F8F8FA;
 }
-
 .outerContainer {
   display: flex;
   flex-direction: row;
@@ -13,7 +33,53 @@
   margin-top: 30px;
 }
 
+/*Begin styling of person name section*/
+.person-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+.btn {
+  background-color: #640FF3;
+  color: white;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+.btn:hover {
+  background-color: #0000e6;
+  color: white;
+}
+.button-group {
+  display: flex;
+  flex-direction: row;
+}
+.detail-names {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.buffer-line {
+  background-color: silver;
+  height: 3px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/*End styling of person name section*/
+
+/*Begin styling of connections section*/
+.detail-input {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 180px;
+  border-radius: 3px;
+}
 .innerInfo {
+  box-shadow: 3px 3px 3px #CCCCCC;
   flex-direction: column;
   width: 30%;
   background-color: white;
@@ -26,7 +92,13 @@
   border-right: 1px solid silver;
   border-left: 1px solid silver;
 }
-
+.input-box {
+  background-color: #0000e6;
+  display: flex;
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+}
 .titleRow {
   text-align: center;
   width: 100%;
@@ -36,13 +108,14 @@
   display: flex;
   flex-direction: row;
 }
-
 .infoRow {
   display: flex;
   flex-direction: row;
   width: 95%;
   margin-right: auto;
   margin-left: auto;
+  border-bottom: 1px solid silver;
+  font-family: SSP-Light;
 }
 .blank-person-header {
   width: 15%;
@@ -55,6 +128,7 @@
   margin-bottom: auto;
   margin-left: auto;
   margin-right: auto;
+  font-family: CabinMI;
 }
 .buttonSize {
   font-size: 1.5em;
@@ -64,7 +138,8 @@
 #detail-name {
   margin-right: auto;
   margin-left: auto;
-  width: 95%;
+  display: flex;
+  flex-direction: column;
 }
 .buttonRow {
   width: 30px;
@@ -78,8 +153,48 @@
 }
 .buttonCol {
   width: 50px;
+  display: flex;
+  align-items: center;
+}
+.buffer-div {
+  width: 100%;
+  height: 5px;
+  background-color: silver;
 }
 
+/*Begin styling of parent details section*/
+.nameCol {
+  display: flex;
+  align-items: center;
+}
+
+.relTypeCol {
+  display: flex;
+  width: 43%;
+  align-items: center;
+  margin-left: auto;
+}
+.relTypeWord {
+  margin-right: 3px;
+}
+.ital {
+  font-style: italic;
+}
+
+.personCol {
+  width: 25%;
+  display: flex;
+  align-items: center;
+}
+.inner-name-div {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  width: 100%;
+}
+/*End styling of parent details section*/
+
+/*End styling of connections section*/
 
 @media (max-width: 800px) {
   .outerContainer {
@@ -93,7 +208,25 @@
   .main-detail {
     height: 100%;
   }
+
+  .detail-names {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-input {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+  }
+  .button-group {
+    margin-top: 10px;
+  }
+  .buffer-line {
+    width: 70%;
+  }
 }
 @media (max-width: 600px) {
-
+  .relTypeCol {
+    font-size: 12px;
+  }
 }
