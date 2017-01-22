@@ -147,10 +147,6 @@
   margin-right: 15px;
   margin-left: auto;
 }
-.infoRow {
-  display: flex;
-  flex-direction: row;
-}
 .buttonCol {
   width: 50px;
   display: flex;
@@ -180,7 +176,6 @@
 .ital {
   font-style: italic;
 }
-
 .personCol {
   width: 25%;
   display: flex;
@@ -192,6 +187,115 @@
   margin-left: auto;
   width: 100%;
 }
+.PR-main {
+  display: flex;
+  flex-direction: column;
+}
+.PR-row-1 {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  margin-top: 30px;
+  width: 400px;
+}
+.PR-row-2 {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  margin-top: 30px;
+  width: 400px;
+}
+.PR-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 200px;
+  align-items: center;
+  text-align: center;
+}
+.PR-sub-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.PR-row-3 {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+}
+.PR-date-div {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.PR-title {
+  width: 130px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.PR-sub-title {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+.PR-drop-1 {
+  width: 150px;
+}
+.PR-drop-2 {
+  width: 150px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.PR-drops {
+  display: flex;
+  flex-direction: row;
+}
+.PR-eDate {
+  display: flex;
+  justify-content: center;
+}
+.buffer-modal {
+  background-color: silver;
+  height: 3px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+.fa-window-close-o {
+  margin-left: auto;
+  margin-right: 5px;
+  float: right;
+  background-color: white;
+  color: #640FF3;
+}
+.modal-header {
+  display: flex;
+  flex-direction: row;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 0;
+}
+.modal-header-1 {
+  width: 30%;
+}
+.modal-header-2 {
+  width: 40%;
+}
+.modal-header-3 {
+  width: 30%;
+}
+
 /*End styling of parent details section*/
 
 /*End styling of connections section*/
