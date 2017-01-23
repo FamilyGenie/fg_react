@@ -22,7 +22,7 @@
 .main-detail {
   width: 100%;
   height: 100vh;
-  background-color: #F8F8FA;
+  background-color: #E9EBEE;
 }
 .outerContainer {
   display: flex;
@@ -102,7 +102,7 @@
 .titleRow {
   text-align: center;
   width: 100%;
-  background-color: #0000e6;
+  background-color: #3B42AF;
   height: 35px;
   color: white;
   display: flex;
@@ -128,7 +128,8 @@
   margin-bottom: auto;
   margin-left: auto;
   margin-right: auto;
-  font-family: CabinMI;
+  font-family: brandFont;
+  color: #F3C100;
 }
 .buttonSize {
   font-size: 1.5em;
@@ -159,11 +160,29 @@
 }
 
 /*Begin styling of parent details section*/
+.detail-modal {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #EDF0FF;
+  overflow: scroll;
+  height: 500px;
+  border: 3px solid #0C6AFA;
+  border-radius: 5px;
+}
+.ReactModal__Overlay {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  height: 500px;
+  margin-top: 80px;
+  background-color: #C2D0D7;
+}
 .nameCol {
   display: flex;
   align-items: center;
 }
-
 .relTypeCol {
   display: flex;
   width: 43%;
@@ -190,6 +209,7 @@
 .PR-main {
   display: flex;
   flex-direction: column;
+  font-family: CabinMI;
 }
 .PR-row-1 {
   display: flex;
@@ -209,6 +229,15 @@
   margin-top: 30px;
   width: 400px;
 }
+.PR-row-event {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  margin-top: 30px;
+  width: 500px;
+}
 .PR-div {
   display: flex;
   flex-direction: column;
@@ -217,6 +246,13 @@
   align-items: center;
   text-align: center;
 }
+.PR-sDate {
+  width: 150px;
+}
+.PR-eDate {
+  width: 150px;
+}
+
 .PR-sub-div {
   display: flex;
   flex-direction: row;
@@ -230,23 +266,25 @@
   margin-left: auto;
   margin-right: auto;
   width: 400px;
+  margin-bottom: 30px;
 }
 .PR-date-div {
   display: flex;
   flex-direction: column;
-  width: 130px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: 200px;
+  align-items: center;
 }
 .PR-title {
   width: 130px;
   text-align: center;
   margin-bottom: 10px;
+  font-size: 17px;
 }
 .PR-sub-title {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;
+  font-size: 17px;
 }
 .PR-drop-1 {
   width: 150px;
@@ -270,7 +308,6 @@
   width: 50%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 30px;
 }
 .fa-window-close-o {
   margin-left: auto;
@@ -285,15 +322,27 @@
   padding-top: 0px;
   padding-bottom: 0px;
   border: 0;
+  height: 70px;
+  justify-content: center;
+  align-items: center;
 }
 .modal-header-1 {
-  width: 30%;
+  width: 20%;
 }
 .modal-header-2 {
-  width: 40%;
+  width: 60%;
 }
 .modal-header-3 {
-  width: 30%;
+  width: 20%;
+}
+.PR-modal-header {
+  text-align: center;
+  color: #F3C100;
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 10px;
+  font-family: brandFont;
+  text-shadow: -1px 0 #640FF3, 0 1px #640FF3, 1px 0 #640FF3, 0 -1px #640FF3;
 }
 
 /*End styling of parent details section*/
@@ -312,6 +361,10 @@
   .main-detail {
     height: 100%;
   }
+  .ReactModal__Overlay {
+    width: 70%;
+    position: relative;
+  }
 
   .detail-names {
     display: flex;
@@ -328,9 +381,38 @@
   .buffer-line {
     width: 70%;
   }
+
 }
 @media (max-width: 600px) {
   .relTypeCol {
     font-size: 12px;
+  }
+  .ReactModal__Overlay {
+    width: 90%;
+  }
+  .PR-row-1 {
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+  }
+  .PR-row-2 {
+    width: 100%;
+    flex-direction: column;
+  }
+  .PR-row-3 {
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+  }
+  .PR-sub-div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .PR-div {
+    margin-bottom: 10px;
+  }
+  .modal-header-2 {
+    font-size: 17px;
   }
 }

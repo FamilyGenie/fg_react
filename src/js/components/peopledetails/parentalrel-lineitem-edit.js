@@ -219,7 +219,7 @@ constructor(props) {
 					<div class="buffer-modal">
 					</div>
 					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
+						<i class="fa fa-minus-square fa-2x" onClick={this.deleteRecord}></i>
 					</div>
 				</div>)
 		} else {

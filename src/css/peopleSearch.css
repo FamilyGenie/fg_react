@@ -2,7 +2,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: #E9EBEE;
 }
 #search-instruction {
   width: 100%;
@@ -14,11 +14,12 @@
   justify-content: center;
 }
 .family-header {
-  color: black;
+  color: #640FF3;
   font-weight: 400;
   font-size: 40px;
   margin-top: 10px;
   text-align: center;
+  font-family: brandFont;
 }
 #below-family {
  width: 100%;
@@ -90,7 +91,7 @@
 
 #add-family {
   width: 100%;
-  background-color: #0000e6;
+  background-color: #3B42AF;
   display: flex;
   flex-direction: row;
   text-align: center;
