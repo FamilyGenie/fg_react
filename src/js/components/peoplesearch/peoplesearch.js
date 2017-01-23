@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import Modal from 'react-modal';
 import AlertContainer from 'react-alert';
+import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
 import NewPerson from '../newperson';
@@ -88,10 +89,14 @@ export default class PeopleSearch extends React.Component {
       }
     };
 
-    return (
+        return (
       <div id="outer-search">
     		<div class="header-div">
-          <h1 class="h1">Family Members</h1>
+          <h1 class="family-header">Family Members</h1>
+        </div>
+        <div id="search-instruction">
+          <p>
+          </p>
         </div>
         <div id="family-content">
           <div id="people-info">
@@ -111,7 +116,6 @@ export default class PeopleSearch extends React.Component {
           	{mappedPeople}
           </div>
         </div>
-
       <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
@@ -122,7 +126,8 @@ export default class PeopleSearch extends React.Component {
       </Modal>
 
       <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
-
+        <div id="below-family">
+        </div>
       </div>);
     }
 }

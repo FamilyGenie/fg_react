@@ -76,7 +76,7 @@ export default class ParentalRelLineItem extends React.Component {
 				<div>
 					<div class="infoRow">
 						<div class="buttonCol" onClick={this.openModal}>
-							<i class="fa fa-pencil-square-o"></i>
+							<i class="fa fa-pencil-square-o button2"></i>
 						</div>
 						<div class="nameCol" onClick={this.openModal}>
 								{parentFName} {parentLName}
