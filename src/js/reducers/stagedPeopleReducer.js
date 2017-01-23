@@ -15,6 +15,15 @@ export default function reducer(state={
     case "FETCH_STAGINGPEOPLE_FULFILLED": {
       return {...state, fetching: false, stagedPeople: action.payload}
     }
+    case "UPDATE_STAGINGPERSON": {
+      return {...state, fetching: true}
+    }
+    case "UPDATE_STAGINGPERSON_REJECTED": {
+      return {...state, fetching: false, error: action.payload}
+    }
+    case "UPDATE_STAGINGPERSON_FULFILLED": {
+      return {...state, fetching: false}
+    }
   }
   return state
 

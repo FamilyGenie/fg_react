@@ -23,3 +23,25 @@ export function fetchStagedPeople() {
       })
   }
 }
+
+export function updateStagedPerson(_id, field, value) {
+
+  const body = {
+    object : {
+      _id, 
+      field, 
+      value 
+    }
+  };
+
+  return function(dispatch) {
+    dispatch({type: 'UPDATE_STAGINGPERSON'});
+    axios.post(config.api_url + '/api/v2/staging/person/update', body, axiosConfig)
+      .then((response) => {
+        dispatch({type: 'UPDATE_STAGINGPERSON_FULFILLED', payload: response.data})
+      })
+      .catch((err) => {
+        dispatch({type: 'UPDATE_STAGINGPERSON_REJECTED', payload: err})
+      })
+  }
+}

@@ -5,11 +5,6 @@ import { updatePerson } from '../../actions/peopleActions';
 
 @connect(
   (store, ownProps) => {
-    for (event in store.events.events) {
-      if (event.person_id === ownProps.person._id) {
-
-      }
-    }
     return {
       person: ownProps.person,
       events: store.events,
@@ -74,11 +69,6 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
               onBlur={this.getOnBlur('sexAtBirth')}
             />
           </div>
-            <button
-              class="form-control"
-            >
-              Use This Person
-            </button>
         </div>
       </div>);
     } else {

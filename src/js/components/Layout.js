@@ -40,6 +40,10 @@ export default class Layout extends React.Component {
 		hashHistory.push('/stagedpeoplesearch/');
 	}
 
+  goToImport = () => {
+    hashHistory.push('/gedcomimport/');
+  }
+
 	render() {
 		return (
 		<div>
@@ -59,6 +63,9 @@ export default class Layout extends React.Component {
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
+					<li class="navbar-li-padding">
+						<a class="navbarright" onClick={this.goToImport}> IMPORT </a>
+					</li>
 					<li class="navbar-li-padding">
 						<a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
 					</li>

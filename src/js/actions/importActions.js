@@ -1,6 +1,8 @@
 import axios from "axios";
 import cookie from "react-cookie";
 import { createEvent } from "./eventsActions";
+import { fetchPeople } from "./peopleActions";
+import { fetchStagedPeople } from "./stagedPeopleActions";
 
 import config from "../config.js";
 
@@ -9,6 +11,26 @@ const fgtoken = cookie.load('fg-access-token');
 var axiosConfig = {
 	headers: {'x-access-token': fgtoken}
 };
+
+export function runImport() {
+
+  // send an empty body object
+  const body = {};
+
+  return (dispatch) => {
+    dispatch({type: "RUN_IMPORT"});
+    axios.post(config.api_url + "/api/v2/autoimport", body, axiosConfig)
+      .then((response) => {
+        dispatch({type: "RUN_IMPORT_FULFILLED", payload: response.data})
+        // after running import, refresh the store.
+        dispatch(fetchPeople());
+        dispatch(fetchStagedPeople());
+      })
+      .catch((err) => {
+        dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
+      })
+  }
+}
 
 export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace) {
 
@@ -70,3 +92,4 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 			})
 	}
 }
+

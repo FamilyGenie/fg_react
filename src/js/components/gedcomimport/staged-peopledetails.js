@@ -27,7 +27,7 @@ export default class StagedPeopleDetails extends React.Component {
     const { stagedStar, starMatches } = this.props;
 
     const mappedMatches = starMatches.map(starMatch =>
-      <MatchedPeopleDetails person={starMatch} key={starMatch._id}/>
+      <MatchedPeopleDetails person={starMatch} key={starMatch._id} starId={stagedStar._id}/>
     );
 
     return (<div>
