@@ -13,6 +13,7 @@ import GedcomImport from './components/gedcomimport/upload-gedcom';
 import StagedPeopleSearch from './components/gedcomimport/staged-peoplesearch';
 import StagedPeopleDetails from './components/gedcomimport/staged-peopledetails';
 import StagedParentalRels from './components/gedcomimport/staged-parentalrels';
+import Chronology from './components/chronology/chronology';
 
 const app = document.getElementById('app');
 
@@ -27,6 +28,7 @@ ReactDOM.render(<Provider store={store}>
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
 			<Route path="/stagedparentalrels(/:_id)" name="Staged Parental Relationships" component={StagedParentalRels}></Route>
+      <Route path="/chronology" name="Chronology" component={Chronology}></Route>
 		</Route>
 	</Router>
 </Provider>, app);
