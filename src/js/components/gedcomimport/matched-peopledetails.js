@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
 
 import { updatePerson } from '../../actions/peopleActions';
 import { updateStagedPerson } from '../../actions/stagedPeopleActions';
@@ -31,6 +32,7 @@ export default class MatchedPeopleDetails extends React.Component {
   useRecord = () => {
     this.props.useRecord(this.props.starId, 'genie_id', this.props.person._id);
     this.props.useRecord(this.props.starId, 'ignore', true);
+    hashHistory.push('/stagedpeoplesearch/');
   }
 
   render = () => {
