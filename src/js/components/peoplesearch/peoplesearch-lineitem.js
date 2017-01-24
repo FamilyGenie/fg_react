@@ -16,7 +16,6 @@ import DateInput from '../date-input';
 )
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
-		console.log(this.props.person);
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
