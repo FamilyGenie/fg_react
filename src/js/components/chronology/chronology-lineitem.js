@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
+import moment from 'moment';
 
 import EventLineItemEdit from '../peopledetails/event-lineitem-edit';
 import { setEvent } from '../../actions/modalActions';
@@ -70,20 +71,20 @@ export default class ChronologyLineItem extends React.Component {
     if (event) {
       return (<div>
         <div class="infoRow">
-					<div class="buttonCol" onClick={this.openModal}>
+					<div class="buttonCol col-xs-1" onClick={this.openModal}>
 						<i class="fa fa-pencil-square-o"></i>
 					</div>
-          <div class="nameCol">
-            {eventDateUser}
+          <div class="nameCol col-xs-2">
+            {moment(eventDateUser).format('MM/DD/YYYY')}
           </div>
-          <div class="nameCol">
+          <div class="nameCol col-xs-3">
+            {(person ? person.fName + ' ' + person.lName : "PERSON")}
+          </div>
+          <div class="nameCol col-xs-2">
             {(event.eventType ? event.eventType : "EVENT TYPE")}
           </div>
-          <div class="nameCol">
+          <div class="nameCol col-xs-2">
             {(event.eventPlace ? event.eventPlace : "EVENT PLACE")}
-          </div>
-          <div class="nameCol">
-            {(person ? person.fName + ' ' + person.lName : "PERSON")}
           </div>
         </div>
         <Modal

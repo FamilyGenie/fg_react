@@ -26,12 +26,16 @@ export default class Chronology extends React.Component {
 
     if(events) {
       return(<div>
+        <div style={{height : 75 + 'px'}}></div>
         <h2> Chronology </h2>
 
         <div class="container">
-          <div class="col-xs-12">
-            {mappedEvents}
-          </div>
+          <div class="col-xs-1"></div>
+          <div class="col-xs-2"> Date </div>
+          <div class="col-xs-3"> Person </div>
+          <div class="col-xs-2"> Type </div>
+          <div class="col-xs-2"> Place </div>
+          {mappedEvents}
         </div>
         
       </div>)
