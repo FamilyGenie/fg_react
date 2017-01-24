@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { hashHistory } from 'react-router';
 
-
 import { fetchEvents } from "../actions/eventsActions";
 import { fetchPairBondRels } from "../actions/pairBondRelsActions";
 import { fetchParentalRels } from "../actions/parentalRelsActions";
