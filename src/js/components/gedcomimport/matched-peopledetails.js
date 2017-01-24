@@ -21,7 +21,6 @@ import MatchedPeopleLineItem from './matched-people-lineitem';
     return {
       useRecord: (_id, field, value) => {
         dispatch(updateStagedPerson(_id, field, value));
-        dispatch(updateStagedPerson(_id, 'ignore', true));
       }
     }
   }
@@ -31,6 +30,7 @@ export default class MatchedPeopleDetails extends React.Component {
 
   useRecord = () => {
     this.props.useRecord(this.props.starId, 'genie_id', this.props.person._id);
+    this.props.useRecord(this.props.starId, 'ignore', true);
   }
 
   render = () => {

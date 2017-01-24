@@ -53,17 +53,16 @@ export default class GedcomImport extends React.Component {
     }
 
     render = () => {
-      return (
-        <div>
-        <Dropzone onDrop={this.onDrop}>
-          <div>
-            Drop a file or click to browse
-            This currently only accepts files from Ancestry.com
-          </div>
-        </Dropzone>
-        <button onClick={this.runImport}> Run Import </button>
+      return (<div>
+        <div class="container" style={{marginTop: '100px'}}>
+          <Dropzone onDrop={this.onDrop}>
+            <div>
+              <p>Drop a file or click to browse</p>
+              <p>This currently only accepts files from Ancestry.com</p>
+            </div>
+          </Dropzone>
+          <button onClick={this.runImport}> Run Import </button>
         </div>
-
-      );
+      </div>);
     }
 }

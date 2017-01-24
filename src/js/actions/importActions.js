@@ -32,7 +32,7 @@ export function runImport() {
   }
 }
 
-export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace) {
+export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes, _id) {
 
 	// construct body for api call to create person
 	const body = {
@@ -86,6 +86,40 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 							dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
 						})
 					}
+
+        const bodyUpdate1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        }
+        const bodyUpdate2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true'
+          }
+        }
+
+        dispatch({type: "UPDATE_STAGINGPERSON"});
+        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate1, axiosConfig)
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
+          })
+
+        dispatch({type: "UPDATE_STAGINGPERSON"});
+        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate2, axiosConfig)
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
+          })
+
 			})
 			.catch((err) => {
 				dispatch({type: "CREATE_PERSON_REJECTED", payload: err})

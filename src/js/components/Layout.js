@@ -41,7 +41,7 @@ export default class Layout extends React.Component {
 	}
 
   goToImport = () => {
-    hashHistory.push('/gedcomimport/');
+    hashHistory.push('/importhome/');
   }
 
 	render() {
