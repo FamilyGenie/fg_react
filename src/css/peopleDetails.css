@@ -139,8 +139,8 @@
   margin-bottom: auto;
   margin-left: auto;
   margin-right: auto;
-  font-family: brandFont;
-  color: #F3C100;
+  font-family: cabin;
+  color: #E9EBEE;
 }
 .buttonSize {
   font-size: 1.5em;
@@ -175,10 +175,10 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  background-color: #EDF0FF;
+  background-color: white;
   overflow: scroll;
-  height: 500px;
-  border: 3px solid #0C6AFA;
+  height: 600px;
+  border: 3px solid #640FF3;
   border-radius: 5px;
 }
 .ReactModal__Overlay {
@@ -186,10 +186,11 @@
   margin-left: auto;
   margin-right: auto;
   background-color: white;
-  height: 500px;
+  height: 600px;
   margin-top: 80px;
   background-color: #C2D0D7;
 }
+
 .nameCol {
   display: flex;
   align-items: center;
@@ -229,7 +230,7 @@
   margin-right: auto;
   justify-content: center;
   margin-top: 30px;
-  width: 400px;
+  width: 600px;
 }
 .PR-row-2 {
   display: flex;
@@ -238,7 +239,7 @@
   margin-right: auto;
   justify-content: center;
   margin-top: 30px;
-  width: 400px;
+  width: 600px;
 }
 .PR-row-event {
   display: flex;
@@ -247,21 +248,47 @@
   margin-right: auto;
   justify-content: center;
   margin-top: 30px;
-  width: 500px;
+  width: 600px;
+}
+.Select-control {
+  height: 50px;
+  width: 250px;
+}
+.Select-single {
+  width: 250px;
+}
+.Select-value-label {
+  font-size: 20px;
+}
+.Select-value {
+  display: flex;
+  font-size: 25px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 .PR-div {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 200px;
+  width: 300px;
   align-items: center;
   text-align: center;
 }
 .PR-sDate {
-  width: 150px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
 }
 .PR-eDate {
-  width: 150px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+}
+.form-control {
+  height: 50px;
+  font-size: 20px;
+  width: 250px;
 }
 
 .PR-sub-div {
@@ -276,20 +303,20 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
+  width: 600px;
   margin-bottom: 30px;
 }
 .PR-date-div {
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 600px;
   align-items: center;
 }
-.PR-title {
-  width: 130px;
+.PR-event-title {
+  width: 300px;
   text-align: center;
   margin-bottom: 10px;
-  font-size: 17px;
+  font-size: 25px;
 }
 .PR-sub-title {
   margin-left: auto;
@@ -298,16 +325,18 @@
   font-size: 17px;
 }
 .PR-drop-1 {
-  width: 150px;
+  width: 250px;
+}
+.PR-drop-name {
+  width: 250px;
 }
 .PR-drop-2 {
-  width: 150px;
-  margin-right: 5px;
-  margin-left: 5px;
+  width: 250px;
 }
 .PR-drops {
   display: flex;
   flex-direction: row;
+  width: 250px;
 }
 .PR-eDate {
   display: flex;
@@ -337,6 +366,21 @@
   justify-content: center;
   align-items: center;
 }
+.modal-delete {
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  width: 70px;
+}
+.delete-modal {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
 .modal-header-1 {
   width: 20%;
 }
@@ -348,12 +392,12 @@
 }
 .PR-modal-header {
   text-align: center;
-  color: #F3C100;
+  color: black;
   font-weight: bold;
   font-size: 25px;
   margin-bottom: 10px;
-  font-family: brandFont;
-  text-shadow: -1px 0 #640FF3, 0 1px #640FF3, 1px 0 #640FF3, 0 -1px #640FF3;
+  font-family: cabin;
+  /*text-shadow: -1px 0 #640FF3, 0 1px #640FF3, 1px 0 #640FF3, 0 -1px #640FF3;*/
 }
 
 /*End styling of parent details section*/

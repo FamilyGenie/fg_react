@@ -110,12 +110,22 @@ constructor(props) {
 					<div class="PR-row-event">
 						<div class="PR-div">
 							<div class="PR-title">
+								Event Name
+							</div>
+							<div class="PR-drop-1">
+								<DateInput defaultValue="Event Name" field="eventDate"/>
+							</div>
+						</div>
+						<div class="PR-div">
+							<div class="PR-title">
 								Date
 							</div>
 							<div class="PR-drop-1">
 								<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
 							</div>
 						</div>
+					</div>
+					<div class="PR-row-event">
 						<div class="PR-div">
 							<div class="PR-title">
 								Type
@@ -145,7 +155,7 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-title">
+						<div class="PR-event-title">
 						Family Context
 						</div>
 						<div class="PR-sDate">
@@ -157,8 +167,10 @@ constructor(props) {
 							/>
 						</div>
 					</div>
+				</div>
+				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-title">
+						<div class="PR-event-title">
 						Local Context
 						</div>
 						<div class="PR-eDate">
@@ -170,8 +182,10 @@ constructor(props) {
 							/>
 						</div>
 					</div>
+				</div>
+				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-title">
+						<div class="PR-event-title">
 						World Context
 						</div>
 						<div class="PR-eDate">

@@ -54,7 +54,7 @@ h3 {
   margin-bottom: 0;
 }
 .navbar.navbar-default {
-    background-color: #EDF0FF;
+    background-color: #3B42AF;
     border-bottom: 3px solid silver;
     border-left: none;
     border-right: none;
@@ -64,15 +64,16 @@ h3 {
 
 /* this is fonts in the navbar */
 .navbar-default .navbar-nav>li>a {
-    color: #777777;
+    color: #E9EBEE;
     font-weight: 600;
     font-size: 16px;
+    font-family: cabin;
 }
 
 /* this is the color when the item is the active page */
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus {
     color: #478652;
-    background-color: #FFFFFF;
+    background-color: #3B42AF;
 }
 
 .navbarright {
@@ -93,12 +94,14 @@ h3 {
 
 /* this is for the word Family Genie on the left */
 .navbar-default .navbar-brand {
+  display: flex;
+  align-items: center;
 	font-family: brandFont;
 	font-weight: bolder;
 	text-align: left;
 	color: #640FF3;
 	font-size: 2.5em;
-  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+  text-shadow: -1px 0 #E9EBEE, 0 1px #E9EBEE, 1px 0 #E9EBEE, 0 -1px #E9EBEE;
 }
 
 /* this is to accomodate for the poor icon I took from the internet. when we get a vector image, we will either change this or remove it */
@@ -139,11 +142,6 @@ div.container.select-container {
 
 .gendername {
   margin-top: 20px
-}
-
-/* this makes the fields square corners and increases font-size */
-.form-control {
-  font-size: 18px;
 }
 
 

@@ -38,11 +38,7 @@ export default class PeopleSearch extends React.Component {
         return (
       <div id="outer-search">
     		<div class="header-div">
-          <h1 class="family-header">Family Members</h1>
-        </div>
-        <div id="search-instruction">
-          <p>
-          </p>
+          <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
           <div id="people-info">

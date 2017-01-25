@@ -146,19 +146,7 @@ constructor(props) {
 							<div class="PR-title">
 								Parent Name
 							</div>
-							<div class="PR-drop-1">
-								<Select
-									options={peopleArray}
-									onChange={this.onParentChange}
-									value={this.state.parent_id}
-								/>
-							</div>
-						</div>
-						<div class="PR-div">
-							<div class="PR-title">
-								Relationship
-							</div>
-							<div class="PR-drop-1">
+							<div class="PR-drop-name">
 								<Select
 									options={peopleArray}
 									onChange={this.onParentChange}
@@ -168,11 +156,11 @@ constructor(props) {
 						</div>
 					</div>
 					<div class="PR-row-2">
-						<div class="PR-sub-title">
-							SubType
-						</div>
 						<div class="PR-sub-div">
 							<div class="PR-div">
+								<div class="PR-title">
+									Relationship
+								</div>
 								<div class="PR-drops">
 									<div class="PR-drop-2">
 										<Select
@@ -184,6 +172,9 @@ constructor(props) {
 								</div>
 							</div>
 							<div class="PR-div">
+								<div class="PR-title">
+									Sub Type
+								</div>
 								<div class="PR-drops">
 									<div class="PR-drop-2">
 										<Select
@@ -218,8 +209,14 @@ constructor(props) {
 					</div>
 					<div class="buffer-modal">
 					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square fa-2x" onClick={this.deleteRecord}></i>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
 					</div>
 				</div>)
 		} else {

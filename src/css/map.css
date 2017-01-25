@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: row;
   border: 2px solid silver;
-  width: 200px;
+  width: 160px;
   border-radius: 5px;
   background-color: white;
 }
@@ -20,10 +20,14 @@
   margin-right: 10px;
 }
 .map-date {
-  width: 140px;
+  width: 120px;
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+}
+.map-date-1 {
+  width: 120px;
+  font-family: cabin;
 }
 .svg-map {
   height: 1400px;

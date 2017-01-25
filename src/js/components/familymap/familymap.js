@@ -111,8 +111,8 @@ export default class FamilyMap extends React.Component {
 							</div>
 						</div>
 						<div class="map-arrow">
-							<i class="fa fa-arrow-circle-up buttonSize" onClick={this.addYear}></i>
-							<i class="fa fa-arrow-circle-down buttonSize" onClick={this.subtractYear.bind(this)}></i>
+							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
+							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 						</div>
 					</div>
 					<div>
