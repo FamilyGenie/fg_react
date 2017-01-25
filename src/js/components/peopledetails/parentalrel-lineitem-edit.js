@@ -156,38 +156,83 @@ constructor(props) {
 
 		if (parentalRel) {
 			return (
-				<div class="infoRow">
-					<div class="custom-input" style={nameCol}>
-						<Select
-							options={peopleArray}
-							onChange={this.onParentChange}
-							value={this.state.parent_id}
-						/>
+				<div class="PR-main">
+					<div class="PR-row-1">
+						<div class="PR-div">
+							<div class="PR-title">
+								Parent Name
+							</div>
+							<div class="PR-drop-name">
+								<Select
+									options={peopleArray}
+									onChange={this.onParentChange}
+									value={this.state.parent_id}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<Select
-							options={parentalRelTypes}
-							onChange={this.onRelTypeChange}
-							value={this.state.relationshipType}
-						/>
+					<div class="PR-row-2">
+						<div class="PR-sub-div">
+							<div class="PR-div">
+								<div class="PR-title">
+									Relationship
+								</div>
+								<div class="PR-drops">
+									<div class="PR-drop-2">
+										<Select
+											options={parentalRelTypes}
+											onChange={this.onRelTypeChange}
+											value={this.state.relationshipType}
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="PR-div">
+								<div class="PR-title">
+									Sub Type
+								</div>
+								<div class="PR-drops">
+									<div class="PR-drop-2">
+										<Select
+											options={parentalRelSubTypes}
+											onChange={this.onSubTypeChange}
+											value={this.state.subType}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<Select
-							options={parentalRelSubTypes}
-							onChange={this.onSubTypeChange}
-							value={this.state.subType}
-						/>
+					<div class="PR-row-3">
+						<div class="PR-date-div">
+							<div class="PR-title">
+							Start Date
+							</div>
+							<div class="PR-sDate">
+								<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
+								/>
+							</div>
+						</div>
+						<div class="PR-date-div">
+							<div class="PR-title">
+							End Date
+							</div>
+							<div class="PR-eDate">
+								<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
-						/>
+					<div class="buffer-modal">
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
-						/>
-					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
 					</div>
 				</div>)
 		} else {

@@ -97,21 +97,31 @@ export default class FamilyMap extends React.Component {
 
 		if (this.props.people) {
 			return (<div>
-				<div class="container">
-					<h1>Family Map</h1>
-					<div>
-						Date: {this.state.dateFilterString}
+				<div class="main-map-header">
+					<div class="header-div">
+						<h1 class="family-header">Family Map</h1>
 					</div>
-					<div>
-						Star's Age: {this.starAge}
-						<i class="fa fa-arrow-circle-down buttonSize" onClick={this.subtractYear.bind(this)}></i>
-						<i class="fa fa-arrow-circle-up buttonSize" onClick={this.addYear}></i>
+					<div class="main-date">
+						<div class="map-date">
+							<div class="map-date-1">
+								Date: {this.state.dateFilterString}
+							</div>
+							<div class="map-date-1">
+							Star's Age: {this.starAge}
+							</div>
+						</div>
+						<div class="map-arrow">
+							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
+							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
+						</div>
 					</div>
 					<div>
 					</div>
 				</div>
-				<svg class="svg-map">
-				</svg>
+				<div class="map">
+					<svg class="svg-map">
+					</svg>
+				</div>
 			</div>)
 		}
 	}
