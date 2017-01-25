@@ -15,11 +15,14 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 					store.modal.event,
 				eventTypes:
 					store.eventTypes.eventTypes,
-				star:
-					store.modal.event.person_id,
 			}
 		} else {
-			return ownProps
+      return {
+        event:
+          ownProps.event,
+        eventTypes:
+          store.eventTypes.eventTypes,
+      }
 		}
 	},
 	(dispatch) => {
