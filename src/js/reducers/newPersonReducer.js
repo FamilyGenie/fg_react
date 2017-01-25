@@ -20,14 +20,6 @@ export default function reducer(
         error: action.payload
       };
     }
-    case "CREATE_NEWPERSON_FULFILLED": {
-      return {
-        ...state,
-        fetching: false,
-        person: action.payload
-      }
-    }
   }
   return state;
 }
-

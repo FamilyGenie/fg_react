@@ -37,8 +37,9 @@ export function newPerson() {
           })
           .catch((err) => {
             dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-          })
+          });
 
+        // the newly created person's id is passed to the createParentalRel action, as the child_id.
         const fatherRelBody = {
           object: {
             child_id: newChild._id,
@@ -47,6 +48,7 @@ export function newPerson() {
           }
         }
 
+        // the newly created person's id is passed to the createParentalRel action, as the child_id.
         const motherRelBody = {
           object: {
             child_id: newChild._id,
@@ -56,6 +58,7 @@ export function newPerson() {
         }
 
         // create two parent record for mother and father because we don't trust people without parents
+        // When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are. 
         dispatch({type: "CREATE_PARENTALREL"});
         axios.post(config.api_url + '/api/v2/parentalrel/create', fatherRelBody, axiosConfig)
           .then((response) => {
@@ -78,7 +81,7 @@ export function newPerson() {
             id: newChild._id,
             modalIsOpen: true,
           };
-          // make newPerson accessible from the store
+          // dispatching this will make the newPersonModal open, and will pass it the newly created person's id. 
           dispatch({type: "SET_NEWPERSON", payload: newPerson});
           
       })

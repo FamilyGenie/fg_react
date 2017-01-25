@@ -12,7 +12,6 @@ import store from './store';
 import GedcomImport from './components/gedcomimport/upload-gedcom';
 import StagedPeopleSearch from './components/gedcomimport/staged-peoplesearch';
 import StagedPeopleDetails from './components/gedcomimport/staged-peopledetails';
-import TestNewPerson from './components/testPage';
 import NewPerson from './components/newperson';
 
 const app = document.getElementById('app');
@@ -27,8 +26,6 @@ ReactDOM.render(<Provider store={store}>
 			<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 			<Route path='/stagedpeopledetails(/:_id)' name='Staged People Details' component={StagedPeopleDetails}></Route>
-      <Route path='/testpage' name='Test Page' component={TestNewPerson}></Route>
-      <Route path='/newperson(/:_id)' name='New Person' component={NewPerson}></Route>
 		</Route>
 	</Router>
 </Provider>, app);

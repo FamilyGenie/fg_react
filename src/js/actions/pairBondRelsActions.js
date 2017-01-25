@@ -3,7 +3,6 @@ import cookie from "react-cookie";
 
 import config from "../config.js";
 
-
 const fgtoken = cookie.load('fg-access-token');
 
 var axiosConfig = {
