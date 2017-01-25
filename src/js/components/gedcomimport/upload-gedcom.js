@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import cookie from "react-cookie";
 import Dropzone from 'react-dropzone';
+import { hashHistory } from 'react-router';
+
 import { runImport } from '../../actions/importActions';
 
 const fgtoken = cookie.load('fg-access-token');
