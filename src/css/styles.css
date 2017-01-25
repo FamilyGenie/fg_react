@@ -231,15 +231,9 @@ input .content {
 
 .map-title {
   position: fixed;
-  width: 98%
+  width: 98%;
 }
 
-.svg-map {
-  height: 1400px;
-  width: 1400px;
-  padding-top: 75px
-
-}
 
 html {
   position: relative;

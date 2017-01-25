@@ -1,3 +1,4 @@
+
 #outer-search {
   width: 100%;
   display: flex;
@@ -14,12 +15,13 @@
   justify-content: center;
 }
 .family-header {
-  color: #640FF3;
+  color: #F3C100;
   font-weight: 400;
   font-size: 40px;
   margin-top: 10px;
   text-align: center;
   font-family: brandFont;
+  margin-top: 20px;
 }
 #below-family {
  width: 100%;
@@ -52,10 +54,12 @@
 #person-div {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 95%;
   height: 30px;
   align-items: center;
   border-bottom: 1px solid silver;
+  margin-left: auto;
+  margin-right: auto;
 }
 .search-name-title {
   width: 100%;
@@ -106,11 +110,12 @@
   color: silver;
   font-size: 30px;
   padding: 0;
-  color: white;
+  color: #F3C100;
   margin-right: auto;
   margin-left: auto;
   margin-bottom: auto;
   margin-top: auto;
+  font-family: brandFont;
 }
 #buffer-div {
   width: 100%;
