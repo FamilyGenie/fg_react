@@ -18,11 +18,26 @@ export default class Chronology extends React.Component {
 
   render = () => { 
 
+    var sort_by = (field, reverse, primer) => {
+      var key = primer ? 
+        function(x) {return primer(x[field])} : 
+        function(x) {return x[field]};
+
+
+        reverse = !reverse ? 1 : -1;
+
+        return function (a, b) {
+          return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+        } 
+    }
+
     const { events } = this.props;
 
     const mappedEvents = events.map(event => 
       <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
     );
+
+    const sortByDate = mappedEvents.sort(sort_by('eventDate', false, parseFloat));
 
     if(events) {
       return(<div>
@@ -35,7 +50,7 @@ export default class Chronology extends React.Component {
           <div class="col-xs-3"> Person </div>
           <div class="col-xs-2"> Type </div>
           <div class="col-xs-2"> Place </div>
-          {mappedEvents}
+          {sortByDate}
         </div>
         
       </div>)

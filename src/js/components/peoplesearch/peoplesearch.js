@@ -26,6 +26,7 @@ export default class PeopleSearch extends React.Component {
     console.log("in people search", this.props);
   }
 
+  // When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are. 
   createPerson = () => {
     this.props.createPerson();
   };
