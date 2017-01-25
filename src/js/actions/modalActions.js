@@ -28,7 +28,7 @@ export function setNewPerson(newPerson) {
 }
 
 export function closeNewPersonModal() {
-  // the reducer will change the modalIsOpen variable to false, in order to close the modal
+  // the reducer will change the modalIsOpen variable to false, in order to close the modal.
   return function(dispatch) {
     dispatch({type: "CLOSE_NEWPERSON_MODAL_FULFILLED"})
   }
