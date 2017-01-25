@@ -7,7 +7,6 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 
 @connect(
 	(store, ownProps) => {
-		console.log("In EventLineItemEdit @connect with Store:", store);
 		// for the modal to work, we previously put the event in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no event object in the store, so check for that condition. If there is no event object found in the store, then just send through ownProps
 		if (store.modal.event) {
@@ -38,16 +37,15 @@ export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
-	console.log("in EventLineItemEdit constructor with: ", this.props);
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		eventType: this.props.event.type,
+		eventType: this.props.event.eventType,
 	};
 }
 
 	onEventTypeChange = (evt) => {
-		this.props.updateEvent(this.props.event._id, "type", evt.value);
+		this.props.updateEvent(this.props.event._id, "eventType", evt.value);
 		// As well as updating the database and the store, update the state variable so the display shows the new value.
 		this.setState({eventType: evt.value});
 	}
@@ -106,77 +104,104 @@ constructor(props) {
 
 		// only render if we have data to show
 		if (event) {
-			return ( <div>
-				<div class="infoRow">
-					<div class="title bold" style={dateCol}>
-						Date
+			return (
+			<div>
+				<div class="PR-main">
+					<div class="PR-row-event">
+						<div class="PR-div">
+							<div class="PR-title">
+								Event Name
+							</div>
+							<div class="PR-drop-1">
+								<DateInput defaultValue="Event Name" field="eventDate"/>
+							</div>
+						</div>
+						<div class="PR-div">
+							<div class="PR-title">
+								Date
+							</div>
+							<div class="PR-drop-1">
+								<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
+							</div>
+						</div>
 					</div>
-					<div class="title bold" style={relCol}>
-						Type
-					</div>
-					<div class="title bold" style={relCol}>
-						Place
+					<div class="PR-row-event">
+						<div class="PR-div">
+							<div class="PR-title">
+								Type
+							</div>
+							<div class="PR-drop-1">
+								<Select
+									options={eventTypes}
+									onChange={this.onEventTypeChange}
+									value={eventType}
+								/>
+							</div>
+						</div>
+						<div class="PR-div">
+							<div class="PR-title">
+								Place
+							</div>
+							<div class="PR-drop-1">
+								<input
+										class="form-control"
+										type="text"
+										defaultValue={event.eventPlace}
+										onBlur={this.getUpdateEvent('eventPlace')}
+								/>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="infoRow">
-					<div class="custom-input" style={dateCol}>
-						<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
-					</div>
-					<div class="custom-input" style={relCol}>
-						<Select
-							options={eventTypes}
-							onChange={this.onEventTypeChange}
-							value={eventType}
-						/>
-					</div>
-					<div class="custom-input" style={relCol}>
-						<input
-								class="form-control"
-								type="text"
-								defaultValue={event.place}
-								onBlur={this.getUpdateEvent('place')}
-						/>
-					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
-					</div>
-				</div>
-				<div class="infoRow">
-					<div class="title bold" style={contextCol}>
+				<div class="PR-row-3">
+					<div class="PR-date-div">
+						<div class="PR-event-title">
 						Family Context
-					</div>
-					<div class="title bold" style={contextCol}>
-						Local Context
-					</div>
-					<div class="title bold" style={contextCol}>
-						World Context
+						</div>
+						<div class="PR-sDate">
+							<input
+									class="form-control"
+									type="text"
+									defaultValue={event.familyContext}
+									onBlur={this.getUpdateEvent('familyContext')}
+							/>
+						</div>
 					</div>
 				</div>
-				<div class="infoRow">
-					<div class="custom-input" style={contextCol}>
-						<input
-								class="form-control"
-								type="text"
-								defaultValue={event.familyContext}
-								onBlur={this.getUpdateEvent('familyContext')}
-						/>
+				<div class="PR-row-3">
+					<div class="PR-date-div">
+						<div class="PR-event-title">
+						Local Context
+						</div>
+						<div class="PR-eDate">
+							<input
+									class="form-control"
+									type="text"
+									defaultValue={event.localContext}
+									onBlur={this.getUpdateEvent('localContext')}
+							/>
+						</div>
 					</div>
-					<div class="custom-input" style={contextCol}>
-						<input
-								class="form-control"
-								type="text"
-								defaultValue={event.localContext}
-								onBlur={this.getUpdateEvent('localContext')}
-						/>
+				</div>
+				<div class="PR-row-3">
+					<div class="PR-date-div">
+						<div class="PR-event-title">
+						World Context
+						</div>
+						<div class="PR-eDate">
+							<input
+									class="form-control"
+									type="text"
+									defaultValue={event.worldContext}
+									onBlur={this.getUpdateEvent('worldContext')}
+							/>
+						</div>
 					</div>
-					<div class="custom-input" style={contextCol}>
-						<input
-								class="form-control"
-								type="text"
-								defaultValue={event.worldContext}
-								onBlur={this.getUpdateEvent('worldContext')}
-						/>
-					</div>
+				</div>
+				<div class="custom-input" style={buttonCol}>
+					<i class="fa fa-minus-square fa-2x button2" onClick={this.deleteRecord}></i>
+				</div>
+				<div class="buffer-modal">
 				</div>
 			</div>)
 		} else {

@@ -9,6 +9,8 @@ import parentalRelTypes from "./parentalRelTypesReducer"
 import parentalRelSubTypes from "./parentalRelSubTypesReducer"
 import people from "./peopleReducer"
 import user from "./userReducer"
+import stagedPeople from "./stagedPeopleReducer"
+import importPeople from "./importPeopleReducer"
 
 
 export default combineReducers({
@@ -21,4 +23,6 @@ export default combineReducers({
   parentalRelSubTypes,
   people,
   user,
+  stagedPeople,
+  importPeople,
 })

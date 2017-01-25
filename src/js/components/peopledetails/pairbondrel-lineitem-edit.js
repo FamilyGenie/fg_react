@@ -95,8 +95,13 @@ constructor(props) {
 	getUpdateDate = (field, dateUser, dateSet) => {
 		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
 		return (field, dateUser, dateSet) => {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
 			this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
+			// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
+			if (dateSet === "Invalid date") {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, field, null);
+			} else {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
+			}
 			if (field === "startDate") {
 				this.setState({startDateUser: dateUser});
 			} else {
@@ -137,29 +142,62 @@ constructor(props) {
 		// only render if we are not fetching data
 		if (pairBondRel) {
 			return (
-				<div class="infoRow">
-					<div class="custom-input" style={nameCol}>
-						<Select
-							options={peopleArray}
-							onChange={this.onPersonChange}
-							value={this.state.pairPerson_id}
-						/>
+				<div class="PR-main">
+					<div class="PR-row-1">
+						<div class="PR-div">
+							<div class="PR-title">
+								Pair Bond Name
+							</div>
+							<div class="PR-drop-1">
+								<Select
+									options={peopleArray}
+									onChange={this.onPersonChange}
+									value={this.state.pairPerson_id}
+								/>
+							</div>
+						</div>
+						<div class="PR-div">
+							<div class="PR-title">
+								Relationship Type
+							</div>
+							<div class="PR-drop-1">
+								<Select
+									options={this.relTypes}
+									onChange={this.onRelTypeChange}
+									value={this.state.relType}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="custom-input" style={relCol}>
-						<Select
-							options={this.relTypes}
-							onChange={this.onRelTypeChange}
-							value={this.state.relType}
-						/>
+
+					<div class="PR-row-3">
+						<div class="PR-date-div">
+							<div class="PR-title">
+							Start Date
+							</div>
+							<div class="PR-sDate">
+								<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+							</div>
+						</div>
+						<div class="PR-date-div">
+							<div class="PR-title">
+							End Date
+							</div>
+							<div class="PR-eDate">
+								<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
+							</div>
+						</div>
 					</div>
-					<div class="custom-input" style={dateCol}>
-						<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+					<div class="buffer-modal">
 					</div>
-					<div class="custom-input" style={dateCol}>
-						<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
-					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
 					</div>
 				</div>)
 		} else {

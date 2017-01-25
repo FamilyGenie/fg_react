@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { hashHistory } from 'react-router';
 
 import { createPerson, deletePerson, updatePerson } from '../../actions/peopleActions';
 
@@ -30,7 +31,14 @@ export default class PeopleDetailsLineItem extends React.Component {
 
 	deletePerson = () => {
 		this.props.deletePerson(this.props.person._id);
+		hashHistory.push('/');
 	}
+
+	openMap = () => {
+		hashHistory.push('/familymap/' + this.props.person._id);
+	}
+
+
 
 	render = () => {
 		const { person, onBlur } = this.props;
@@ -38,38 +46,54 @@ export default class PeopleDetailsLineItem extends React.Component {
 		// put in code to test if person._id === 0, and then say person cannot be found
 		if (person) {
 			return (
-				<div class="row person-item">
-					<div class="col-xs-2 custom-input">
+				<div class="person-item">
+					<div class="detail-names">
 						<input
-							class="form-control"
+							class="form-control detail-input"
 							type="text"
 							defaultValue={person.fName}
+							placeholder="Enter First Name"
 							onBlur={this.getOnBlur('fName')}
 						/>
-					</div>
-					<div class="col-xs-2 custom-input">
 						<input
-							class="form-control"
+							class="form-control detail-input"
 							type="text"
 							defaultValue={person.mName}
+							placeholder="Enter Middle Name"
 							onBlur={this.getOnBlur('mName')}
 						/>
-					</div>
-					<div class="col-xs-2 custom-input">
 						<input
-							class="form-control"
+							class="form-control detail-input"
 							type="text"
 							defaultValue={person.lName}
+							placeholder="Enter Last Name"
 							onBlur={this.getOnBlur('lName')}
 						/>
 					</div>
-					<div class="col-xs-1 custom-input">
+					<div class="detail-names">
+						<input
+							class="form-control detail-input"
+							type="text"
+							defaultValue={person.sexAtBirth}
+							placeholder="Enter Gender At Birth"
+							onBlur={this.getOnBlur('sexAtBirth')}
+						/>
+					<div class="button-group">
 						<button
-							class="form-control"
+							type="button"
+							class="btn btn-default"
 							onClick={this.deletePerson}
 						>
 							Delete
 						</button>
+						<button
+							type="button"
+							class="btn btn-default"
+							onClick={this.openMap}
+						>
+							Map
+						</button>
+					</div>
 					</div>
 				</div>
 			);
