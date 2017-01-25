@@ -28,7 +28,7 @@ import { closeNewPersonModal } from '../actions/modalActions';
       person: store.people.people.find(function(s) {
         return (store.modal.newPerson.id === s._id)
       }),
-      events: store.events.events.filter(function(e) {
+      events: store.events.events.filter(function(e) { // doing a find returns a single object, instead of an array, which cannot be mapped to the lineItem
         return (e.person_id === store.modal.newPerson.id && e.eventType === 'Birth')
       }),
       parents: store.parentalRels.parentalRels.filter(function(p) {
@@ -50,7 +50,7 @@ export default class NewPerson extends React.Component {
  
   closeModal = () => {
     // This is validation for the contents of the modal. The user must either delete the person or enter the required information.
-    if (!this.props.events[0].eventDate) {
+    if (!this.props.events[0].eventDate) { // the first record should be the newly created Birth record, might need some validation here.
       console.log(this.props.event.eventDate)
       msg.show('Need to enter a valid birth date', {
         type: 'error'
@@ -68,6 +68,7 @@ export default class NewPerson extends React.Component {
 
     const { person, events, parents, modalIsOpen } = this.props;
 
+    // events must be mapped to the lineItem, and cannot be passed in individually, not sure why this happens, leaving it for now
     const mappedEvents = events.map(event => 
       <EventLineItemEdit event={event} key={event._id}/>
     )

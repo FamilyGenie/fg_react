@@ -65,9 +65,6 @@ export default class DateInput extends React.Component {
 					onChange={this.getOnChange()}
 					onBlur={this.getOnBlur()}
 				/>
-				<div>
-					{this.state.setDate}
-				</div>
 			</div>
 		)
 	}
