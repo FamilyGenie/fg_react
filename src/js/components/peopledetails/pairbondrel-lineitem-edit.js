@@ -65,6 +65,10 @@ constructor(props) {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
 		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
+		relTypeInitial: this.props.pairBondRel.relationshipType,
+		pairPerson_idInitial: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		startDateInitial: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : " "),
+		endDateInitial: (this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : " "),
 	};
 }
 	// these are the different types of pairBonds.
@@ -74,45 +78,80 @@ constructor(props) {
 		{ value: 'Informal', label: 'Informal'}
 	];
 
-	onRelTypeChange = (evt) => {
-		this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// onRelTypeChange = (evt) => {
+	// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({relType: evt.value});
+	// }
+	//
+	// onPersonChange = (evt) => {
+	// 	// find out if star is personOne or personTwo in the pairBondRel record, and then update the other field with the id of the newly selected person
+		// if (this.props.star._id === this.props.pairBondRel.personOne_id) {
+		// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", evt.value);
+		// } else {
+		// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", evt.value);
+		// }
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({pairPerson_id: evt.value})
+	// }
+	tempPersonChange = (evt) => {
+		this.setState({pairPerson_id: evt.value});
+	}
+	tempRelTypeChange = (evt) => {
 		this.setState({relType: evt.value});
 	}
-
-	onPersonChange = (evt) => {
-		// find out if star is personOne or personTwo in the pairBondRel record, and then update the other field with the id of the newly selected person
-		if (this.props.star._id === this.props.pairBondRel.personOne_id) {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", evt.value);
-		} else {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", evt.value);
+	tempStartDate = (evt) => {
+		this.setState({startDateUser: evt.value});
+	}
+	tempEndDate = (evt) => {
+		this.setState({endDateUser: evt.value});
+	}
+	saveRecord = () => {
+		console.log(this.state, "quantify this, bitch");
+		if (this.state.relType !== this.state.relTypeInitial) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", this.state.relType);
 		}
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({pairPerson_id: evt.value})
+		if (this.state.pairPerson_id != this.state.pairPerson_idInitial) {
+			if (this.props.star._id === this.props.pairBondRel.personOne_id) {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", this.state.pairPerson_id);
+			} else {
+				this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", this.state.pairPerson_id);
+			}
+		}
+		if (this.state.startDateUser !== this.state.startDateInitial) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "startDateUser", this.state.startDateUser);
+		}
+		if (this.state.endDateUser !== this.state.endDateInitial) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "endDateUser", this.state.endDateUser);
+		}
+		console.log("end of save record");
+		// this.props.updatePairBondRel(this.props.pairBondRel.)
 	}
 
 	// this call returns a function, so that when the field is updated, the fuction will execute.
-	getUpdateDate = (field, dateUser, dateSet) => {
-		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
-		return (field, dateUser, dateSet) => {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
-			// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
-			if (dateSet === "Invalid date") {
-				this.props.updatePairBondRel(this.props.pairBondRel._id, field, null);
-			} else {
-				this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
-			}
-			if (field === "startDate") {
-				this.setState({startDateUser: dateUser});
-			} else {
-				this.setState({endDateUser: dateUser})
-			}
-		}
-	}
+	// getUpdateDate = (field, dateUser, dateSet) => {
+	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
+	// 	return (field, dateUser, dateSet) => {
+	// 		this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
+	// 		// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
+	// 		if (dateSet === "Invalid date") {
+	// 			this.props.updatePairBondRel(this.props.pairBondRel._id, field, null);
+	// 		} else {
+	// 			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
+	// 		}
+	// 		if (field === "startDate") {
+	// 			this.setState({startDateUser: dateUser});
+	// 		} else {
+	// 			this.setState({endDateUser: dateUser})
+	// 		}
+	// 	}
+	// }
 
 	deleteRecord = () => {
-		this.props.deletePairBondRel(this.props.pairBondRel._id);
+		console.log(this.state, "this is the state");
+		// this.props.deletePairBondRel(this.props.pairBondRel._id);
 	}
+
 
 	render = () => {
 
@@ -151,7 +190,7 @@ constructor(props) {
 							<div class="PR-drop-1">
 								<Select
 									options={peopleArray}
-									onChange={this.onPersonChange}
+									onChange={this.tempPersonChange}
 									value={this.state.pairPerson_id}
 								/>
 							</div>
@@ -163,20 +202,22 @@ constructor(props) {
 							<div class="PR-drop-1">
 								<Select
 									options={this.relTypes}
-									onChange={this.onRelTypeChange}
+									onChange={this.tempRelTypeChange}
 									value={this.state.relType}
 								/>
 							</div>
 						</div>
 					</div>
-
 					<div class="PR-row-3">
 						<div class="PR-date-div">
 							<div class="PR-title">
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+								<DateInput defaultValue={this.state.startDateUser}
+									onChange={this.tempStartDate}
+									field="startDate"
+								/>
 							</div>
 						</div>
 						<div class="PR-date-div">
@@ -184,13 +225,23 @@ constructor(props) {
 							End Date
 							</div>
 							<div class="PR-eDate">
-								<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
+								<DateInput
+								defaultValue={this.state.endDateUser}
+								onChange={this.tempEndDate}
+								field="endDate"/>
 							</div>
 						</div>
 					</div>
 					<div class="buffer-modal">
 					</div>
 					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.saveRecord}
+						>
+							Save
+						</button>
 						<button
 							type="button"
 							class="btn btn-default modal-delete"

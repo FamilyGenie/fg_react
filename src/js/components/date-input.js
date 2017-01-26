@@ -51,6 +51,7 @@ export default class DateInput extends React.Component {
 	getOnBlur = () => {
 		return (evt) => {
 			// Need to call update here. The function to update needs to come through the props
+			
 			this.props.updateFunction(this.props.field, evt.target.value, this.state.setDate);
 		}
 	}

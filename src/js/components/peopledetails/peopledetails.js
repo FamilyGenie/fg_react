@@ -123,7 +123,7 @@ export default class PeopleDetails extends React.Component {
 		<div class="main-detail" ref={(ref) => this._div = ref}>
 			<div>
 				<div class="header-div">
-					<h1 class="family-header">Personal Connections</h1>
+					<h1 class="family-header">Personal Details</h1>
 				</div>
 			</div>
 			<div id="detail-name">

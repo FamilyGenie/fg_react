@@ -106,8 +106,8 @@ constructor(props) {
 		if (event) {
 			return (
 			<div>
-				<div class="PR-main">
-					<div class="PR-row-event">
+				<div class="event-main">
+					<div class="event-row">
 						<div class="PR-div">
 							<div class="PR-title">
 								Event Name
@@ -125,7 +125,7 @@ constructor(props) {
 							</div>
 						</div>
 					</div>
-					<div class="PR-row-event">
+					<div class="event-row">
 						<div class="PR-div">
 							<div class="PR-title">
 								Type
@@ -154,13 +154,13 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
-					<div class="PR-date-div">
+					<div class="event-context-div">
 						<div class="PR-event-title">
 						Family Context
 						</div>
-						<div class="PR-sDate">
+						<div class="event-context">
 							<input
-									class="form-control"
+									class="event-input"
 									type="text"
 									defaultValue={event.familyContext}
 									onBlur={this.getUpdateEvent('familyContext')}
@@ -169,13 +169,13 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
-					<div class="PR-date-div">
+					<div class="event-context-div">
 						<div class="PR-event-title">
 						Local Context
 						</div>
-						<div class="PR-eDate">
+						<div class="event-context">
 							<input
-									class="form-control"
+									class="event-input"
 									type="text"
 									defaultValue={event.localContext}
 									onBlur={this.getUpdateEvent('localContext')}
@@ -184,13 +184,13 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
-					<div class="PR-date-div">
+					<div class="event-context-div">
 						<div class="PR-event-title">
 						World Context
 						</div>
-						<div class="PR-eDate">
+						<div class="event-context">
 							<input
-									class="form-control"
+									class="event-input"
 									type="text"
 									defaultValue={event.worldContext}
 									onBlur={this.getUpdateEvent('worldContext')}
@@ -198,12 +198,27 @@ constructor(props) {
 						</div>
 					</div>
 				</div>
-				<div class="custom-input" style={buttonCol}>
-					<i class="fa fa-minus-square fa-2x button2" onClick={this.deleteRecord}></i>
-				</div>
 				<div class="buffer-modal">
 				</div>
-			</div>)
+				<div class="event-delete-modal">
+					<button
+						type="button"
+						class="btn btn-default modal-delete"
+						onClick={this.saveRecord}
+					>
+						Save
+					</button>
+					<button
+						type="button"
+						class="btn btn-default modal-delete"
+						onClick={this.deleteRecord}
+					>
+						Delete
+					</button>
+				</div>
+
+			</div>
+			)
 		} else {
 			return (<p>Loading Event Info...</p>);
 		}
