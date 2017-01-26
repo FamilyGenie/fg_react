@@ -10,7 +10,7 @@ import { updateParentalRel } from '../actions/parentalRelsActions';
 import { closeNewPersonModal } from '../actions/modalActions';
 
 /* the following is the code that needs to be inserted into the parent component where you will call this modal to open.
- 
+
   <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
@@ -47,11 +47,11 @@ import { closeNewPersonModal } from '../actions/modalActions';
 )
 
 export default class NewPerson extends React.Component {
- 
+
   closeModal = () => {
     // This is validation for the contents of the modal. The user must either delete the person or enter the required information.
+    console.log("New Person: ", this.props);
     if (!this.props.events[0].eventDate) { // the first record should be the newly created Birth record, might need some validation here.
-      console.log(this.props.event.eventDate)
       msg.show('Need to enter a valid birth date', {
         type: 'error'
       });
@@ -69,7 +69,7 @@ export default class NewPerson extends React.Component {
     const { person, events, parents, modalIsOpen } = this.props;
 
     // events must be mapped to the lineItem, and cannot be passed in individually, not sure why this happens, leaving it for now
-    const mappedEvents = events.map(event => 
+    const mappedEvents = events.map(event =>
       <EventLineItemEdit event={event} key={event._id}/>
     )
 
@@ -80,7 +80,7 @@ export default class NewPerson extends React.Component {
 
       return(<div>
           <h3> New Person </h3>
-          
+
           <PeopleDetailsLineItem person={person} key={person._id}/>
 
           <div class="container">
