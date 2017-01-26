@@ -4,11 +4,18 @@ import { hashHistory } from 'react-router'
 import moment from 'moment';
 
 import PeopleSearchLineItem from '../peoplesearch/peoplesearch-lineitem';
+<<<<<<< Updated upstream
 import { createPerson } from '../../actions/peopleActions';
 
 @connect(
 	(store, ownProps) => {
 
+=======
+import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
+
+@connect(
+	(store, ownProps) => {
+>>>>>>> Stashed changes
 		return {
 			star_id:
 				ownProps.params.star_id,
@@ -45,9 +52,15 @@ import { createPerson } from '../../actions/peopleActions';
 	},
 	(dispatch) => {
 		return {
+<<<<<<< Updated upstream
 			createPerson: (fName, mName, lName, sexAtBirth) => {
 				dispatch(createPerson(fName, mName, lName, sexAtBirth));
 			}
+=======
+			createNewPerson: (star_id, fName) => {
+				dispatch(createNewPersonInMap(star_id, fName));
+			},
+>>>>>>> Stashed changes
 		}
 	}
 )
