@@ -626,7 +626,8 @@ export default class FamilyMap extends React.Component {
 
 					var star = this.getPersonById(this.star_id);
 					parent = {
-						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id,
+						// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
+						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id,
 						birthDate: null,
 						birthPlace: "",
 						deathDate: null,
@@ -638,7 +639,7 @@ export default class FamilyMap extends React.Component {
 						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
 					};
 					this.people.push(parent);
-					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id;
+					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id;
 					console.log("parentRels: ", this.parentRels);
 				}
 				// put the parent into the parents array, if they don't yet exist
@@ -761,7 +762,7 @@ export default class FamilyMap extends React.Component {
 			.attr("r", 40)
 			.attr("id", person._id)
 			.attr("class", "can-click")
-			.on("click", this.createPerson(person, star))
+			.on("click", this.personClick(person, star))
 			.style("stroke", "black")
 			.style("stroke-width", 3)
 			.style("fill", "white");
@@ -770,14 +771,15 @@ export default class FamilyMap extends React.Component {
 	}
 
 	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
-	createPerson(person, star) {
+	personClick(person, star) {
 		return() => {
 			console.log('Person was clicked: ', person, star);
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
-
-			// createNewPerson(star._id, star.fName, person.sexAtBirth);
-
-			// hashHistory.push('/peopledetails/' + person._id);
+			if (person._id.substr(0,1) === "Z") {
+				createNewPerson(star._id, star.fName, person.sexAtBirth);
+			} else {
+				hashHistory.push('/peopledetails/' + person._id);
+			}
 		}
 	}
 

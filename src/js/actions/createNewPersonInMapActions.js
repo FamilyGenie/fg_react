@@ -18,7 +18,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth) {
     }
   };
   var newChild;
-
+  debugger;
   // create a new blank person record for a child
   return (dispatch) => {
     dispatch({type: "CREATE_PERSON"});
