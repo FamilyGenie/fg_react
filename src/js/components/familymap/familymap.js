@@ -4,18 +4,10 @@ import { hashHistory } from 'react-router'
 import moment from 'moment';
 
 import PeopleSearchLineItem from '../peoplesearch/peoplesearch-lineitem';
-<<<<<<< Updated upstream
-import { createPerson } from '../../actions/peopleActions';
-
-@connect(
-	(store, ownProps) => {
-
-=======
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
 
 @connect(
 	(store, ownProps) => {
->>>>>>> Stashed changes
 		return {
 			star_id:
 				ownProps.params.star_id,
@@ -52,22 +44,15 @@ import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions'
 	},
 	(dispatch) => {
 		return {
-<<<<<<< Updated upstream
-			createPerson: (fName, mName, lName, sexAtBirth) => {
-				dispatch(createPerson(fName, mName, lName, sexAtBirth));
-			}
-=======
 			createNewPerson: (star_id, fName) => {
 				dispatch(createNewPersonInMap(star_id, fName));
 			},
->>>>>>> Stashed changes
 		}
 	}
 )
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log("in familymap contructor, with: ", this.props);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -83,8 +68,6 @@ export default class FamilyMap extends React.Component {
 	pairBonds = [];
 	alreadyDrawn = [];
 	drawnCoords = [];
-	// this is to store a copy of the people array from the store, so that we can manipulate it to accomodate for drawing the map when needed
-	people = [];
 	dateFilterString;
 	firstChildYDistance = 0;
 	firstChildYWithAdoptions = 0;
@@ -119,30 +102,34 @@ export default class FamilyMap extends React.Component {
 
 		if (this.props.people) {
 			return (<div>
-				<div class="container">
-					<h1>Family Map</h1>
-					<div>
-						Date: {this.state.dateFilterString}
+				<div class="main-map-header">
+					<div class="header-div">
+						<h1 class="family-header">Family Map</h1>
 					</div>
-					<div>
-						Star's Age: {this.starAge}
-						<i class="fa fa-arrow-circle-down buttonSize" onClick={this.subtractYear.bind(this)}></i>
-						<i class="fa fa-arrow-circle-up buttonSize" onClick={this.addYear}></i>
+					<div class="main-date">
+						<div class="map-date">
+							<div class="map-date-1">
+								Date: {this.state.dateFilterString}
+							</div>
+							<div class="map-date-1">
+							Star's Age: {this.starAge}
+							</div>
+						</div>
+						<div class="map-arrow">
+							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
+							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
+						</div>
 					</div>
 					<div>
 					</div>
 				</div>
-				<svg class="svg-map">
-				</svg>
+				<div class="map">
+					<svg class="svg-map">
+					</svg>
+				</div>
 			</div>)
 		}
 	}
-
-	// sometimes we add a person while processing the map. If that happens, this lifecycle hook is triggered, so we then want to draw the map again, so that it uses that new information
-	// componentDidUpdate() {
- //    console.log("in component did update, with: ", this.props.people);
- //    this.componentDidMount();
- //  }
 
 	componentDidMount = () => {
 		// there are some constants at the top of the component class definition as well.
@@ -171,12 +158,11 @@ export default class FamilyMap extends React.Component {
 			return;
 		}
 		console.log("After getAllParents: ", this.parents);
+
 		if (this.parents.length === 0) {
 			alert("No parents for this person, map will not be drawn.");
 			hashHistory.push('/');
 			return;
-
-			// If there are no parents of the star, then add them to the parents array as blank people, and make a pair bond between them so they show on the map
 		}
 
 		this.getAllChildrenOfParents();
@@ -566,31 +552,8 @@ export default class FamilyMap extends React.Component {
 
 		if (!this.pairBonds.length) {
 			let star = this.getPersonById(this.star_id);
-			// alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
-			// return false;
-
-			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
-			debugger;
-			var momRel = this.parentRels.find(function(pr) {
-				return pr.child_id === star._id &&
-				/[Mm]other/.test(pr.relationshipType) &&
-				/[Bb]iological/.test(pr.subType)
-			});
-
-			var dadRel = this.parentRels.find(function(pr) {
-				return pr.child_id === star._id &&
-				/[Ff]ather/.test(pr.relationshipType) &&
-				/[Bb]iological/.test(pr.subType)
-			});
-
-			var pairBond = {
-				personOne_id : momRel.parent_id,
-				personTwo_id : dadRel.parent_id,
-				relationshipType : "???",
-				startDate : null
-			};
-
-			this.pairBonds.push(pairBond);
+			alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
+			return false;
 		}
 
 		// if we got here, everything was executed successfully, so return true so map drawing can continue.
@@ -602,12 +565,11 @@ export default class FamilyMap extends React.Component {
 
 		// for each child
 		for (let child of this.children) {
-			// get all parental relationships. if there is no start date, then make value empty string, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will show up on the map.
-			console.log("dateFilterString: ", this.dateFilterString);
+			// get all parental relationships. if there is no start date, then make value null, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.child_id === child._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : "") <= this.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
 				}.bind(this)
 			);
 			// console.log("in getAllParents, parentalRelTemp: ", parentalRelTemp);
@@ -620,28 +582,10 @@ export default class FamilyMap extends React.Component {
 					}
 				// find the parent
 				let parent = this.getPersonById(parentRel.parent_id);
-				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist. The code in the below if statement is covering the use case for when a person exists, and we created a parentalRel record for their biological mother and biological father. However, the parents may not yet be assigned to that relationship. When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are. If they haven't selected anyone by the time they draw the map of the child, we want to show them on the map anyway, as "blank" people. If the customer clicks on the "blank" parent, then we want to create the parent, so they can fill in information about them.
+				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					// alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					// return false;
-					// add a parent record with ??? for this child so that a parent still shows on the map. Also, Create a unique _id to this record and then update the parentRels object so that the parentalRel record between this parent and child exists. Last, push the parent onto the people array for this map.
-
-					var star = this.getPersonById(this.star_id);
-					parent = {
-						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id,
-						birthDate: null,
-						birthPlace: "",
-						deathDate: null,
-						deathPlace:"",
-						fName: star.fName + "'s " + (/[Mm]other/.test(parentRel.relationshipType) ? "Mother" : "Father"),
-						lName: "",
-						mName: "",
-						notes: null,
-						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
-					};
-					this.people.push(parent);
-					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id;
-					console.log("parentRels: ", this.parentRels);
+					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+					return false;
 				}
 				// put the parent into the parents array, if they don't yet exist
 				// this.parents = this.dataService.addToArray(this.parents, parent);
@@ -688,10 +632,8 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
-	// 1/22/17 if we keep using this.people for all of our calls in making the maps, then this code won't be neccessary because we will be resetting that everytime we call initializeVariables
 	clearMapData = () => {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
-
 		for (let person of this.props.people) {
 			delete person["d3CircleHash1"];
 			delete person["d3CircleHash2"];
@@ -708,10 +650,10 @@ export default class FamilyMap extends React.Component {
 			delete person["d3Star"];
 		}
 
-		// for (let pairBond of this.props.pairBondRelationships) {
-		// 	delete pairBond["subTypeToStar"];
-		// 	delete pairBond["color"];
-		// }
+		for (let pairBond of this.props.pairBondRelationships) {
+			delete pairBond["subTypeToStar"];
+			delete pairBond["color"];
+		}
 	}
 
 	initializeVariables = () => {
@@ -724,7 +666,6 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
-		this.people = this.props.people.slice();
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
 		this.firstChildYDistance = 20;
 		this.firstChildYWithAdoptions = 130;
@@ -747,13 +688,12 @@ export default class FamilyMap extends React.Component {
 	}
 
 	getPersonById = (_id) => {
-		return this.people.find(function(person){
+		return this.props.people.find(function(person){
 			return person._id === _id;
 		});
 	}
 
 	drawCircle(person) {
-		// console.log("in draw circle for:", this.star_id);
 		var star = this.getPersonById(this.star_id);
 		let circle = d3.select("svg")
 			.append("svg:a")
@@ -764,7 +704,7 @@ export default class FamilyMap extends React.Component {
 			.attr("r", 40)
 			.attr("id", person._id)
 			.attr("class", "can-click")
-			.on("click", this.personClick(person, star))
+			.on("click", this.createPerson(person._id, star.fName))
 			.style("stroke", "black")
 			.style("stroke-width", 3)
 			.style("fill", "white");
@@ -772,11 +712,10 @@ export default class FamilyMap extends React.Component {
 		return circle;
 	}
 
-	personClick = (person, star) => {
-		return () => {
-			console.log("Person clicked", person, star);
-			// Need to create a new action to create a person. The new action needs to also accept a child_id. After creating the person, the action needs to see if there is a parentalRel record with this child and a null parent_id, if so, update that record so this new person is the parent. If there is not an existing parentalRel, then create one with the child_id and this newly created parent_id.
-		};
+	createPerson(person_id, fName) {
+		return() => {
+			console.log('Person was clicked: ', person_id, fName);
+		}
 	}
 
 	drawCircleText(cx, cy, person) {
@@ -787,7 +726,7 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
 				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
@@ -798,7 +737,7 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}
@@ -1442,9 +1381,9 @@ export default class FamilyMap extends React.Component {
 
 		// this is needed to move d3 elements to the front of the drawing. Found here: http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
 		d3.selection.prototype.moveToFront = function() {
-			return this.each(function(){
-				this.parentNode.appendChild(this);
-			});
+		    return this.each(function(){
+		        this.parentNode.appendChild(this);
+		    });
 		};
 
 		for (let child of this.children) {
