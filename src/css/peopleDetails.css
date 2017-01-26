@@ -271,6 +271,11 @@
   flex-direction: column;
   font-family: CabinMI;
 }
+.PB-main {
+  display: flex;
+  flex-direction: column;
+  font-family: CabinMI;
+}
 .PR-row-1 {
   display: flex;
   flex-direction: row;
@@ -431,13 +436,13 @@
   margin-top: 25px;
 }
 .modal-header-1 {
-  width: 20%;
+  width: 10%;
 }
 .modal-header-2 {
-  width: 60%;
+  width: 80%;
 }
 .modal-header-3 {
-  width: 20%;
+  width: 10%;
   margin-bottom: 40px;
 }
 .PR-modal-header {
@@ -515,8 +520,10 @@
   .modal-header-2 {
     font-size: 17px;
   }
-  .chronology-div {
-    width: 95%;
+}
+@media(max-width: 1000px) {
+  .PR-modal-header {
+    font-size: 23px;
   }
 }
 
@@ -540,7 +547,7 @@
     flex-direction: column;
   }
   .chronology-div {
-    width: 70%;
+    width: 90%;
   }
   .detail-names {
     display: flex;
@@ -559,6 +566,9 @@
   }
   .PR-main {
     height: 700px;
+  }
+  .PB-main {
+    height: 560px;
   }
 
 }
