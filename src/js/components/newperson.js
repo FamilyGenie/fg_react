@@ -51,7 +51,6 @@ export default class NewPerson extends React.Component {
   closeModal = () => {
     // This is validation for the contents of the modal. The user must either delete the person or enter the required information.
     if (!this.props.events[0].eventDate) { // the first record should be the newly created Birth record, might need some validation here.
-      console.log(this.props.event.eventDate)
       msg.show('Need to enter a valid birth date', {
         type: 'error'
       });
