@@ -30,7 +30,7 @@ export default class PeopleSearchLineItem extends React.Component {
 
   birthDate = () => {
     try {
-      return this.props.event.eventDate.toString().substr(0,10)
+      return this.props.event.eventDate.toString().substr(0,10).toLowerCase(); // not sure if we want to do toLowerCase()... TODO
     } catch (TypeError) {
       return "no birthDate"
     }
