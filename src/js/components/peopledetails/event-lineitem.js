@@ -47,11 +47,11 @@ export default class EventLineItem extends React.Component {
 
 		if (event) {
 			return (
-				<div class="infoRow">
+				<div class="chronology-row">
 					<div class="buttonCol" onClick={this.openModal}>
-						<i class="fa fa-pencil-square-o button2"></i>
+						<i class="fa fa-pencil-square-o chronology-edit"></i>
 					</div>
-					<div class="inner-name-div">
+					<div class="inner-event-name">
 						<div class="nameCol" onClick={this.openModal}>
 							<div class="relTypeWord">{eventDateUser}</div>
 						</div>

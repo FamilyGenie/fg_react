@@ -41,17 +41,17 @@ export default class PeopleSearch extends React.Component {
           <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
-          <div id="people-info">
-          </div>
           <div id="family">
             <div id="add-family">
               <div class="blank-person-header">
   						</div>
       				<p class="add">
-      					Family Members
+      					Add Family Members
       				</p>
-              <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createPerson}>
-              </i>
+              <div class="search-add">
+                <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createPerson}>
+                </i>
+              </div>
             </div>
             <div id="buffer-div">
             </div>

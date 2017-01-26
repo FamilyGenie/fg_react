@@ -39,11 +39,11 @@ export default class PeopleSearchLineItem extends React.Component {
 			</div>
 			<div id="details-map">
 				<i
-					class="fa fa-pencil-square-o button2"
+					class="fa fa-pencil-square-o fa-3x button2"
 					onClick={this.openDetails}>
 				</i>
 				<i
-					class="fa fa-sitemap button2"
+					class="fa fa-sitemap fa-3x search-map-button"
 					onClick={this.openMap}
 				>
 			</i>
