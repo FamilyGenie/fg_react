@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
+import Modal from 'react-modal';
 
-import PeopleSearchLineItem from '../peoplesearch/peoplesearch-lineitem';
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
+import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {
@@ -40,6 +41,8 @@ import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions'
 				store.pairBondRels.pairBondRels,
 			parentalRelationships:
 				store.parentalRels.parentalRels,
+			newPersonModalIsOpen:
+				store.modal.newPerson.modalIsOpen,
 		};
 	},
 	(dispatch) => {
@@ -68,6 +71,8 @@ export default class FamilyMap extends React.Component {
 	pairBonds = [];
 	alreadyDrawn = [];
 	drawnCoords = [];
+	// this is to store a copy of the people array from the store, so that we can manipulate it to accomodate for drawing the map when needed
+	people = [];
 	dateFilterString;
 	firstChildYDistance = 0;
 	firstChildYWithAdoptions = 0;
@@ -98,9 +103,8 @@ export default class FamilyMap extends React.Component {
 	}
 
 	render = () => {
-		// console.log("in Family Map Render, with state: ", this.state);
-
-		if (this.props.people) {
+		const { people, newPersonModalIsOpen } = this.props;
+		if (people) {
 			return (<div>
 				<div class="main-map-header">
 					<div class="header-div">
@@ -127,9 +131,21 @@ export default class FamilyMap extends React.Component {
 					<svg class="svg-map">
 					</svg>
 				</div>
+				<Modal
+			      isOpen={newPersonModalIsOpen}
+			      contentLabel="Modal"
+			    >
+			      <NewPerson/>
+			    </Modal>
 			</div>)
 		}
 	}
+
+	// sometimes we add a person while processing the map. If that happens, this lifecycle hook is triggered, so we then want to draw the map again, so that it uses that new information
+	// componentDidUpdate() {
+	//    console.log("in component did update, with: ", this.props.people);
+	//    this.componentDidMount();
+	//  }
 
 	componentDidMount = () => {
 		// there are some constants at the top of the component class definition as well.
@@ -243,7 +259,7 @@ export default class FamilyMap extends React.Component {
 				dad = this.parents.find(function(parent){
 					return parent._id === dadRel.parent_id;
 				});
-				console.log("drawing kid for mom and dad: ", mom, dad);
+				// console.log("drawing kid for mom and dad: ", mom, dad);
 				// calculate xPos of child
 				// find the amount that is halfway between the two parents
 				xPos = Math.abs(mom.mapXPos - dad.mapXPos) / 2;
@@ -552,8 +568,27 @@ export default class FamilyMap extends React.Component {
 
 		if (!this.pairBonds.length) {
 			let star = this.getPersonById(this.star_id);
-			alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
-			return false;
+			// alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
+			// return false;
+
+			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
+
+			var momRel = this.parentRels.find(function(pr) {
+				return pr.child_id === star._id && /[Mm]other/.test(pr.relationshipType) && /[Bb]iological/.test(pr.subType)
+			});
+
+			var dadRel = this.parentRels.find(function(pr) {
+				return pr.child_id === star._id && /[Ff]ather/.test(pr.relationshipType) && /[Bb]iological/.test(pr.subType)
+			});
+
+			var pairBond = {
+				personOne_id : momRel.parent_id,
+				personTwo_id : dadRel.parent_id,
+				relationshipType : "???",
+				startDate : null
+			};
+
+			this.pairBonds.push(pairBond);
 		}
 
 		// if we got here, everything was executed successfully, so return true so map drawing can continue.
@@ -565,11 +600,11 @@ export default class FamilyMap extends React.Component {
 
 		// for each child
 		for (let child of this.children) {
-			// get all parental relationships. if there is no start date, then make value null, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will show up on the map.
+			// get all parental relationships. if there is no start date, then make value empty string, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will still show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.child_id === child._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
 			// console.log("in getAllParents, parentalRelTemp: ", parentalRelTemp);
@@ -584,8 +619,27 @@ export default class FamilyMap extends React.Component {
 				let parent = this.getPersonById(parentRel.parent_id);
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					return false;
+					// alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+					// return false;
+
+					// add a parent record with name of Star as fName for this child so that a parent still shows on the map. Also, Create a unique _id to this record and then update the parentRels object so that the parentalRel record between this parent and child exists. Last, push the parent onto the people array for this map.
+
+					var star = this.getPersonById(this.star_id);
+					parent = {
+						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id,
+						birthDate: null,
+						birthPlace: "",
+						deathDate: null,
+						deathPlace:"",
+						fName: star.fName + "'s " + (/[Mm]other/.test(parentRel.relationshipType) ? "Mother" : "Father"),
+						lName: "",
+						mName: "",
+						notes: null,
+						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
+					};
+					this.people.push(parent);
+					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "Mom" : "Dad") + child._id;
+					console.log("parentRels: ", this.parentRels);
 				}
 				// put the parent into the parents array, if they don't yet exist
 				// this.parents = this.dataService.addToArray(this.parents, parent);
@@ -666,6 +720,8 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
+		// create a copy of the people array
+		this.people = this.props.people.slice();
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
 		this.firstChildYDistance = 20;
 		this.firstChildYWithAdoptions = 130;
@@ -688,7 +744,8 @@ export default class FamilyMap extends React.Component {
 	}
 
 	getPersonById = (_id) => {
-		return this.props.people.find(function(person){
+		// want to find the person in the local person array, in case a person has been added by this map function. this.people is a copy of the store.people.people at the beginning of the function. This function may add people (the star's parents most germainly) to the local people copy.
+		return this.people.find(function(person){
 			return person._id === _id;
 		});
 	}
@@ -704,7 +761,7 @@ export default class FamilyMap extends React.Component {
 			.attr("r", 40)
 			.attr("id", person._id)
 			.attr("class", "can-click")
-			.on("click", this.createPerson(person._id, star.fName))
+			.on("click", this.createPerson(person, star))
 			.style("stroke", "black")
 			.style("stroke-width", 3)
 			.style("fill", "white");
@@ -712,9 +769,15 @@ export default class FamilyMap extends React.Component {
 		return circle;
 	}
 
-	createPerson(person_id, fName) {
+	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
+	createPerson(person, star) {
 		return() => {
-			console.log('Person was clicked: ', person_id, fName);
+			console.log('Person was clicked: ', person, star);
+			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
+
+			// createNewPerson(star._id, star.fName, person.sexAtBirth);
+
+			// hashHistory.push('/peopledetails/' + person._id);
 		}
 	}
 
@@ -726,7 +789,7 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
 				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
@@ -737,7 +800,7 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}

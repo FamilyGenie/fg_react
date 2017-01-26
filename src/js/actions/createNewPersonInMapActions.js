@@ -9,11 +9,12 @@ var axiosConfig = {
   headers: {'x-access-token': fgtoken}
 };
 
-export function createNewPersonInMap(childFromMap_id, fName) {
+export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth) {
 
   const body = {
     object: {
-      fName: fName
+      fName: fName,
+      sexAtBirth: sexAtBirth,
     }
   };
   var newChild;
@@ -86,7 +87,7 @@ export function createNewPersonInMap(childFromMap_id, fName) {
           object: {
             parent_id: newPerson._id,
             child_id: childFromMap_id,
-            relationshipType: 'Father',
+            relationshipType: (sexAtBirth === 'M' ? 'Father' : 'Mother'),
             subType: 'Biological',
           }
         }
