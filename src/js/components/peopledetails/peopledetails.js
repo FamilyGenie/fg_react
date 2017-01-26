@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
 import EventLineItem from './event-lineitem';
@@ -129,6 +129,8 @@ export default class PeopleDetails extends React.Component {
 			<div id="detail-name">
 				<PeopleDetailsLineItem person={star} />
 			</div>
+			<div class="buffer-line">
+			</div>
 			<div class="outerContainer">
 				<div class="innerInfo">
 					<div class="titleRow">
@@ -139,6 +141,8 @@ export default class PeopleDetails extends React.Component {
 							<i class="fa-plus-square fa" onClick={this.createParentalRel}>
 							</i>
 						</div>
+					</div>
+					<div class="buffer-div">
 					</div>
 					<div>
 						{mappedParentalRels}
@@ -153,10 +157,11 @@ export default class PeopleDetails extends React.Component {
 							<i class="fa-plus-square fa" onClick={this.createPairBondRel}></i>
 						</div>
 					</div>
+					<div class="buffer-div">
+					</div>
 					<div>
 						{mappedPairBondRels}
 					</div>
-
 				</div>
 				<div class="innerInfo">
 					<div class="titleRow">
@@ -168,6 +173,8 @@ export default class PeopleDetails extends React.Component {
 							onClick={this.createEvent}>
 							</i>
 						</div>
+					</div>
+					<div class="buffer-div">
 					</div>
 					<div>
 						{mappedEvents}
