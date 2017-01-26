@@ -94,6 +94,10 @@ constructor(props) {
 	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
 	// 	this.setState({pairPerson_id: evt.value})
 	// }
+
+
+	// Utilizing this.setState is to maintain the immutability of the code
+
 	tempPersonChange = (evt) => {
 		this.setState({pairPerson_id: evt.value});
 	}
@@ -106,8 +110,11 @@ constructor(props) {
 	tempEndDate = (evt) => {
 		this.setState({endDateUser: evt.value});
 	}
+
+	// It was necessary to create several new keys, startDateUser, startDateInitial, and relTypeInitial, to properly differentiate between the new and old dates and save the new dates in the database. The same logic has been applied to the pair bond relationship key .
+
 	saveRecord = () => {
-		console.log(this.state, "quantify this, bitch");
+		console.log(this.state, "start of saveRecord-PB");
 		if (this.state.relType !== this.state.relTypeInitial) {
 			this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", this.state.relType);
 		}

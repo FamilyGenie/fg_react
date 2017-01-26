@@ -66,6 +66,10 @@ constructor(props) {
 			this.props.updateEvent(this.props.event._id, field, evt.target.value);
 		}
 	}
+	saveRecord = () => {
+		console.log(this.state, "start of saveRecord-E");
+		
+	}
 
 	deleteRecord = () => {
 		this.props.deleteEvent(this.props.event._id);

@@ -109,6 +109,15 @@ constructor(props) {
 		this.setState({subType: evt.value});
 	}
 
+	tempParentChange = (evt) => {
+		this.setState({parent_id: evt.value});
+	}
+	tempRelTypeChange = (evt) => {
+		this.setState({relationshipType: evt.value});
+	}
+	saveRecord = () => {
+		console.log(this.state, "start of save record");
+	}
 	deleteRecord = () => {
 		this.props.deleteParentalRel(this.props.parentalRel._id);
 	}
@@ -210,6 +219,13 @@ constructor(props) {
 					<div class="buffer-modal">
 					</div>
 					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.saveRecord}
+						>
+							Save
+						</button>
 						<button
 							type="button"
 							class="btn btn-default modal-delete"
