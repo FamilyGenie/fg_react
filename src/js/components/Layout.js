@@ -7,7 +7,8 @@ import { fetchPairBondRels } from "../actions/pairBondRelsActions";
 import { fetchParentalRels } from "../actions/parentalRelsActions";
 import { fetchPeople } from "../actions/peopleActions";
 import { fetchStagedPeople } from '../actions/stagedPeopleActions';
-import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
+import { fetchStagedEvents } from '../actions/stagedEventActions';
+// import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 
 import PeopleSearch from './peoplesearch/peoplesearch';
 
@@ -20,7 +21,8 @@ export default class Layout extends React.Component {
 		this.props.dispatch(fetchParentalRels());
 		this.props.dispatch(fetchPeople());
 		this.props.dispatch(fetchStagedPeople());
-		this.props.dispatch(fetchStagedParentalRels());
+    this.props.dispatch(fetchStagedEvents());
+		// this.props.dispatch(fetchStagedParentalRels());
 	}
 
 	logIn = () => {

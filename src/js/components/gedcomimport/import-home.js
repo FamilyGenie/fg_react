@@ -12,8 +12,14 @@ import { hashHistory } from 'react-router';
     totalPeople : store.stagedPeople.stagedPeople.filter(function(t) {
       return (t.ignore === true);
     }),
+    stagedEvents: store.stagedEvents.stagedEvents,
+    eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
+      return (!e.ignore || e.ignore === false);
+    }),
+    eventsTotal: store.stagedEvents.stagedEvents.filter(function(s) {
+      return (s.ignore === true);
+    }),
     /*
-     * stagedEvents: store.stagedEvents.stagedEvents,
      * stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
      * stagedPairbondRels: store.stagedPairbondRels.stagedPairbondRels,
      */
@@ -48,6 +54,9 @@ export default class ImportDashboard extends React.Component {
         <div class='col-md-6'>
           <h4> Event Imports </h4>
           <label> Need To Be Imported: </label>
+            <p>{this.props.eventsRemaining.length}</p>
+          <label>  Already Imported: </label>
+            <p>{this.props.eventsTotal.length}</p>
         </div>
       </div>
       <div class='container'>
