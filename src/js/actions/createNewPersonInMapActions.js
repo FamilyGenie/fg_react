@@ -14,11 +14,11 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
   const body = {
     object: {
       fName: fName,
+      lName: '',
       sexAtBirth: sexAtBirth,
     }
   };
   var newPerson;
-  debugger;
   // create a new blank person record for a child
   return (dispatch) => {
     dispatch({type: "CREATE_PERSON"});
