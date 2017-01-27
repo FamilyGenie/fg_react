@@ -9,7 +9,7 @@ var axiosConfig = {
   headers: {'x-access-token': fgtoken}
 };
 
-export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth) {
+export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parentalRel_Id) {
 
   const body = {
     object: {
@@ -17,7 +17,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth) {
       sexAtBirth: sexAtBirth,
     }
   };
-  var newChild;
+  var newPerson;
   debugger;
   // create a new blank person record for a child
   return (dispatch) => {
@@ -82,24 +82,46 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth) {
             dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
           })
 
-        // Create the parental rel that makes this newly created person the parent of the child in the map
-        const parentRelBody = {
-          object: {
-            parent_id: newPerson._id,
-            child_id: childFromMap_id,
-            relationshipType: (sexAtBirth === 'M' ? 'Father' : 'Mother'),
-            subType: 'Biological',
-          }
+        // If there was a parentalRel passed into the Action, then update that record to make this newly created person the parent of the child passed in. If there was not a parentalRel passed into the Action, then create the parental rel that makes this newly created person the parent of the child in the map
+        if (parentalRel_Id) {
+          // update parentalRel here
+          const newBody = {
+            object: {
+              _id: parentalRel_Id,
+              field: 'parent_id',
+              value: newPerson._id
+            }
+          };
+
+          dispatch({type: "UPDATE_PARENTALREL"});
+          axios.post(config.api_url + "/api/v2/parentalrel/update", newBody, axiosConfig)
+            .then((response) => {
+              dispatch({type: "UPDATE_PARENTALREL_FULFILLED", payload: response.data})
+            })
+            .catch((err) => {
+              dispatch({type: "UPDATE_PARENTALREL_REJECTED", payload: err})
+            })
+
+        } else {
+          const parentRelBody = {
+            object: {
+              parent_id: newPerson._id,
+              child_id: childFromMap_id,
+              relationshipType: (sexAtBirth === 'M' ? 'Father' : 'Mother'),
+              subType: 'Biological'
+            }
+          };
+          dispatch({type: "CREATE_PARENTALREL"});
+          axios.post(config.api_url + '/api/v2/parentalrel/create', parentRelBody, axiosConfig)
+            .then((response) => {
+              dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+            })
+            .catch((err) => {
+              dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+            })
         }
 
-        dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', parentRelBody, axiosConfig)
-          .then((response) => {
-            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-          })
+
 
         // last, we want to dispatch to SET_NEWPERSON to show the modal to edit this newly created person, and pass it the of this newly created person
         newPerson = {

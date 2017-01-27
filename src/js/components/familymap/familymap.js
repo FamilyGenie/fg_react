@@ -47,8 +47,8 @@ import NewPerson from '../newperson';
 	},
 	(dispatch) => {
 		return {
-			createNewPerson: (star_id, fName) => {
-				dispatch(createNewPersonInMap(star_id, fName));
+			createNewPerson: (star_id, fName, sexAtBirth, parentalRel_id) => {
+				dispatch(createNewPersonInMap(star_id, fName, sexAtBirth, parentalRel_id));
 			},
 		}
 	}
@@ -636,6 +636,7 @@ export default class FamilyMap extends React.Component {
 						lName: "",
 						mName: "",
 						notes: null,
+						parentalRel_id: parentRel._id,
 						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
 					};
 					this.people.push(parent);
@@ -775,8 +776,9 @@ export default class FamilyMap extends React.Component {
 		return() => {
 			console.log('Person was clicked: ', person, star);
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
+			debugger;
 			if (person._id.substr(0,1) === "Z") {
-				createNewPerson(star._id, star.fName, person.sexAtBirth);
+				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, person.parentalRel_id);
 			} else {
 				hashHistory.push('/peopledetails/' + person._id);
 			}
