@@ -49,7 +49,7 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 					}),
 				peopleArray:
           peopleArray,
-			}		
+			}
     }
 	},
 	(dispatch) => {
@@ -58,7 +58,8 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				dispatch(deleteParentalRel(_id));
+				// this action requires a feild and a value to delete
+				dispatch(deleteParentalRel("_id", _id));
 			}
 		}
 	}

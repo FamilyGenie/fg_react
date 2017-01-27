@@ -74,7 +74,8 @@ export function deletePairBondRel(field, value) {
 
 	const body = {
 		object: {
-			[field]: value,
+			field,
+			value,
 		}
 	};
 
