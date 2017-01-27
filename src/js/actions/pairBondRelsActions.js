@@ -69,11 +69,12 @@ export function createPairBondRel(personOne_id, personTwo_id, relationshipType, 
 	}
 }
 
-export function deletePairBondRel(_id) {
+// modified to be able to accept and then send to the API, the field and the value to delete from the pairBondRels table. This way, we can tell the API to delete all records for a given personOne_id (for example).
+export function deletePairBondRel(field, value) {
 
 	const body = {
 		object: {
-			_id,
+			[field]: value,
 		}
 	};
 
