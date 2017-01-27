@@ -4,26 +4,26 @@ import { hashHistory } from 'react-router';
 
 @connect(
   (store, ownProps) => {
-  return {
-    stagedPeople: store.stagedPeople.stagedPeople,
-    peopleRemaining : store.stagedPeople.stagedPeople.filter(function(p) {
-      return (!p.ignore || p.ignore === false);
-    }),
-    totalPeople : store.stagedPeople.stagedPeople.filter(function(t) {
-      return (t.ignore === true);
-    }),
-    stagedEvents: store.stagedEvents.stagedEvents,
-    eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
-      return (!e.ignore || e.ignore === false);
-    }),
-    eventsTotal: store.stagedEvents.stagedEvents.filter(function(s) {
-      return (s.ignore === true);
-    }),
-    /*
-     * stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
-     * stagedPairbondRels: store.stagedPairbondRels.stagedPairbondRels,
-     */
-  }
+    return {
+      stagedPeople: store.stagedPeople.stagedPeople,
+      peopleImported : store.stagedPeople.stagedPeople.filter(function(p) {
+        return (p.ignore === true);
+      }),
+      peopleRemaining: store.stagedPeople.stagedPeople.filter(function(p) {
+        return (!p.ignore);
+      }),
+      stagedEvents: store.stagedEvents.stagedEvents,
+      eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
+        return (e.ignore === true);
+      }),
+      eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) { 
+        return (!e.ignore);
+      }),
+      /*
+       * stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
+       * stagedPairbondRels: store.stagedPairbondRels.stagedPairbondRels,
+       */
+    }
   }
 )
 export default class ImportDashboard extends React.Component {
@@ -36,7 +36,9 @@ export default class ImportDashboard extends React.Component {
     hashHistory.push('/gedcomimport');
   }
 
-  render = () => (<div>
+  render = () => {
+    
+    return (<div>
       <h1> Import Dashboard </h1>
       <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
       <div class='container'>
@@ -46,19 +48,22 @@ export default class ImportDashboard extends React.Component {
           > 
             People Imports 
           </h4>
-          <label> Need To Be Imported: </label>
+          <label> Ready to be Imported: </label>
           <p>{this.props.peopleRemaining.length}</p>
           <label>  Already Imported: </label>
-          <p>{this.props.totalPeople.length}</p>
+          <p>{this.props.peopleImported.length}</p>
         </div>
+
         <div class='col-md-6'>
           <h4> Event Imports </h4>
-          <label> Need To Be Imported: </label>
+          <label> Ready to be Imported: </label>
             <p>{this.props.eventsRemaining.length}</p>
           <label>  Already Imported: </label>
-            <p>{this.props.eventsTotal.length}</p>
+            <p>{this.props.eventsImported.length}</p>
         </div>
+
       </div>
+
       <div class='container'>
         <div class='col-md-6'>
           <h4> Parent Imports </h4>
@@ -69,5 +74,6 @@ export default class ImportDashboard extends React.Component {
           <label> Need To Be Imported: </label>
         </div>
       </div>
-    </div>)
+    </div>);
+  }
 }

@@ -3,6 +3,8 @@ import cookie from "react-cookie";
 import { createEvent } from "./eventsActions";
 import { fetchPeople } from "./peopleActions";
 import { fetchStagedPeople } from "./stagedPeopleActions";
+import { fetchEvents } from './eventsActions';
+import { fetchStagedEvents } from './stagedEventActions';
 
 import config from "../config.js";
 
@@ -23,8 +25,11 @@ export function runImport() {
       .then((response) => {
         dispatch({type: "RUN_IMPORT_FULFILLED", payload: response.data})
         // after running import, refresh the store.
+        // TODO: recieve the data through the response.data and append that information to the store.
         dispatch(fetchPeople());
+        dispatch(fetchEvents());
         dispatch(fetchStagedPeople());
+        dispatch(fetchStagedEvents());
       })
       .catch((err) => {
         dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
