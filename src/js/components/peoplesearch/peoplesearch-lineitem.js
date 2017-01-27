@@ -6,7 +6,6 @@ import DateInput from '../date-input';
 
 @connect(
   (store, ownProps) => {
-    // console.log('in peoplesearch-lineitem@connect with: ', store, ownProps)
     return {
       event: store.events.events.find(function(e) {
         return (e.person_id === ownProps.person._id);
@@ -16,7 +15,6 @@ import DateInput from '../date-input';
 )
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
-		console.log(this.props.person);
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
@@ -29,10 +27,9 @@ export default class PeopleSearchLineItem extends React.Component {
 		}
 	}
 
-  // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page.
   birthDate = () => {
     try {
-      return this.props.event.eventDate.toString().substr(0,10)
+      return this.props.event.eventDate.toString().substr(0,10).toLowerCase(); // not sure if we want to do toLowerCase()... TODO
     } catch (TypeError) {
       return "no birthDate"
     }
