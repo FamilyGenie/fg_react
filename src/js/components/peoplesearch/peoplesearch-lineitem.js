@@ -6,7 +6,6 @@ import DateInput from '../date-input';
 
 @connect(
   (store, ownProps) => {
-    // console.log('in peoplesearch-lineitem@connect with: ', store, ownProps)
     return {
       event: store.events.events.find(function(e) {
         return (e.person_id === ownProps.person._id);
@@ -16,7 +15,6 @@ import DateInput from '../date-input';
 )
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
-		console.log(this.props.person);
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 

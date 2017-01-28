@@ -32,7 +32,6 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 			},
 			deleteEvent: (_id) => {
 				// this action requires a feild and a value to delete
-				debugger;
 				dispatch(deleteEvent('_id', _id));
 			}
 		}
