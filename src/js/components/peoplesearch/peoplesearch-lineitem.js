@@ -16,7 +16,6 @@ import DateInput from '../date-input';
 )
 export default class PeopleSearchLineItem extends React.Component {
 	openDetails = () => {
-		console.log(this.props.person);
 		hashHistory.push('/peopledetails/' + this.props.person._id);
 	}
 
@@ -32,7 +31,7 @@ export default class PeopleSearchLineItem extends React.Component {
   // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page.
   birthDate = () => {
     try {
-      return this.props.event.eventDate.toString().substr(0,10)
+      return this.props.event.eventDate.toString().substr(0,10);
     } catch (TypeError) {
       return "no birthDate"
     }

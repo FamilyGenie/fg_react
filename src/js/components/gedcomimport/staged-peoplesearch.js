@@ -7,7 +7,9 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
   (store, ownProps) => {
     return {
       user: store.user.user,
-      stagedPeople: store.stagedPeople.stagedPeople,
+      stagedPeople: store.stagedPeople.stagedPeople.filter(function(p) {
+        return (!p.ignore)
+      }),
     };
 })
 
