@@ -56,8 +56,9 @@ export default class PeopleSearch extends React.Component {
       position: 'fixed',
       top: 100,
       left: 100,
-      right: 100,
-      bottom: 100,
+      width: '90vw',
+      // right: 100,
+      // bottom: 100,
       }
     };
 

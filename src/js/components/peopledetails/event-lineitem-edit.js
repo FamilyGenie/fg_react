@@ -31,7 +31,8 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 				dispatch(updateEvent(_id, field, value));
 			},
 			deleteEvent: (_id) => {
-				dispatch(deleteEvent(_id));
+				// this action requires a feild and a value to delete
+				dispatch(deleteEvent('_id', _id));
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { hashHistory } from 'react-router'
 import { connect } from 'react-redux';
-import { importPerson } from '../../actions/importActions';
 
+import { importPerson } from '../../actions/importActions';
 import DateInput from '../date-input';
 
 @connect(
@@ -13,9 +13,9 @@ import DateInput from '../date-input';
 	},
 	(dispatch) => {
 		return {
-      importPerson: (fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes) => {
-        dispatch(importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes))
-      }
+      importPerson: (fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes, _id) => {
+        dispatch(importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes, _id));
+      },
 		}
 	}
 )
@@ -23,7 +23,9 @@ import DateInput from '../date-input';
 export default class StagedPeopleDetailsLineItem extends React.Component {
 
   importPerson = () => {
-    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes)
+    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes, this.props.person._id);
+    alert('You hae imported a new record for ' + this.props.person.fName + ' ' + this.props.person.lName)
+    hashHistory.push('/stagedpeoplesearch/');
   }
 
 	getUpdateDate = (field, displayDate, setDate) => {
