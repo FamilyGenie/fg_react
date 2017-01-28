@@ -1,4 +1,4 @@
-import { combineReducers } from "redux"
+import { combineReducers } from 'redux'
 
 import events from "./eventsReducer"
 import eventTypes from "./eventTypesReducer"
