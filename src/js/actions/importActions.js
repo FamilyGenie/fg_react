@@ -53,7 +53,6 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
 			.then((response) => {
 				dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
-				// do post for event create for birthDate, but only
 				// create body post for event create for birthDate
 				const bodyBirth = {
 					object: {
