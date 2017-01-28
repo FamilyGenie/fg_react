@@ -6,7 +6,6 @@ import DateInput from '../date-input';
 
 @connect(
   (store, ownProps) => {
-    // console.log('in peoplesearch-lineitem@connect with: ', store, ownProps)
     return {
       event: store.events.events.find(function(e) {
         return (e.person_id === ownProps.person._id);
