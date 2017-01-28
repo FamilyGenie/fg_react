@@ -59,7 +59,7 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 			},
 			deleteParentalRel: (_id) => {
 				// this action requires a feild and a value to delete
-				dispatch(deleteParentalRel("_id", _id));
+				dispatch(deleteParentalRel('_id', _id));
 			}
 		}
 	}

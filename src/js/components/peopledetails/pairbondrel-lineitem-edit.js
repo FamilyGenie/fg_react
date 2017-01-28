@@ -50,7 +50,7 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 			},
 			deletePairBondRel: (_id) => {
 				// the action to delete a pairBondRel requires a pass of the field name and the value
-				dispatch(deletePairBondRel("_id", _id));
+				dispatch(deletePairBondRel('_id', _id));
 			}
 		}
 	}
