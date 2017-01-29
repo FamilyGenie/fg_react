@@ -80,6 +80,7 @@ export function deleteEvent(field, value) {
 		}
 	};
 
+
 	return (dispatch) => {
 		dispatch({type: "DELETE_EVENT"});
 		axios.post(config.api_url + "/api/v2/event/delete", body, axiosConfig)

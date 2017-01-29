@@ -30,14 +30,15 @@ import { closeNewPersonModal } from '../../actions/modalActions';
 export default class PeopleSearch extends React.Component {
   constructor(props){
     super(props);
-    this.alertOptions = {
+  }
+
+  alertOptions = {
       offset: 15,
       position: 'middle',
       theme: 'light',
       time: 0,
       transition: 'scale'
     };
-  }
 
   createNewPerson = () => {
     this.props.createNewPerson();

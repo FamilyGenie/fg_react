@@ -4,6 +4,7 @@ import Select from 'react-select';
 
 import DateInput from '../date-input';
 import { updateEvent, deleteEvent } from '../../actions/eventsActions';
+import { resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -34,7 +35,10 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 			deleteEvent: (_id) => {
 				// this action requires a feild and a value to delete
 				dispatch(deleteEvent('_id', _id));
-			}
+			},
+			resetModalEvent: () => {
+				dispatch(resetModalEvent());
+			},
 		}
 	}
 )
@@ -75,6 +79,8 @@ constructor(props) {
 	}
 
 	deleteRecord = () => {
+		// when the event is deleted, need to reset store.modal.event so that the next time the eventlineitemedit is called, it does not show up with this old event in it.
+		this.props.resetModalEvent();
 		this.props.deleteEvent(this.props.event._id);
 	}
 

@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import Modal from 'react-modal';
 
 import EventLineItemEdit from './event-lineitem-edit';
-import { setEvent } from '../../actions/modalActions';
-import { resetEvent } from '../../actions/modalActions';
+import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -15,10 +14,10 @@ import { resetEvent } from '../../actions/modalActions';
 		return {
 			// get the parentalRel object that needs to appear in the modal
 			setEvent: (event) => {
-				dispatch(setEvent(event));
+				dispatch(setModalEvent(event));
 			},
 			resetEvent: () => {
-				dispatch(resetEvent());
+				dispatch(resetModalEvent());
 			},
 		}
 	}
