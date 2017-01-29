@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from 'react-modal';
 
 import EventLineItemEdit from './event-lineitem-edit';
-import { setEvent } from '../../actions/modalActions';
+import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -14,7 +14,10 @@ import { setEvent } from '../../actions/modalActions';
 		return {
 			// get the parentalRel object that needs to appear in the modal
 			setEvent: (event) => {
-				dispatch(setEvent(event));
+				dispatch(setModalEvent(event));
+			},
+			resetEvent: () => {
+				dispatch(resetModalEvent());
 			},
 		}
 	}
@@ -35,6 +38,8 @@ export default class EventLineItem extends React.Component {
 	}
 
 	closeModal = () => {
+		// first call the action that will set the store.modal.event to empty string, so that the event currently set for the EventLineItemEdit is not accidentally opened the next time this modal is opened.
+		this.props.resetEvent();
 		this.setState({modalIsOpen: false});
 	}
 
