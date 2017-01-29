@@ -28,6 +28,7 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 	(dispatch) => {
 		return {
 			updateEvent: (_id, field, value) => {
+				console.log("in update event: ", _id, field, value);
 				dispatch(updateEvent(_id, field, value));
 			},
 			deleteEvent: (_id) => {
@@ -40,6 +41,8 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
+	console.log("in EventLineItemEdit with: ", this.props);
+
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel

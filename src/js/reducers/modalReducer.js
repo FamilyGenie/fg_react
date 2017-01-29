@@ -23,6 +23,12 @@ export default function reducer(state={
 					...state,
 					event: action.payload}
 			}
+			// this is called when the eventlineitemedit modal is closed, so that the event that was being edited is not accidentally opened when the modal is opened next
+			case "RESET_EVENT": {
+				return {
+					...state,
+					event: ""}
+			}
       case "SET_NEWPERSON" : {
         return {
           ...state,

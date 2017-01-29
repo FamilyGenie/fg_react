@@ -20,6 +20,13 @@ export function setEvent(event) {
 	}
 }
 
+export function resetEvent(event) {
+	// set the event to empty string. This action should be called when the modal is closing.
+	return function(dispatch) {
+		dispatch({type: "RESET_EVENT"});
+	}
+}
+
 export function setNewPerson(newPerson) {
 	// set the type to tell the newPersonModal to open, and pass the object to be edited in the modal window as the payload
 	return function(dispatch) {
