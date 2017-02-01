@@ -49,7 +49,8 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 				dispatch(updatePairBondRel(_id, field, value));
 			},
 			deletePairBondRel: (_id) => {
-				dispatch(deletePairBondRel(_id));
+				// the action to delete a pairBondRel requires a pass of the field name and the value
+				dispatch(deletePairBondRel('_id', _id));
 			}
 		}
 	}
@@ -142,29 +143,62 @@ constructor(props) {
 		// only render if we are not fetching data
 		if (pairBondRel) {
 			return (
-				<div class="infoRow">
-					<div class="custom-input" style={nameCol}>
-						<Select
-							options={peopleArray}
-							onChange={this.onPersonChange}
-							value={this.state.pairPerson_id}
-						/>
+				<div class="PR-main">
+					<div class="PR-row-1">
+						<div class="PR-div">
+							<div class="PR-title">
+								Pair Bond Name
+							</div>
+							<div class="PR-drop-1">
+								<Select
+									options={peopleArray}
+									onChange={this.onPersonChange}
+									value={this.state.pairPerson_id}
+								/>
+							</div>
+						</div>
+						<div class="PR-div">
+							<div class="PR-title">
+								Relationship Type
+							</div>
+							<div class="PR-drop-1">
+								<Select
+									options={this.relTypes}
+									onChange={this.onRelTypeChange}
+									value={this.state.relType}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="custom-input" style={relCol}>
-						<Select
-							options={this.relTypes}
-							onChange={this.onRelTypeChange}
-							value={this.state.relType}
-						/>
+
+					<div class="PR-row-3">
+						<div class="PR-date-div">
+							<div class="PR-title">
+							Start Date
+							</div>
+							<div class="PR-sDate">
+								<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+							</div>
+						</div>
+						<div class="PR-date-div">
+							<div class="PR-title">
+							End Date
+							</div>
+							<div class="PR-eDate">
+								<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
+							</div>
+						</div>
 					</div>
-					<div class="custom-input" style={dateCol}>
-						<DateInput defaultValue={this.state.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)} />
+					<div class="buffer-modal">
 					</div>
-					<div class="custom-input" style={dateCol}>
-						<DateInput defaultValue={this.state.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)} />
-					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
 					</div>
 				</div>)
 		} else {

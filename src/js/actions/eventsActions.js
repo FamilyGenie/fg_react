@@ -70,11 +70,13 @@ export function createEvent(eventDateUser, eventDate, person_id, eventType, even
 	}
 }
 
-export function deleteEvent(_id) {
+// modify to accept the feild and value of that field to delete from the collection
+export function deleteEvent(field, value) {
 
 	const body = {
 		object: {
-			_id,
+			field,
+			value,
 		}
 	};
 

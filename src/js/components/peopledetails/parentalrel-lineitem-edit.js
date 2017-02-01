@@ -9,6 +9,15 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 	(store, ownProps) => {
 		// for the modal to work, we need to put the parentalRel in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no parentalRel object in the store, so check for that condition. If there is no parentalRel object found in the store, then just send through ownProps
+    var peopleArray = store.people.people.map(function(person) {
+						var newObj = {};
+						var label = person.fName + ' ' + person.lName;
+						var value = person._id;
+						newObj["value"] = value;
+						newObj["label"] = label;
+						return newObj;
+					})
+
 		if (store.modal.parentalRel) {
 			return {
 				parentalRel:
@@ -23,18 +32,25 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 						return p._id === store.modal.parentalRel.parent_id;
 					}),
 				peopleArray:
-					store.people.people.map(function(person) {
-						var newObj = {};
-						var label = person.fName + ' ' + person.lName;
-						var value = person._id;
-						newObj["value"] = value;
-						newObj["label"] = label;
-						return newObj;
-					}),
+          peopleArray,
 			}
 		} else {
-			return ownProps
-		}
+			return {
+				parentalRel:
+					ownProps.parentalRel,
+				// with the parent_id from the parentalRel object, get the details of the person who is the parent
+				parentalRelTypes:
+					store.parentalRelTypes.parentalRelTypes,
+				parentalRelSubTypes:
+					store.parentalRelSubTypes.parentalRelSubTypes,
+				parent:
+					store.people.people.find(function(p) {
+						return p._id === store.modal.parentalRel.parent_id;
+					}),
+				peopleArray:
+          peopleArray,
+			}
+    }
 	},
 	(dispatch) => {
 		return {
@@ -42,7 +58,8 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				dispatch(deleteParentalRel(_id));
+				// this action requires a feild and a value to delete
+				dispatch(deleteParentalRel('_id', _id));
 			}
 		}
 	}
@@ -140,38 +157,83 @@ constructor(props) {
 
 		if (parentalRel) {
 			return (
-				<div class="infoRow">
-					<div class="custom-input" style={nameCol}>
-						<Select
-							options={peopleArray}
-							onChange={this.onParentChange}
-							value={this.state.parent_id}
-						/>
+				<div class="PR-main">
+					<div class="PR-row-1">
+						<div class="PR-div">
+							<div class="PR-title">
+								Parent Name
+							</div>
+							<div class="PR-drop-name">
+								<Select
+									options={peopleArray}
+									onChange={this.onParentChange}
+									value={this.state.parent_id}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<Select
-							options={parentalRelTypes}
-							onChange={this.onRelTypeChange}
-							value={this.state.relationshipType}
-						/>
+					<div class="PR-row-2">
+						<div class="PR-sub-div">
+							<div class="PR-div">
+								<div class="PR-title">
+									Relationship
+								</div>
+								<div class="PR-drops">
+									<div class="PR-drop-2">
+										<Select
+											options={parentalRelTypes}
+											onChange={this.onRelTypeChange}
+											value={this.state.relationshipType}
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="PR-div">
+								<div class="PR-title">
+									Sub Type
+								</div>
+								<div class="PR-drops">
+									<div class="PR-drop-2">
+										<Select
+											options={parentalRelSubTypes}
+											onChange={this.onSubTypeChange}
+											value={this.state.subType}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<Select
-							options={parentalRelSubTypes}
-							onChange={this.onSubTypeChange}
-							value={this.state.subType}
-						/>
+					<div class="PR-row-3">
+						<div class="PR-date-div">
+							<div class="PR-title">
+							Start Date
+							</div>
+							<div class="PR-sDate">
+								<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
+								/>
+							</div>
+						</div>
+						<div class="PR-date-div">
+							<div class="PR-title">
+							End Date
+							</div>
+							<div class="PR-eDate">
+								<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
-						/>
+					<div class="buffer-modal">
 					</div>
-					<div class="col-xs-2 custom-input">
-						<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
-						/>
-					</div>
-					<div class="custom-input" style={buttonCol}>
-						<i class="fa fa-minus-square buttonSize" onClick={this.deleteRecord}></i>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
 					</div>
 				</div>)
 		} else {

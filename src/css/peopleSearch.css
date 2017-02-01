@@ -2,7 +2,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: #E9EBEE;
 }
 #search-instruction {
   width: 100%;
@@ -19,6 +19,8 @@
   font-size: 40px;
   margin-top: 10px;
   text-align: center;
+  font-family: cabin;
+  margin-top: 20px;
 }
 #below-family {
  width: 100%;
@@ -51,10 +53,12 @@
 #person-div {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 95%;
   height: 30px;
   align-items: center;
   border-bottom: 1px solid silver;
+  margin-left: auto;
+  margin-right: auto;
 }
 .search-name-title {
   width: 100%;
@@ -90,7 +94,7 @@
 
 #add-family {
   width: 100%;
-  background-color: #0000e6;
+  background-color: #3B42AF;
   display: flex;
   flex-direction: row;
   text-align: center;
@@ -102,14 +106,14 @@
 .add {
   border-bottom: 0;
   border-top: 0;
-  color: silver;
   font-size: 30px;
   padding: 0;
-  color: white;
+  color: #E9EBEE;
   margin-right: auto;
   margin-left: auto;
   margin-bottom: auto;
   margin-top: auto;
+  font-family: cabin;
 }
 #buffer-div {
   width: 100%;
@@ -121,8 +125,9 @@
   color: #640FF3;
 }
 .fa-sitemap {
-  margin-right: 17px;
+  margin-right: 10px;
   font-size: 22px;
+  margin-left: 7px;
 }
 .fa-plus-square {
   margin-top: auto;

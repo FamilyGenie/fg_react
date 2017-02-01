@@ -3,6 +3,7 @@ export default function reducer(state={
 		parentalRel: "",
 		pairBondRel: "",
 		event: "",
+    newPerson: "",
 	},
 	action = ""
 ) {
@@ -22,6 +23,27 @@ export default function reducer(state={
 					...state,
 					event: action.payload}
 			}
-		}
+      case "SET_NEWPERSON" : {
+        return {
+          ...state,
+          newPerson: action.payload
+        }
+      }
+      case "CLOSE_NEWPERSON_MODAL": {
+        return {
+          ...state
+        }
+      }
+      case "CLOSE_NEWPERSON_MODAL_FULFILLED" : {
+        return {
+          ...state,
+          ...state.modal,
+          newPerson: {
+            ...state.newPerson,
+            modalIsOpen: false,
+          }
+        }
+      }
+    }
 		return state
 }

@@ -13,7 +13,6 @@ export default function reducer(state={
       return {...state, fetching: false, error: action.payload}
     }
     case "FETCH_STAGINGPARENTALRELS_FULFILLED": {
-      console.log('fulfilled fetching', action.payload)
       return {...state, fetching: false, stagedParentalRels: action.payload}
     }
   }

@@ -35,13 +35,14 @@ export default function reducer(
     case "RUN_IMPORT REJECTED": {
       return {
         ...state,
-        fetching: false
+        fetching: false,
+        error: action.payload
       };
     }
     case "RUN_IMPORT_FULFILLED": {
       return {
         ...state,
-        fetching: false
+        fetching: false,
       };
     }
 	}

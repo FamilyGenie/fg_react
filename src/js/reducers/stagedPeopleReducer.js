@@ -1,6 +1,5 @@
 export default function reducer(state={
   stagedPeople : [],
-  fetched : false,
   fetching : false,
   error : null,
 }, action) {
@@ -21,9 +20,24 @@ export default function reducer(state={
     case "UPDATE_STAGINGPERSON_REJECTED": {
       return {...state, fetching: false, error: action.payload}
     }
-    case "UPDATE_STAGINGPERSON_FULFILLED": {
-      return {...state, fetching: false}
-    }
+		case "UPDATE_STAGINGPERSON_FULFILLED": {
+			// todo: throw error on invalid field???
+			const newPerson = action.payload;
+			const oldPersonIndex = state.stagedPeople.findIndex(
+				person => person._id === newPerson._id
+			);
+			const newPeople = [
+				...state.stagedPeople.slice(0, oldPersonIndex),
+				newPerson,
+				...state.stagedPeople.slice(oldPersonIndex+1)
+			];
+
+			return {
+				...state,
+				fetching: false,
+				stagedPeople: newPeople,
+			};
+		}
   }
   return state
 
