@@ -70,11 +70,13 @@ export function createParentalRel(child_id, parent_id, relationshipType, subType
 	}
 }
 
-export function deleteParentalRel(_id) {
+// modify to it accepts the feild and value of that field to delete from the collection
+export function deleteParentalRel(field, value) {
 
 	const body = {
 		object: {
-			_id,
+			field,
+			value,
 		}
 	};
 

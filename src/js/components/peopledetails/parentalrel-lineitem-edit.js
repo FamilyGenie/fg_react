@@ -9,6 +9,15 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 	(store, ownProps) => {
 		// for the modal to work, we need to put the parentalRel in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no parentalRel object in the store, so check for that condition. If there is no parentalRel object found in the store, then just send through ownProps
+    var peopleArray = store.people.people.map(function(person) {
+						var newObj = {};
+						var label = person.fName + ' ' + person.lName;
+						var value = person._id;
+						newObj["value"] = value;
+						newObj["label"] = label;
+						return newObj;
+					})
+
 		if (store.modal.parentalRel) {
 			return {
 				parentalRel:
@@ -23,18 +32,25 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 						return p._id === store.modal.parentalRel.parent_id;
 					}),
 				peopleArray:
-					store.people.people.map(function(person) {
-						var newObj = {};
-						var label = person.fName + ' ' + person.lName;
-						var value = person._id;
-						newObj["value"] = value;
-						newObj["label"] = label;
-						return newObj;
-					}),
+          peopleArray,
 			}
 		} else {
-			return ownProps
-		}
+			return {
+				parentalRel:
+					ownProps.parentalRel,
+				// with the parent_id from the parentalRel object, get the details of the person who is the parent
+				parentalRelTypes:
+					store.parentalRelTypes.parentalRelTypes,
+				parentalRelSubTypes:
+					store.parentalRelSubTypes.parentalRelSubTypes,
+				parent:
+					store.people.people.find(function(p) {
+						return p._id === store.modal.parentalRel.parent_id;
+					}),
+				peopleArray:
+          peopleArray,
+			}
+    }
 	},
 	(dispatch) => {
 		return {
@@ -42,7 +58,8 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				dispatch(deleteParentalRel(_id));
+				// this action requires a feild and a value to delete
+				dispatch(deleteParentalRel('_id', _id));
 			}
 		}
 	}

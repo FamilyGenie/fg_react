@@ -1,40 +1,69 @@
 import React from 'react';
-import { connect } from "react-redux"
+import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
+import Modal from 'react-modal';
+import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
+import NewPerson from '../newperson';
+import { newPerson } from '../../actions/createNewPersonActions';
+import { closeNewPersonModal } from '../../actions/modalActions';
 
-@connect(
-  (store) => {
-    return {
-      user: store.user.user,
-      userFetched: store.user.fetched,
-      people: store.people.people,
-    };
-  },
-  (dispatch) => {
-    return {
-      createPerson: () => {
-        dispatch(createPerson());
-      }
-    }
+@connect((store, ownProps) => {
+  return {
+    user: store.user.user,
+    userFetched: store.user.fetched,
+    people: store.people.people,
+    modalIsOpen: store.modal.newPerson.modalIsOpen,
+    store,
+  };
+},
+(dispatch) => {
+  return {
+    createNewPerson: () => {
+      dispatch(newPerson());
+    },
   }
+}
 )
 export default class PeopleSearch extends React.Component {
-  constructor (props) {
+  constructor(props){
     super(props);
-    console.log("in people search", this.props);
   }
 
-  createPerson = () => {
-    this.props.createPerson();
-  };
-	render = () => {
-        const { people } = this.props;
+  alertOptions = {
+      offset: 15,
+      position: 'middle',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
 
-        const mappedPeople = people.map(person =>
-            <PeopleSearchLineItem person={person} key={person._id}/>
-        );
+  createNewPerson = () => {
+    this.props.createNewPerson();
+  }
+
+	render = () => {
+    const { people, modalIsOpen } = this.props;
+
+    const mappedPeople = people.map(person =>
+        <PeopleSearchLineItem person={person} key={person._id}/>
+    );
+
+
+    var modalStyle = {
+      overlay: {
+      position: 'fixed',
+      top: 50,
+      left: 50,
+      width: '90vw',
+      height: '80vh',
+      // right: 100,
+      // bottom: 100,
+      }
+    };
+
         return (
       <div id="outer-search">
     		<div class="header-div">
@@ -49,7 +78,7 @@ export default class PeopleSearch extends React.Component {
       					Add Family Members
       				</p>
               <div class="search-add">
-                <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createPerson}>
+                <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
                 </i>
               </div>
             </div>
@@ -58,6 +87,14 @@ export default class PeopleSearch extends React.Component {
           	{mappedPeople}
           </div>
         </div>
+      <Modal
+        isOpen={modalIsOpen}
+        contentLabel="Modal"
+        style={modalStyle}
+      >
+        <NewPerson/>
+      </Modal>
+      <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
         <div id="below-family">
         </div>
       </div>);

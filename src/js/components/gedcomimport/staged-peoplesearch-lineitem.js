@@ -74,7 +74,7 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 					class="form-control"
 					onClick={this.openDetails}
 				>
-					Import Details
+					Details
 				</button>
 			</div>
 
