@@ -4,6 +4,8 @@
   display: flex;
   flex-direction: column;
   background-color: #E9EBEE;
+  z-index: 0;
+  position: relative;
 }
 #search-instruction {
   width: 100%;
@@ -13,6 +15,7 @@
 .header-div {
   display: flex;
   justify-content: center;
+  margin-top: 40px;
 }
 .family-header {
   color: black;

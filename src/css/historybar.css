@@ -1,0 +1,41 @@
+@font-face {
+   font-family: CabinMI;
+   src: url("./fonts/Cabin/Cabin-MediumItalic.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+.main-history {
+  width: 300px;
+  border-bottom: 1px solid #640FF3;
+  border-right: 1px solid #640FF3;
+  border-left: 1px solid #640FF3;
+  height: 97vh;
+  z-index: 1;
+  position: fixed;
+  right: 0;
+  background-color: white;
+  margin-top: 52px;
+}
+.help-menu {
+  height: 210px;
+  border-bottom: 1px solid silver;
+}
+.history-title {
+  text-align: center;
+  font-family: CabinMI;
+}
+.history-context {
+  width: 100%;
+}
+.histories {
+  width: 100%;
+  height: 400px;
+  overflow: scroll;
+}
+.history {
+  width: 90%;
+  border-bottom: 1px solid silver;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}

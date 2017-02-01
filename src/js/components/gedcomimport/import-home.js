@@ -16,7 +16,7 @@ import { hashHistory } from 'react-router';
       eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
         return (e.ignore === true);
       }),
-      eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) { 
+      eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
         return (!e.ignore);
       }),
       /*
@@ -37,16 +37,16 @@ export default class ImportDashboard extends React.Component {
   }
 
   render = () => {
-    
+
     return (<div>
-      <h1> Import Dashboard </h1>
+      <h1 class="family-header"> Import Dashboard </h1>
       <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
       <div class='container'>
         <div class='col-md-6'>
           <h4
             onClick={this.goToStagedPeopleSearch}
-          > 
-            People Imports 
+          >
+            People Imports
           </h4>
           <label> Ready to be Imported: </label>
           <p>{this.props.peopleRemaining.length}</p>

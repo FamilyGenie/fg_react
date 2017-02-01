@@ -9,6 +9,7 @@ import PeopleSearchLineItem from './peoplesearch-lineitem';
 import NewPerson from '../newperson';
 import { newPerson } from '../../actions/createNewPersonActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
+import HistoryBar from '../historybar/historybar';
 
 @connect((store, ownProps) => {
   return {
@@ -69,6 +70,7 @@ export default class PeopleSearch extends React.Component {
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>
+        <HistoryBar/>
         <div id="family-content">
           <div id="family">
             <div id="add-family">
