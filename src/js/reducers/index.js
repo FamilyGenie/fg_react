@@ -4,6 +4,7 @@ import events from "./eventsReducer"
 import eventTypes from "./eventTypesReducer"
 import modal from "./modalReducer"
 import pairBondRels from "./pairBondRelsReducer"
+import pairBondRelTypes from "./pairBondRelTypesReducer"
 import parentalRels from "./parentalRelsReducer"
 import parentalRelTypes from "./parentalRelTypesReducer"
 import parentalRelSubTypes from "./parentalRelSubTypesReducer"
@@ -19,6 +20,7 @@ export default combineReducers({
   eventTypes,
   modal,
   pairBondRels,
+  pairBondRelTypes,
   parentalRels,
   parentalRelTypes,
   parentalRelSubTypes,
