@@ -1,4 +1,5 @@
 import React from 'react';
+import AlertContainer from 'react-alert';
 import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
@@ -63,7 +64,6 @@ export default class FamilyMap extends React.Component {
 		};
 	}
 
-	starAge;
 	star_id = this.props.star_id;
 	parents = [];
 	parentRels = [];
@@ -80,10 +80,42 @@ export default class FamilyMap extends React.Component {
 	textSize = '.9em';
 	fullName;
 
+	alertOptions = {
+      offset: 15,
+      position: 'middle',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
+
 	subtractYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
-		this.starAge--;
+		console.log("at start of subtractYear: ", this.state.starAge);
+		var vStarAge = this.state.starAge - 1;
+		console.log("vstarage: ", vStarAge, this.state.starAge);
 		// also set the state variable
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: vStarAge
+		});
+		this.componentDidMount();
+	}
+
+	addYear = () => {
+		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
+		var vStarAge = this.state.starAge + 1;
+		console.log("vstarage: ", vStarAge, this.state.starAge);
+		// also set the state variable
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: vStarAge
+		});
+		this.componentDidMount();
+	}
+
+	updateStarAge = (evt) => {
+		this.starAge = evt.target.value;
+		this.dateFilterString = moment(this.getPersonById(this.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: this.starAge
@@ -91,15 +123,9 @@ export default class FamilyMap extends React.Component {
 		this.componentDidMount();
 	}
 
-	addYear = () => {
-		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
-		this.starAge++;
-		// also set the state variable
-		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
-		});
-		this.componentDidMount();
+	// this function it to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
+	onAgeChange = (evt) => {
+		this.setState({starAge: evt.target.value});
 	}
 
 	render = () => {
@@ -116,7 +142,15 @@ export default class FamilyMap extends React.Component {
 								Date: {this.state.dateFilterString}
 							</div>
 							<div class="map-date-1">
-							Star's Age: {this.starAge}
+								Star's Age:
+								<input
+									id="ageInput"
+									class="form-control"
+									type="text"
+									value={this.state.starAge}
+									onChange={this.onAgeChange}
+									onBlur={this.updateStarAge}
+								/>
 							</div>
 						</div>
 						<div class="map-arrow">
@@ -137,6 +171,9 @@ export default class FamilyMap extends React.Component {
 			    >
 			      <NewPerson/>
 			    </Modal>
+
+			    // This is the container for the alerts we are using
+			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 			</div>)
 		}
 	}
@@ -734,15 +771,19 @@ export default class FamilyMap extends React.Component {
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
-			this.starAge = 18;
+			// var vStarAge = 18;
 			this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+			this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: 18
+		});
 		}
 		// update the display as well
 		console.log("Date: ", this.dateFilterString);
-		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
-		});
+		// this.setState({
+		// 	dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+		// 	starAge: vStarAge
+		// });
 	}
 
 	getPersonById = (_id) => {
@@ -775,7 +816,6 @@ export default class FamilyMap extends React.Component {
 	personClick(person, star) {
 		return() => {
 			console.log('Person was clicked: ', person, star);
-			debugger;
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
 				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, person.parentalRel_id);
@@ -786,7 +826,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		debugger;
 		let textData = [];
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
@@ -861,7 +900,7 @@ export default class FamilyMap extends React.Component {
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
 			.attr("stroke-width", 0)
-			.attr("fill", "white");
+			.attr("fill", "#E9EBEE");
 	}
 
 	drawRelText(mom, dad, pairBondRel) {
