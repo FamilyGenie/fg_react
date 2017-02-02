@@ -72,13 +72,14 @@ export default class PeopleSearch extends React.Component {
           </div>
           <div id="family">
             <div id="add-family">
-              <div class="add-button">
-        				<button
-          					class="form-control add btn-info btn"
+              <div class="blank-person-header">
+  						</div>
+  						<p class="detail-title">Lineage</p>
+  						<div class="">
+                <i class="fa-plus-square fa add"
         					onClick={this.createNewPerson}>
-        					Add Family Member
-        				</button>
-        			</div>
+        				</i>
+  						</div>
             </div>
             <div id="buffer-div">
             </div>
