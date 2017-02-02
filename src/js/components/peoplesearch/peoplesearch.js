@@ -80,7 +80,7 @@ export default class PeopleSearch extends React.Component {
       					Add Family Members
       				</p>
               <div class="search-add">
-                <i class="fa fa-plus-square" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
+                <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
                 </i>
               </div>
             </div>

@@ -1,4 +1,12 @@
-
+.main-div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #E9EBEE;
+  z-index: 0;
+  position: relative;
+  min-height: 100vh;
+}
 #outer-search {
   width: 100%;
   display: flex;
@@ -144,10 +152,12 @@
   font-size: 22px;
   margin-left: 7px;
 }
+.plus {
+  margin-right: 15px;
+}
 .fa-plus-square {
   margin-top: auto;
   margin-left: auto;
-  margin-right: 15px;
   margin-bottom: auto;
   font-size: 28px;
 }

@@ -139,7 +139,7 @@ export default class PeopleDetails extends React.Component {
 							</div>
 							<p class="detail-title">Parents</p>
 							<div class="buttonSize">
-								<i class="fa-plus-square fa" onClick={this.createParentalRel}>
+								<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
 								</i>
 							</div>
 						</div>
@@ -156,7 +156,7 @@ export default class PeopleDetails extends React.Component {
 						</div>
 						<p class="detail-title">Pair Bonds</p>
 						<div class="buttonSize">
-							<i class="fa-plus-square fa" onClick={this.createPairBondRel}></i>
+							<i class="fa-plus-square fa plus" onClick={this.createPairBondRel}></i>
 						</div>
 					</div>
 					<div class="buffer-div">
@@ -173,7 +173,7 @@ export default class PeopleDetails extends React.Component {
 							</div>
 							<p class="detail-title">Chronology</p>
 							<div class="buttonSize">
-								<i class="fa-plus-square fa"
+								<i class="fa-plus-square fa plus"
 								onClick={this.createEvent}>
 								</i>
 							</div>

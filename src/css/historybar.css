@@ -5,24 +5,44 @@
    font-weight: 700;
 }
 .main-history {
-  width: 300px;
   border-bottom: 1px solid #640FF3;
   border-right: 1px solid #640FF3;
   border-left: 1px solid #640FF3;
+  background-color: white;
+}
+.help-div {
+  width: 300px;
   height: 97vh;
   z-index: 1;
   position: fixed;
   right: 0;
-  background-color: white;
   margin-top: 52px;
+  top: 0;
 }
 .help-menu {
   height: 210px;
   border-bottom: 1px solid silver;
+  display: flex;
+}
+.help-header {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  height: 50px;
+}
+.help-close {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  margin-top: 9px;
+  margin-right: 3px;
 }
 .history-title {
   text-align: center;
   font-family: CabinMI;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
 }
 .history-context {
   width: 100%;
@@ -38,4 +58,11 @@
   height: 50px;
   margin-left: auto;
   margin-right: auto;
+}
+#helpHide {
+  display: none;
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
