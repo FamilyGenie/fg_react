@@ -9,7 +9,8 @@ import PeopleSearchLineItem from './peoplesearch-lineitem';
 import NewPerson from '../newperson';
 import { newPerson } from '../../actions/createNewPersonActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
-import HistoryBar from '../historybar/historybar';
+import HistoryBar from '../historybar/index';
+import Sidebar from 'react-sidebar';
 
 @connect((store, ownProps) => {
   return {
@@ -20,17 +21,34 @@ import HistoryBar from '../historybar/historybar';
     store,
   };
 },
-(dispatch) => {
-  return {
-    createNewPerson: () => {
-      dispatch(newPerson());
-    },
+  (dispatch) => {
+    return {
+      createNewPerson: () => {
+        dispatch(newPerson());
+      },
+    }
   }
-}
 )
 export default class PeopleSearch extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      sidebarOpen: true,
+    };
+  }
+  onSetSidebarOpen = (open) => {
+    this.setState({sidebarOpen: open});
+  }
+  componentWillMount = () => {
+    var mql = window.matchMedia('(min-width: 800px)');
+    mql.addListener(this.mediaQueryChanged);
+    this.setState({mql: mql, sidebarDocked: mql.matches});
+  }
+  componentWillUnmount = () => {
+    this.state.mql.removeListener(this.mediaQueryChanged);
+  }
+  mediaQueryChanged = () => {
+    this.setState({sidebarDocked: this.state.mql.matches});
   }
 
   alertOptions = {
@@ -78,6 +96,7 @@ export default class PeopleSearch extends React.Component {
     );
 
 
+
     var modalStyle = {
       overlay: {
       position: 'fixed',
@@ -89,13 +108,14 @@ export default class PeopleSearch extends React.Component {
       // bottom: 100,
       }
     };
+    const sidebarContent = <div><h1>Help</h1></div>
 
         return (
-      <div class="main" style={this.selectedStyle}>
+      <div class="main">
+<HistoryBar/>
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>
-        <HistoryBar/>
         <div id="family-content">
           <div id="family">
             <div id="add-family">

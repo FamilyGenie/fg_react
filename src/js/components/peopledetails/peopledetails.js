@@ -12,7 +12,7 @@ import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { createParentalRel } from '../../actions/parentalRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
-import HistoryBar from '../historybar/historybar';
+// import HistoryBar from '../historybar/historybar';
 
 @connect(
 	(store, ownProps) => {
@@ -125,7 +125,6 @@ export default class PeopleDetails extends React.Component {
 			<div class="header-div">
 				<h1 class="family-header">Personal Connections</h1>
 			</div>
-			<HistoryBar/>
 			<div id="detail-name">
 				<PeopleDetailsLineItem person={star} />
 			</div>

@@ -16,7 +16,6 @@
   z-index: 1;
   position: fixed;
   right: 0;
-  margin-top: 52px;
   top: 0;
 }
 .help-menu {
@@ -85,4 +84,7 @@
   position: absolute;
   right: 0;
   top: 0;
+}
+.custom-sidebar-class {
+  margin-top: 52px;
 }

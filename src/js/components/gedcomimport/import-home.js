@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-import HistoryBar from '../historybar/historybar';
+// import HistoryBar from '../historybar/historybar';
 
 @connect(
   (store, ownProps) => {
@@ -41,7 +41,6 @@ export default class ImportDashboard extends React.Component {
 
     return (
     <div class="main-div">
-      <HistoryBar/>
       <div class="header-div">
         <h1 class="family-header"> Import Dashboard </h1>
       </div>

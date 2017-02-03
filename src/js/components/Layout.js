@@ -79,6 +79,9 @@ export default class Layout extends React.Component {
 		          <li>
 		            <a class="navbarright" onClick={this.logIn}>LOG IN</a>
 		          </li>
+							<li>
+								<i class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
+							</li>
 		        </ul>
 			    </div>
 			  </div>

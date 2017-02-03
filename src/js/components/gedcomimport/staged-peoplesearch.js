@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import HistoryBar from '../historybar/historybar';
+// import HistoryBar from '../historybar/historybar';
 import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 
 @connect(
@@ -23,7 +23,6 @@ export default class StagedPeopleSearch extends React.Component {
 
     return (
     <div class="main-div">
-      <HistoryBar/>
       <div class="header-div">
         <h1 class="family-header"> Duplicate Review </h1>
       </div>
