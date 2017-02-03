@@ -10,40 +10,22 @@ import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {
+		console.log("in familymap @connect with: ", store.people.people);
 		return {
 			star_id:
 				ownProps.params.star_id,
-			// people:
-			// 	store.people.people,
-			// this prop stores the people with their birth info and death info in the object with the person. Makes the logic to draw the map easier.
 			people:
-				store.people.people.map(function(person) {
-					 var birth = store.events.events.find(function(e) {
-							return person._id === e.person_id && e.eventType === "Birth";
-					 });
-					 if (birth) {
-						 person.birthDate = birth.eventDate;
-						 person.birthPlace = birth.eventPlace;
-					 }
-
-					 var death = store.events.events.find(function(e) {
-							return person._id === e.person_id && e.eventType === "Death";
-					 });
-
-					 if (death) {
-						 person.deathDate = death.eventDate;
-						 person.deathPlace = death.eventPlace;
-					 }
-
-					return person;
-				}
-			),
+				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
+				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
+				JSON.parse(JSON.stringify(store.people.people)),
 			pairBondRelationships:
 				store.pairBondRels.pairBondRels,
 			parentalRelationships:
 				store.parentalRels.parentalRels,
 			newPersonModalIsOpen:
 				store.modal.newPerson.modalIsOpen,
+			events:
+				store.events.events,
 		};
 	},
 	(dispatch) => {
@@ -57,6 +39,7 @@ import NewPerson from '../newperson';
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log("in familymap with props: ", this.props);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -749,6 +732,34 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
+	createLocalPeople = (people, events) => {
+		var localPeople = people.map(function(person) {
+
+			 var birth = events.find(function(e) {
+					return person._id === e.person_id && e.eventType === "Birth";
+			 });
+			 if (birth) {
+				person.birthDate = birth.eventDate;
+				person.birthDateUser = birth.eventDateUser;
+				person.birthPlace = birth.eventPlace;
+			 }
+
+			 var death = events.find(function(e) {
+					return person._id === e.person_id && e.eventType === "Death";
+			 });
+
+			 if (death) {
+				person.deathDate = death.eventDate;
+				person.deathDateUser = death.eventDateUser;
+				person.deathPlace = death.eventPlace;
+			 }
+
+			return person;
+		});
+
+		return localPeople;
+	}
+
 	initializeVariables = () => {
 		// do we need to initialize the xPos and yPos of each person?
 		// remove d3 drawn objects
@@ -759,31 +770,25 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
-		// create a copy of the people array
-		this.people = this.props.people.slice();
+		// this is the array that the rest of this component gets information from about the people to draw. So call a function that takes the people array from props and adds the birth and death info to each person. Note that the people array from props is a copy of the store.people.people array.
+		this.people = this.createLocalPeople(this.props.people, this.props.events);
+
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
 		this.firstChildYDistance = 20;
 		this.firstChildYWithAdoptions = 130;
-		// console.log("in initializeVariables", this.state.star_id);
 		var star = this.getPersonById(this.star_id);
 		console.log("star: ", star);
 		this.fullName = star.fName + " " + star.lName;
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
-			// var vStarAge = 18;
 			this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
 			this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: 18
 		});
 		}
-		// update the display as well
 		console.log("Date: ", this.dateFilterString);
-		// this.setState({
-		// 	dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-		// 	starAge: vStarAge
-		// });
 	}
 
 	getPersonById = (_id) => {
@@ -826,17 +831,21 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		let textData = [];
+		// console.log("draw text for: ", person);
+		var textData = [];
+		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
+		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
+			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 			textData = [
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "Birth: " + birthDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "Death: " + deathDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
@@ -844,14 +853,14 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				// {"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "Birth: " + birthDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-
 		 return d3.select("svg").selectAll("text" + person._id)
 			.data(textData)
 			.enter()
