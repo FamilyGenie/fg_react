@@ -51,7 +51,7 @@ export default class StagedPeopleDetails extends React.Component {
           Death Date
         </div>
       </div>
-      <div>
+      <div class="staged-people-list">
         <StagedPeopleDetailsLineItem person={stagedStar} />
       </div>
       <div class="container col-xs-12">

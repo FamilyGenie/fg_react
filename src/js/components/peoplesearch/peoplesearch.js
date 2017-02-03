@@ -44,6 +44,31 @@ export default class PeopleSearch extends React.Component {
   createNewPerson = () => {
     this.props.createNewPerson();
   }
+  // selectedStyle = () => {
+  //   if (this.state.hiddenHistory) {
+  //     var mainStyle = {
+  //       display: flex;
+  //       flex-direction: column;
+  //       background-color: #E9EBEE;
+  //       z-index: 0;
+  //       position: relative;
+  //       min-height: 100vh;
+  //       margin-right: 300px;
+  //     }
+  //   }
+  //   else {
+  //     var mainStyle = {
+  //       display: flex;
+  //       flex-direction: column;
+  //       background-color: #E9EBEE;
+  //       z-index: 0;
+  //       position: relative;
+  //       min-height: 100vh;
+  //       margin-right: 0px;
+  //     }
+  //   }
+  //
+  // }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
@@ -66,7 +91,7 @@ export default class PeopleSearch extends React.Component {
     };
 
         return (
-      <div id="outer-search">
+      <div class="main" style={this.selectedStyle}>
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>

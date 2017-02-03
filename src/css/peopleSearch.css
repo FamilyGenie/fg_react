@@ -1,20 +1,5 @@
-.main-div {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #E9EBEE;
-  z-index: 0;
-  position: relative;
-  min-height: 100vh;
-}
-#outer-search {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #E9EBEE;
-  z-index: 0;
-  position: relative;
-}
+
+
 #search-instruction {
   width: 100%;
   height: 100px;
@@ -56,7 +41,7 @@
   overflow: scroll;
   margin-right: auto;
   margin-left: auto;
-  width: 50%;
+  width: 720px;
   border: 1px solid silver;
   border-radius: 5px;
   position: relative;
