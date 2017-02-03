@@ -10,16 +10,15 @@ var axiosConfig = {
 };
 
 export function login(username, password) {
+	console.log("in authActions.login with params: ", username, password);
 	const body = {
-		object: {
-			username,
-			password
-		}
+		username,
+		password
 	};
 
 	return (dispatch) => {
 		dispatch({type: "LOGIN"});
-		console.log('in authActions.login');
+		console.log('in authActions.login with body and axiosConfig: ', body, axiosConfig);
 		axios.post(config.api_url + "/api/v1/login", body, axiosConfig)
 			.then((response) => {
 				console.log('in authAction LOGIN_SUCCESSFUL ', response.data);

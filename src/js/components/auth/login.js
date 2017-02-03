@@ -25,12 +25,13 @@ export default class Login extends React.Component {
 	}
 
 	submitCredentials = () => {
+		console.log('in submit with: ', this.state.email, this.state.password);
 		this.props.login(this.state.email, this.state.password);
 	}
 
 	updateEmail = (evt) => {
 		console.log('update email with: ', evt.target.value);
-		this.setState({password: evt.target.value});
+		this.setState({email: evt.target.value});
 	}
 
 	updatePassword = (evt) => {
