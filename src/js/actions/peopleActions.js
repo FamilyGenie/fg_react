@@ -2,7 +2,6 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 
 import config from '../config.js';
-import { deleteEvent } from './eventsActions';
 
 const fgtoken = cookie.load('fg-access-token');
 

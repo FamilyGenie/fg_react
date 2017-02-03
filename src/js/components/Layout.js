@@ -27,6 +27,7 @@ export default class Layout extends React.Component {
 
 	logIn = () => {
   // TODO
+  		hashHistory.push('/auth/login');
 	}
 
 	logOut = () => {
