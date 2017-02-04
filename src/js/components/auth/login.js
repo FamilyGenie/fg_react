@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
 
 @connect(
+	// test
 	(store, ownProps) => {
 		return store;
 	},
