@@ -11,6 +11,7 @@ var axiosConfig = {
 
 export function fetchPeople() {
 
+	console.log("in fetch people: ", fgtoken);
 	return function(dispatch) {
 		dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/api/v2/people", axiosConfig)

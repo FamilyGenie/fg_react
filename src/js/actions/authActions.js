@@ -10,7 +10,6 @@ var axiosConfig = {
 };
 
 export function login(username, password) {
-	console.log("in authActions.login with params: ", username, password);
 	const body = {
 		username,
 		password
@@ -18,15 +17,21 @@ export function login(username, password) {
 
 	return (dispatch) => {
 		dispatch({type: "LOGIN"});
-		console.log('in authActions.login with body and axiosConfig: ', body, axiosConfig);
 		axios.post(config.api_url + "/api/v1/login", body, axiosConfig)
 			.then((response) => {
-				console.log('in authAction LOGIN_SUCCESSFUL ', response.data);
+				// save the cookie to store the toke
+				cookie.save('fg-access-token', response.data.token);
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data})
 			})
 			.catch((err) => {
-				console.log('in authAction LOGIN_SUCCESSFUL ', err);
 				dispatch({type: "LOGIN_ERROR", payload: err})
 			})
+	}
+}
+
+export function logout() {
+	return (dispatch) => {
+		cookie.remove('fg-access-token');
+		dispatch({type: 'LOGOUT_SUCCESSFUL'});
 	}
 }

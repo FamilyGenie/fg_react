@@ -15,6 +15,7 @@ export default function reducer(
 			};
 		}
 		case "LOGIN_SUCCESSFUL": {
+			// on successful login, set userName in the store, so that it can be retrieved and also used to test if the user is logged in or not
 			return {
 				...state,
 				fetching: false,
@@ -26,6 +27,17 @@ export default function reducer(
 				...state,
 				fetching: false,
 				error: action.payload
+			};
+		}
+		case "LOGOUT_SUCCESSFUL": {
+			// on successful logout, set userName to falsy value
+			return {
+				...state,
+				people: [],
+				events: [],
+				pairBondRels: [],
+				parentalRels: [],
+				userName: ''
 			};
 		}
 	}
