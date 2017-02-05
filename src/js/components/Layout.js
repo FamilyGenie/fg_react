@@ -14,9 +14,9 @@ import { logout } from '../actions/authActions';
 import PeopleSearch from './peoplesearch/peoplesearch';
 
 @connect(
-	// (store, ownProps) => {
-	// 	return store;
-	// },
+	(store, ownProps) => {
+		return store;
+	}
 	// (dispatch) => {
 	// 	return {
 	// 		logout: () => {
@@ -43,8 +43,6 @@ export default class Layout extends React.Component {
 
 	logOut = () => {
 		this.props.dispatch(logout());
-		debugger;
-		// this.componentWillMount();
 		hashHistory.push('/auth/login');
 	}
 

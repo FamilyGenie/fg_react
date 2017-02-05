@@ -11,7 +11,6 @@ var axiosConfig = {
 
 export function fetchPeople() {
 
-	console.log("in fetch people: ", fgtoken);
 	return function(dispatch) {
 		dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/api/v2/people", axiosConfig)
@@ -87,6 +86,11 @@ export function deletePerson(_id) {
 			}
 		};
 
+		/*************
+		TODO: can all these be changed to just call the action (will also need to import it at the top). Something like:
+		import { deleteEvent } from '../actions/eventsActions';
+		dispatch(deleteEvent('person_id', _id));
+		**************/
 		dispatch({type: "DELETE_EVENT"});
 		axios.post(config.api_url + "/api/v2/event/delete", body, axiosConfig)
 			.then((response) => {

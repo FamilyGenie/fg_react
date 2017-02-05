@@ -30,13 +30,9 @@ export default function reducer(
 			};
 		}
 		case "LOGOUT_SUCCESSFUL": {
-			// on successful logout, set userName to falsy value
+			// on successful logout, set userName to falsy value and empty the data arrays
 			return {
 				...state,
-				people: [],
-				events: [],
-				pairBondRels: [],
-				parentalRels: [],
 				userName: ''
 			};
 		}

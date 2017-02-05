@@ -25,8 +25,8 @@ export default class Login extends React.Component {
 		}
 	}
 
+	// when creds are submitted, call the login action from authActions
 	submitCredentials = () => {
-		console.log('in submit with: ', this.state.email, this.state.password);
 		this.props.login(this.state.email, this.state.password);
 	}
 

@@ -13,6 +13,13 @@ export default function reducer(state={
     case "FETCH_STAGINGEVENTS_FULFILLED": {
       return {...state, fetching: false, stagedEvents: action.payload}
     }
+    case "CLEAR_STAGEDEVENTS": {
+      return {
+        ...state,
+        fetching: false,
+        stagedEvents: [],
+      };
+    }
   }
   return state
 }

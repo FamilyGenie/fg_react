@@ -38,6 +38,13 @@ export default function reducer(state={
 				stagedPeople: newPeople,
 			};
 		}
+    case "CLEAR_STAGEDPEOPLE": {
+      return {
+        ...state,
+        fetching: false,
+        stagedPeople: [],
+      };
+    }
   }
   return state
 
