@@ -17,21 +17,14 @@ import PeopleSearch from './peoplesearch/peoplesearch';
 	(store, ownProps) => {
 		return store;
 	}
-	// (dispatch) => {
-	// 	return {
-	// 		logout: () => {
-	// 			dispatch(logout());
-	// 		},
-	// 	}
-	// }
 )
 export default class Layout extends React.Component {
 
 	componentWillMount() {
+		this.props.dispatch(fetchPeople());
 		this.props.dispatch(fetchEvents());
 		this.props.dispatch(fetchPairBondRels());
 		this.props.dispatch(fetchParentalRels());
-		this.props.dispatch(fetchPeople());
 		this.props.dispatch(fetchStagedPeople());
 		this.props.dispatch(fetchStagedEvents());
 		// this.props.dispatch(fetchStagedParentalRels());

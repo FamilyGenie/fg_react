@@ -12,24 +12,24 @@ import { fetchStagedEvents } from '../actions/stagedEventActions';
 
 import config from '../config.js';
 
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
+function getAxiosConfig() {
+	return {
+		headers: {'x-access-token': cookie.load('fg-access-token')}
+	}
+}
 
 export function login(username, password) {
 	const body = {
 		username,
 		password
 	};
+	var axiosConfig = getAxiosConfig();
 	return (dispatch) => {
 		dispatch({type: "LOGIN"});
 		axios.post(config.api_url + "/api/v1/login", body, axiosConfig)
 			.then((response) => {
 				// if the login is successful, then save the cookie for the app, and call the dispatch to retrieve all the data.
 				cookie.save('fg-access-token', response.data.token);
-				debugger;
 				dispatch(fetchPeople());
 				dispatch(fetchEvents());
 				dispatch(fetchPairBondRels());
@@ -39,7 +39,6 @@ export function login(username, password) {
 				// this.props.dispatch(fetchStagedParentalRels());
 
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
-				debugger;
 				hashHistory.push('/');
 
 			})

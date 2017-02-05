@@ -3,14 +3,21 @@ import cookie from 'react-cookie';
 
 import config from '../config.js';
 
-const fgtoken = cookie.load('fg-access-token');
+// const fgtoken = cookie.load('fg-access-token');
 
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
+// var axiosConfig = {
+// 	headers: {'x-access-token': fgtoken}
+// };
+
+function getAxiosConfig() {
+	return {
+		headers: {'x-access-token': cookie.load('fg-access-token')}
+	}
+}
 
 export function fetchPeople() {
 
+	var axiosConfig = getAxiosConfig();
 	return function(dispatch) {
 		dispatch({type: "FETCH_PEOPLE"});
 		axios.get(config.api_url + "/api/v2/people", axiosConfig)
@@ -34,6 +41,7 @@ export function createPerson(fName, mName, lName, sexAtBirth, notes) {
 			notes
 		}
 	};
+	var axiosConfig = getAxiosConfig();
 	return (dispatch) => {
 		dispatch({type: "CREATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
@@ -54,7 +62,7 @@ export function updatePerson(_id, field, value) {
 			value
 		}
 	};
-
+	var axiosConfig = getAxiosConfig();
 	return (dispatch) => {
 		dispatch({type: "UPDATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/update", body, axiosConfig)
@@ -74,7 +82,7 @@ export function deletePerson(_id) {
 	3. All parentalRels where they are the parent or child
 */
 	var body;
-
+	var axiosConfig = getAxiosConfig();
 	return (dispatch) => {
 		dispatch({type: "DELETE_PERSON"});
 
