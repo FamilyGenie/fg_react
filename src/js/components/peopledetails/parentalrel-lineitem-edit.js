@@ -53,11 +53,35 @@ constructor(props) {
 	// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
 	this.state = {
 		parent_id: ( this.props.parent ? this.props.parent._id : " "),
-		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : " "),
-		subType: ( this.props.parentalRel ? this.props.parentalRel.subType : " "),
+
+
+		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : this.props.parentalRel.realtionshipType),
+		relationshipTypeInitial: ( this.props.parentalRel.relationshipType: " "),
+
+
+		// subType: ( this.props.parentalRel ?
+		// this.props.parentalRel.subType : " "),
+
+		subType: ( this.props.parentalRel ?
+		this.props.parentalRel.subType :
+		this.props.parentalRel.subType),
+
+		subTypeInitial: ( this.props.parentalRel ?
+		this.props.parentalRel.subType : " "),
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
-		startDateUser: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser : this.props.parentalRel.startDate),
-		endDateUser: ( this.props.parentalRel.endDateUser ? this.props.parentalRel.endDateUser : this.props.parentalRel.endDate),
+
+		startDateUser: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser :
+		this.props.parentalRel.startDate),
+
+		startDateInitial: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser : " "),
+
+
+		endDateUser: ( this.props.parentalRel.endDateUser ?
+		this.props.parentalRel.endDateUser :
+		this.props.parentalRel.endDate),
+
+		endDateInitial: (this.props.parentalRel.endDateUser ?
+		this.props.pairBondRel.endDateUser : " "),
 	}
 }
 
@@ -88,35 +112,51 @@ constructor(props) {
 		}
 	}
 
-	onParentChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({parent_id: evt.value});
-	}
+	// onParentChange = (evt) => {
+	// 	// Update the record with the newly selected parent
+	// 	this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({parent_id: evt.value});
+	// }
+	//
+	// onRelTypeChange = (evt) => {
+	// 	// Update the record with the newly selected parent
+	// 	this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({relationshipType: evt.value});
+	// }
 
-	onRelTypeChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({relationshipType: evt.value});
-	}
+	// onSubTypeChange = (evt) => {
+	// 	// Update the record with the newly selected parent
+	// 	this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({subType: evt.value});
+	// }
 
-	onSubTypeChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({subType: evt.value});
+	tempSubTypeChange = (evt) => {
+		this.setState({subType: evt.value})
 	}
-
-	tempParentChange = (evt) => {
+ 	tempParentChange = (evt) => {
 		this.setState({parent_id: evt.value});
 	}
 	tempRelTypeChange = (evt) => {
 		this.setState({relationshipType: evt.value});
 	}
+	tempStartDate = (evt) => {
+		this.setState({startDateUser: evt.value});
+	}
+	tempEndDate = (evt) => {
+		this.setState({endDateUser: evt.value});
+	}
+
 	saveRecord = () => {
 		console.log(this.state, "start of save record");
+		if (this.state.relType !== this.state.relTypeInitial) {
+			this.props.updateParentalRel(this.props.parent_id, "relationshipType", this.state.relType);
+		}
+		if (this.state.parent_id != this.state.parent_idInitial) {
+			// if (this.props.star._id === this.props.parent)
+		}
 	}
 	deleteRecord = () => {
 		this.props.deleteParentalRel(this.props.parentalRel._id);
@@ -126,26 +166,6 @@ constructor(props) {
 
 		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
 
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
 
 		if (parentalRel) {
 			return (
@@ -158,7 +178,7 @@ constructor(props) {
 							<div class="PR-drop-name">
 								<Select
 									options={peopleArray}
-									onChange={this.onParentChange}
+									onChange={this.tempParentChange}
 									value={this.state.parent_id}
 								/>
 							</div>
@@ -174,7 +194,7 @@ constructor(props) {
 									<div class="PR-drop-2">
 										<Select
 											options={parentalRelTypes}
-											onChange={this.onRelTypeChange}
+											onChange={this.tempRelTypeChange}
 											value={this.state.relationshipType}
 										/>
 									</div>
@@ -187,8 +207,8 @@ constructor(props) {
 								<div class="PR-drops">
 									<div class="PR-drop-2">
 										<Select
-											options={parentalRelSubTypes}
-											onChange={this.onSubTypeChange}
+											options={this.parentalRelSubTypes}
+											onChange={this.tempSubTypeChange}
 											value={this.state.subType}
 										/>
 									</div>
@@ -202,7 +222,10 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
+								<DateInput
+									defaultValue={this.state.startDateUser}
+									onChange={this.tempStartDate}
+									field="startDate"
 								/>
 							</div>
 						</div>
@@ -211,7 +234,10 @@ constructor(props) {
 							End Date
 							</div>
 							<div class="PR-eDate">
-								<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
+								<DateInput
+									defaultValue={this.state.endDateUser}
+									onChange={this.tempEndDate}
+									field="endDate"
 								/>
 							</div>
 						</div>

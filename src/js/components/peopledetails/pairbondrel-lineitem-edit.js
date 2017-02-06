@@ -60,15 +60,19 @@ constructor(props) {
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		relType: this.props.pairBondRel.relationshipType,
+		relTypeInitial: this.props.pairBondRel.relationshipType,
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
 		pairPerson_id: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
-		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
-		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
-		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
-		relTypeInitial: this.props.pairBondRel.relationshipType,
 		pairPerson_idInitial: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
+
+		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
 		startDateInitial: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : " "),
+
+		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
+
 		endDateInitial: (this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : " "),
+
 	};
 }
 	// these are the different types of pairBonds.
@@ -111,7 +115,7 @@ constructor(props) {
 		this.setState({endDateUser: evt.value});
 	}
 
-	// It was necessary to create several new keys, startDateUser, startDateInitial, and relTypeInitial, to properly differentiate between the new and old dates and save the new dates in the database. The same logic has been applied to the pair bond relationship key .
+	// It was necessary to create several new keys, startDateUser, startDateInitial, and relTypeInitial, to properly differentiate between the new and old dates and save the new dates in the database. The same logic has been applied to the pair bond relationship key.
 
 	saveRecord = () => {
 		console.log(this.state, "start of saveRecord-PB");
@@ -164,26 +168,6 @@ constructor(props) {
 
 		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
 
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
 
 		// only render if we are not fetching data
 		if (pairBondRel) {
@@ -221,7 +205,7 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput defaultValue={this.state.startDateUser}
+								<DateInput 			 					defaultValue={this.state.startDateUser}
 									onChange={this.tempStartDate}
 									field="startDate"
 								/>
