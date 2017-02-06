@@ -127,7 +127,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p>{this.props.peopleImported.length}</p>
                 </div>
-                <button class="btn button3 import-button" onClick={this.goToStagedPeopleSearch}>Review</button>
+                <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p>{this.props.eventsImported.length}</p>
                 </div>
-                <button class="btn button3 import-button" onClick={this.goToStagedEventSearch}>Review</button>
+                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
             </div>
           </div>
@@ -173,14 +173,14 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p>{this.props.eventsImported.length}</p>
                 </div>
-                <button class="btn button3 import-button" onClick={this.goToStagedEventSearch}>Review</button>
+                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
             </div>
           </div>
         </div>
         <div class="import-row">
           <div class="import-step">
-            <p>4</p>
+            <p>5</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
@@ -196,7 +196,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p>{this.props.eventsImported.length}</p>
                 </div>
-                <button class="btn button3 import-button" onClick={this.goToStagedEventSearch}>Review</button>
+                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
             </div>
           </div>
