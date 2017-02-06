@@ -13,10 +13,17 @@ export function setPairBondRel(pairBondRel) {
 	}
 }
 
-export function setEvent(event) {
+export function setModalEvent(event) {
 	// set the type to tell the eventModal to open, and pass the object to be edited in the modal window as the payload
 	return function(dispatch) {
-		dispatch({type: "SET_EVENT", payload: event});
+		dispatch({type: "SET_MODAL_EVENT", payload: event});
+	}
+}
+
+export function resetModalEvent(event) {
+	// set the event to empty string. This action should be called when the modal is closing.
+	return function(dispatch) {
+		dispatch({type: "RESET_MODAL_EVENT"});
 	}
 }
 

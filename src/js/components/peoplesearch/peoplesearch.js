@@ -30,14 +30,15 @@ import { closeNewPersonModal } from '../../actions/modalActions';
 export default class PeopleSearch extends React.Component {
   constructor(props){
     super(props);
-    this.alertOptions = {
+  }
+
+  alertOptions = {
       offset: 15,
       position: 'middle',
       theme: 'light',
       time: 0,
       transition: 'scale'
     };
-  }
 
   createNewPerson = () => {
     this.props.createNewPerson();
@@ -54,9 +55,10 @@ export default class PeopleSearch extends React.Component {
     var modalStyle = {
       overlay: {
       position: 'fixed',
-      top: 100,
-      left: 100,
+      top: 50,
+      left: 50,
       width: '90vw',
+      height: '80vh',
       // right: 100,
       // bottom: 100,
       }
