@@ -24,46 +24,6 @@ export default class HistoryBar extends React.Component {
   constructor(props){
     super(props);
   }
-  // closeHelp = () => {
-  //   $("#helpHistory").css("display", "none");
-  //   $("#helpHide").css("display", "block");
-  //   $(".main").css("margin-left", "auto");
-  //   $(".main").css("margin-right", "auto");
-  // }
-  // openHelp = () => {
-  //   $("#helpHide").css("display", "none");
-  //   $("#helpHistory").css("display", "block");
-  // }
-  // selectedStyle = () => {
-  //   console.log(this.state.hiddenHistory, "hide the history!");
-  //   this.setState ({
-  //     hiddenHistory: !this.state.hiddenHistory,
-  //   })
-  //   if (this.state.hiddenHistory) {
-  //     var mainStyle = {
-  //       display: "flex",
-  //       flexDirection: "column",
-  //       backgroundColor: "#E9EBEE",
-  //       zIndex: 0,
-  //       position: "relative",
-  //       minHeight: 100 + "vh",
-  //       marginRight: 300 + "px",
-  //     }
-  //   }
-  //   else {
-  //     var mainStyle = {
-  //       display: "flex",
-  //       flexDirection: "column",
-  //       backgroundColor: "#E9EBEE",
-  //       zIndex: 0,
-  //       position: "relative",
-  //       minHeight: 100 + "vh",
-  //       marginRight: 0,
-  //     }
-  //   }
-  //   return mainStyle;
-  // }
-  //
 
   openHistoryBar = () => {
     this.props.openHistoryBar();
