@@ -38,16 +38,16 @@ export default class Chronology extends React.Component {
         })
       }
       /*
-       * else if (sortType === 'place') {
-       *   sortedEvents = this.props.events.sort(function(a, b) {
-       *     return b.eventType - a.eventType;
-       *   })
-       * }
-       * else {
-       *   sortedEvents = this.props.events.sort(function(a, b) {
-       *     return moment(a.eventDate) - moment(b.eventDate);
-       *   });
-       * }
+        else if (sortType === 'place') {
+          sortedEvents = this.props.events.sort(function(a, b) {
+            return b.eventType - a.eventType;
+          })
+        }
+        else {
+          sortedEvents = this.props.events.sort(function(a, b) {
+            return moment(a.eventDate) - moment(b.eventDate);
+          });
+        }
        */
     }
     else {
@@ -62,16 +62,16 @@ export default class Chronology extends React.Component {
           })
         }
         /*
-         * else if (sortType === 'place') {
-         *   sortedEvents = this.props.events.sort(function(a, b) {
-         *     return a.eventType - b.eventType;
-         *   })
-         * }
-         * else {  
-         *   sortedEvents = this.props.events.sort(function(a, b) {
-         *     return moment(a.eventDate) - moment(b.eventDate);
-         *   });
-         * }
+          else if (sortType === 'place') {
+            sortedEvents = this.props.events.sort(function(a, b) {
+              return a.eventType - b.eventType;
+            })
+          }
+          else {  
+            sortedEvents = this.props.events.sort(function(a, b) {
+              return moment(a.eventDate) - moment(b.eventDate);
+            });
+          }
          */
       }
 
