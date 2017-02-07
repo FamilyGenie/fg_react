@@ -5,12 +5,6 @@
    font-weight: 700;
 }
 @font-face {
-   font-family: SSP-Light;
-   src: url("./fonts/Source_Sans_Pro/SourceSansPro-Light.ttf");
-   format("opentype");
-   font-weight: 700;
-}
-@font-face {
    font-family: SSP-LI;
    src: url("./fonts/Source_Sans_Pro/SourceSansPro-LightItalic.ttf");
    format("opentype");

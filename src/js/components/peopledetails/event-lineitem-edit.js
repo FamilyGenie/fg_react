@@ -50,7 +50,15 @@ constructor(props) {
 		eventType: (this.props.event.eventType ? this.props.event.eventType : " "),
 		eventTypeInitial: (this.props.event.eventType ? this.props.event.eventType : " "),
 
+		eventPlace: (this.props.event ? this.props.event.eventPlace: " "),
+		eventPlaceInitial: (this.props.event ? this.props.event.eventPlace: " "),
 
+		familyContext: (this.props.event ? this.props.event.familyContext: " "),
+		familyContextInitial: (this.props.event ? this.props.event.familyContext: " "),
+		localContext: (this.props.event ? this.props.event.localContext: " "),
+		localContextInitial: (this.props.event ? this.props.event.localContext: " "),
+		worldContext: (this.props.event ? this.props.event.worldContext: " "),
+		worldContextInitial: (this.props.event ? this.props.event.worldContext: " "),
 	};
 }
 
@@ -142,7 +150,7 @@ constructor(props) {
 								<input
 										class="form-control"
 										type="text"
-										defaultValue={this.event.eventPlace}
+										defaultValue={this.state.eventPlace}
 										onChange={this.tempPlaceChange}
 								/>
 							</div>
@@ -158,8 +166,8 @@ constructor(props) {
 							<input
 									class="event-input"
 									type="text"
-									defaultValue={this.event.familyContext}
-									onChange={this.event.tempFamilyContext}
+									defaultValue={this.state.familyContext}
+									onChange={this.tempFamilyContext}
 							/>
 						</div>
 					</div>
@@ -173,8 +181,8 @@ constructor(props) {
 							<textarea
 								class="event-input"
 								type="text"
-								defaultValue={this.event.localContext}
-								onChange={this.event.tempLocalContext}
+								defaultValue={this.state.localContext}
+								onChange={this.tempLocalContext}
 							>
 						</textarea>
 						</div>
@@ -189,8 +197,8 @@ constructor(props) {
 							<input
 									class="event-input"
 									type="text"
-									defaultValue={this.event.worldContext}
-									onChange={this.event.tempWorldContext}
+									defaultValue={this.state.worldContext}
+									onChange={this.tempWorldContext}
 							/>
 						</div>
 					</div>
