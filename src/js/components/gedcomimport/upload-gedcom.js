@@ -11,7 +11,7 @@ const fgtoken = cookie.load('fg-access-token');
 
 @connect(
   (store, ownProps) => {
-    return { 
+    return {
       ownProps,
       store,
     }
@@ -59,7 +59,7 @@ export default class GedcomImport extends React.Component {
     }
 
     render = () => {
-      return (<div>
+      return (
         <div class="container" style={{marginTop: '100px'}}>
           <Dropzone onDrop={this.onDrop}>
             <div>
@@ -69,6 +69,6 @@ export default class GedcomImport extends React.Component {
           </Dropzone>
           <button onClick={this.runImport}> Run Import </button>
         </div>
-      </div>);
+      );
     }
 }

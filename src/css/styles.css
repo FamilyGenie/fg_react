@@ -4,7 +4,6 @@ The following is for the flexbox styling
 .navbar-toggle {
   color: #478652;
 }
-
 /***************
 This ends the flexbox styling
 
@@ -60,6 +59,10 @@ h3 {
     border-right: none;
     border-top: none;
     border-radius: 0;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100%;
 }
 
 /* this is fonts in the navbar */

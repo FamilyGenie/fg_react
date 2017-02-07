@@ -14,6 +14,7 @@ import stagedPeople from './stagedPeopleReducer'
 import importPeople from './importPeopleReducer'
 import stagedParentalRels from './stagedParentalRelsReducer'
 import stagedEvents from './stagedEventsReducer'
+import historyBarReducer from './historyBarReducer'
 
 export default combineReducers({
   auth,
@@ -21,6 +22,7 @@ export default combineReducers({
   eventTypes,
   modal,
   pairBondRels,
+  pairBondRelTypes,
   parentalRels,
   parentalRelTypes,
   parentalRelSubTypes,
@@ -30,4 +32,5 @@ export default combineReducers({
   importPeople,
   stagedParentalRels,
   stagedEvents,
+  historyBarReducer,
 })

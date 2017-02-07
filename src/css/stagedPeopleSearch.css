@@ -1,0 +1,83 @@
+.staged-people-list {
+  background-color: white;
+  width: 100%;
+  height: 500px;
+  overflow: scroll;
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px solid silver;
+  border-radius: 5px;
+}
+.staged-person {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  height: 50px;
+  align-items: center;
+  border-bottom: 1px solid silver;
+  margin-left: auto;
+  margin-right: auto;
+}
+.staged-name-div {
+  display: flex;
+  flex-direction: row;
+  width: 350px;
+}
+.staged-name {
+  margin-right: 5px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+}
+#staged-container {
+  width: 800px;
+  height: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+.staged-header-container {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: CabinMI;
+}
+.staged-people-header-1 {
+  width: 300px;
+}
+.staged-date {
+  display: flex;
+  align-items: center;
+  width: 120px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.staged-date-header-1 {
+  display: flex;
+  align-items: center;
+  width: 80px;
+  margin-right: auto;
+  margin-left: 29px;
+}
+.staged-date-header-2 {
+  display: flex;
+  align-items: center;
+  width: 80px;
+  margin-right: auto;
+  margin-left: 39px;
+}
+.staged-sex {
+  width: 30px;
+}
+#stage-buffer {
+  margin-left: auto;
+  width: 35px;
+}
+.check-duplicate {
+  margin-left: auto;
+  margin-right: 8px;
+}

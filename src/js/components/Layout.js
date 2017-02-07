@@ -51,11 +51,15 @@ export default class Layout extends React.Component {
     hashHistory.push('/importhome/');
   }
 
+  goToChronology = () => {
+    hashHistory.push('/chronology/');
+  }
+
 	render() {
 		return (
 		<div>
 			<nav class="navbar navbar-default">
-<div class="container-fluid">
+				<div class="container-fluid">
 			    <div class="navbar-header">
 			      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 			        <span class="sr-only">Toggle navigation</span>
@@ -70,6 +74,12 @@ export default class Layout extends React.Component {
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 						<ul class="nav navbar-nav navbar-right">
+      				<li class="navbar-li-padding">
+						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
+					    </li>
+							<li>
+		            <a class="navbarright" onClick={this.goToImport}>IMPORT</a>
+		          </li>
 		          <li>
 		            <a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
 		          </li>
@@ -82,11 +92,14 @@ export default class Layout extends React.Component {
 		          <li>
 		            <a class="navbarright" onClick={this.logIn}>LOG IN</a>
 		          </li>
+							<li>
+								<i class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
+							</li>
 		        </ul>
 			    </div>
 			  </div>
 			</nav>
-			<div>
+			<div class="all-content">
 				{this.props.children}
 			</div>
 			<footer class="footer navbar-fixed-bottom">
