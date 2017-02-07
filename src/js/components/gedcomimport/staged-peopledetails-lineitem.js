@@ -44,38 +44,22 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 
 	render = () => (
 
-		<div class="row person-item">
-
-			<div class="col-xs-2 custom-input">
-        <div>
-					{this.props.person.fName}
-        </div>
-			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-					{this.props.person.lName}
-        </div>
-			</div>
-
-			<div class="col-xs-1 custom-input">
-        <div>
-					{this.props.person.sexAtBirth}
-        </div>
-			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-          {this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}
-        </div>
-			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-          {(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}
-        </div>
-			</div>
-
+		<div class="staged-person">
+      <div>
+				{this.props.person.fName}
+      </div>
+      <div>
+				{this.props.person.lName}
+      </div>
+      <div>
+				{this.props.person.sexAtBirth}
+      </div>
+      <div>
+        {this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}
+      </div>
+      <div>
+        {(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}
+      </div>
 			<div class="col-xs-3 custom-input">
 				<button
 					class="form-control"

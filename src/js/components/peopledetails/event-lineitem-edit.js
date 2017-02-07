@@ -123,14 +123,6 @@ constructor(props) {
 					<div class="PR-row-event">
 						<div class="PR-div">
 							<div class="PR-title">
-								Event Name
-							</div>
-							<div class="PR-drop-1">
-								<DateInput defaultValue="Event Name" field="eventDate"/>
-							</div>
-						</div>
-						<div class="PR-div">
-							<div class="PR-title">
 								Date
 							</div>
 							<div class="PR-drop-1">

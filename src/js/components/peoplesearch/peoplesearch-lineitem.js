@@ -35,7 +35,6 @@ export default class PeopleSearchLineItem extends React.Component {
       return "no birthDate"
     }
   }
-
 	render = () => {
 
     const { person } = this.props;

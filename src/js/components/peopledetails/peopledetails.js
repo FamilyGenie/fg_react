@@ -12,6 +12,7 @@ import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { createParentalRel } from '../../actions/parentalRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
+// import HistoryBar from '../historybar/historybar';
 
 @connect(
 	(store, ownProps) => {
@@ -121,10 +122,8 @@ export default class PeopleDetails extends React.Component {
 
 		return (
 		<div class="main-detail" ref={(ref) => this._div = ref}>
-			<div>
-				<div class="header-div">
-					<h1 class="family-header">Personal Connections</h1>
-				</div>
+			<div class="header-div">
+				<h1 class="family-header">Personal Connections</h1>
 			</div>
 			<div id="detail-name">
 				<PeopleDetailsLineItem person={star} />
@@ -132,29 +131,31 @@ export default class PeopleDetails extends React.Component {
 			<div class="buffer-line">
 			</div>
 			<div class="outerContainer">
-				<div class="innerInfo">
-					<div class="titleRow">
-						<div class="blank-person-header">
+				<div class="parents-relationships">
+					<div class="innerInfo">
+						<div class="titleRow">
+							<div class="blank-person-header">
+							</div>
+							<p class="detail-title">Parents</p>
+							<div class="buttonSize">
+								<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
+								</i>
+							</div>
 						</div>
-						<p class="detail-title">Parents</p>
-						<div class="buttonSize">
-							<i class="fa-plus-square fa" onClick={this.createParentalRel}>
-							</i>
+						<div class="buffer-div">
 						</div>
-					</div>
-					<div class="buffer-div">
-					</div>
-					<div>
-						{mappedParentalRels}
-					</div>
+						<div>
+							{mappedParentalRels}
+						</div>
 				</div>
+
 				<div class="innerInfo">
 					<div class="titleRow">
 						<div class="blank-person-header">
 						</div>
 						<p class="detail-title">Pair Bonds</p>
 						<div class="buttonSize">
-							<i class="fa-plus-square fa" onClick={this.createPairBondRel}></i>
+							<i class="fa-plus-square fa plus" onClick={this.createPairBondRel}></i>
 						</div>
 					</div>
 					<div class="buffer-div">
@@ -163,21 +164,24 @@ export default class PeopleDetails extends React.Component {
 						{mappedPairBondRels}
 					</div>
 				</div>
-				<div class="innerInfo">
-					<div class="titleRow">
-						<div class="blank-person-header">
+				</div>
+				<div class="chronology-div">
+					<div class="inner-chronology">
+						<div class="titleRow">
+							<div class="blank-person-header">
+							</div>
+							<p class="detail-title">Chronology</p>
+							<div class="buttonSize">
+								<i class="fa-plus-square fa plus"
+								onClick={this.createEvent}>
+								</i>
+							</div>
 						</div>
-						<p class="detail-title">Chronology</p>
-						<div class="buttonSize">
-							<i class="fa-plus-square fa"
-							onClick={this.createEvent}>
-							</i>
+						<div class="buffer-div">
 						</div>
-					</div>
-					<div class="buffer-div">
-					</div>
-					<div>
-						{mappedEvents}
+						<div>
+							{mappedEvents}
+						</div>
 					</div>
 				</div>
 			</div>

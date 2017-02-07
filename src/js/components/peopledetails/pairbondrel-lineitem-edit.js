@@ -24,6 +24,8 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 					}),
 				pairBondRel:
 					store.modal.pairBondRel,
+				pairBondRelTypes:
+					store.pairBondRelTypes.pairBondRelTypes,
 				star:
 					ownProps.star,
 				fetching:
@@ -68,12 +70,6 @@ constructor(props) {
 		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
 	};
 }
-	// these are the different types of pairBonds.
-	// this needs to be moved into a reducer - use the parentalRelTypes reducer as an example, and how the parentalRelEdit modal accesses that data
-	relTypes = [
-		{ value: 'Marriage', label: 'Marriage' },
-		{ value: 'Informal', label: 'Informal'}
-	];
 
 	onRelTypeChange = (evt) => {
 		this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", evt.value);
@@ -117,7 +113,8 @@ constructor(props) {
 
 	render = () => {
 
-		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
+		// pairBondRelTypes are stored in the pairBondRelTypes reducer
+		const { pairBondRel, pairBondRelTypes, pairBondPerson, fetching, peopleArray } = this.props;
 
 		var nameCol = {
 			width: "15%",
@@ -143,7 +140,7 @@ constructor(props) {
 		// only render if we are not fetching data
 		if (pairBondRel) {
 			return (
-				<div class="PR-main">
+				<div class="PB-main">
 					<div class="PR-row-1">
 						<div class="PR-div">
 							<div class="PR-title">
@@ -163,7 +160,7 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<Select
-									options={this.relTypes}
+									options={pairBondRelTypes}
 									onChange={this.onRelTypeChange}
 									value={this.state.relType}
 								/>
