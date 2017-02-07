@@ -104,6 +104,13 @@ export default function reducer(
 					error: action.payload
 				};
 			}
+			case "CLEAR_PAIRBONDRELS": {
+				return {
+					...state,
+					fetching: false,
+					pairBondRels: []
+				};
+			}
 		}
 		return state
 }

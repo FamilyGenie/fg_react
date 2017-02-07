@@ -1,20 +1,13 @@
 import axios from 'axios';
-import cookie from 'react-cookie';
 
+import { getAxiosConfig } from './actionFunctions';
 import config from '../config.js';
-import { deleteEvent } from './eventsActions';
-
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
 
 export function fetchPeople() {
 
 	return function(dispatch) {
 		dispatch({type: "FETCH_PEOPLE"});
-		axios.get(config.api_url + "/api/v2/people", axiosConfig)
+		axios.get(config.api_url + "/api/v2/people", getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
 			})
@@ -35,9 +28,11 @@ export function createPerson(fName, mName, lName, sexAtBirth, notes) {
 			notes
 		}
 	};
+
+	// console.log('in createPerson: ', ac);
 	return (dispatch) => {
 		dispatch({type: "CREATE_PERSON"});
-		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/person/create", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
 			})
@@ -55,10 +50,9 @@ export function updatePerson(_id, field, value) {
 			value
 		}
 	};
-
 	return (dispatch) => {
 		dispatch({type: "UPDATE_PERSON"});
-		axios.post(config.api_url + "/api/v2/person/update", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/person/update", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "UPDATE_PERSON_FULFILLED", payload: response.data})
 			})
@@ -75,7 +69,6 @@ export function deletePerson(_id) {
 	3. All parentalRels where they are the parent or child
 */
 	var body;
-
 	return (dispatch) => {
 		dispatch({type: "DELETE_PERSON"});
 
@@ -87,8 +80,13 @@ export function deletePerson(_id) {
 			}
 		};
 
+		/*************
+		TODO: can all these be changed to just call the action (will also need to import it at the top). Something like:
+		import { deleteEvent } from '../actions/eventsActions';
+		dispatch(deleteEvent('person_id', _id));
+		**************/
 		dispatch({type: "DELETE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/event/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
 			})
@@ -104,7 +102,7 @@ export function deletePerson(_id) {
 			}
 		};
 		dispatch({type: "DELETE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PAIRBONDREL_FULFILLED", payload: response.data})
 			})
@@ -119,7 +117,7 @@ export function deletePerson(_id) {
 			}
 		};
 		dispatch({type: "DELETE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PAIRBONDREL_FULFILLED", payload: response.data})
 			})
@@ -135,7 +133,7 @@ export function deletePerson(_id) {
 			}
 		};
 		dispatch({type: "DELETE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
 			})
@@ -151,7 +149,7 @@ export function deletePerson(_id) {
 			}
 		};
 		dispatch({type: "DELETE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
 			})
@@ -165,7 +163,7 @@ export function deletePerson(_id) {
 				_id,
 			}
 		};
-		axios.post(config.api_url + "/api/v2/person/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/person/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PERSON_FULFILLED", payload: response.data})
 			})

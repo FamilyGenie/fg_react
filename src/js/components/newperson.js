@@ -24,7 +24,6 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
-  console.log('in newperson@connect with: ', store);
     return {
       person: store.people.people.find(function(s) {
         return (store.modal.newPerson.id === s._id)

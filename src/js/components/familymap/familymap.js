@@ -775,7 +775,6 @@ export default class FamilyMap extends React.Component {
 	personClick(person, star) {
 		return() => {
 			console.log('Person was clicked: ', person, star);
-			debugger;
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
 				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, person.parentalRel_id);
@@ -786,7 +785,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		debugger;
 		let textData = [];
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
