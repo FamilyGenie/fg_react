@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import moment from 'moment';
 
 import EventLineItemEdit from '../peopledetails/event-lineitem-edit';
-import { setEvent } from '../../actions/modalActions';
+import { setModalEvent } from '../../actions/modalActions';
 
 @connect(
   (store, ownProps) => {
@@ -22,7 +22,7 @@ import { setEvent } from '../../actions/modalActions';
   (dispatch) => {
     return {
       setEvent: (event) => {
-        dispatch(setEvent(event));
+        dispatch(setModalEvent(event));
       },
     }
   }
@@ -78,13 +78,13 @@ export default class ChronologyLineItem extends React.Component {
             {moment(eventDateUser).format('MM/DD/YYYY')}
           </div>
           <div class="nameCol col-xs-3">
-            {(person ? person.fName + ' ' + person.lName : "PERSON")}
+            {person.fName + ' ' + person.lName}
           </div>
           <div class="nameCol col-xs-2">
-            {(event.eventType ? event.eventType : "EVENT TYPE")}
+            {event.eventType}
           </div>
           <div class="nameCol col-xs-2">
-            {(event.eventPlace ? event.eventPlace : "EVENT PLACE")}
+            {event.eventPlace}
           </div>
         </div>
         <Modal
