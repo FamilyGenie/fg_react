@@ -68,6 +68,7 @@ export default class ImportDashboard extends React.Component {
         }
       }
     }
+    // TODO: Need to reference the config.js to bring in the correct server. Not good to hardcode it.
     this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
   }
 
