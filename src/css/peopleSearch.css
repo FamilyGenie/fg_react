@@ -1,5 +1,9 @@
-
-
+#outer-search {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #E9EBEE;
+}
 #search-instruction {
   width: 100%;
   height: 100px;
