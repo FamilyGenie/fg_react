@@ -2,7 +2,6 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 import { hashHistory } from 'react-router';
 
-import config from '../config.js';
 import { fetchEvents } from '../actions/eventsActions';
 import { fetchPairBondRels } from '../actions/pairBondRelsActions';
 import { fetchParentalRels } from '../actions/parentalRelsActions';
@@ -10,6 +9,8 @@ import { fetchPeople } from "../actions/peopleActions";
 import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../actions/stagedEventActions';
 // import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
+
+import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
 export function login(username, password) {

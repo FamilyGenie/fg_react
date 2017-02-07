@@ -1,19 +1,14 @@
 import axios from 'axios';
-import cookie from 'react-cookie';
 
 import config from '../config.js';
+import { getAxiosConfig } from './actionFunctions';
 
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-  headers: {'x-access-token': fgtoken}
-};
 
 export function fetchStagedParentalRels() {
 
   return function(dispatch) {
     dispatch({type: 'FETCH_STAGINGPARENTALRELS'});
-    axios.get(config.api_url + '/api/v2/staging/parentalrels', axiosConfig)
+    axios.get(config.api_url + '/api/v2/staging/parentalrels', getAxiosConfig())
       .then((response) => {
         dispatch({type: 'FETCH_STAGINGPARENTALRELS_FULFILLED', payload: response.data})
       })

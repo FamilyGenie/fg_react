@@ -30,13 +30,12 @@ export default class Login extends React.Component {
 		this.props.login(this.state.email, this.state.password);
 	}
 
+	// TODO: need to figure out how to make this so that you don't have to blur out of the fields in order for what the user has entered to be able to be passed to the login method. I don't know how do do this in React.
 	updateEmail = (evt) => {
-		console.log('update email with: ', evt.target.value);
 		this.setState({email: evt.target.value});
 	}
 
 	updatePassword = (evt) => {
-		console.log('update password with: ', evt.target.value);
 		this.setState({password: evt.target.value});
 
 	}
