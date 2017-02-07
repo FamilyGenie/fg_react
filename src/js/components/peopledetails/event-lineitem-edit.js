@@ -39,16 +39,26 @@ constructor(props) {
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
-		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		eventType: this.props.event.eventType,
+
+		// eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
+		// eventType: this.props.event.eventType,
+		eventDateUser: (this.props.event.eventDateUser ?
+		this.props.event.eventDateUser : this.props.event.eventDate),
+
+		eventDateInitial: (this.props.event.eventDateUser ? this.props.event.eventDateUser: " "),
+
+		eventType: (this.props.event.eventType ? this.props.event.eventType : " "),
+		eventTypeInitial: (this.props.event.eventType ? this.props.event.eventType : " "),
+
+
 	};
 }
 
-	onEventTypeChange = (evt) => {
-		this.props.updateEvent(this.props.event._id, "eventType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({eventType: evt.value});
-	}
+	// onEventTypeChange = (evt) => {
+	// 	this.props.updateEvent(this.props.event._id, "eventType", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({eventType: evt.value});
+	// }
 
 	// this call returns a function, so that when the field is updated, the fuction will execute.
 	getUpdateDate = (field, dateUser, dateSet) => {
@@ -66,9 +76,20 @@ constructor(props) {
 			this.props.updateEvent(this.props.event._id, field, evt.target.value);
 		}
 	}
+	tempDateChange = (evt) => {
+		this.setState({eventDateUser: evt.value});
+	}
+	tempEventTypeChange = (evt) => {
+		this.setState({eventType: evt.value});
+	}
+	tempPlaceChange = (evt) => {
+		this.setState({eventPlace: evt.value});
+	}
+
+
 	saveRecord = () => {
-		console.log(this.state, "start of saveRecord-E");
-		
+		console.log(this.state, "start of saveRecord-Events");
+
 	}
 
 	deleteRecord = () => {
@@ -80,31 +101,6 @@ constructor(props) {
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
-		var contextCol = {
-			width: "30%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
 
 		// only render if we have data to show
 		if (event) {
@@ -114,18 +110,14 @@ constructor(props) {
 					<div class="event-row">
 						<div class="PR-div">
 							<div class="PR-title">
-								Event Name
-							</div>
-							<div class="PR-drop-1">
-								<DateInput defaultValue="Event Name" field="eventDate"/>
-							</div>
-						</div>
-						<div class="PR-div">
-							<div class="PR-title">
 								Date
 							</div>
 							<div class="PR-drop-1">
-								<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
+								<DateInput
+									onChange={this.tempDateChange}
+									defaultValue={this.eventDateUser}
+									field="eventDate"
+								/>
 							</div>
 						</div>
 					</div>
@@ -136,9 +128,9 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<Select
-									options={eventTypes}
-									onChange={this.onEventTypeChange}
-									value={eventType}
+									options={this.eventTypes}
+									onChange={this.tempEventTypeChange}
+									defaultValue={this.eventType}
 								/>
 							</div>
 						</div>
@@ -150,8 +142,8 @@ constructor(props) {
 								<input
 										class="form-control"
 										type="text"
-										defaultValue={event.eventPlace}
-										onBlur={this.getUpdateEvent('eventPlace')}
+										defaultValue={this.event.eventPlace}
+										onChange={this.tempPlaceChange}
 								/>
 							</div>
 						</div>
@@ -166,8 +158,8 @@ constructor(props) {
 							<input
 									class="event-input"
 									type="text"
-									defaultValue={event.familyContext}
-									onBlur={this.getUpdateEvent('familyContext')}
+									defaultValue={this.event.familyContext}
+									onChange={this.event.tempFamilyContext}
 							/>
 						</div>
 					</div>
@@ -178,12 +170,13 @@ constructor(props) {
 						Local Context
 						</div>
 						<div class="event-context">
-							<input
-									class="event-input"
-									type="text"
-									defaultValue={event.localContext}
-									onBlur={this.getUpdateEvent('localContext')}
-							/>
+							<textarea
+								class="event-input"
+								type="text"
+								defaultValue={this.event.localContext}
+								onChange={this.event.tempLocalContext}
+							>
+						</textarea>
 						</div>
 					</div>
 				</div>
@@ -196,8 +189,8 @@ constructor(props) {
 							<input
 									class="event-input"
 									type="text"
-									defaultValue={event.worldContext}
-									onBlur={this.getUpdateEvent('worldContext')}
+									defaultValue={this.event.worldContext}
+									onChange={this.event.tempWorldContext}
 							/>
 						</div>
 					</div>

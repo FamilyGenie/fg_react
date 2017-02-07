@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import moment from 'moment';
+// import updateEvent from '../actions/eventsActions';
 
 /********
  this custom component will take in a default value to display. You also pass it the field name the component represents. You also pass in an updateFunction. This function will be called when the user blurs out of the field. The it will pass the value of what the user entered, the field name that is being represented, and the this.state.setState variable. The idea is that you modify the "getOnChange" function to manipulate the user input however you want. Then, when the user blurs, you can set not only the value the user entered, but also the value you created based on their input. Syntax for using the component is:
@@ -51,7 +52,7 @@ export default class DateInput extends React.Component {
 	getOnBlur = () => {
 		return (evt) => {
 			// Need to call update here. The function to update needs to come through the props
-			
+
 			this.props.updateFunction(this.props.field, evt.target.value, this.state.setDate);
 		}
 	}

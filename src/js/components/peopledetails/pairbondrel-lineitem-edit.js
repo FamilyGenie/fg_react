@@ -62,11 +62,12 @@ constructor(props) {
 		relType: this.props.pairBondRel.relationshipType,
 		relTypeInitial: this.props.pairBondRel.relationshipType,
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
-		pairPerson_id: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
-		pairPerson_idInitial: ( this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		pairPerson_id: (this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		pairPerson_idInitial: (this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
-		startDateUser: ( this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
+		startDateUser: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
+
 		startDateInitial: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : " "),
 
 		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
@@ -180,9 +181,9 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<Select
-									options={peopleArray}
+									options={this.peopleArray}
 									onChange={this.tempPersonChange}
-									value={this.state.pairPerson_id}
+									defaultValue={this.state.pairPerson_id}
 								/>
 							</div>
 						</div>
@@ -194,7 +195,7 @@ constructor(props) {
 								<Select
 									options={this.relTypes}
 									onChange={this.tempRelTypeChange}
-									value={this.state.relType}
+									defaultValue={this.state.relType}
 								/>
 							</div>
 						</div>

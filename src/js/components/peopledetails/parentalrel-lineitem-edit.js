@@ -11,6 +11,10 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 		// When we close the modal, there is no parentalRel object in the store, so check for that condition. If there is no parentalRel object found in the store, then just send through ownProps
 		if (store.modal.parentalRel) {
 			return {
+				star:
+					store.people.people.find (function(p) {
+						return p._id === store.modal.parentalRel.child_id;
+					}),
 				parentalRel:
 					store.modal.parentalRel,
 				// with the parent_id from the parentalRel object, get the details of the person who is the parent
@@ -55,19 +59,17 @@ constructor(props) {
 		parent_id: ( this.props.parent ? this.props.parent._id : " "),
 
 
-		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : this.props.parentalRel.realtionshipType),
-		relationshipTypeInitial: ( this.props.parentalRel.relationshipType: " "),
+		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : " "),
+
+		relationshipTypeInitial: ( this.props.parentalRel.relationshipType ? this.props.parentalRel.relationshipType: " "),
 
 
 		// subType: ( this.props.parentalRel ?
 		// this.props.parentalRel.subType : " "),
 
-		subType: ( this.props.parentalRel ?
-		this.props.parentalRel.subType :
-		this.props.parentalRel.subType),
+		subType: ( this.props.parentalRel ? this.props.parentalRel.subType : " "),
 
-		subTypeInitial: ( this.props.parentalRel ?
-		this.props.parentalRel.subType : " "),
+		subTypeInitial: ( this.props.parentalRel ? this.props.parentalRel.subType : " "),
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
 
 		startDateUser: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser :
@@ -150,13 +152,27 @@ constructor(props) {
 	}
 
 	saveRecord = () => {
-		console.log(this.state, "start of save record");
-		if (this.state.relType !== this.state.relTypeInitial) {
-			this.props.updateParentalRel(this.props.parent_id, "relationshipType", this.state.relType);
+		if (this.state.relationshipType !== this.state.relationshipTypeInitial) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", this.state.relationshipType);
 		}
 		if (this.state.parent_id != this.state.parent_idInitial) {
-			// if (this.props.star._id === this.props.parent)
+			if (this.props.star._id === this.props.parentalRel.parent_id) {
+				alert ("the child can't be their own parent");
+			}
+			else {
+				this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", this.state.parent_id);
+			}
 		}
+		if (this.state.subType !== this.state.subTypeInitial) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "subType", this.state.subType);
+		}
+		if (this.state.startDateUser !== this.state.startDateInitial) {
+			console.log("inside startDateUser", this.state);
+			this.props.updateParentalRel(this.props.parentalRel._id, "startDateUser", this.state.startDateUser);
+		}
+		// if (this.state.endDateUser !== this.state.endDateInitial) {
+		// 	this.props.updateParentalRel(this.props.parentalRel._id, "endDateUser", this.state.endDateUser);
+		// }
 	}
 	deleteRecord = () => {
 		this.props.deleteParentalRel(this.props.parentalRel._id);
