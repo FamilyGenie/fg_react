@@ -39,14 +39,19 @@ export default class PeopleSearch extends React.Component {
   onSetSidebarOpen = (open) => {
     this.setState({sidebarOpen: open});
   }
+  
+  // for the history bar showing or not
   componentWillMount = () => {
     var mql = window.matchMedia('(min-width: 800px)');
     mql.addListener(this.mediaQueryChanged);
     this.setState({mql: mql, sidebarDocked: mql.matches});
   }
+  
+  // for the history bar showing or not
   componentWillUnmount = () => {
     this.state.mql.removeListener(this.mediaQueryChanged);
   }
+  // for the history bar showing or not
   mediaQueryChanged = () => {
     this.setState({sidebarDocked: this.state.mql.matches});
   }
@@ -62,31 +67,6 @@ export default class PeopleSearch extends React.Component {
   createNewPerson = () => {
     this.props.createNewPerson();
   }
-  // selectedStyle = () => {
-  //   if (this.state.hiddenHistory) {
-  //     var mainStyle = {
-  //       display: flex;
-  //       flex-direction: column;
-  //       background-color: #E9EBEE;
-  //       z-index: 0;
-  //       position: relative;
-  //       min-height: 100vh;
-  //       margin-right: 300px;
-  //     }
-  //   }
-  //   else {
-  //     var mainStyle = {
-  //       display: flex;
-  //       flex-direction: column;
-  //       background-color: #E9EBEE;
-  //       z-index: 0;
-  //       position: relative;
-  //       min-height: 100vh;
-  //       margin-right: 0px;
-  //     }
-  //   }
-  //
-  // }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
@@ -104,8 +84,6 @@ export default class PeopleSearch extends React.Component {
       left: 50,
       width: '90vw',
       height: '80vh',
-      // right: 100,
-      // bottom: 100,
       }
     };
     const sidebarContent = <div><h1>Help</h1></div>
