@@ -16,7 +16,6 @@ import StagedPeopleSearch from './components/gedcomimport/staged-peoplesearch';
 import StagedPeopleDetails from './components/gedcomimport/staged-peopledetails';
 import StagedParentalRels from './components/gedcomimport/staged-parentalrels';
 import Chronology from './components/chronology/chronology';
-import ImportDashboard from './components/gedcomimport/import-home';
 import HistoryBar from './components/historybar/index';
 
 const app = document.getElementById('app');
