@@ -1,10 +1,5 @@
 
-#outer-search {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #E9EBEE;
-}
+
 #search-instruction {
   width: 100%;
   height: 100px;
@@ -13,6 +8,7 @@
 .header-div {
   display: flex;
   justify-content: center;
+  margin-top: 40px;
 }
 .family-header {
   color: black;
@@ -45,7 +41,7 @@
   overflow: scroll;
   margin-right: auto;
   margin-left: auto;
-  width: 40%;
+  width: 720px;
   border: 1px solid silver;
   border-radius: 5px;
   position: relative;
@@ -55,11 +51,17 @@
   display: flex;
   flex-direction: row;
   width: 95%;
-  height: 30px;
+  height: 50px;
   align-items: center;
   border-bottom: 1px solid silver;
   margin-left: auto;
   margin-right: auto;
+}
+.search-add {
+  width: 15%;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 .search-name-title {
   width: 100%;
@@ -90,7 +92,7 @@
   padding-right: 5px;
   margin-bottom: 0;
   font-family: 'Cabin', sans-serif;
-  font-size: 18px;
+  font-size: 23px;
 }
 
 #add-family {
@@ -115,11 +117,16 @@
   margin-bottom: auto;
   margin-top: auto;
   font-family: cabin;
+  width: 70%;
 }
 #buffer-div {
   width: 100%;
   height: 10px;
   background-color: silver;
+}
+.search-map-button {
+  margin-bottom: 2px;
+  color: #640FF3;
 }
 
 .button2 {
@@ -130,15 +137,19 @@
   font-size: 22px;
   margin-left: 7px;
 }
+.plus {
+  margin-right: 15px;
+}
 .fa-plus-square {
   margin-top: auto;
   margin-left: auto;
-  margin-right: 15px;
   margin-bottom: auto;
   font-size: 28px;
 }
 #create-person {
   color: white;
+  margin-left: auto;
+
 }
 .fa-pencil-square-o {
   border-bottom: 0;
@@ -152,11 +163,15 @@
 #details-map {
   display: flex;
   margin-left: auto;
+  align-items: center;
+  height: 49.091px;
 }
 #name-date {
   display: flex;
   flex-direction: row;
   width: 100%;
+  height: 49.091px;
+  align-items: center;
 }
 
 @media (max-width: 1300px) {

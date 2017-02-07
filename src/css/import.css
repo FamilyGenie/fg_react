@@ -1,0 +1,93 @@
+.main-div {
+  background-color: #E9EBEE;
+  min-height: 100vh;
+}
+.import-content {
+  width: 800px;
+  border: 1px solid silver;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  border-radius: 8px;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.import-row {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid silver;
+}
+.import-step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  width: 150px;;
+  height: 150px;
+  border-right: 1px solid silver;
+}
+.import-step-content {
+  width: 650px;
+  height: 150px;
+  display: flex;
+  flex-direction: row;
+}
+.step-instruction {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 150px;
+  align-items: center;
+}
+.step-header {
+  margin-left: 20px;
+}
+.step-action {
+  height: 150px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.action-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.action-content {
+  height: 120px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.gedCom {
+  height: 150px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.dropzone {
+  height: 100px;
+  margin-top: 10px;
+  border: 1px solid silver;
+}
+.button3 {
+  background-color: #640FF3;
+  color: white;
+}
+.btn {
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.import-button {
+  margin-top: auto;
+}

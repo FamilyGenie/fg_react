@@ -13,6 +13,7 @@ import stagedPeople from "./stagedPeopleReducer"
 import importPeople from "./importPeopleReducer"
 import stagedParentalRels from "./stagedParentalRelsReducer"
 import stagedEvents from "./stagedEventsReducer"
+import historyBarReducer from "./historyBarReducer"
 
 export default combineReducers({
   events,
@@ -28,4 +29,5 @@ export default combineReducers({
   importPeople,
   stagedParentalRels,
   stagedEvents,
+  historyBarReducer,
 })

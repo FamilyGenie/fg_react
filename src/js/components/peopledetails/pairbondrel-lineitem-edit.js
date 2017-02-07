@@ -143,7 +143,7 @@ constructor(props) {
 		// only render if we are not fetching data
 		if (pairBondRel) {
 			return (
-				<div class="PR-main">
+				<div class="PB-main">
 					<div class="PR-row-1">
 						<div class="PR-div">
 							<div class="PR-title">
