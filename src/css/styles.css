@@ -40,6 +40,9 @@ h3 {
 .container-button {
 	display: inline;
 }
+.all-content {
+  width: 100%;
+}
 
 /* this is for the column titles in the data entry forms */
 .title {
@@ -145,6 +148,10 @@ div.container.select-container {
 
 .gendername {
   margin-top: 20px
+}
+.layout {
+  display: flex;
+  flex-direction: row;
 }
 
 

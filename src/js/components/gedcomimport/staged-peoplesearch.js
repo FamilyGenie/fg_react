@@ -26,9 +26,7 @@ export default class StagedPeopleSearch extends React.Component {
       <div class="header-div">
         <h1 class="family-header"> Duplicate Review </h1>
       </div>
-    <div>
-    </div>
-    <div id="staged-container">
+    <div class="staged-container">
       <div class='staged-header-container'>
         <div class="staged-name-div">
           <p>Name</p>

@@ -25,6 +25,7 @@ export default class HistoryBar extends React.Component {
     super(props);
   }
 
+
   openHistoryBar = () => {
     this.props.openHistoryBar();
   }

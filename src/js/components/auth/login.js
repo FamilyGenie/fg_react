@@ -42,7 +42,7 @@ export default class Login extends React.Component {
 
 	render = () => {
 	    return (
-	    	<div class="container main">
+	    	<div class="main-div">
 		        <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
 		        <div class="container">
 		            <form role="form">

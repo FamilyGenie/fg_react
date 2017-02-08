@@ -46,7 +46,7 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 
 
 		return(
-		<div class="staged-person">
+		<div class="staged-item">
 			<div class="staged-name-div">
 				<p class="staged-name">{stagedPerson.fName}</p>
 				<p class="staged-name">{stagedPerson.lName}</p>
