@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { getAxiosConfig } from './actionFunctions';
 import config from '../config.js';
+import { deleteEvent } from './eventsActions';
 
 export function fetchPeople() {
 
@@ -86,13 +87,14 @@ export function deletePerson(_id) {
 		dispatch(deleteEvent('person_id', _id));
 		**************/
 		dispatch({type: "DELETE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_EVENT_REJECTED", payload: err})
-			})
+		dispatch(deleteEvent('person_id', _id));
+		// axios.post(config.api_url + "/api/v2/event/delete", body, getAxiosConfig())
+		// 	.then((response) => {
+		// 		dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
+		// 	})
+		// 	.catch((err) => {
+		// 		dispatch({type: "DELETE_EVENT_REJECTED", payload: err})
+		// 	})
 
 		// to delete the person from all pairbondRels, have to delete where they are PersonOne and PersonTwo
 		body = {
