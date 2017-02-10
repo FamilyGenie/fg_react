@@ -18,6 +18,7 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 				pairBondPerson_id = store.modal.pairBondRel.personOne_id
 			}
 			return {
+				...ownProps,
 				pairBondPerson:
 					store.people.people.find(function(p) {
 						return p._id === pairBondPerson_id;
@@ -59,20 +60,21 @@ constructor(props) {
 	super(props);
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
-		relType: this.props.pairBondRel.relationshipType,
-		relTypeInitial: this.props.pairBondRel.relationshipType,
+		relTypeNew: this.props.pairBondRel.relationshipType,
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
-		pairPerson_id: (this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
-		pairPerson_idInitial: (this.props.pairBondPerson ? this.props.pairBondPerson._id : " "),
+		pairBondPerson_idNew: (this.props.pairBondPerson ? this.props.pairBondPerson_id : " "),
+
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
-		startDateUser: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : this.props.pairBondRel.startDate),
+		startDateNew: this.props.pairBondRel.startDate,
 
-		startDateInitial: (this.props.pairBondRel.startDateUser ? this.props.pairBondRel.startDateUser : " "),
+		startDateUserNew: this.props.pairBondRel.startDateUser,
 
-		endDateUser: ( this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : this.props.pairBondRel.endDate),
+		endDateNew: this.props.pairBondRel.endDate,
 
-		endDateInitial: (this.props.pairBondRel.endDateUser ? this.props.pairBondRel.endDateUser : " "),
+		endDateUserNew: this.props.pairBondRel.endDateUser,
+
+
 
 	};
 }
@@ -83,85 +85,66 @@ constructor(props) {
 		{ value: 'Informal', label: 'Informal'}
 	];
 
-	// onRelTypeChange = (evt) => {
-	// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", evt.value);
-	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
-	// 	this.setState({relType: evt.value});
-	// }
-	//
-	// onPersonChange = (evt) => {
-	// 	// find out if star is personOne or personTwo in the pairBondRel record, and then update the other field with the id of the newly selected person
-		// if (this.props.star._id === this.props.pairBondRel.personOne_id) {
-		// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", evt.value);
-		// } else {
-		// 	this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", evt.value);
-		// }
-	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
-	// 	this.setState({pairPerson_id: evt.value})
-	// }
-
 
 	// Utilizing this.setState is to maintain the immutability of the code
 
 	tempPersonChange = (evt) => {
-		this.setState({pairPerson_id: evt.value});
+		this.setState({pairBondPerson_idNew: evt.value});
+		console.log(this.state, "state inside of personChange");
 	}
 	tempRelTypeChange = (evt) => {
-		this.setState({relType: evt.value});
+		this.setState({relTypeNew: evt.value});
 	}
-	tempStartDate = (evt) => {
-		this.setState({startDateUser: evt.value});
+	tempStartDate = (parsedDate, userDate) => {
+		this.setState({
+			startDateUserNew: userDate,
+			startDateNew: parsedDate
+		});
 	}
-	tempEndDate = (evt) => {
-		this.setState({endDateUser: evt.value});
+	tempEndDate = (parsedDate, userDate) => {
+		this.setState({
+			endDateUserNew: userDate,
+			endDateNew: parsedDate
+		});
 	}
 
-	// It was necessary to create several new keys, startDateUser, startDateInitial, and relTypeInitial, to properly differentiate between the new and old dates and save the new dates in the database. The same logic has been applied to the pair bond relationship key.
 
 	saveRecord = () => {
 		console.log(this.state, "start of saveRecord-PB");
-		if (this.state.relType !== this.state.relTypeInitial) {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", this.state.relType);
+		console.log(this.props, "props");
+		if (this.state.relTypeNew !== this.props.relType) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "relationshipType", this.state.relTypeNew);
 		}
-		if (this.state.pairPerson_id != this.state.pairPerson_idInitial) {
+		if (this.props.pairBondPerson_id != this.state.pairBondPerson_idNew) {
 			if (this.props.star._id === this.props.pairBondRel.personOne_id) {
-				this.props.updatePairBondRel(this.props.pairBondRel._id, "personTwo_id", this.state.pairPerson_id);
+				this.props.updatePairBondRel(this.props.pairBondPerson_id, "personTwo_id", this.state.pairBondPerson_id);
 			} else {
-				this.props.updatePairBondRel(this.props.pairBondRel._id, "personOne_id", this.state.pairPerson_id);
+				this.props.updatePairBondRel(this.props.pairBondPerson_id, "personOne_id", this.state.pairBondPerson_id);
 			}
 		}
-		if (this.state.startDateUser !== this.state.startDateInitial) {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, "startDateUser", this.state.startDateUser);
+		if (this.state.startDateUserNew !== this.props.pairBondRel.startDateUser) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "startDateUser", this.state.startDateUserNew);
 		}
-		if (this.state.endDateUser !== this.state.endDateInitial) {
-			this.props.updatePairBondRel(this.props.pairBondRel._id, "endDateUser", this.state.endDateUser);
+		if (this.state.startDateNew !== this.props.pairBondRel.startDate) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "startDate", this.state.startDateNew);
 		}
-		console.log("end of save record");
-		// this.props.updatePairBondRel(this.props.pairBondRel.)
+		if (this.state.endDateUserNew !== this.props.pairBondRel.endDateUser) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "endDateUser", this.state.endDateUserNew);
+		}
+		if (this.state.endDateNew !== this.props.pairBondRel.endDate) {
+			this.props.updatePairBondRel(this.props.pairBondRel._id, "endDate", this.state.endDateNew);
+		}
+		console.log(this.state, "end of save record");
+
+		if(this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
-
-	// this call returns a function, so that when the field is updated, the fuction will execute.
-	// getUpdateDate = (field, dateUser, dateSet) => {
-	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
-	// 	return (field, dateUser, dateSet) => {
-	// 		this.props.updatePairBondRel(this.props.pairBondRel._id, field + "User", dateUser);
-	// 		// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
-	// 		if (dateSet === "Invalid date") {
-	// 			this.props.updatePairBondRel(this.props.pairBondRel._id, field, null);
-	// 		} else {
-	// 			this.props.updatePairBondRel(this.props.pairBondRel._id, field, dateSet);
-	// 		}
-	// 		if (field === "startDate") {
-	// 			this.setState({startDateUser: dateUser});
-	// 		} else {
-	// 			this.setState({endDateUser: dateUser})
-	// 		}
-	// 	}
-	// }
-
 	deleteRecord = () => {
 		console.log(this.state, "this is the state");
-		// this.props.deletePairBondRel(this.props.pairBondRel._id);
+		if(this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
 
 
@@ -183,7 +166,7 @@ constructor(props) {
 								<Select
 									options={peopleArray}
 									onChange={this.tempPersonChange}
-									value={this.state.pairPerson_id}
+									value={this.state.pairBondPerson_idNew}
 								/>
 							</div>
 						</div>
@@ -195,7 +178,7 @@ constructor(props) {
 								<Select
 									options={this.relTypes}
 									onChange={this.tempRelTypeChange}
-									value={this.state.relType}
+									value={this.state.relTypeNew}
 								/>
 							</div>
 						</div>
@@ -206,8 +189,8 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput 			 					initialValue={this.state.startDateNew}
-									onChange={this.tempStartDate}
+								<DateInput 			 					initialValue={this.state.startDateUserNew}
+									onNewDate={this.tempStartDate}
 									field="startDate"
 								/>
 							</div>
@@ -218,8 +201,8 @@ constructor(props) {
 							</div>
 							<div class="PR-eDate">
 								<DateInput
-								initialValue={this.state.endDateNew}
-								onChange={this.tempEndDate}
+								initialValue={this.state.endDateUserNew}
+								onNewDate={this.tempEndDate}
 								field="endDate"/>
 							</div>
 						</div>

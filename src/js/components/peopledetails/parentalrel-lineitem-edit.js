@@ -133,11 +133,9 @@ export default class ParentalRelLineItemEdit extends React.Component {
 		if (this.state.endDateNew !== this.props.parentalRel.endDate) {
 			this.props.updateParentalRel(this.props.parentalRel._id, "endDate", this.state.endDateNew);
 		}
-
 		if (this.props.closeModal) {
 			this.props.closeModal();
 		}
-
 	}
 	deleteRecord = () => {
 		this.props.deleteParentalRel(this.props.parentalRel._id);
