@@ -95,7 +95,9 @@ export default class ParentalRelLineItem extends React.Component {
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<ParentalRelLineItemEdit />
+						<ParentalRelLineItemEdit
+							closeModal={this.closeModal}
+						/>
 					</Modal>
 				</div>)
 		} else {
