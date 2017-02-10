@@ -78,7 +78,7 @@ export default class Layout extends React.Component {
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 						<ul class="nav navbar-nav navbar-right">
-      				<li class="navbar-li-padding">
+      				<li>
 						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
 					    </li>
 							<li>

@@ -137,7 +137,6 @@ export default class Chronology extends React.Component {
       </div>
     </div>
     )
-
     } else {
       return (<p>Loading...</p>)
     }
