@@ -106,7 +106,10 @@ export default class PairBondRelLineItem extends React.Component {
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<PairBondRelLineItemEdit pairBondRel={pairBondRel} star={star}/>
+						<PairBondRelLineItemEdit
+							pairBondRel={pairBondRel}
+							star={star}
+							closeModal={this.closeModal}/>
 						<div><p></p></div>
 					</Modal>
 				</div>)

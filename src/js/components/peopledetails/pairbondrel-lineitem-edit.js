@@ -181,9 +181,9 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<Select
-									options={this.peopleArray}
+									options={peopleArray}
 									onChange={this.tempPersonChange}
-									defaultValue={this.state.pairPerson_id}
+									value={this.state.pairPerson_id}
 								/>
 							</div>
 						</div>
@@ -195,7 +195,7 @@ constructor(props) {
 								<Select
 									options={this.relTypes}
 									onChange={this.tempRelTypeChange}
-									defaultValue={this.state.relType}
+									value={this.state.relType}
 								/>
 							</div>
 						</div>
@@ -206,7 +206,7 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput 			 					defaultValue={this.state.startDateUser}
+								<DateInput 			 					initialValue={this.state.startDateNew}
 									onChange={this.tempStartDate}
 									field="startDate"
 								/>
@@ -218,7 +218,7 @@ constructor(props) {
 							</div>
 							<div class="PR-eDate">
 								<DateInput
-								defaultValue={this.state.endDateUser}
+								initialValue={this.state.endDateNew}
 								onChange={this.tempEndDate}
 								field="endDate"/>
 							</div>
