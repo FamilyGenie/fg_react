@@ -73,9 +73,7 @@ export default class FamilyMap extends React.Component {
 
 	subtractYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
-		console.log("at start of subtractYear: ", this.state.starAge);
-		var vStarAge = this.state.starAge - 1;
-		console.log("vstarage: ", vStarAge, this.state.starAge);
+		var vStarAge = parseInt(this.state.starAge) - 1;
 		// also set the state variable
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
@@ -86,8 +84,7 @@ export default class FamilyMap extends React.Component {
 
 	addYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
-		var vStarAge = this.state.starAge + 1;
-		console.log("vstarage: ", vStarAge, this.state.starAge);
+		var vStarAge = parseInt(this.state.starAge) + 1;
 		// also set the state variable
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
@@ -97,11 +94,11 @@ export default class FamilyMap extends React.Component {
 	}
 
 	updateStarAge = (evt) => {
-		this.starAge = evt.target.value;
+		console.log('in updateStarAge with ', evt.target.value)
 		this.dateFilterString = moment(this.getPersonById(this.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
+			starAge: evt.target.value
 		});
 		this.componentDidMount();
 	}
