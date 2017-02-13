@@ -30,11 +30,33 @@ import { closeNewPersonModal } from '../../actions/modalActions';
 export default class PeopleSearch extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      sidebarOpen: true,
+    };
+  }
+  onSetSidebarOpen = (open) => {
+    this.setState({sidebarOpen: open});
+  }
+
+  // for the history bar showing or not
+  componentWillMount = () => {
+    var mql = window.matchMedia('(min-width: 800px)');
+    mql.addListener(this.mediaQueryChanged);
+    this.setState({mql: mql, sidebarDocked: mql.matches});
+  }
+
+  // for the history bar showing or not
+  componentWillUnmount = () => {
+    this.state.mql.removeListener(this.mediaQueryChanged);
+  }
+  // for the history bar showing or not
+  mediaQueryChanged = () => {
+    this.setState({sidebarDocked: this.state.mql.matches});
   }
 
   alertOptions = {
       offset: 15,
-      position: 'middle',
+      position: 'bottom-left',
       theme: 'light',
       time: 0,
       transition: 'scale'
