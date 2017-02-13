@@ -91,7 +91,7 @@ export default class Chronology extends React.Component {
 
     if(events) {
       return(
-      <div class="main-div">
+      <div class="mainDiv">
         <div class="header-div">
           <h1 class="family-header"> Chronology </h1>
         </div>

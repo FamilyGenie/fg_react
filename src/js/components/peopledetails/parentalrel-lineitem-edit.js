@@ -134,27 +134,6 @@ constructor(props) {
 
 		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
 
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-
 		if (parentalRel) {
 			return (
 				<div class="PR-main">

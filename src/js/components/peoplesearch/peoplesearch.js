@@ -88,7 +88,7 @@ export default class PeopleSearch extends React.Component {
     const sidebarContent = <div><h1>Help</h1></div>
 
         return (
-      <div class="main">
+      <div class="mainDiv">
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>
