@@ -46,10 +46,11 @@ constructor(props) {
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
-		// eventType: (this.props.event.eventType ? this.props.event.eventType : " "),
+		eventTypeUserNew: this.props.event.eventTypeUser,
 
-		eventPlaceNew: this.props.event.eventPlace,
-		eventPlaceUserNew: this.props.event.eventPlaceUser,
+		eventPlaceNew: (this.props.event.eventPlace ? this.props.event.eventPlace : " "),
+
+		eventPlaceUserNew: (this.props.event.eventPlace ? this.props.event.eventPlace : " "),
 
 		familyContextNew: this.props.event.familyContext,
 		familyContextUserNew: this.props.event.familyContextUser,
@@ -90,21 +91,27 @@ constructor(props) {
 			eventDateUserNew: userDate,
 			eventDateNew: parsedDate
 		});
+		console.log(this.state, "inside eventDate");
 	}
 	tempEventType = (evt) => {
-		this.setState({eventTypeNew: evt.value});
+		this.setState({eventTypeUserNew: evt.value});
+		console.log(this.state, "inside eventType");
 	}
 	tempEventPlace = (evt) => {
-		this.setState({eventPlaceNew: evt.value});
+		this.setState({eventPlaceUserNew: evt.value});
+		// console.log(this.state, "inside eventPlace");
 	}
 	tempFamilyContext = (evt) => {
-		this.setState({familyContextNew: evt.value});
+		this.setState({familyContextUserNew: evt.value});
+		// console.log(this.state, "inside family");
 	}
 	tempLocalContext = (evt) => {
-		this.setState({localContextNew: evt.value});
+		this.setState({localContextUserNew: evt.value});
+		// console.log(this.state, "inside local");
 	}
 	tempWorldContext = (evt) => {
-		this.setState({worldContextNew: evt.value});
+		this.setState({worldContextUserNew: evt.value});
+		// console.log(this.state, "inside world");
 	}
 
 
@@ -115,6 +122,22 @@ constructor(props) {
 		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
 			this.getUpdateDate(this.props.event.person_id, "eventDateUser", this.stateeventDateUserNew);
 		}
+		if (this.state.eventTypeNew !== this.props.eventType) {
+			this.getUpdateDate(this.props.person_id, "eventType", this.state.eventTypeNew)
+		}
+		if (this.state.eventPlace !== this.props.event.eventPlace) {
+			this.getUpdateDate(this.props.event.person_id, "eventPlace", this.state.eventPlaceNew);
+		}
+		if (this.state.familyContext !== this.props.event.familyContext) {
+			this.getUpdateDate(this.props.event.familyContext, "familyContext", this.state.familyContextNew);
+		}
+		if (this.state.localContext !== this.props.event.localContext) {
+			this.getUpdateDate(this.props.event.localContext, "localContext", this.state.localContextNew);
+		}
+		if (this.state.worldContext !== this.props.event.worldContext) {
+			this.getUpdateDate(this.props.event.worldContext, "worldContext", this.state.worldContextNew);
+		}
+
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
@@ -128,10 +151,8 @@ constructor(props) {
 	}
 
 	render = () => {
-
-		const { event, eventTypes, eventFamilyContext, eventLocalContext, eventWorldContext} = this.props;
-		// const { eventDateUser, eventType } = this.state;
-
+		console.log(this.state, "render state");
+		const { event, eventTypes} = this.props;
 
 		// only render if we have data to show
 		if (event) {
