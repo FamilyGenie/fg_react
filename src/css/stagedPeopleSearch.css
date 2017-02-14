@@ -8,6 +8,15 @@
   border: 1px solid silver;
   border-radius: 5px;
 }
+.comparisonList {
+  background-color: white;
+  width: 100%;
+  overflow: scroll;
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px solid silver;
+  border-radius: 5px;
+}
 .staged-item {
   display: flex;
   flex-direction: row;
@@ -18,10 +27,27 @@
   margin-left: auto;
   margin-right: auto;
 }
+.stagedPerson {
+  font-family: SSP-Light;
+  height: 50px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  align-items: center;
+  border-bottom: 1px solid silver;
+  margin-left: auto;
+  margin-right: auto;
+}
 .staged-name-div {
   display: flex;
   flex-direction: row;
   width: 350px;
+}
+.comparisonNameDiv {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
 }
 .staged-name {
   margin-right: 5px;
@@ -33,6 +59,13 @@
 .staged-container {
   width: 800px;
   height: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+.stagedComparison {
+  width: 600px;
+  height: 400px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
@@ -62,6 +95,13 @@
   width: 80px;
   margin-right: auto;
   margin-left: 31px;
+}
+.stagedHDob {
+  display: flex;
+  align-items: center;
+  width: 80px;
+  margin-right: auto;
+  margin-left: 44px;
 }
 .stagedHD {
   display: flex;
@@ -93,4 +133,8 @@
 .check-duplicate {
   margin-left: auto;
   margin-right: 8px;
+}
+.comparisonDiv {
+  display: flex;
+  flex-direction: row;
 }
