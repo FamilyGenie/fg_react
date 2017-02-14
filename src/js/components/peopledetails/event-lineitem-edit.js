@@ -11,12 +11,14 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 		// When we close the modal, there is no event object in the store, so check for that condition. If there is no event object found in the store, then just send through ownProps
 		if (store.modal.event) {
 			return {
+				...ownProps,
 				event:
 					store.modal.event,
 				eventTypes:
 					store.eventTypes.eventTypes,
 				star:
 					store.modal.event.person_id,
+
 			}
 		} else {
 			return ownProps
@@ -40,25 +42,23 @@ constructor(props) {
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
-		// eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		// eventType: this.props.event.eventType,
-		eventDateUser: (this.props.event.eventDateUser ?
-		this.props.event.eventDateUser : this.props.event.eventDate),
+		eventDateNew: this.props.event.eventDate,
+		eventDateUserNew: this.props.event.eventDateUser,
 
-		eventDateInitial: (this.props.event.eventDateUser ? this.props.event.eventDateUser: " "),
+		eventTypeNew: this.props.event.eventType,
+		// eventType: (this.props.event.eventType ? this.props.event.eventType : " "),
 
-		eventType: (this.props.event.eventType ? this.props.event.eventType : " "),
-		eventTypeInitial: (this.props.event.eventType ? this.props.event.eventType : " "),
+		eventPlaceNew: this.props.event.eventPlace,
+		eventPlaceUserNew: this.props.event.eventPlaceUser,
 
-		eventPlace: (this.props.event ? this.props.event.eventPlace: " "),
-		eventPlaceInitial: (this.props.event ? this.props.event.eventPlace: " "),
+		familyContextNew: this.props.event.familyContext,
+		familyContextUserNew: this.props.event.familyContextUser,
 
-		familyContext: (this.props.event ? this.props.event.familyContext: " "),
-		familyContextInitial: (this.props.event ? this.props.event.familyContext: " "),
-		localContext: (this.props.event ? this.props.event.localContext: " "),
-		localContextInitial: (this.props.event ? this.props.event.localContext: " "),
-		worldContext: (this.props.event ? this.props.event.worldContext: " "),
-		worldContextInitial: (this.props.event ? this.props.event.worldContext: " "),
+		localContextNew: this.props.event.localContext,
+		localContextUserNew: this.props.event.localContextUser,
+
+		worldContextNew: this.props.event.worldContext,
+		worldContextUserNew: this.props.event.worldContextUser,
 	};
 }
 
@@ -84,30 +84,53 @@ constructor(props) {
 			this.props.updateEvent(this.props.event._id, field, evt.target.value);
 		}
 	}
-	tempDateChange = (evt) => {
-		this.setState({eventDateUser: evt.value});
+
+	tempEventDate = (parsedDate, userDate) => {
+		this.setState({
+			eventDateUserNew: userDate,
+			eventDateNew: parsedDate
+		});
 	}
-	tempEventTypeChange = (evt) => {
-		this.setState({eventType: evt.value});
+	tempEventType = (evt) => {
+		this.setState({eventTypeNew: evt.value});
 	}
-	tempPlaceChange = (evt) => {
-		this.setState({eventPlace: evt.value});
+	tempEventPlace = (evt) => {
+		this.setState({eventPlaceNew: evt.value});
+	}
+	tempFamilyContext = (evt) => {
+		this.setState({familyContextNew: evt.value});
+	}
+	tempLocalContext = (evt) => {
+		this.setState({localContextNew: evt.value});
+	}
+	tempWorldContext = (evt) => {
+		this.setState({worldContextNew: evt.value});
 	}
 
 
 	saveRecord = () => {
-		console.log(this.state, "start of saveRecord-Events");
+		console.log(this.state, "STATE saveRecord-Events");
+		console.log(this.props, "PROPS of saveRecord-Events");
 
+		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
+			this.getUpdateDate(this.props.event.person_id, "eventDateUser", this.stateeventDateUserNew);
+		}
+		if(this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
 
 	deleteRecord = () => {
 		this.props.deleteEvent(this.props.event._id);
+		if(this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
 
 	render = () => {
 
-		const { event, eventTypes} = this.props;
-		const { eventDateUser, eventType } = this.state;
+		const { event, eventTypes, eventFamilyContext, eventLocalContext, eventWorldContext} = this.props;
+		// const { eventDateUser, eventType } = this.state;
 
 
 		// only render if we have data to show
@@ -122,8 +145,8 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<DateInput
-									onChange={this.tempDateChange}
-									defaultValue={this.eventDateUser}
+									onNewDate={this.tempEventDate}
+									initialValue={this.state.eventDateUserNew}
 									field="eventDate"
 								/>
 							</div>
@@ -136,9 +159,9 @@ constructor(props) {
 							</div>
 							<div class="PR-drop-1">
 								<Select
-									options={this.eventTypes}
-									onChange={this.tempEventTypeChange}
-									defaultValue={this.eventType}
+									options={eventTypes}
+									onChange={this.tempEventType}
+									initialValue={this.state.eventTypeNew}
 								/>
 							</div>
 						</div>
@@ -150,8 +173,8 @@ constructor(props) {
 								<input
 										class="form-control"
 										type="text"
-										defaultValue={this.state.eventPlace}
-										onChange={this.tempPlaceChange}
+										initialValue={this.state.eventPlaceNew}
+										onChange={this.tempEventPlace}
 								/>
 							</div>
 						</div>
@@ -163,12 +186,13 @@ constructor(props) {
 						Family Context
 						</div>
 						<div class="event-context">
-							<input
+							<textarea
 									class="event-input"
 									type="text"
-									defaultValue={this.state.familyContext}
+									initialValue={this.state.familyContext}
 									onChange={this.tempFamilyContext}
-							/>
+							>
+							</textarea>
 						</div>
 					</div>
 				</div>
@@ -181,7 +205,7 @@ constructor(props) {
 							<textarea
 								class="event-input"
 								type="text"
-								defaultValue={this.state.localContext}
+								initialValue={this.state.localContext}
 								onChange={this.tempLocalContext}
 							>
 						</textarea>
@@ -194,12 +218,13 @@ constructor(props) {
 						World Context
 						</div>
 						<div class="event-context">
-							<input
+							<textarea
 									class="event-input"
 									type="text"
-									defaultValue={this.state.worldContext}
+									initialValue={this.state.worldContext}
 									onChange={this.tempWorldContext}
-							/>
+							>
+							</textarea>
 						</div>
 					</div>
 				</div>
@@ -221,7 +246,6 @@ constructor(props) {
 						Delete
 					</button>
 				</div>
-
 			</div>
 			)
 		} else {

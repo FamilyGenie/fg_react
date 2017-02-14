@@ -30,6 +30,7 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 				fetching:
 					// if we are fetching the pairBondRels, reflect that in this prop
 					store.pairBondRels.fetching,
+				pairBondPerson_id: pairBondPerson_id,
 				peopleArray:
 					store.people.people.map(function(person) {
 						var newObj = {};
@@ -47,6 +48,7 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 	(dispatch) => {
 		return {
 			updatePairBondRel: (_id, field, value) => {
+				console.log(_id, field, value, "in dispatch");
 				dispatch(updatePairBondRel(_id, field, value));
 			},
 			deletePairBondRel: (_id) => {
@@ -117,9 +119,11 @@ constructor(props) {
 		}
 		if (this.props.pairBondPerson_id != this.state.pairBondPerson_idNew) {
 			if (this.props.star._id === this.props.pairBondRel.personOne_id) {
-				this.props.updatePairBondRel(this.props.pairBondPerson_id, "personTwo_id", this.state.pairBondPerson_id);
+				console.log("inside if", this.props.pairBondRel, this.props.star)
+				this.props.updatePairBondRel(this.props.pairBondRel, "personTwo_id", this.state.pairBondPerson_idNew);
 			} else {
-				this.props.updatePairBondRel(this.props.pairBondPerson_id, "personOne_id", this.state.pairBondPerson_id);
+				console.log("inside else", this.props.pairBondRel, this.props.star)
+				this.props.updatePairBondRel(this.props.pairBondRel, "personOne_id", this.state.pairBondPerson_idNew);
 			}
 		}
 		if (this.state.startDateUserNew !== this.props.pairBondRel.startDateUser) {
