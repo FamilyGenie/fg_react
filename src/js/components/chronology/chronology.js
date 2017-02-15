@@ -37,6 +37,7 @@ export default class Chronology extends React.Component {
       }
       else if (sortType === 'place') {
         sortedEvents = this.props.events.sort(function(a, b) {
+          // Using localeCompare (ES6 function) to compare strings.
           return b.eventPlace.localeCompare(a.eventPlace);
         })
       }
@@ -60,6 +61,7 @@ export default class Chronology extends React.Component {
       }
       else if (sortType === 'place') {
         sortedEvents = this.props.events.sort(function(a, b) {
+          // Using localeCompare (ES6 function) to compare strings.
           return a.eventPlace.localeCompare(b.eventPlace);
         })
       }
