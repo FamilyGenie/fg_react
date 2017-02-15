@@ -25,6 +25,8 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 					}),
 				pairBondRel:
 					store.modal.pairBondRel,
+				pairBondRelTypes:
+					store.pairBondRelTypes.pairBondRelTypes,
 				star:
 					ownProps.star,
 				fetching:
@@ -52,7 +54,8 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 				dispatch(updatePairBondRel(_id, field, value));
 			},
 			deletePairBondRel: (_id) => {
-				dispatch(deletePairBondRel(_id));
+				// the action to delete a pairBondRel requires a pass of the field name and the value
+				dispatch(deletePairBondRel('_id', _id));
 			}
 		}
 	}
@@ -80,12 +83,6 @@ constructor(props) {
 
 	};
 }
-	// these are the different types of pairBonds.
-	// this needs to be moved into a reducer - use the parentalRelTypes reducer as an example, and how the parentalRelEdit modal accesses that data
-	relTypes = [
-		{ value: 'Marriage', label: 'Marriage' },
-		{ value: 'Informal', label: 'Informal'}
-	];
 
 
 	// Utilizing this.setState is to maintain the immutability of the code
@@ -154,7 +151,8 @@ constructor(props) {
 
 	render = () => {
 
-		const { pairBondRel, pairBondPerson, fetching, peopleArray } = this.props;
+		// pairBondRelTypes are stored in the pairBondRelTypes reducer
+		const { pairBondRel, pairBondRelTypes, pairBondPerson, fetching, peopleArray } = this.props;
 
 
 		// only render if we are not fetching data

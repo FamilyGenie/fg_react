@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
 import EventLineItem from './event-lineitem';
@@ -12,6 +12,7 @@ import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { createParentalRel } from '../../actions/parentalRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
+// import HistoryBar from '../historybar/historybar';
 
 @connect(
 	(store, ownProps) => {
@@ -91,24 +92,6 @@ export default class PeopleDetails extends React.Component {
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
 		);
 
-		var divStyle = {
-			borderWidth: "1px",
-			borderColor: "gray",
-			borderStyle: "solid",
-			marginTop: "30px",
-			marginRight: "10px",
-			marginLeft: "10px",
-			paddingBottom: "5px"
-		}
-
-		var headingStyle = {
-			textAlign: "center",
-			color: "#444444",
-			fontWeight: "bold",
-			fontSize: "1.25em",
-			marginBottom: 10,
-		}
-
 		var modalStyle = {
 			overlay: {
 			position: 'fixed',
@@ -121,10 +104,8 @@ export default class PeopleDetails extends React.Component {
 
 		return (
 		<div class="main-detail" ref={(ref) => this._div = ref}>
-			<div>
-				<div class="header-div">
-					<h1 class="family-header">Personal Details</h1>
-				</div>
+			<div class="header-div">
+				<h1 class="family-header">Personal Connections</h1>
 			</div>
 			<div id="detail-name">
 				<PeopleDetailsLineItem person={star} />
@@ -139,7 +120,7 @@ export default class PeopleDetails extends React.Component {
 							</div>
 							<p class="detail-title">Parents</p>
 							<div class="buttonSize">
-								<i class="fa-plus-square fa" onClick={this.createParentalRel}>
+								<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
 								</i>
 							</div>
 						</div>
@@ -149,14 +130,13 @@ export default class PeopleDetails extends React.Component {
 							{mappedParentalRels}
 						</div>
 				</div>
-
 				<div class="innerInfo">
 					<div class="titleRow">
 						<div class="blank-person-header">
 						</div>
 						<p class="detail-title">Pair Bonds</p>
 						<div class="buttonSize">
-							<i class="fa-plus-square fa" onClick={this.createPairBondRel}></i>
+							<i class="fa-plus-square fa plus" onClick={this.createPairBondRel}></i>
 						</div>
 					</div>
 					<div class="buffer-div">
@@ -173,7 +153,7 @@ export default class PeopleDetails extends React.Component {
 							</div>
 							<p class="detail-title">Chronology</p>
 							<div class="buttonSize">
-								<i class="fa-plus-square fa"
+								<i class="fa-plus-square fa plus"
 								onClick={this.createEvent}>
 								</i>
 							</div>

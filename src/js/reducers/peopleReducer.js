@@ -104,6 +104,13 @@ export default function reducer(
 				error: action.payload
 			};
 		}
+		case "CLEAR_PEOPLE": {
+			return {
+				...state,
+				fetching: false,
+				people: []
+			};
+		}
 	}
 
 	return state

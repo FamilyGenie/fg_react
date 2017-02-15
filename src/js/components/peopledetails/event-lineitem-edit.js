@@ -4,6 +4,7 @@ import Select from 'react-select';
 
 import DateInput from '../date-input';
 import { updateEvent, deleteEvent } from '../../actions/eventsActions';
+import { resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -18,26 +19,37 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 					store.eventTypes.eventTypes,
 				star:
 					store.modal.event.person_id,
-
 			}
 		} else {
-			return ownProps
+      return {
+        event:
+          ownProps.event,
+        eventTypes:
+          store.eventTypes.eventTypes,
+      }
 		}
 	},
 	(dispatch) => {
 		return {
 			updateEvent: (_id, field, value) => {
+				console.log("in update event: ", _id, field, value);
 				dispatch(updateEvent(_id, field, value));
 			},
 			deleteEvent: (_id) => {
-				dispatch(deleteEvent(_id));
-			}
+				// this action requires a feild and a value to delete
+				dispatch(deleteEvent('_id', _id));
+			},
+			resetModalEvent: () => {
+				dispatch(resetModalEvent());
+			},
 		}
 	}
 )
 export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
+	console.log("in EventLineItemEdit with: ", this.props);
+
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
@@ -86,6 +98,7 @@ constructor(props) {
 		}
 	}
 
+<<<<<<< HEAD
 	tempEventDate = (parsedDate, userDate) => {
 		this.setState({
 			eventDateUserNew: userDate,
@@ -112,6 +125,12 @@ constructor(props) {
 	tempWorldContext = (evt) => {
 		this.setState({worldContextUserNew: evt.value});
 		// console.log(this.state, "inside world");
+=======
+	deleteRecord = () => {
+		// when the event is deleted, need to reset store.modal.event so that the next time the eventlineitemedit is called, it does not show up with this old event in it.
+		this.props.resetModalEvent();
+		this.props.deleteEvent(this.props.event._id);
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 	}
 
 
@@ -119,6 +138,7 @@ constructor(props) {
 		console.log(this.state, "STATE saveRecord-Events");
 		console.log(this.props, "PROPS of saveRecord-Events");
 
+<<<<<<< HEAD
 		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
 			this.getUpdateDate(this.props.event.person_id, "eventDateUser", this.stateeventDateUserNew);
 		}
@@ -154,12 +174,19 @@ constructor(props) {
 		console.log(this.state, "render state");
 		const { event, eventTypes} = this.props;
 
+=======
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 		// only render if we have data to show
 		if (event) {
 			return (
 			<div>
+<<<<<<< HEAD
 				<div class="event-main">
 					<div class="event-row">
+=======
+				<div class="PR-main">
+					<div class="PR-row-event">
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 						<div class="PR-div">
 							<div class="PR-title">
 								Date
@@ -202,6 +229,7 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
+<<<<<<< HEAD
 					<div class="event-context-div">
 						<div class="PR-event-title">
 						Family Context
@@ -209,6 +237,15 @@ constructor(props) {
 						<div class="event-context">
 							<textarea
 									class="event-input"
+=======
+					<div class="PR-date-div">
+						<div class="eventTitle">
+						Family Context
+						</div>
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 									type="text"
 									initialValue={this.state.familyContext}
 									onChange={this.tempFamilyContext}
@@ -218,6 +255,7 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
+<<<<<<< HEAD
 					<div class="event-context-div">
 						<div class="PR-event-title">
 						Local Context
@@ -230,10 +268,24 @@ constructor(props) {
 								onChange={this.tempLocalContext}
 							>
 						</textarea>
+=======
+					<div class="PR-date-div">
+						<div class="eventTitle">
+						Local Context
+						</div>
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
+									type="text"
+									defaultValue={event.localContext}
+									onBlur={this.getUpdateEvent('localContext')}
+							/>
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 						</div>
 					</div>
 				</div>
 				<div class="PR-row-3">
+<<<<<<< HEAD
 					<div class="event-context-div">
 						<div class="PR-event-title">
 						World Context
@@ -241,6 +293,15 @@ constructor(props) {
 						<div class="event-context">
 							<textarea
 									class="event-input"
+=======
+					<div class="PR-date-div">
+						<div class="eventTitle">
+						World Context
+						</div>
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 									type="text"
 									initialValue={this.state.worldContext}
 									onChange={this.tempWorldContext}
@@ -251,6 +312,7 @@ constructor(props) {
 				</div>
 				<div class="buffer-modal">
 				</div>
+<<<<<<< HEAD
 				<div class="event-delete-modal">
 					<button
 						type="button"
@@ -269,6 +331,12 @@ constructor(props) {
 				</div>
 			</div>
 			)
+=======
+				<div class="custom-input">
+					<button class="button2" onClick={this.deleteRecord}>Delete</button>
+				</div>
+			</div>)
+>>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 		} else {
 			return (<p>Loading Event Info...</p>);
 		}

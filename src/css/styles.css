@@ -4,7 +4,6 @@ The following is for the flexbox styling
 .navbar-toggle {
   color: #478652;
 }
-
 /***************
 This ends the flexbox styling
 
@@ -37,9 +36,15 @@ h2, h4 {
 h3 {
 	font-family: "Open Sans", Helvetica, sans-serif;
 }
-
+.mainDiv {
+  background-color: #E9EBEE;
+  min-height: 100vh;
+}
 .container-button {
 	display: inline;
+}
+.all-content {
+  width: 100%;
 }
 
 /* this is for the column titles in the data entry forms */
@@ -60,6 +65,10 @@ h3 {
     border-right: none;
     border-top: none;
     border-radius: 0;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100%;
 }
 
 /* this is fonts in the navbar */
@@ -142,6 +151,10 @@ div.container.select-container {
 
 .gendername {
   margin-top: 20px
+}
+.layout {
+  display: flex;
+  flex-direction: row;
 }
 
 

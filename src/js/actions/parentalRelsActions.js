@@ -1,19 +1,14 @@
 import axios from "axios";
-import cookie from "react-cookie";
 
 import config from "../config.js";
+import { getAxiosConfig } from './actionFunctions';
 
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
 
 export function fetchParentalRels() {
 
 	return function(dispatch) {
 		dispatch({type: "FETCH_PARENTALRELS"});
-		axios.get(config.api_url + "/api/v2/parentalrels", axiosConfig)
+		axios.get(config.api_url + "/api/v2/parentalrels", getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "FETCH_PARENTALRELS_FULFILLED", payload: response.data})
 			})
@@ -34,7 +29,7 @@ export function updateParentalRel(_id, field, value) {
 
 	return (dispatch) => {
 		dispatch({type: "UPDATE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/update", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/parentalrel/update", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "UPDATE_PARENTALREL_FULFILLED", payload: response.data})
 			})
@@ -60,7 +55,7 @@ export function createParentalRel(child_id, parent_id, relationshipType, subType
 	};
 	return (dispatch) => {
 		dispatch({type: "CREATE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/create", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/parentalrel/create", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
 			})
@@ -70,17 +65,19 @@ export function createParentalRel(child_id, parent_id, relationshipType, subType
 	}
 }
 
-export function deleteParentalRel(_id) {
+// modify to it accepts the feild and value of that field to delete from the collection
+export function deleteParentalRel(field, value) {
 
 	const body = {
 		object: {
-			_id,
+			field,
+			value,
 		}
 	};
 
 	return (dispatch) => {
 		dispatch({type: "DELETE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
 			})

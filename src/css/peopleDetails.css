@@ -1,12 +1,19 @@
 @font-face {
    font-family: CabinMI;
-   src: url("./fonts/Cabin/Cabin-MediumItalic.ttf");
+   src: url("../fonts/Cabin/Cabin-MediumItalic.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+@font-face {
+
+   font-family: SSP-Light;
+   src: url("../fonts/Source_Sans_Pro/SourceSansPro-Light.ttf");
    format("opentype");
    font-weight: 700;
 }
 @font-face {
    font-family: SSP-LI;
-   src: url("./fonts/Source_Sans_Pro/SourceSansPro-LightItalic.ttf");
+   src: url("../fonts/Source_Sans_Pro/SourceSansPro-LightItalic.ttf");
    format("opentype");
    font-weight: 700;
 }
@@ -26,6 +33,8 @@
   min-height: 1200px;
   /*background-color:rgba(0, 0, 0, 0.7);*/
   background-color: #E9EBEE;
+  z-index: 0;
+  position: relative;
 }
 .outerContainer {
   display: flex;
@@ -95,6 +104,13 @@
 .button-group {
   display: flex;
   flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.btn-PD {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100px;
 }
 .detail-names {
   display: flex;
@@ -124,7 +140,7 @@
 .innerInfo {
   box-shadow: 2px 2px 2px #CCCCCC;
   flex-direction: column;
-  width: 30%;
+  width: 500px;
   background-color: white;
   height: 200px;
   overflow: scroll;
@@ -159,6 +175,8 @@
   margin-left: auto;
   border-bottom: 1px solid silver;
   font-family: SSP-Light;
+  height: 40px;
+  font-size: 20px;
 }
 .blank-person-header {
   width: 15%;
@@ -212,9 +230,10 @@
   height: 575px;
   border: 3px solid #640FF3;
   border-radius: 5px;
+  z-index: 0;
 }
 .PR-title {
-  font-size: 23px;
+  font-size: 30px;
 }
 .ReactModal__Overlay {
   width: 50%;
@@ -259,6 +278,7 @@
   margin-left: auto;
   width: 100%;
   font-size: 25px;
+  font-family: SSP-Light;
 }
 .PR-main {
   display: flex;
@@ -328,7 +348,7 @@
   text-align: center;
 }
 .PR-sDate {
-  width: 300px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
@@ -341,6 +361,10 @@
   height: 50px;
   font-size: 20px;
   width: 250px;
+}
+.event-context {
+  height: 300px;
+  width: 100%;
 }
 
 .PR-sub-div {
@@ -361,14 +385,15 @@
 .PR-date-div {
   display: flex;
   flex-direction: column;
-  width: 600px;
+  width: 100%;
   align-items: center;
 }
-.PR-event-title {
+.eventTitle {
   width: 300px;
   text-align: center;
   margin-bottom: 10px;
-  font-size: 25px;
+  font-size: 30px;
+  font-family: CabinMI;
 }
 .PR-sub-title {
   margin-left: auto;
@@ -458,20 +483,33 @@
 .modal-header-1 {
   width: 10%;
 }
-.modal-header-2 {
-  width: 80%;
+.modalH {
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 35px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-family: CabinMI;
 }
-.modal-header-3 {
-  width: 10%;
+.modalClose {
+  margin-left: 600px;
+  width: 100px;
   margin-bottom: 40px;
+  z-index: 1;
+  position: fixed;
+  margin-top: 15px;
 }
 .PR-modal-header {
   text-align: center;
   color: black;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 35px;
   margin-bottom: 10px;
-  font-family: cabin;
+  margin-top: 10px;
+  font-family: CabinMI;
+  width: 100%;
   /*text-shadow: -1px 0 #640FF3, 0 1px #640FF3, 1px 0 #640FF3, 0 -1px #640FF3;*/
 }
 

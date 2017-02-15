@@ -15,7 +15,7 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
       // get all people existing in the FG DB that match our stagedStar
       starMatches:
         store.people.people.filter(function(m) {
-          return (m.fName === stagedStar.fName || m.lName === stagedStar.lName || m.birthDate === stagedStar.birthDate)
+          return ((m.fName === stagedStar.fName || m.lName === stagedStar.lName) && m.sexAtBirth === stagedStar.sexAtBirth)
         })
     };
   },
@@ -27,44 +27,41 @@ export default class StagedPeopleDetails extends React.Component {
     const { stagedStar, starMatches } = this.props;
 
     const mappedMatches = starMatches.map(starMatch =>
-      <MatchedPeopleDetails person={starMatch} key={starMatch._id}/>
+      <MatchedPeopleDetails person={starMatch} key={starMatch._id} starId={stagedStar._id}/>
     );
 
-    return (<div>
-      <div class="container">
-        <div class="col-xs-12">
-          <h1> Person Comparison </h1>
+    return (
+      <div class="mainDiv">
+        <div class="header-div">
+          <h1 class="family-header"> Person Comparison </h1>
+        </div>
+        <div class="comparisonDiv">
+          <div class="stagedComparison">
+            <div class='staged-header-container'>
+              <div class="comparisonNameDiv">
+                <p>Name</p>
+              </div>
+              <div class="staged-sex">
+                <p>Sex</p>
+              </div>
+              <div class="stagedHDob">
+                <p>Date of Birth</p>
+              </div>
+            </div>
+            <div class="comparisonList">
+              <StagedPeopleDetailsLineItem person={stagedStar} />
+            </div>
+          </div>
+          <div class="stagedComparison">
+            <div class="row">
+              <h1> Matching People in Your Database </h1>
+            </div>
+            <div>
+              {mappedMatches}
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-2 title bold can-click">
-        </div>
-        <div class="col-xs-2 title bold can-click">
-        </div>
-        <div class="col-xs-1 title bold can-click">
-          Gender
-        </div>
-        <div class="col-xs-2 title bold can-click">
-          Birth Date
-        </div>
-        <div class="col-xs-2 title bold can-click">
-          Death Date
-        </div>
-      </div>
-      <div>
-        <StagedPeopleDetailsLineItem person={stagedStar} />
-      </div>
-      <div class="container col-xs-12">
-        <div class="row">
-          <h1> Matching People </h1>
-        </div>
-        <div>
-          {mappedMatches}
-        </div>
-      </div>
-    </div>
-
     )
-
   }
 }
