@@ -4,6 +4,13 @@ import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 import { runImport } from '../../actions/importActions';
 
+import cookie from "react-cookie";
+
+import config from '../../config.js';
+const fgtoken = cookie.load('fg-access-token');
+
+
+
 @connect(
   (store, ownProps) => {
     return {
@@ -43,8 +50,34 @@ export default class ImportDashboard extends React.Component {
     hashHistory.push('/stagedpeoplesearch');
   }
 
-  goToUploadPage = () => {
-    hashHistory.push('/gedcomimport');
+  // this is specifically for the gedcom file upload process
+  xhr_post(xhrToSend, url, formData) {
+      xhrToSend.open("POST", url, true);
+      xhrToSend.setRequestHeader("x-access-token", fgtoken);
+      xhrToSend.send(formData);
+  }
+
+  onDrop = (files) => {
+    var formData = new FormData();
+    var xhr = new XMLHttpRequest();
+    formData.append('gedcom', files[0]);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert('File Upload Successful');
+        } else {
+          alert('File Upload Unsuccessful');
+        }
+      }
+    }
+    // TODO: Need to reference the config.js to bring in the correct server. Not good to hardcode it.
+    this.xhr_post(xhr, config.api_url + '/uploads', formData)
+  }
+
+  runImport = () => {
+    this.props.runImport();
+    alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
+    hashHistory.push('/importhome/')
   }
 
   // this is specifically for the gedcom file upload process

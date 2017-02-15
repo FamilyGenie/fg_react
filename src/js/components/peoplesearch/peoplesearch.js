@@ -39,14 +39,12 @@ export default class PeopleSearch extends React.Component {
   onSetSidebarOpen = (open) => {
     this.setState({sidebarOpen: open});
   }
-  
   // for the history bar showing or not
   componentWillMount = () => {
     var mql = window.matchMedia('(min-width: 800px)');
     mql.addListener(this.mediaQueryChanged);
     this.setState({mql: mql, sidebarDocked: mql.matches});
   }
-  
   // for the history bar showing or not
   componentWillUnmount = () => {
     this.state.mql.removeListener(this.mediaQueryChanged);
@@ -58,7 +56,7 @@ export default class PeopleSearch extends React.Component {
 
   alertOptions = {
       offset: 15,
-      position: 'middle',
+      position: 'bottom-left',
       theme: 'light',
       time: 0,
       transition: 'scale'
@@ -90,7 +88,7 @@ export default class PeopleSearch extends React.Component {
 
         return (
       <div class="main">
-<HistoryBar/>
+        <HistoryBar/>
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>
