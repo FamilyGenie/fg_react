@@ -30,7 +30,7 @@ export function login(username, password) {
 				dispatch(fetchParentalRels());
 				dispatch(fetchStagedPeople());
 				dispatch(fetchStagedEvents());
-				this.props.dispatch(fetchStagedParentalRels());
+				// dispatch(fetchStagedParentalRels());
 
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
 				hashHistory.push('/');
