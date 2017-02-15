@@ -58,20 +58,14 @@ constructor(props) {
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
-		eventTypeUserNew: this.props.event.eventTypeUser,
 
-		eventPlaceNew: (this.props.event.eventPlace ? this.props.event.eventPlace : " "),
-
-		eventPlaceUserNew: (this.props.event.eventPlace ? this.props.event.eventPlace : " "),
+		eventPlaceNew: this.props.event.eventPlace,
 
 		familyContextNew: this.props.event.familyContext,
-		familyContextUserNew: this.props.event.familyContextUser,
 
 		localContextNew: this.props.event.localContext,
-		localContextUserNew: this.props.event.localContextUser,
 
 		worldContextNew: this.props.event.worldContext,
-		worldContextUserNew: this.props.event.worldContextUser,
 	};
 }
 
@@ -81,24 +75,26 @@ constructor(props) {
 	// 	this.setState({eventType: evt.value});
 	// }
 
-	// this call returns a function, so that when the field is updated, the fuction will execute.
-	getUpdateDate = (field, dateUser, dateSet) => {
-		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
-		return (field, dateUser, dateSet) => {
-			this.props.updateEvent(this.props.event._id, field, dateSet);
-			this.props.updateEvent(this.props.event._id, field + "User", dateUser);
-			this.setState({startDateUser: dateUser});
-		}
-	}
+	// // this call returns a function, so that when the field is updated, the fuction will execute.
+	// getUpdateDate = (field, dateUser, dateSet) => {
+	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
+	// 	return (field, dateUser, dateSet) => {
+	// 		this.props.updateEvent(this.props.event._id, field, dateSet);
+	// 		this.props.updateEvent(this.props.event._id, field + "User", dateUser);
+	// 		this.setState({startDateUser: dateUser});
+	// 	}
+	// }
 
-	getUpdateEvent = (field) => {
-		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
-		return (evt) => {
-			this.props.updateEvent(this.props.event._id, field, evt.target.value);
-		}
-	}
+	// getUpdateEvent = (field) => {
+	// 	// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
+	// 	return (evt) => {
+	// 		this.props.updateEvent(this.props.event._id, field, evt.target.value);
+	// 	}
+	// }
 
-<<<<<<< HEAD
+	// For event type, evt.value is used to access its information. Text areas/input boxes use evt.target.value
+
+
 	tempEventDate = (parsedDate, userDate) => {
 		this.setState({
 			eventDateUserNew: userDate,
@@ -107,57 +103,49 @@ constructor(props) {
 		console.log(this.state, "inside eventDate");
 	}
 	tempEventType = (evt) => {
-		this.setState({eventTypeUserNew: evt.value});
-		console.log(this.state, "inside eventType");
+		this.setState({eventTypeNew: evt.value});
+		// console.log(this.state, "inside eventType");
 	}
 	tempEventPlace = (evt) => {
-		this.setState({eventPlaceUserNew: evt.value});
+		this.setState({eventPlaceNew: evt.target.value});
 		// console.log(this.state, "inside eventPlace");
 	}
 	tempFamilyContext = (evt) => {
-		this.setState({familyContextUserNew: evt.value});
+		this.setState({familyContextNew: evt.target.value});
 		// console.log(this.state, "inside family");
 	}
 	tempLocalContext = (evt) => {
-		this.setState({localContextUserNew: evt.value});
+		this.setState({localContextNew: evt.target.value});
 		// console.log(this.state, "inside local");
 	}
 	tempWorldContext = (evt) => {
-		this.setState({worldContextUserNew: evt.value});
+		this.setState({worldContextNew: evt.target.value});
 		// console.log(this.state, "inside world");
-=======
-	deleteRecord = () => {
-		// when the event is deleted, need to reset store.modal.event so that the next time the eventlineitemedit is called, it does not show up with this old event in it.
-		this.props.resetModalEvent();
-		this.props.deleteEvent(this.props.event._id);
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 	}
-
 
 	saveRecord = () => {
 		console.log(this.state, "STATE saveRecord-Events");
 		console.log(this.props, "PROPS of saveRecord-Events");
 
-<<<<<<< HEAD
 		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
-			this.getUpdateDate(this.props.event.person_id, "eventDateUser", this.stateeventDateUserNew);
+			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
+			// this.UpdateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
 		}
-		if (this.state.eventTypeNew !== this.props.eventType) {
-			this.getUpdateDate(this.props.person_id, "eventType", this.state.eventTypeNew)
+		if (this.state.eventTypeNew !== this.props.event.eventType) {
+			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
 		}
 		if (this.state.eventPlace !== this.props.event.eventPlace) {
-			this.getUpdateDate(this.props.event.person_id, "eventPlace", this.state.eventPlaceNew);
+			this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
 		}
-		if (this.state.familyContext !== this.props.event.familyContext) {
-			this.getUpdateDate(this.props.event.familyContext, "familyContext", this.state.familyContextNew);
+		if (this.state.familyContextNew !== this.props.event.familyContext) {
+			this.props.updateEvent(this.props.event._id, "familyContext", this.state.familyContextNew);
 		}
-		if (this.state.localContext !== this.props.event.localContext) {
-			this.getUpdateDate(this.props.event.localContext, "localContext", this.state.localContextNew);
+		if (this.state.localContextNew !== this.props.event.localContext) {
+			this.props.updateEvent(this.props.event._id, "localContext", this.state.localContextNew);
 		}
-		if (this.state.worldContext !== this.props.event.worldContext) {
-			this.getUpdateDate(this.props.event.worldContext, "worldContext", this.state.worldContextNew);
+		if (this.state.worldContextNew !== this.props.event.worldContext) {
+			this.props.updateEvent(this.props.event._id, "worldContext", this.state.worldContextNew);
 		}
-
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
@@ -171,22 +159,16 @@ constructor(props) {
 	}
 
 	render = () => {
-		console.log(this.state, "render state");
+		console.log(this.state, 'state of the state')
 		const { event, eventTypes} = this.props;
+		const { eventDateUser, eventType } = this.state;
 
-=======
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 		// only render if we have data to show
 		if (event) {
 			return (
 			<div>
-<<<<<<< HEAD
 				<div class="event-main">
 					<div class="event-row">
-=======
-				<div class="PR-main">
-					<div class="PR-row-event">
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 						<div class="PR-div">
 							<div class="PR-title">
 								Date
@@ -209,7 +191,7 @@ constructor(props) {
 								<Select
 									options={eventTypes}
 									onChange={this.tempEventType}
-									initialValue={this.state.eventTypeNew}
+									value={this.state.eventTypeNew}
 								/>
 							</div>
 						</div>
@@ -221,7 +203,7 @@ constructor(props) {
 								<input
 										class="form-control"
 										type="text"
-										initialValue={this.state.eventPlaceNew}
+										value={this.state.eventPlaceNew}
 										onChange={this.tempEventPlace}
 								/>
 							</div>
@@ -229,15 +211,6 @@ constructor(props) {
 					</div>
 				</div>
 				<div class="PR-row-3">
-<<<<<<< HEAD
-					<div class="event-context-div">
-						<div class="PR-event-title">
-						Family Context
-						</div>
-						<div class="event-context">
-							<textarea
-									class="event-input"
-=======
 					<div class="PR-date-div">
 						<div class="eventTitle">
 						Family Context
@@ -245,55 +218,31 @@ constructor(props) {
 						<div class="PR-sDate">
 							<textarea
 									class="event-context"
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 									type="text"
-									initialValue={this.state.familyContext}
 									onChange={this.tempFamilyContext}
 							>
+							{this.state.familyContextNew}
 							</textarea>
 						</div>
 					</div>
 				</div>
 				<div class="PR-row-3">
-<<<<<<< HEAD
 					<div class="event-context-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Local Context
 						</div>
 						<div class="event-context">
 							<textarea
 								class="event-input"
 								type="text"
-								initialValue={this.state.localContext}
 								onChange={this.tempLocalContext}
 							>
+							{this.state.localContextNew}
 						</textarea>
-=======
-					<div class="PR-date-div">
-						<div class="eventTitle">
-						Local Context
-						</div>
-						<div class="PR-sDate">
-							<textarea
-									class="event-context"
-									type="text"
-									defaultValue={event.localContext}
-									onBlur={this.getUpdateEvent('localContext')}
-							/>
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 						</div>
 					</div>
 				</div>
 				<div class="PR-row-3">
-<<<<<<< HEAD
-					<div class="event-context-div">
-						<div class="PR-event-title">
-						World Context
-						</div>
-						<div class="event-context">
-							<textarea
-									class="event-input"
-=======
 					<div class="PR-date-div">
 						<div class="eventTitle">
 						World Context
@@ -301,18 +250,16 @@ constructor(props) {
 						<div class="PR-sDate">
 							<textarea
 									class="event-context"
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 									type="text"
-									initialValue={this.state.worldContext}
 									onChange={this.tempWorldContext}
 							>
+							{this.state.worldContextNew}
 							</textarea>
 						</div>
 					</div>
 				</div>
 				<div class="buffer-modal">
 				</div>
-<<<<<<< HEAD
 				<div class="event-delete-modal">
 					<button
 						type="button"
@@ -329,16 +276,9 @@ constructor(props) {
 						Delete
 					</button>
 				</div>
-			</div>
-			)
-=======
-				<div class="custom-input">
-					<button class="button2" onClick={this.deleteRecord}>Delete</button>
-				</div>
 			</div>)
->>>>>>> bb5335684db5740b20e50b1bf81cc8b2fb26da9c
 		} else {
 			return (<p>Loading Event Info...</p>);
 		}
-	}
+	}  // end render
 }
