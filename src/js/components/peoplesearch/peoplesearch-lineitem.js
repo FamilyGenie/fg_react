@@ -27,7 +27,7 @@ export default class PeopleSearchLineItem extends React.Component {
 		}
 	}
 
-  // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page.
+   // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page. 
   birthDate = () => {
     try {
       return this.props.event.eventDate.toString().substr(0,10);
@@ -35,38 +35,42 @@ export default class PeopleSearchLineItem extends React.Component {
       return "no birthDate"
     }
   }
+	render = () => {
 
-	render = () => (
-		<div id="person-div">
-			<div id="name-date">
-				<div class="custom-input">
-					<p class="person-text">
-						{this.props.person.fName}
-					</p>
-					<p class="person-text">
-						{this.props.person.mName}
-					</p>
-					<p class="person-text">
-						{this.props.person.lName}
-					</p>
-				</div>
-				<div class="date-div">
-					<p class="person-text">
-            {this.birthDate()}
-          </p>
-				</div>
-			</div>
-			<div id="details-map">
-				<i
-					class="fa fa-pencil-square-o button2"
-					onClick={this.openDetails}>
-				</i>
-				<i
-					class="fa fa-sitemap button2"
-					onClick={this.openMap}
-				>
-			</i>
-			</div>
-		</div>
-	);
+    const { person } = this.props;
+
+    return (
+      <div id="person-div">
+        <div id="name-date">
+          <div class="custom-input">
+            <p class="person-text">
+              {person.fName}
+            </p>
+            <p class="person-text">
+              {person.mName}
+            </p>
+            <p class="person-text">
+              {person.lName}
+            </p>
+          </div>
+          <div class="date-div">
+            <p class="person-text">
+              {this.birthDate()}
+            </p>
+          </div>
+        </div>
+        <div id="details-map">
+          <i
+            class="fa fa-pencil-square-o button2"
+            onClick={this.openDetails}>
+          </i>
+          <i
+            class="fa fa-sitemap button2"
+            onClick={this.openMap}
+          >
+        </i>
+        </div>
+      </div>
+    )
+	};
 }

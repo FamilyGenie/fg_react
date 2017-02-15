@@ -89,46 +89,12 @@ constructor(props) {
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
-		var contextCol = {
-			width: "30%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-
 		// only render if we have data to show
 		if (event) {
 			return (
 			<div>
 				<div class="PR-main">
 					<div class="PR-row-event">
-						<div class="PR-div">
-							<div class="PR-title">
-								Event Name
-							</div>
-							<div class="PR-drop-1">
-								<DateInput defaultValue="Event Name" field="eventDate"/>
-							</div>
-						</div>
 						<div class="PR-div">
 							<div class="PR-title">
 								Date
@@ -168,12 +134,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Family Context
 						</div>
 						<div class="PR-sDate">
-							<input
-									class="form-control"
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.familyContext}
 									onBlur={this.getUpdateEvent('familyContext')}
@@ -183,12 +149,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Local Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.localContext}
 									onBlur={this.getUpdateEvent('localContext')}
@@ -198,12 +164,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						World Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.worldContext}
 									onBlur={this.getUpdateEvent('worldContext')}
@@ -211,10 +177,10 @@ constructor(props) {
 						</div>
 					</div>
 				</div>
-				<div class="custom-input" style={buttonCol}>
-					<i class="fa fa-minus-square fa-2x button2" onClick={this.deleteRecord}></i>
-				</div>
 				<div class="buffer-modal">
+				</div>
+				<div class="custom-input">
+					<button class="button2" onClick={this.deleteRecord}>Delete</button>
 				</div>
 			</div>)
 		} else {

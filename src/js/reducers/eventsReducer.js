@@ -96,6 +96,13 @@ export default function reducer(state={
 					error: action.payload
 				};
 			}
+			case "CLEAR_EVENTS": {
+				return {
+					...state,
+					fetching: false,
+					events: []
+				};
+			}
 		}
 		return state
 }

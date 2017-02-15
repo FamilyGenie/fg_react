@@ -104,6 +104,13 @@ export default function reducer(
 				error: action.payload
 			};
 		}
+		case "CLEAR_PARENTALRELS": {
+			return {
+				...state,
+				fetching: false,
+				parentalRels: []
+			};
+		}
 	}
 	return state
 }

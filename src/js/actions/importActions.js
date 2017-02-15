@@ -1,5 +1,4 @@
 import axios from "axios";
-import cookie from "react-cookie";
 import { createEvent } from "./eventsActions";
 import { fetchPeople } from "./peopleActions";
 import { fetchStagedPeople } from "./stagedPeopleActions";
@@ -7,12 +6,7 @@ import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
 
 import config from "../config.js";
-
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
+import { getAxiosConfig } from './actionFunctions';
 
 export function runImport() {
 
@@ -21,7 +15,7 @@ export function runImport() {
 
   return (dispatch) => {
     dispatch({type: "RUN_IMPORT"});
-    axios.post(config.api_url + "/api/v2/autoimport", body, axiosConfig)
+    axios.post(config.api_url + "/api/v2/autoimport", body, getAxiosConfig())
       .then((response) => {
         dispatch({type: "RUN_IMPORT_FULFILLED", payload: response.data})
         // after running import, refresh the store.
@@ -50,7 +44,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 	};
 	return (dispatch) => {
 		dispatch({type: "CREATE_PERSON"});
-		axios.post(config.api_url + "/api/v2/person/create", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/person/create", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
 				// create body post for event create for birthDate
@@ -63,7 +57,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 					}
 				}
 				dispatch({type: "CREATE_EVENT"});
-				axios.post(config.api_url + "/api/v2/event/create", bodyBirth, axiosConfig)
+				axios.post(config.api_url + "/api/v2/event/create", bodyBirth, getAxiosConfig())
 					.then((response) => {
 						dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
 					})
@@ -82,7 +76,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 						}
 					}
 					dispatch({type: "CREATE_EVENT"});
-					axios.post(config.api_url + "/api/v2/event/create", bodyDeath, axiosConfig)
+					axios.post(config.api_url + "/api/v2/event/create", bodyDeath, getAxiosConfig())
 						.then((response) => {
 							dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
 						})
@@ -107,7 +101,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
         }
 
         dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate1, axiosConfig)
+        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate1, getAxiosConfig())
           .then((response) => {
             dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
           })
@@ -116,7 +110,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
           })
 
         dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate2, axiosConfig)
+        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate2, getAxiosConfig())
           .then((response) => {
             dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
           })

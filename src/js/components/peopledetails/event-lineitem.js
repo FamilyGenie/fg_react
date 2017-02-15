@@ -52,11 +52,11 @@ export default class EventLineItem extends React.Component {
 
 		if (event) {
 			return (
-				<div class="infoRow">
+				<div class="chronology-row">
 					<div class="buttonCol" onClick={this.openModal}>
-						<i class="fa fa-pencil-square-o button2"></i>
+						<i class="fa fa-pencil-square-o chronology-edit"></i>
 					</div>
-					<div class="inner-name-div">
+					<div class="inner-event-name">
 						<div class="nameCol" onClick={this.openModal}>
 							<div class="relTypeWord">{eventDateUser}</div>
 						</div>
@@ -73,17 +73,11 @@ export default class EventLineItem extends React.Component {
 						contentLabel="Modal"
 						>
 						{/* Everything between here and <EventLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
-						<div class="modal-header">
-							<div class="modal-header-1">
-							</div>
-							<div class="modal-header-2">
-								<div class="PR-modal-header">
-									Event Edit
-								</div>
-							</div>
-							<div class="modal-header-3">
-								<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
-							</div>
+						<div class="modalClose">
+							<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+						</div>
+						<div class="modalH">
+								Event Edit
 						</div>
 						<div class="buffer-modal">
 						</div>

@@ -1,0 +1,90 @@
+@font-face {
+   font-family: CabinMI;
+   src: url("./fonts/Cabin/Cabin-MediumItalic.ttf");
+   format("opentype");
+   font-weight: 700;
+}
+.main-history {
+  border-bottom: 1px solid silver;
+  border-left: 1px solid silver;
+  background-color: white;
+  height: 100vh;
+}
+.help-div {
+  width: 300px;
+  height: 97vh;
+  z-index: 1;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.help-menu {
+  height: 210px;
+  border-bottom: 1px solid silver;
+  display: flex;
+}
+.help-header {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  height: 50px;
+  background-color: #3B42AF;
+  align-items: center;
+}
+.help-close {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  margin-right: 3px;
+}
+.fa-minus-square {
+  color: white;
+}
+.history-title-1 {
+  text-align: center;
+  font-family: Cabin;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  color: white;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 28px;
+}
+.history-title-2 {
+  text-align: center;
+  font-family: Cabin;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  color: black;
+  margin-bottom: 0;
+  height: 28px;
+  text-align: center;
+  margin-top: 10px;
+}
+.history-context {
+  width: 100%;
+}
+.histories {
+  width: 100%;
+  height: 400px;
+  overflow: scroll;
+}
+.history {
+  width: 90%;
+  border-bottom: 1px solid silver;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#helpHide {
+  display: none;
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.custom-sidebar-class {
+  margin-top: 52px;
+}

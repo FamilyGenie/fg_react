@@ -1,19 +1,13 @@
 import axios from "axios";
-import cookie from "react-cookie";
 
 import config from "../config.js";
-
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
+import { getAxiosConfig } from './actionFunctions';
 
 export function fetchPairBondRels() {
 
 	return function(dispatch) {
 		dispatch({type: "FETCH_PAIRBONDRELS"});
-		axios.get(config.api_url + "/api/v2/pairbondrels", axiosConfig)
+		axios.get(config.api_url + "/api/v2/pairbondrels", getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "FETCH_PAIRBONDRELS_FULFILLED", payload: response.data})
 			})
@@ -34,7 +28,7 @@ export function updatePairBondRel(_id, field, value) {
 
 	return (dispatch) => {
 		dispatch({type: "UPDATE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/update", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/pairbondrel/update", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "UPDATE_PAIRBONDREL_FULFILLED", payload: response.data})
 			})
@@ -59,7 +53,7 @@ export function createPairBondRel(personOne_id, personTwo_id, relationshipType, 
 	};
 	return (dispatch) => {
 		dispatch({type: "CREATE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/create", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/pairbondrel/create", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "CREATE_PAIRBONDREL_FULFILLED", payload: response.data})
 			})
@@ -81,7 +75,7 @@ export function deletePairBondRel(field, value) {
 
 	return (dispatch) => {
 		dispatch({type: "DELETE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_PAIRBONDREL_FULFILLED", payload: response.data})
 			})

@@ -1,13 +1,7 @@
 import axios from 'axios';
-import cookie from 'react-cookie';
 
 import config from '../config.js';
-
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-  headers: {'x-access-token': fgtoken}
-};
+import { getAxiosConfig } from './actionFunctions';
 
 export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parentalRel_Id) {
 
@@ -22,7 +16,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
   // create a new blank person record for a child
   return (dispatch) => {
     dispatch({type: "CREATE_PERSON"});
-    axios.post(config.api_url + '/api/v2/person/create', body, axiosConfig)
+    axios.post(config.api_url + '/api/v2/person/create', body, getAxiosConfig())
       .then((response) => {
         newPerson = response.data;
         dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
@@ -36,7 +30,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
 
         // create a blank birth record for the newly created person because we don't trust people without a birthdate.
         dispatch({type: "CREATE_EVENT"});
-        axios.post(config.api_url + '/api/v2/event/create', birthBody, axiosConfig)
+        axios.post(config.api_url + '/api/v2/event/create', birthBody, getAxiosConfig())
           .then((response) => {
             dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
           })
@@ -65,7 +59,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
         // create two parent record for mother and father because we don't trust people without parents
         // When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are.
         dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', fatherRelBody, axiosConfig)
+        axios.post(config.api_url + '/api/v2/parentalrel/create', fatherRelBody, getAxiosConfig())
           .then((response) => {
             dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
           })
@@ -74,7 +68,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
           })
 
         dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', motherRelBody, axiosConfig)
+        axios.post(config.api_url + '/api/v2/parentalrel/create', motherRelBody, getAxiosConfig())
           .then((response) => {
             dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
           })
@@ -94,7 +88,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
           };
 
           dispatch({type: "UPDATE_PARENTALREL"});
-          axios.post(config.api_url + "/api/v2/parentalrel/update", newBody, axiosConfig)
+          axios.post(config.api_url + "/api/v2/parentalrel/update", newBody, getAxiosConfig())
             .then((response) => {
               dispatch({type: "UPDATE_PARENTALREL_FULFILLED", payload: response.data})
             })
@@ -112,7 +106,7 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
             }
           };
           dispatch({type: "CREATE_PARENTALREL"});
-          axios.post(config.api_url + '/api/v2/parentalrel/create', parentRelBody, axiosConfig)
+          axios.post(config.api_url + '/api/v2/parentalrel/create', parentRelBody, getAxiosConfig())
             .then((response) => {
               dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
             })
