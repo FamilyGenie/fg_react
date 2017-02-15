@@ -11,7 +11,7 @@ import { fetchStagedEvents } from '../actions/stagedEventActions';
 // import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 
 import config from '../config.js';
-import { getAxiosConfig } from './actionFunctions';
+import { getAxiosConfigForLogin } from './actionFunctions';
 
 export function login(username, password) {
 	const body = {
@@ -19,8 +19,8 @@ export function login(username, password) {
 		password
 	};
 	return (dispatch) => {
-		dispatch({type: "LOGIN"});
-		axios.post(config.api_url + "/api/v1/login", body, getAxiosConfig())
+		dispatch({type: "LOGIN_ATTEMPT"});
+		axios.post(config.api_url + "/api/v1/login", body, getAxiosConfigForLogin())
 			.then((response) => {
 				// if the login is successful, then save the cookie for the app, and call the dispatch to retrieve all the data.
 				cookie.save('fg-access-token', response.data.token);
@@ -30,7 +30,7 @@ export function login(username, password) {
 				dispatch(fetchParentalRels());
 				dispatch(fetchStagedPeople());
 				dispatch(fetchStagedEvents());
-				// this.props.dispatch(fetchStagedParentalRels());
+				this.props.dispatch(fetchStagedParentalRels());
 
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
 				hashHistory.push('/');
