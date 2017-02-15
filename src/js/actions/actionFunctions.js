@@ -10,7 +10,6 @@ export function getAxiosConfig() {
 
 export function getAxiosConfigForLogin() {
 	return {
-		timeout: 5000,
 		headers: {
 			'Content-Type': 'application/json'
 			// 'Authorization': undefined
