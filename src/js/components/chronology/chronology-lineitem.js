@@ -79,13 +79,13 @@ export default class ChronologyLineItem extends React.Component {
             {eventDateUser}
           </div>
           <div class="nameCol col-xs-3">
-            {(person ? person.fName + ' ' + person.lName : "PERSON")}
+            {(person ? person.fName + ' ' + person.lName : "")}
           </div>
           <div class="nameCol col-xs-2">
-            {(event.eventType ? event.eventType : "EVENT TYPE")}
+            {(event.eventType ? event.eventType : "")}
           </div>
           <div class="nameCol col-xs-2">
-            {(event.eventPlace ? event.eventPlace : "EVENT PLACE")}
+            {(event.eventPlace ? event.eventPlace : "")}
           </div>
         </div>
         <Modal
