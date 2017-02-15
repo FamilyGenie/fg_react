@@ -49,7 +49,7 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 					}),
 				peopleArray:
           peopleArray,
-			}		
+			}
     }
 	},
 	(dispatch) => {
@@ -58,7 +58,8 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				dispatch(deleteParentalRel(_id));
+				// this action requires a feild and a value to delete
+				dispatch(deleteParentalRel('_id', _id));
 			}
 		}
 	}
@@ -132,27 +133,6 @@ constructor(props) {
 	render = () => {
 
 		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
-
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
 
 		if (parentalRel) {
 			return (

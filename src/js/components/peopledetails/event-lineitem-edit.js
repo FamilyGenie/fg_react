@@ -4,6 +4,7 @@ import Select from 'react-select';
 
 import DateInput from '../date-input';
 import { updateEvent, deleteEvent } from '../../actions/eventsActions';
+import { resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -28,17 +29,24 @@ import { updateEvent, deleteEvent } from '../../actions/eventsActions';
 	(dispatch) => {
 		return {
 			updateEvent: (_id, field, value) => {
+				console.log("in update event: ", _id, field, value);
 				dispatch(updateEvent(_id, field, value));
 			},
 			deleteEvent: (_id) => {
-				dispatch(deleteEvent(_id));
-			}
+				// this action requires a feild and a value to delete
+				dispatch(deleteEvent('_id', _id));
+			},
+			resetModalEvent: () => {
+				dispatch(resetModalEvent());
+			},
 		}
 	}
 )
 export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
+	console.log("in EventLineItemEdit with: ", this.props);
+
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
@@ -71,6 +79,8 @@ constructor(props) {
 	}
 
 	deleteRecord = () => {
+		// when the event is deleted, need to reset store.modal.event so that the next time the eventlineitemedit is called, it does not show up with this old event in it.
+		this.props.resetModalEvent();
 		this.props.deleteEvent(this.props.event._id);
 	}
 
@@ -79,46 +89,12 @@ constructor(props) {
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
-		var contextCol = {
-			width: "30%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-
 		// only render if we have data to show
 		if (event) {
 			return (
 			<div>
 				<div class="PR-main">
 					<div class="PR-row-event">
-						<div class="PR-div">
-							<div class="PR-title">
-								Event Name
-							</div>
-							<div class="PR-drop-1">
-								<DateInput defaultValue="Event Name" field="eventDate"/>
-							</div>
-						</div>
 						<div class="PR-div">
 							<div class="PR-title">
 								Date
@@ -158,12 +134,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Family Context
 						</div>
 						<div class="PR-sDate">
-							<input
-									class="form-control"
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.familyContext}
 									onBlur={this.getUpdateEvent('familyContext')}
@@ -173,12 +149,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Local Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.localContext}
 									onBlur={this.getUpdateEvent('localContext')}
@@ -188,12 +164,12 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						World Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
 									type="text"
 									defaultValue={event.worldContext}
 									onBlur={this.getUpdateEvent('worldContext')}
@@ -201,10 +177,10 @@ constructor(props) {
 						</div>
 					</div>
 				</div>
-				<div class="custom-input" style={buttonCol}>
-					<i class="fa fa-minus-square fa-2x button2" onClick={this.deleteRecord}></i>
-				</div>
 				<div class="buffer-modal">
+				</div>
+				<div class="custom-input">
+					<button class="button2" onClick={this.deleteRecord}>Delete</button>
 				</div>
 			</div>)
 		} else {

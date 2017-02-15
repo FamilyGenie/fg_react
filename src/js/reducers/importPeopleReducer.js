@@ -26,6 +26,25 @@ export default function reducer(
 				fetching: false
 			};
 		}
+    case "RUN_IMPORT": {
+      return {
+        ...state,
+        fetching: true
+      };
+    }
+    case "RUN_IMPORT REJECTED": {
+      return {
+        ...state,
+        fetching: false,
+        error: action.payload
+      };
+    }
+    case "RUN_IMPORT_FULFILLED": {
+      return {
+        ...state,
+        fetching: false,
+      };
+    }
 	}
 
 	return state

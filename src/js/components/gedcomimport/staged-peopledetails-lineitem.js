@@ -1,8 +1,8 @@
 import React from 'react';
 import { hashHistory } from 'react-router'
 import { connect } from 'react-redux';
-import { importPerson } from '../../actions/importActions';
 
+import { importPerson } from '../../actions/importActions';
 import DateInput from '../date-input';
 
 @connect(
@@ -13,9 +13,9 @@ import DateInput from '../date-input';
 	},
 	(dispatch) => {
 		return {
-      importPerson: (fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes) => {
-        dispatch(importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes))
-      }
+      importPerson: (fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes, _id) => {
+        dispatch(importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPlace, deathDate, deathPlace, notes, _id));
+      },
 		}
 	}
 )
@@ -23,7 +23,9 @@ import DateInput from '../date-input';
 export default class StagedPeopleDetailsLineItem extends React.Component {
 
   importPerson = () => {
-    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes)
+    this.props.importPerson(this.props.person.fName,this.props.person.mName,this.props.person.lName,this.props.person.sexAtBirth,this.props.person.birthDate,this.props.person.birthPlace,this.props.person.deathDate,this.props.person.deathPlace,this.props.person.notes, this.props.person._id);
+    alert('You hae imported a new record for ' + this.props.person.fName + ' ' + this.props.person.lName)
+    hashHistory.push('/stagedpeoplesearch/');
   }
 
 	getUpdateDate = (field, displayDate, setDate) => {
@@ -42,44 +44,26 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 
 	render = () => (
 
-		<div class="row person-item">
-
-			<div class="col-xs-2 custom-input">
-        <div>
-					{this.props.person.fName}
-        </div>
+		<div class="stagedPerson">
+			<div class="comparisonNameDiv">
+				<p class="staged-name">{this.props.person.fName}</p>
+				<p class="staged-name">{this.props.person.lName}</p>
 			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-					{this.props.person.lName}
-        </div>
-			</div>
-
-			<div class="col-xs-1 custom-input">
-        <div>
-					{this.props.person.sexAtBirth}
-        </div>
-			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-          {this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}
-        </div>
-			</div>
-
-			<div class="col-xs-2 custom-input">
-        <div>
-          {(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}
-        </div>
-			</div>
-
-			<div class="col-xs-3 custom-input">
+      <div class="staged-sex">
+				<p class="staged-name">{this.props.person.sexAtBirth}</p>
+      </div>
+      <div class="staged-date">
+        <p class="staged-name">{this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}</p>
+      </div>
+      <div class="stagd-date">
+        <p class="staged-name">{(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}</p>
+      </div>
+			<div class="">
 				<button
-					class="form-control"
+					class="btn button3"
 					onClick={this.importPerson}
 				>
-					Add To DB
+					Add
 				</button>
 			</div>
 
