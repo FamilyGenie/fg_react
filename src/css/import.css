@@ -1,10 +1,12 @@
-.main-div {
+.mainImport {
   background-color: #E9EBEE;
-  min-height: 100vh;
+  min-height: 1000px;
 }
 .import-content {
   width: 800px;
-  border: 1px solid silver;
+  border-left: 1px solid silver;
+  border-top: 1px solid silver;
+  border-right: 1px solid silver;
   background-color: white;
   margin-left: auto;
   margin-right: auto;
@@ -57,6 +59,8 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  font-family: CabinMI;
+  font-size: 17px;
 }
 .action-content {
   height: 120px;
@@ -82,12 +86,14 @@
 .button3 {
   background-color: #640FF3;
   color: white;
-}
-.btn {
   width: 100px;
   margin-left: auto;
   margin-right: auto;
 }
 .import-button {
   margin-top: auto;
+}
+.actionItem {
+  margin-left: 10px;
+
 }

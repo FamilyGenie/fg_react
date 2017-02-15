@@ -52,26 +52,10 @@ export default class ChronologyLineItem extends React.Component {
     const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate? event.eventDate.substr(0,10) : '') );
     const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate? event.eventDate.substr(0,10) : '') );
 
-		var modalStyle = {
-			overlay: {
-			position: 'fixed',
-			top: 100,
-			left: 100,
-			right: 100,
-			bottom: 100,
-			}
-		}
-		var headingStyle = {
-			textAlign: "center",
-			color: "#333333",
-			fontWeight: "bold",
-			fontSize: "1.25em",
-			marginBottom: 10,
-		}
 
     if (event) {
       return (<div>
-        <div class="infoRow">
+        <div class="staged-item">
 					<div class="buttonCol col-xs-1" onClick={this.openModal}>
 						<i class="fa fa-pencil-square-o"></i>
 					</div>
@@ -102,7 +86,7 @@ export default class ChronologyLineItem extends React.Component {
           <div><p></p></div>
           <button onClick={this.closeModal}>Close</button>
         </Modal>
-         
+
       </div>)
     } else {
       return (<p>Loading...</p>);

@@ -22,13 +22,11 @@ export default class StagedPeopleSearch extends React.Component {
     );
 
     return (
-    <div class="main-div">
+    <div class="mainDiv">
       <div class="header-div">
         <h1 class="family-header"> Duplicate Review </h1>
       </div>
-    <div>
-    </div>
-    <div id="staged-container">
+    <div class="staged-container">
       <div class='staged-header-container'>
         <div class="staged-name-div">
           <p>Name</p>
@@ -36,13 +34,14 @@ export default class StagedPeopleSearch extends React.Component {
         <div class="staged-sex">
           <p>Sex</p>
         </div>
-        <div class="staged-date-header-1">
+        <div class="stagedHB">
           <p>Date of Birth</p>
         </div>
-        <div class="staged-date-header-2">
+        <div class="stagedHD">
           <p>Date of Death</p>
         </div>
-        <div id="stage-buffer">
+        <div class="stagedHeaderReview">
+          <p>Review</p>
         </div>
       </div>
       <div class="staged-people-list">
