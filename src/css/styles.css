@@ -36,9 +36,15 @@ h2, h4 {
 h3 {
 	font-family: "Open Sans", Helvetica, sans-serif;
 }
-
+.mainDiv {
+  background-color: #E9EBEE;
+  min-height: 100vh;
+}
 .container-button {
 	display: inline;
+}
+.all-content {
+  width: 100%;
 }
 
 /* this is for the column titles in the data entry forms */
@@ -145,6 +151,10 @@ div.container.select-container {
 
 .gendername {
   margin-top: 20px
+}
+.layout {
+  display: flex;
+  flex-direction: row;
 }
 
 

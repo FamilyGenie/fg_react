@@ -92,24 +92,6 @@ export default class PeopleDetails extends React.Component {
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
 		);
 
-		var divStyle = {
-			borderWidth: "1px",
-			borderColor: "gray",
-			borderStyle: "solid",
-			marginTop: "30px",
-			marginRight: "10px",
-			marginLeft: "10px",
-			paddingBottom: "5px"
-		}
-
-		var headingStyle = {
-			textAlign: "center",
-			color: "#444444",
-			fontWeight: "bold",
-			fontSize: "1.25em",
-			marginBottom: 10,
-		}
-
 		var modalStyle = {
 			overlay: {
 			position: 'fixed',
@@ -148,7 +130,6 @@ export default class PeopleDetails extends React.Component {
 							{mappedParentalRels}
 						</div>
 				</div>
-
 				<div class="innerInfo">
 					<div class="titleRow">
 						<div class="blank-person-header">

@@ -8,6 +8,8 @@ import { fetchParentalRels } from '../actions/parentalRelsActions';
 import { fetchPeople } from "../actions/peopleActions";
 import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../actions/stagedEventActions';
+import HistoryBar from './historybar/index';
+import Sidebar from 'react-sidebar';
 // import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { logout } from '../actions/authActions';
 
@@ -55,6 +57,8 @@ export default class Layout extends React.Component {
     hashHistory.push('/chronology/');
   }
 
+	// <HistoryBar/>
+
 	render() {
 		return (
 		<div>
@@ -74,7 +78,7 @@ export default class Layout extends React.Component {
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 						<ul class="nav navbar-nav navbar-right">
-      				<li class="navbar-li-padding">
+      				<li>
 						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
 					    </li>
 							<li>
@@ -99,8 +103,10 @@ export default class Layout extends React.Component {
 			    </div>
 			  </div>
 			</nav>
-			<div class="all-content">
-				{this.props.children}
+			<div class="layout">
+				<div class="all-content">
+					{this.props.children}
+				</div>
 			</div>
 			<footer class="footer navbar-fixed-bottom">
 				<div class="container footer-container">

@@ -82,7 +82,7 @@ export default class ImportDashboard extends React.Component {
   render = () => {
 
     return (
-    <div class="main-div">
+    <div class="mainImport">
       <div class="header-div">
         <h1 class="family-header"> Import Dashboard </h1>
       </div>
@@ -120,11 +120,11 @@ export default class ImportDashboard extends React.Component {
               <div class="action-content">
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
-                  <p>{this.props.peopleRemaining.length}</p>
+                  <p class="actionItem">{this.props.peopleRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
-                  <p>{this.props.peopleImported.length}</p>
+                  <p class="actionItem">{this.props.peopleImported.length}</p>
                 </div>
                 <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
               </div>
@@ -143,11 +143,11 @@ export default class ImportDashboard extends React.Component {
               <div class="action-content">
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
-                  <p>{this.props.eventsRemaining.length}</p>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
-                  <p>{this.props.eventsImported.length}</p>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
@@ -166,11 +166,11 @@ export default class ImportDashboard extends React.Component {
               <div class="action-content">
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
-                  <p>{this.props.eventsRemaining.length}</p>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
-                  <p>{this.props.eventsImported.length}</p>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
@@ -189,11 +189,11 @@ export default class ImportDashboard extends React.Component {
               <div class="action-content">
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
-                  <p>{this.props.eventsRemaining.length}</p>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
-                  <p>{this.props.eventsImported.length}</p>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
