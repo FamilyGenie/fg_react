@@ -55,19 +55,65 @@ constructor(props) {
 	};
 }
 
-	onEventTypeChange = (evt) => {
-		this.props.updateEvent(this.props.event._id, "eventType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({eventType: evt.value});
+	// onEventTypeChange = (evt) => {
+	// 	this.props.updateEvent(this.props.event._id, "eventType", evt.value);
+	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
+	// 	this.setState({eventType: evt.value});
+	// }
+
+	// // this call returns a function, so that when the field is updated, the fuction will execute.
+	// getUpdateDate = (field, dateUser, dateSet) => {
+	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
+	// 	return (field, dateUser, dateSet) => {
+	// 		this.props.updateEvent(this.props.event._id, field, dateSet);
+	// 		this.props.updateEvent(this.props.event._id, field + "User", dateUser);
+	// 		this.setState({startDateUser: dateUser});
+	// 	}
+	// }
+
+	// getUpdateEvent = (field) => {
+	// 	// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
+	// 	return (evt) => {
+	// 		this.props.updateEvent(this.props.event._id, field, evt.target.value);
+	// 	}
+	// }
+
+	// For event type, evt.value is used to access its information. Text areas/input boxes use evt.target.value
+
+
+	tempEventDate = (parsedDate, userDate) => {
+		this.setState({
+			eventDateUserNew: userDate,
+			eventDateNew: parsedDate
+		});
+		console.log(this.state, "inside eventDate");
+	}
+	tempEventType = (evt) => {
+		this.setState({eventTypeNew: evt.value});
+	}
+	tempEventPlace = (evt) => {
+		this.setState({eventPlaceNew: evt.target.value});
+	}
+	tempFamilyContext = (evt) => {
+		this.setState({familyContextNew: evt.target.value});
+	}
+	tempLocalContext = (evt) => {
+		this.setState({localContextNew: evt.target.value});
+	}
+	tempWorldContext = (evt) => {
+		this.setState({worldContextNew: evt.target.value});
 	}
 
-	// this call returns a function, so that when the field is updated, the fuction will execute.
-	getUpdateDate = (field, dateUser, dateSet) => {
-		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
-		return (field, dateUser, dateSet) => {
-			this.props.updateEvent(this.props.event._id, field, dateSet);
-			this.props.updateEvent(this.props.event._id, field + "User", dateUser);
-			this.setState({startDateUser: dateUser});
+	saveRecord = () => {
+		console.log(this.state, "STATE saveRecord-Events");
+		console.log(this.props, "PROPS of saveRecord-Events");
+
+		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
+			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
+      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+		}
+		if (this.state.eventTypeNew !== this.props.event.eventType) {
+			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
 		}
 	}
 
