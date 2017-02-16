@@ -39,6 +39,7 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 		const bDate = (stagedPerson.birthDate ? stagedPerson.birthDate.substr(0,10) : stagedPerson.birthDate);
 		const dDate = (stagedPerson.deathDate ? stagedPerson.deathDate.substr(0,10) : stagedPerson.deathDate);
 
+    return (<div>
 			<div class="col-xs-2 custom-input">
 				<input
 					class="form-control"
@@ -81,6 +82,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 			</div>
 
 
-		</div>
-	);
+    </div>);
+  }
 }

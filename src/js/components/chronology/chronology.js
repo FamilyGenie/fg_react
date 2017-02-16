@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import ChronologyLineItem from './chronology-lineitem';
-import Something from './coloring';
+// import Something from './coloring';
 
 @connect((store, ownProps) => {
   return {
@@ -108,8 +108,6 @@ export default class Chronology extends React.Component {
       return(<div>
         <div style={{height : 75 + 'px'}}></div>
         <h2> Chronology </h2>
-
-        <Something star={people[0]} />
 
         <div class="container">
           <div class="col-xs-1"></div>
