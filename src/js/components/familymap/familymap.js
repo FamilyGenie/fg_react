@@ -1,4 +1,5 @@
 import React from 'react';
+import AlertContainer from 'react-alert';
 import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
@@ -9,40 +10,23 @@ import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {
+		console.log("in familymap @connect with: ", store.people.people);
 		return {
 			star_id:
 				ownProps.params.star_id,
-			// people:
-			// 	store.people.people,
-			// this prop stores the people with their birth info and death info in the object with the person. Makes the logic to draw the map easier.
 			people:
-				store.people.people.map(function(person) {
-					 var birth = store.events.events.find(function(e) {
-							return person._id === e.person_id && e.eventType === "Birth";
-					 });
-					 if (birth) {
-						 person.birthDate = birth.eventDate;
-						 person.birthPlace = birth.eventPlace;
-					 }
-
-					 var death = store.events.events.find(function(e) {
-							return person._id === e.person_id && e.eventType === "Death";
-					 });
-
-					 if (death) {
-						 person.deathDate = death.eventDate;
-						 person.deathPlace = death.eventPlace;
-					 }
-
-					return person;
-				}
-			),
+				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
+				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
+				JSON.parse(JSON.stringify(store.people.people)),
 			pairBondRelationships:
 				store.pairBondRels.pairBondRels,
 			parentalRelationships:
-				store.parentalRels.parentalRels,
+				// store.parentalRels.parentalRels,
+				JSON.parse(JSON.stringify(store.parentalRels.parentalRels)),
 			newPersonModalIsOpen:
 				store.modal.newPerson.modalIsOpen,
+			events:
+				store.events.events,
 		};
 	},
 	(dispatch) => {
@@ -56,6 +40,7 @@ import NewPerson from '../newperson';
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log("in familymap with props: ", this.props);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -63,8 +48,7 @@ export default class FamilyMap extends React.Component {
 		};
 	}
 
-	starAge;
-	star_id = this.props.star_id;
+	// star_id = this.props.star_id;
 	parents = [];
 	parentRels = [];
 	children = [];
@@ -80,26 +64,49 @@ export default class FamilyMap extends React.Component {
 	textSize = '.9em';
 	fullName;
 
+	alertOptions = {
+      offset: 15,
+      position: 'middle',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
+
 	subtractYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
-		this.starAge--;
+		var vStarAge = parseInt(this.state.starAge) - 1;
 		// also set the state variable
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
+			starAge: vStarAge
 		});
 		this.componentDidMount();
 	}
 
 	addYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
-		this.starAge++;
+		var vStarAge = parseInt(this.state.starAge) + 1;
 		// also set the state variable
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
+			starAge: vStarAge
 		});
 		this.componentDidMount();
+	}
+
+	updateStarAge = (evt) => {
+		console.log('in updateStarAge with ', evt.target.value)
+		this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
+		this.setState({
+			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			starAge: evt.target.value
+		});
+		this.componentDidMount();
+	}
+
+	// this function it to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
+	onAgeChange = (evt) => {
+		this.setState({starAge: evt.target.value});
 	}
 
 	render = () => {
@@ -116,7 +123,15 @@ export default class FamilyMap extends React.Component {
 								Date: {this.state.dateFilterString}
 							</div>
 							<div class="map-date-1">
-							Star's Age: {this.starAge}
+								Star's Age:
+								<input
+									id="ageInput"
+									class="form-control"
+									type="text"
+									value={this.state.starAge}
+									onChange={this.onAgeChange}
+									onBlur={this.updateStarAge}
+								/>
 							</div>
 						</div>
 						<div class="map-arrow">
@@ -137,6 +152,9 @@ export default class FamilyMap extends React.Component {
 			    >
 			      <NewPerson/>
 			    </Modal>
+
+			    // This is the container for the alerts we are using
+			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 			</div>)
 		}
 	}
@@ -146,6 +164,56 @@ export default class FamilyMap extends React.Component {
 	//    console.log("in component did update, with: ", this.props.people);
 	//    this.componentDidMount();
 	//  }
+
+
+	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record. This function is not currently being called - still in development
+	checkForBioParents = (star_id) => {
+		// find biological mother relationship
+		var momRel = this.props.parentalRelationships.find(function(parentRel){
+			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+			return /[Mm]other/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === star_id;
+		});
+
+		// if there is not a momRel, then create one for the star.
+		if (!momRel) {
+			momRel = {
+				_id: 'ZMom'+ star_id,
+				child_id: star_id,
+				endDate: '',
+				parent_id: '',
+				relationshipType: 'Mother',
+				startDate: '',
+				subType: 'Biological',
+			}
+
+			this.props.parentalRelationships.push(momRel);
+		}
+
+		// find biological dad relationship record
+		var dadRel = this.props.parentalRelationships.find(function(parentRel){
+			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+			return /[Ff]ather/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === star_id;
+		});
+
+		// if there is not a dadRel, then create one for the star.
+		if (!dadRel) {
+			dadRel = {
+				_id: 'ZDad' + star_id,
+				child_id: star_id,
+				endDate: '',
+				parent_id: '',
+				relationshipType: 'Father',
+				startDate: '',
+				subType: 'Biological',
+			}
+
+			this.props.parentalRelationships.push(dadRel);
+		}
+	}
 
 	componentDidMount = () => {
 		// there are some constants at the top of the component class definition as well.
@@ -165,8 +233,10 @@ export default class FamilyMap extends React.Component {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
+		this.checkForBioParents(this.props.star_id);
+
 		// push the star onto the empty children array, because we know they will be a child on the map
-		this.children.push(this.getPersonById(this.star_id));
+		this.children.push(this.getPersonById(this.props.star_id));
 
 		// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
 		if ( !this.getAllParentsOfChildren() ) {
@@ -295,7 +365,7 @@ export default class FamilyMap extends React.Component {
 					child.d3Symbol = this.drawFemaleSymbol(xPos, nextChildY);
 				}
 				// check to see if this is the star of the map. If so, draw the star inside of circle
-				if (child._id === this.star_id) {
+				if (child._id === this.props.star_id) {
 					child.d3Star = this.drawStar(xPos, nextChildY, child);
 				}
 				child.d3TextBox = this.drawTextBox(xPos, nextChildY);
@@ -305,7 +375,7 @@ export default class FamilyMap extends React.Component {
 
 			} else {
 				// if not both a mom and or a dad, print error message.
-				alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm donors. This child will not show on the map.");
+				// alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
 			}
 		} // end of let child of this.children
 
@@ -519,13 +589,13 @@ export default class FamilyMap extends React.Component {
 				oneRel = this.parentRels.find(
 					function(parentRel) {
 					return parentRel.parent_id === pairBond.personOne_id &&
-					parentRel.child_id === this.star_id;
+					parentRel.child_id === this.props.star_id;
 					}.bind(this)
 				);
 				twoRel = this.parentRels.find(
 					function (parentRel) {
 					return parentRel.parent_id === pairBond.personTwo_id &&
-					parentRel.child_id === this.star_id;
+					parentRel.child_id === this.props.star_id;
 					}.bind(this)
 				);
 
@@ -567,7 +637,7 @@ export default class FamilyMap extends React.Component {
 		} // end for parentObj
 
 		if (!this.pairBonds.length) {
-			let star = this.getPersonById(this.star_id);
+			let star = this.getPersonById(this.props.star_id);
 			// alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
 			// return false;
 
@@ -624,7 +694,7 @@ export default class FamilyMap extends React.Component {
 
 					// add a parent record with name of Star as fName for this child so that a parent still shows on the map. Also, Create a unique _id to this record and then update the parentRels object so that the parentalRel record between this parent and child exists. Last, push the parent onto the people array for this map.
 
-					var star = this.getPersonById(this.star_id);
+					var star = this.getPersonById(this.props.star_id);
 					parent = {
 						// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
 						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id,
@@ -712,6 +782,34 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
+	createLocalPeople = (people, events) => {
+		var localPeople = people.map(function(person) {
+
+			 var birth = events.find(function(e) {
+					return person._id === e.person_id && e.eventType === "Birth";
+			 });
+			 if (birth) {
+				person.birthDate = birth.eventDate;
+				person.birthDateUser = birth.eventDateUser;
+				person.birthPlace = birth.eventPlace;
+			 }
+
+			 var death = events.find(function(e) {
+					return person._id === e.person_id && e.eventType === "Death";
+			 });
+
+			 if (death) {
+				person.deathDate = death.eventDate;
+				person.deathDateUser = death.eventDateUser;
+				person.deathPlace = death.eventPlace;
+			 }
+
+			return person;
+		});
+
+		return localPeople;
+	}
+
 	initializeVariables = () => {
 		// do we need to initialize the xPos and yPos of each person?
 		// remove d3 drawn objects
@@ -722,27 +820,30 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
-		// create a copy of the people array
-		this.people = this.props.people.slice();
+		// this is the array that the rest of this component gets information from about the people to draw. So call a function that takes the people array from props and adds the birth and death info to each person. Note that the people array from props is a copy of the store.people.people array.
+		this.people = this.createLocalPeople(this.props.people, this.props.events);
+
 		// this stores how far below the parents the first child is drawn. This number gets bigger if there is an adoptive parent pair on the map.
 		this.firstChildYDistance = 20;
 		this.firstChildYWithAdoptions = 130;
-		// console.log("in initializeVariables", this.state.star_id);
-		var star = this.getPersonById(this.star_id);
+		var star = this.getPersonById(this.props.star_id);
 		console.log("star: ", star);
 		this.fullName = star.fName + " " + star.lName;
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
-			this.starAge = 18;
-			this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+			if (!star.birthDate) {
+				alert('Star does not have a birthdate, map will not be drawn');
+				return;
+			} else {
+				this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				this.setState({
+				dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+				starAge: 18
+				});
+			}
 		}
-		// update the display as well
 		console.log("Date: ", this.dateFilterString);
-		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: this.starAge
-		});
 	}
 
 	getPersonById = (_id) => {
@@ -753,7 +854,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
-		var star = this.getPersonById(this.star_id);
+		var star = this.getPersonById(this.props.star_id);
 		let circle = d3.select("svg")
 			.append("svg:a")
 			// .attr("xlink:href", "/#/peopledetails/" + person._id)
@@ -775,10 +876,11 @@ export default class FamilyMap extends React.Component {
 	personClick(person, star) {
 		return() => {
 			console.log('Person was clicked: ', person, star);
-			debugger;
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
-				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, person.parentalRel_id);
+				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
+				var parentalRel_id = (person.parentalRel_id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
 			} else {
 				hashHistory.push('/peopledetails/' + person._id);
 			}
@@ -786,18 +888,21 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		debugger;
-		let textData = [];
+		// console.log("draw text for: ", person);
+		var textData = [];
+		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
+		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
+			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 			textData = [
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "Birth: " + birthDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace},
 				// death info
-				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "DOD: " + moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY')},
+				{"x": cx, "y": cy + (this.textLineSpacing * 3), "txt": "Death: " + deathDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 4), "txt": person.deathPlace}
 			];
 		} else {
@@ -805,14 +910,14 @@ export default class FamilyMap extends React.Component {
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
 				// birth info
-				{"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				// {"x": cx, "y": cy + this.textLineSpacing, "txt": "DOB: " + (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : "")},
+				{"x": cx, "y": cy + this.textLineSpacing, "txt": "Birth: " + birthDate},
 				{"x": cx, "y": cy + (this.textLineSpacing * 2), "txt": person.birthPlace}
 			];
 		}
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-
 		 return d3.select("svg").selectAll("text" + person._id)
 			.data(textData)
 			.enter()
@@ -861,7 +966,7 @@ export default class FamilyMap extends React.Component {
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
 			.attr("stroke-width", 0)
-			.attr("fill", "white");
+			.attr("fill", "#E9EBEE");
 	}
 
 	drawRelText(mom, dad, pairBondRel) {
@@ -1082,15 +1187,38 @@ export default class FamilyMap extends React.Component {
 
 		line = d3.select("svg")
 		.append("path")
+		.attr("id","relline" + mom._id + dad._id)
 		.attr("d", lineStrArr.join(" "))
-		.attr("fill", "transparent")
-		.attr("stroke", color)
-		.attr("stroke-width", 2);
+		.attr("fill", "transparent");
+		// .attr("stroke", color)
+		// .attr("stroke-width", 2);
+
+
 
 		if ( /[Mm]arriage/.test(relType) ) {
-			// leave the line as is
+			// if it is a marriage, leave the line as a solid line
+			line = line
+			.attr("stroke", color)
+			.attr("stroke-width", 2);
+		} else if ( /\?/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			.attr("stroke", "transparent")
+			.attr("stroke-width", 1);
+
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + mom._id + dad._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.attr("startOffset", "50%")
+			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ");
 		} else {
-			line = line.style("stroke-dasharray", ("4,8"));
+			// get here if it is an informal relationship
+			line = line
+			.attr("stroke", color)
+			.attr("stroke-width", 2)
+			.style("stroke-dasharray", ("2,8"));
 		}
 
 		return line;
@@ -1464,7 +1592,7 @@ export default class FamilyMap extends React.Component {
 				}
 				if (child.d3Symbol) { child.d3Symbol.moveToFront(); }
 				// bringing Star to the front did not work with it being a hyper-link, so re-drawing it
-				if (child._id === this.star_id) { this.drawStar(child.mapXPos, child.mapYPos, child); }
+				if (child._id === this.props.star_id) { this.drawStar(child.mapXPos, child.mapYPos, child); }
 				child.d3TextBox.moveToFront();
 				child.d3Text.moveToFront();
 			}

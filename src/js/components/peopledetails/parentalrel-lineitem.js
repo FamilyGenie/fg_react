@@ -81,21 +81,17 @@ export default class ParentalRelLineItem extends React.Component {
 						contentLabel="Modal"
 						>
 						{/* Everything between here and <ParentalRelLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
-						<div class="modal-header">
-							<div class="modal-header-1">
-							</div>
-							<div class="modal-header-2">
-								<div class="PR-modal-header">
-									Parental Relationship Edit
-								</div>
-							</div>
-							<div class="modal-header-3">
-								<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
-							</div>
+						<div class="modalClose">
+							<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+						</div>
+						<div class="modalH">
+								Parental Relationship Edit
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<ParentalRelLineItemEdit />
+						<ParentalRelLineItemEdit
+							closeModal={this.closeModal}
+						/>
 					</Modal>
 				</div>)
 		} else {

@@ -12,10 +12,13 @@ import { resetModalEvent } from '../../actions/modalActions';
 		// When we close the modal, there is no event object in the store, so check for that condition. If there is no event object found in the store, then just send through ownProps
 		if (store.modal.event) {
 			return {
+				...ownProps,
 				event:
 					store.modal.event,
 				eventTypes:
 					store.eventTypes.eventTypes,
+				star:
+					store.modal.event.person_id,
 			}
 		} else {
       return {
@@ -45,13 +48,23 @@ import { resetModalEvent } from '../../actions/modalActions';
 export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
-	console.log("in EventLineItemEdit with: ", this.props);
 
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
-		eventDateUser: ( this.props.event.eventDateUser ? this.props.event.eventDateUser : this.props.event.eventDate),
-		eventType: this.props.event.eventType,
+
+		eventDateNew: this.props.event.eventDate,
+		eventDateUserNew: this.props.event.eventDateUser,
+
+		eventTypeNew: this.props.event.eventType,
+
+		eventPlaceNew: this.props.event.eventPlace,
+
+		familyContextNew: this.props.event.familyContext,
+
+		localContextNew: this.props.event.localContext,
+
+		worldContextNew: this.props.event.worldContext,
 	};
 }
 
@@ -60,7 +73,7 @@ constructor(props) {
 	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
 	// 	this.setState({eventType: evt.value});
 	// }
-
+  //
 	// // this call returns a function, so that when the field is updated, the fuction will execute.
 	// getUpdateDate = (field, dateUser, dateSet) => {
 	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
@@ -115,76 +128,55 @@ constructor(props) {
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
 		}
-	}
-
-	getUpdateEvent = (field) => {
-		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
-		return (evt) => {
-			this.props.updateEvent(this.props.event._id, field, evt.target.value);
+		if (this.state.eventPlace !== this.props.event.eventPlace) {
+			this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
+		}
+		if (this.state.familyContextNew !== this.props.event.familyContext) {
+			this.props.updateEvent(this.props.event._id, "familyContext", this.state.familyContextNew);
+		}
+		if (this.state.localContextNew !== this.props.event.localContext) {
+			this.props.updateEvent(this.props.event._id, "localContext", this.state.localContextNew);
+		}
+		if (this.state.worldContextNew !== this.props.event.worldContext) {
+			this.props.updateEvent(this.props.event._id, "worldContext", this.state.worldContextNew);
+		}
+		if(this.props.closeModal) {
+			this.props.closeModal();
 		}
 	}
 
 	deleteRecord = () => {
-		// when the event is deleted, need to reset store.modal.event so that the next time the eventlineitemedit is called, it does not show up with this old event in it.
-		this.props.resetModalEvent();
 		this.props.deleteEvent(this.props.event._id);
+		if(this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
 
 	render = () => {
-
+		console.log(this.state, 'state of the state')
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
-
-		var contextCol = {
-			width: "30%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var nameCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var relCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var dateCol = {
-			width: "15%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
-		var buttonCol = {
-			width: "5%",
-			marginLeft: "5px",
-			marginRight: "5px",
-		}
 
 		// only render if we have data to show
 		if (event) {
 			return (
 			<div>
-				<div class="PR-main">
-					<div class="PR-row-event">
-						<div class="PR-div">
-							<div class="PR-title">
-								Event Name
-							</div>
-							<div class="PR-drop-1">
-								<DateInput defaultValue="Event Name" field="eventDate"/>
-							</div>
-						</div>
+				<div class="event-main">
+					<div class="event-row">
 						<div class="PR-div">
 							<div class="PR-title">
 								Date
 							</div>
 							<div class="PR-drop-1">
-								<DateInput defaultValue={eventDateUser} field="eventDate" updateFunction={this.getUpdateDate().bind(this)} />
+								<DateInput
+									onNewDate={this.tempEventDate}
+									initialValue={this.state.eventDateUserNew}
+									field="eventDate"
+								/>
 							</div>
 						</div>
 					</div>
-					<div class="PR-row-event">
+					<div class="event-row">
 						<div class="PR-div">
 							<div class="PR-title">
 								Type
@@ -192,8 +184,8 @@ constructor(props) {
 							<div class="PR-drop-1">
 								<Select
 									options={eventTypes}
-									onChange={this.onEventTypeChange}
-									value={eventType}
+									onChange={this.tempEventType}
+									value={this.state.eventTypeNew}
 								/>
 							</div>
 						</div>
@@ -205,8 +197,8 @@ constructor(props) {
 								<input
 										class="form-control"
 										type="text"
-										defaultValue={event.eventPlace}
-										onBlur={this.getUpdateEvent('eventPlace')}
+										value={this.state.eventPlaceNew}
+										onChange={this.tempEventPlace}
 								/>
 							</div>
 						</div>
@@ -214,57 +206,73 @@ constructor(props) {
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						Family Context
 						</div>
 						<div class="PR-sDate">
-							<input
-									class="form-control"
+							<textarea
+									class="event-context"
 									type="text"
-									defaultValue={event.familyContext}
-									onBlur={this.getUpdateEvent('familyContext')}
-							/>
+									onChange={this.tempFamilyContext}
+							>
+							{this.state.familyContextNew}
+							</textarea>
 						</div>
 					</div>
 				</div>
 				<div class="PR-row-3">
-					<div class="PR-date-div">
-						<div class="PR-event-title">
+					<div class="event-context-div">
+						<div class="eventTitle">
 						Local Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
-									type="text"
-									defaultValue={event.localContext}
-									onBlur={this.getUpdateEvent('localContext')}
-							/>
+						<div class="event-context">
+							<textarea
+								class="event-input"
+								type="text"
+								onChange={this.tempLocalContext}
+							>
+							{this.state.localContextNew}
+						</textarea>
 						</div>
 					</div>
 				</div>
 				<div class="PR-row-3">
 					<div class="PR-date-div">
-						<div class="PR-event-title">
+						<div class="eventTitle">
 						World Context
 						</div>
-						<div class="PR-eDate">
-							<input
-									class="form-control"
+						<div class="PR-sDate">
+							<textarea
+									class="event-context"
 									type="text"
-									defaultValue={event.worldContext}
-									onBlur={this.getUpdateEvent('worldContext')}
-							/>
+									onChange={this.tempWorldContext}
+							>
+							{this.state.worldContextNew}
+							</textarea>
 						</div>
 					</div>
 				</div>
-				<div class="custom-input" style={buttonCol}>
-					<i class="fa fa-minus-square fa-2x button2" onClick={this.deleteRecord}></i>
-				</div>
 				<div class="buffer-modal">
+				</div>
+				<div class="event-delete-modal">
+					<button
+						type="button"
+						class="btn btn-default modal-delete"
+						onClick={this.saveRecord}
+					>
+						Save
+					</button>
+					<button
+						type="button"
+						class="btn btn-default modal-delete"
+						onClick={this.deleteRecord}
+					>
+						Delete
+					</button>
 				</div>
 			</div>)
 		} else {
 			return (<p>Loading Event Info...</p>);
 		}
-	}
+	}  // end render
 }

@@ -93,7 +93,7 @@ export default class Chronology extends React.Component {
       }
     }
 
-    var mappedEvents = sortedEvents.map(event => 
+    var mappedEvents = sortedEvents.map(event =>
       <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
     );
     this.setState({mappedEvents: mappedEvents});
@@ -105,24 +105,39 @@ export default class Chronology extends React.Component {
     const { reverse, mappedEvents }  = this.state;
 
     if(events) {
-      return(<div>
-        <div style={{height : 75 + 'px'}}></div>
-        <h2> Chronology </h2>
-
-        <div class="container">
-          <div class="col-xs-1"></div>
-          {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/} 
-          <div class="col-xs-2"><span onClick={() => this.sortEvents('date')}> Date </span></div>
-          <div class="col-xs-3"> Person </div>
-          <div class="col-xs-2"><span onClick={() => this.sortEvents('type')}> Type </span></div>
-          <div class="col-xs-2"><span onClick={() => this.sortEvents('place')}> Place </span></div>
+      return(
+      <div class="mainDiv">
+        <div class="header-div">
+          <h1 class="family-header"> Chronology </h1>
+        </div>
+        <div class="staged-container">
+          <div class='staged-header-container'>
+            <div class="staged-header">
+              {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
+              <span onClick={() => this.sortEvents('date')}> Date </span>
+            </div>
+            <div class="staged-header">
+              <p>Person</p>
+            </div>
+            <div class="staged-header">
+              <span onClick={() => this.sortEvents('type')}>Type</span>
+            </div>
+            <div class="staged-header">
+              <p><span onClick={() => this.sortEvents('place')}> Place </span></p>
+            </div>
+            <div class="stagedHeaderReview">
+              <p>Review</p>
+            </div>
+          </div>
+        <div class="staged-people-list">
           {this.state.mappedEvents}
         </div>
-        
-      </div>)
+      </div>
+    </div>
+    )
     } else {
       return (<p>Loading...</p>)
     }
-  
+
   }
 }

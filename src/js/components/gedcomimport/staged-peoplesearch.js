@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+// import HistoryBar from '../historybar/historybar';
 import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 
 @connect(
@@ -21,32 +21,33 @@ export default class StagedPeopleSearch extends React.Component {
       <StagedPeopleSearchLineItem stagedPerson={stagedPerson} key={stagedPerson._id}/>
     );
 
-    return (<div>
-    <div class='container'>
-      <h1> Staged Family Members </h1>
-    </div>
-    <div>
-      <div class='row'>
-        <div class='col-xs-2 title bold can-click'>
-          First Name
+    return (
+    <div class="mainDiv">
+      <div class="header-div">
+        <h1 class="family-header"> Duplicate Review </h1>
+      </div>
+    <div class="staged-container">
+      <div class='staged-header-container'>
+        <div class="staged-name-div">
+          <p>Name</p>
         </div>
-        <div class='col-xs-2 title bold can-click'>
-          Last Name
+        <div class="staged-sex">
+          <p>Sex</p>
         </div>
-        <div class="col-xs-1 title bold can-click">
-          Sex At Birth
+        <div class="stagedHB">
+          <p>Date of Birth</p>
         </div>
-        <div class="col-xs-2 title bold can-click">
-          Date of Birth
+        <div class="stagedHD">
+          <p>Date of Death</p>
         </div>
-        <div class="col-xs-2 title bold can-click">
-          Date of Death*
+        <div class="stagedHeaderReview">
+          <p>Review</p>
         </div>
-    </div>
-    </div>
-      <div>
+      </div>
+      <div class="staged-people-list">
         {mappedStagedPeople}
       </div>
+    </div>
     </div>);
   }
 }

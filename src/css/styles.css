@@ -36,9 +36,15 @@ h2, h4 {
 h3 {
 	font-family: "Open Sans", Helvetica, sans-serif;
 }
-
+.mainDiv {
+  background-color: #E9EBEE;
+  min-height: 100vh;
+}
 .container-button {
 	display: inline;
+}
+.all-content {
+  width: 100%;
 }
 
 /* this is for the column titles in the data entry forms */
@@ -59,6 +65,10 @@ h3 {
     border-right: none;
     border-top: none;
     border-radius: 0;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100%;
 }
 
 /* this is fonts in the navbar */
@@ -142,6 +152,10 @@ div.container.select-container {
 .gendername {
   margin-top: 20px
 }
+.layout {
+  display: flex;
+  flex-direction: row;
+}
 
 
 /* change the color of the buttons */
@@ -169,7 +183,7 @@ select.form-control.ng-untouched.ng-pristine.ng-valid {
 
 /* these are the standard input fields on the form */
 input {
-  border-radius: .5;
+  border-radius: 5px;
   line-height: 30px;
   /* border: 1px solid #DDDDDD; */
   box-shadow: inset -1px -1px 2px #AAAAAA;
