@@ -2,6 +2,7 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 import { hashHistory } from 'react-router';
 
+
 import { fetchEvents } from '../actions/eventsActions';
 import { fetchPairBondRels } from '../actions/pairBondRelsActions';
 import { fetchParentalRels } from '../actions/parentalRelsActions';
@@ -37,6 +38,13 @@ export function login(username, password) {
 
 			})
 			.catch((err) => {
+				alertOptions = {
+			      offset: 15,
+			      position: 'middle',
+			      theme: 'light',
+			      time: 0,
+			      transition: 'scale'
+			    };
 				dispatch({type: "LOGIN_ERROR", payload: err})
 			})
 	}

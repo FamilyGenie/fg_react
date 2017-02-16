@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
+import AlertContainer from 'react-alert';
 
 @connect(
 	// test
@@ -82,6 +83,8 @@ export default class Login extends React.Component {
 							</div>
 						</form>
 					</div>
+					// This is the container for the alerts we are using
+			    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 		    </div>
 		)
     }
