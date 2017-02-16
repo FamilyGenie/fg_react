@@ -5,6 +5,7 @@
    font-weight: 700;
 }
 @font-face {
+
    font-family: SSP-Light;
    src: url("../fonts/Source_Sans_Pro/SourceSansPro-Light.ttf");
    format("opentype");
@@ -284,6 +285,11 @@
   flex-direction: column;
   font-family: CabinMI;
 }
+.event-main {
+  display: flex;
+  flex-direction: column;
+  font-family: CabinMI;
+}
 .PB-main {
   display: flex;
   flex-direction: column;
@@ -307,14 +313,14 @@
   margin-top: 30px;
   width: 600px;
 }
-.PR-row-event {
+.event-row {
   display: flex;
   flex-direction: row;
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
   margin-top: 30px;
-  width: 600px;
+  width: 100%;
 }
 .Select-control {
   height: 50px;
@@ -448,10 +454,31 @@
   height: 40px;
   width: 70px;
 }
+.event-context-div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.event-context {
+  width: 90%;
+}
+.event-input {
+  width: 100%;
+  height: 300px;
+  overflow: scroll;
+  font-size: 20px;
+}
 .delete-modal {
   display: flex;
   justify-content: center;
   margin-top: 25px;
+}
+.event-delete-modal {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 .modal-header-1 {
   width: 10%;
@@ -524,6 +551,9 @@
   .delete-modal {
     margin-bottom: 25px;
   }
+  .ReactModal__Overlay {
+    width: 70%;
+  }
 }
 @media (max-width: 1200px) {
   .PR-row-1 {
@@ -551,10 +581,17 @@
   .modal-header-2 {
     font-size: 17px;
   }
+  .event-row {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 @media(max-width: 1000px) {
   .PR-modal-header {
     font-size: 23px;
+  }
+  .ReactModal__Overlay {
+    width: 70%;
   }
 }
 
