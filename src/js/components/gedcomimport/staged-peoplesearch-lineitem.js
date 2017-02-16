@@ -34,8 +34,10 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 		}
 	}
 
-	render = () => (
-		<div class="row person-item">
+	render = () => {
+		const {stagedPerson} = this.props;
+		const bDate = (stagedPerson.birthDate ? stagedPerson.birthDate.substr(0,10) : stagedPerson.birthDate);
+		const dDate = (stagedPerson.deathDate ? stagedPerson.deathDate.substr(0,10) : stagedPerson.deathDate);
 
 			<div class="col-xs-2 custom-input">
 				<input

@@ -91,10 +91,9 @@ export default class ChronologyLineItem extends React.Component {
         <Modal
           isOpen={modalIsOpen}
           contentLabel="Modal"
-          style={modalStyle}
         >
           <div class="row">
-            <div class="col-xs-12" style={headingStyle}>
+            <div class="col-xs-12">
               Event Edit
             </div>
           </div>
