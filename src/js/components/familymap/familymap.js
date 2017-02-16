@@ -832,11 +832,16 @@ export default class FamilyMap extends React.Component {
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
-			this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
-			this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: 18
-		});
+			if (!star.birthDate) {
+				alert('Star does not have a birthdate, map will not be drawn');
+				return;
+			} else {
+				this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				this.setState({
+				dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+				starAge: 18
+				});
+			}
 		}
 		console.log("Date: ", this.dateFilterString);
 	}
