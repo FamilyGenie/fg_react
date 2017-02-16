@@ -48,7 +48,6 @@ import { resetModalEvent } from '../../actions/modalActions';
 export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
-	console.log("in EventLineItemEdit with: ", this.props);
 
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
