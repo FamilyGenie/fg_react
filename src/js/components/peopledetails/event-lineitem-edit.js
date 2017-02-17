@@ -126,9 +126,9 @@ constructor(props) {
 		console.log(this.state, "STATE saveRecord-Events");
 		console.log(this.props, "PROPS of saveRecord-Events");
 
-		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
+		if (this.state.eventDateUserNew !== this.props.event.eventDateUser) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-			// this.UpdateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+			this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
