@@ -55,7 +55,7 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 		}
 	}
 )
-export default class ParentalRelLineItemEdit extends React.Component {
+export default class CompactParentalRel extends React.Component {
 	constructor(props) {
 		super(props);
 		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
@@ -189,7 +189,7 @@ export default class ParentalRelLineItemEdit extends React.Component {
 								<div class="PR-drops">
 									<div class="PR-drop-2">
 										<Select
-											options={parentalRelSubTypes}
+											options={this.parentalRelSubTypes}
 											onChange={this.tempSubTypeChange}
 											value={this.state.subTypeNew}
 										/>

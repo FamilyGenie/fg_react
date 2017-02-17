@@ -76,15 +76,15 @@ export default class PeopleSearch extends React.Component {
 
 
 
-    var modalStyle = {
-      overlay: {
-      position: 'fixed',
-      top: 50,
-      left: 50,
-      width: '90vw',
-      height: '80vh',
-      }
-    };
+    // var modalStyle = {
+    //   overlay: {
+    //   position: 'fixed',
+    //   top: 50,
+    //   left: 50,
+    //   width: '90vw',
+    //   height: '80vh',
+    //   }
+    // };
     const sidebarContent = <div><h1>Help</h1></div>
 
         return (
@@ -113,7 +113,6 @@ export default class PeopleSearch extends React.Component {
       <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
-        style={modalStyle}
       >
         <NewPerson/>
       </Modal>

@@ -26,7 +26,7 @@ export default class Chronology extends React.Component {
     if (this.state.reverse) {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
+          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
           return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
         });
       }
@@ -50,7 +50,7 @@ export default class Chronology extends React.Component {
     else {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-        // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
+        // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
           return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
         });
       }
@@ -65,7 +65,7 @@ export default class Chronology extends React.Component {
           return a.eventPlace.localeCompare(b.eventPlace);
         })
       }
-      else {  
+      else {
         sortedEvents = this.props.events.sort(function(a, b) {
           return moment(a.eventDate) - moment(b.eventDate);
         });
@@ -79,7 +79,7 @@ export default class Chronology extends React.Component {
     return mappedEvents
   }
 
-  render = () => { 
+  render = () => {
     const { events, people } = this.props;
     const { reverse, mappedEvents }  = this.state;
 
@@ -110,23 +110,6 @@ export default class Chronology extends React.Component {
           </div>
         <div class="staged-people-list">
           {this.state.mappedEvents}
-          <div class="staged-item">
-      			<div class="stagedElement">
-      				<p class="staged-name">1990-08-15</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Henry Brigham V</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Birth</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Austin, Tx</p>
-      			</div>
-      			<div class="check-duplicate">
-      				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={this.openDetails}></i>
-      			</div>
-      		</div>
         </div>
       </div>
     </div>

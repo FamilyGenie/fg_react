@@ -45,27 +45,22 @@ import { resetModalEvent } from '../../actions/modalActions';
 		}
 	}
 )
-export default class EventLineItemEdit extends React.Component {
+export default class CompactEvent extends React.Component {
 constructor(props) {
 	super(props);
-	// console.log("in EventLineItemEdit with: ", this.props);
+	console.log("in compactEvent with: ", this.props);
 
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
 		eventDateNew: this.props.event.eventDate,
+
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
 
 		eventPlaceNew: this.props.event.eventPlace,
-
-		familyContextNew: this.props.event.familyContext,
-
-		localContextNew: this.props.event.localContext,
-
-		worldContextNew: this.props.event.worldContext,
 	};
 }
 
@@ -109,18 +104,6 @@ constructor(props) {
 		this.setState({eventPlaceNew: evt.target.value});
 		// console.log(this.state, "inside eventPlace");
 	}
-	tempFamilyContext = (evt) => {
-		this.setState({familyContextNew: evt.target.value});
-		// console.log(this.state, "inside family");
-	}
-	tempLocalContext = (evt) => {
-		this.setState({localContextNew: evt.target.value});
-		// console.log(this.state, "inside local");
-	}
-	tempWorldContext = (evt) => {
-		this.setState({worldContextNew: evt.target.value});
-		// console.log(this.state, "inside world");
-	}
 
 	saveRecord = () => {
 		// console.log(this.state, "STATE saveRecord-Events");
@@ -134,15 +117,6 @@ constructor(props) {
 		}
 		if (this.state.eventPlace !== this.props.event.eventPlace) {
 			this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
-		}
-		if (this.state.familyContextNew !== this.props.event.familyContext) {
-			this.props.updateEvent(this.props.event._id, "familyContext", this.state.familyContextNew);
-		}
-		if (this.state.localContextNew !== this.props.event.localContext) {
-			this.props.updateEvent(this.props.event._id, "localContext", this.state.localContextNew);
-		}
-		if (this.state.worldContextNew !== this.props.event.worldContext) {
-			this.props.updateEvent(this.props.event._id, "worldContext", this.state.worldContextNew);
 		}
 		if(this.props.closeModal) {
 			this.props.closeModal();
@@ -205,54 +179,6 @@ constructor(props) {
 										onChange={this.tempEventPlace}
 								/>
 							</div>
-						</div>
-					</div>
-				</div>
-				<div class="PR-row-3">
-					<div class="PR-date-div">
-						<div class="eventTitle">
-						Family Context
-						</div>
-						<div class="PR-sDate">
-							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempFamilyContext}
-							>
-							{this.state.familyContextNew}
-							</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="PR-row-3">
-					<div class="event-context-div">
-						<div class="eventTitle">
-						Local Context
-						</div>
-						<div class="event-context">
-							<textarea
-								class="event-input"
-								type="text"
-								onChange={this.tempLocalContext}
-							>
-							{this.state.localContextNew}
-						</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="PR-row-3">
-					<div class="PR-date-div">
-						<div class="eventTitle">
-						World Context
-						</div>
-						<div class="PR-sDate">
-							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempWorldContext}
-							>
-							{this.state.worldContextNew}
-							</textarea>
 						</div>
 					</div>
 				</div>
