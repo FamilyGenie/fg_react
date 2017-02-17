@@ -9,17 +9,14 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 	(store, ownProps) => {
 		// for the modal to work, we need to put the parentalRel in store (in the modal object). Passing the parameter from the parent component always results in the last parent showing up in the modal.
 		// When we close the modal, there is no parentalRel object in the store, so check for that condition. If there is no parentalRel object found in the store, then just send through ownProps
-    var peopleArray = store.people.people.map(function(person) {
-						var newObj = {};
-						var label = person.fName + ' ' + person.lName;
-						var value = person._id;
-						newObj["value"] = value;
-						newObj["label"] = label;
-						return newObj;
-					})
-
 		if (store.modal.parentalRel) {
+			console.log(store.modal.parentalRel);
 			return {
+				...ownProps,
+				star:
+					store.people.people.find (function(p) {
+						return p._id === store.modal.parentalRel.child_id;
+					}),
 				parentalRel:
 					store.modal.parentalRel,
 				// with the parent_id from the parentalRel object, get the details of the person who is the parent
@@ -32,25 +29,20 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 						return p._id === store.modal.parentalRel.parent_id;
 					}),
 				peopleArray:
-          peopleArray,
+					store.people.people.map(function(person) {
+						var newObj = {};
+						var label = person.fName + ' ' + person.lName;
+						var value = person._id;
+						newObj["value"] = value;
+						newObj["label"] = label;
+						return newObj;
+					})
 			}
 		} else {
-			return {
-				parentalRel:
-					ownProps.parentalRel,
-				// with the parent_id from the parentalRel object, get the details of the person who is the parent
-				parentalRelTypes:
-					store.parentalRelTypes.parentalRelTypes,
-				parentalRelSubTypes:
-					store.parentalRelSubTypes.parentalRelSubTypes,
-				parent:
-					store.people.people.find(function(p) {
-						return p._id === store.modal.parentalRel.parent_id;
-					}),
-				peopleArray:
-          peopleArray,
-			}
-    }
+			console.log("Did you forget to pass a parental rel?");
+			// TODO This is silly
+			return ownProps
+		}
 	},
 	(dispatch) => {
 		return {
@@ -58,76 +50,98 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				// this action requires a feild and a value to delete
+				// the deleteParentalRel action requires you to send the field that you want to delete by, and then the value of that field for the record you want to delete.
 				dispatch(deleteParentalRel('_id', _id));
 			}
 		}
 	}
 )
 export default class ParentalRelLineItemEdit extends React.Component {
-constructor(props) {
-	super(props);
-	// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
-	this.state = {
-		parent_id: ( this.props.parent ? this.props.parent._id : " "),
-		relationshipType: ( this.props.parentalRel ? this.props.parentalRel.relationshipType : " "),
-		subType: ( this.props.parentalRel ? this.props.parentalRel.subType : " "),
-		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
-		startDateUser: ( this.props.parentalRel.startDateUser ? this.props.parentalRel.startDateUser : this.props.parentalRel.startDate),
-		endDateUser: ( this.props.parentalRel.endDateUser ? this.props.parentalRel.endDateUser : this.props.parentalRel.endDate),
-	}
-}
+	constructor(props) {
+		super(props);
+		// the following value is for the drop down select box. If it is a new record that doesn't yet have a pairBondPerson associated with it, then we want to show the value of the box as empty. The Select component then defaults to the word "Select" to show the end user.
+		this.state = {
+			parent_idNew: this.props.parent ? this.props.parent._id : "",
 
-	getOnBlur = (field) => {
-		// have to return a function, because we don't know what evt.target.value is when this page is rendered (and this function is called)
-		return (evt) => {
-			this.props.updateParentalRel(this.props.parentalRel._id, field, evt.target.value)
+			relationshipTypeNew: this.props.parentalRel.relationshipType,
+
+			// subType: ( this.props.parentalRel ?
+			// this.props.parentalRel.subType : " "),
+
+			subTypeNew: this.props.parentalRel.subType,
+
+			// be careful not to mutate startDate or endDate?
+			startDateNew: this.props.parentalRel.startDate,
+			startDateUserNew: this.props.parentalRel.startDateUser,
+
+			endDateNew: this.props.parentalRel.endDate,
+			endDateUserNew: this.props.parentalRel.endDateUser
+
+			// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
 		}
 	}
 
-	// this call returns a function, so that when the field is updated, the fuction will execute.
-	getUpdateDate = (field, dateUser, dateSet) => {
-		// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
-		return (field, dateUser, dateSet) => {
-			this.props.updateParentalRel(this.props.parentalRel._id, field + "User", dateUser);
-			// if the dateSet field is set to "Invalid date" from the Date-Input component, then update that field in the database to null
-			if (dateSet === "Invalid date") {
-				this.props.updateParentalRel(this.props.parentalRel._id, field, null);
-			} else {
-				this.props.updateParentalRel(this.props.parentalRel._id, field, dateSet);
+	tempSubTypeChange = (evt) => {
+		this.setState({subTypeNew: evt.value})
+	}
+ 	tempParentChange = (evt) => {
+		this.setState({parent_idNew: evt.value});
+	}
+	tempRelTypeChange = (evt) => {
+		this.setState({relationshipTypeNew: evt.value});
+	}
+	// different, because they come from date-input fields
+	tempStartDate = (parsedDate, userDate) => {
+		this.setState({
+			startDateUserNew: userDate,
+			startDateNew: parsedDate
+		});
+	}
+	tempEndDate = (parsedDate, userDate) => {
+		this.setState({
+			endDateUserNew: userDate,
+			endDateNew: parsedDate
+		});
+	}
+
+	saveRecord = () => {
+		if (this.state.relationshipTypeNew !== this.props.parentalRel.relationshipType) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", this.state.relationshipTypeNew);
+		}
+		if (this.props.parentalRel.parent_id != this.state.parent_idNew) {
+			// Not 100% sure this works -- TEST THIS
+			if (this.props.star._id === this.props.parentalRel.parent_id) {
+				alert ("the child can't be their own parent");
 			}
-			// set the appropriate state variable
-			if (field === "startDate") {
-				this.setState({startDateUser: dateUser});
-			} else {
-				this.setState({endDateUser: dateUser})
+			else {
+				this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", this.state.parent_idNew);
 			}
 		}
+		if (this.state.subTypeNew !== this.props.parentalRel.subType) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "subType", this.state.subTypeNew);
+		}
+		if (this.state.startDateUserNew !== this.props.parentalRel.startDateUser) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "startDateUser", this.state.startDateUserNew);
+		}
+		if (this.state.startDateNew !== this.props.parentalRel.startDate) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "startDate", this.state.startDateNew);
+		}
+		if (this.state.endDateUserNew !== this.props.parentalRel.endDateUser) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "endDateUser", this.state.endDateUserNew);
+		}
+		if (this.state.endDateNew !== this.props.parentalRel.endDate) {
+			this.props.updateParentalRel(this.props.parentalRel._id, "endDate", this.state.endDateNew);
+		}
+		if (this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
-
-	onParentChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "parent_id", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({parent_id: evt.value});
-	}
-
-	onRelTypeChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "relationshipType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({relationshipType: evt.value});
-	}
-
-	onSubTypeChange = (evt) => {
-		// Update the record with the newly selected parent
-		this.props.updateParentalRel(this.props.parentalRel._id, "subType", evt.value);
-		// As well as updating the database and the store, update the state variable so the display shows the new value.
-		this.setState({subType: evt.value});
-	}
-
 	deleteRecord = () => {
 		this.props.deleteParentalRel(this.props.parentalRel._id);
+
+		if (this.props.closeModal) {
+			this.props.closeModal();
+		}
 	}
 
 	render = () => {
@@ -145,8 +159,8 @@ constructor(props) {
 							<div class="PR-drop-name">
 								<Select
 									options={peopleArray}
-									onChange={this.onParentChange}
-									value={this.state.parent_id}
+									onChange={this.tempParentChange}
+									value={this.state.parent_idNew}
 								/>
 							</div>
 						</div>
@@ -161,8 +175,8 @@ constructor(props) {
 									<div class="PR-drop-2">
 										<Select
 											options={parentalRelTypes}
-											onChange={this.onRelTypeChange}
-											value={this.state.relationshipType}
+											onChange={this.tempRelTypeChange}
+											value={this.state.relationshipTypeNew}
 										/>
 									</div>
 								</div>
@@ -175,8 +189,8 @@ constructor(props) {
 									<div class="PR-drop-2">
 										<Select
 											options={parentalRelSubTypes}
-											onChange={this.onSubTypeChange}
-											value={this.state.subType}
+											onChange={this.tempSubTypeChange}
+											value={this.state.subTypeNew}
 										/>
 									</div>
 								</div>
@@ -189,7 +203,10 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput defaultValue={parentalRel.startDateUser} field="startDate" updateFunction={this.getUpdateDate().bind(this)}
+								<DateInput
+									initialValue={this.state.startDateUserNew}
+									onNewDate={this.tempStartDate}
+									field="startDate"
 								/>
 							</div>
 						</div>
@@ -198,7 +215,10 @@ constructor(props) {
 							End Date
 							</div>
 							<div class="PR-eDate">
-								<DateInput defaultValue={parentalRel.endDateUser} field="endDate" updateFunction={this.getUpdateDate().bind(this)}
+								<DateInput
+									initialValue={this.state.endDateUserNew}
+									onNewDate={this.tempEndDate}
+									field="endDate"
 								/>
 							</div>
 						</div>
@@ -206,6 +226,13 @@ constructor(props) {
 					<div class="buffer-modal">
 					</div>
 					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.saveRecord}
+						>
+							Save
+						</button>
 						<button
 							type="button"
 							class="btn btn-default modal-delete"
