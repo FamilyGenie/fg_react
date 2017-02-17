@@ -4,10 +4,15 @@ import { connect } from 'react-redux';
 import PeopleDetailsLineItem from './peopledetails/peopledetails-lineitem';
 import EventLineItemEdit from './peopledetails/event-lineitem-edit';
 import ParentalRelLineItemEdit from './peopledetails/parentalrel-lineitem-edit';
+import CompactEvent from './compactModal/compactEvent';
+import CompactPeopleDetails from './compactModal/CompactPeopleDetails';
+import CompactParentalRel from './compactModal/compactParentalRel';
 import { updatePerson } from '../actions/peopleActions';
 import { updateEvent } from '../actions/eventsActions';
 import { updateParentalRel } from '../actions/parentalRelsActions';
 import { closeNewPersonModal } from '../actions/modalActions';
+
+
 
 /* the following is the code that needs to be inserted into the parent component render method where you will call this modal to open.
 You can look in the peoplesearch component for an example of a component that calls this component
@@ -69,34 +74,25 @@ export default class NewPerson extends React.Component {
 
     // events must be mapped to the lineItem, and cannot be passed in individually, not sure why this happens, leaving it for now
     const mappedEvents = events.map(event =>
-      <EventLineItemEdit event={event} key={event._id}/>
+      <CompactEvent event={event} key={event._id}/>
     )
 
     const mappedParents = parents.map(parentalRel =>
-    <ParentalRelLineItemEdit parentalRel={parentalRel} key={parentalRel._id}/>
+    <CompactParentalRel parentalRel={parentalRel} key={parentalRel._id}/>
     );
 
 
-      return(<div>
-          <h3> New Person </h3>
-
-          <PeopleDetailsLineItem person={person} key={person._id}/>
-
-          <div class="container">
-            <h3> Events </h3>
-            <div class="col-xs-12">
-              {mappedEvents}
-            </div>
-          </div>
-          <div class="container">
-            <h3> Parents </h3>
-            <div class="col-xs-12">
-              {mappedParents}
-            </div>
-          </div>
-          <button onClick={this.closeModal}> Close </button>
+      return(
+      <div>
+        <div class="modalH">
+            New Person
+        </div>
+        <div class="buffer-modal">
+        </div>
+        <CompactPeopleDetails person={person} key={person._id}/>
+          {mappedEvents}
+          {mappedParents}
+        <button onClick={this.closeModal}> Close </button>
       </div>);
   }
 }
-
-

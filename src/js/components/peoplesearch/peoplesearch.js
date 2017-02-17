@@ -73,19 +73,7 @@ export default class PeopleSearch extends React.Component {
     const mappedPeople = people.map(person =>
         <PeopleSearchLineItem person={person} key={person._id}/>
     );
-
-
-
-    var modalStyle = {
-      overlay: {
-      position: 'fixed',
-      top: 50,
-      left: 50,
-      width: '90vw',
-      height: '80vh',
-      }
-    };
-    const sidebarContent = <div><h1>Help</h1></div>
+    // const sidebarContent = <div><h1>Help</h1></div>;
 
         return (
       <div class="mainDiv">
@@ -113,7 +101,6 @@ export default class PeopleSearch extends React.Component {
       <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
-        style={modalStyle}
       >
         <NewPerson/>
       </Modal>
