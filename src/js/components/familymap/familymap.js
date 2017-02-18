@@ -19,7 +19,8 @@ import NewPerson from '../newperson';
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
 				JSON.parse(JSON.stringify(store.people.people)),
 			pairBondRelationships:
-				store.pairBondRels.pairBondRels,
+				// store.pairBondRels.pairBondRels,
+				JSON.parse(JSON.stringify(store.pairBondRels.pairBondRels)),
 			parentalRelationships:
 				// store.parentalRels.parentalRels,
 				JSON.parse(JSON.stringify(store.parentalRels.parentalRels)),
@@ -268,6 +269,8 @@ export default class FamilyMap extends React.Component {
 			hashHistory.push('/');
 			return;
 		}
+		// this function will add single parents to the pairBonds array
+		this.addParentsNotInPairBonds(this.props.star_id);
 		console.log("all pair bonds:", this.pairBonds);
 
 		// this includes drawing the parents in the pair bonds. this currently
@@ -392,7 +395,6 @@ export default class FamilyMap extends React.Component {
 	drawAllPairBonds (startX, startY, parentDistance): boolean {
 		let mom;
 		let dad;
-		let momRel, dadRel;
 		let parent;
 		let nextMaleX = startX - Math.floor(parentDistance / 3 * 2);
 		let nextFemaleX = startX + Math.floor(parentDistance / 3 * 2);
@@ -404,9 +406,12 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
+		console.log('PairBonds after sort: ', this.pairBonds);
 
 		for (let pairBond of this.pairBonds) {
-
+			// reset the mom and dad variable every time through the loop.
+			mom = null;
+			dad = null;
 			parent = this.getPersonById(pairBond.personOne_id);
 			// console.log("parent is ", parent, parent.sexAtBirth);
 
@@ -416,20 +421,22 @@ export default class FamilyMap extends React.Component {
 				mom = parent;
 			}
 
-			parent = this.getPersonById(pairBond.personTwo_id);
+			// it is possible that there will be just one parent in the pairBond. This would happen if there is a parent of the star that does not have a pairBond with anyone. The function addParentsNotInPairBonds adds the single parents into the this.pairBonds array. The single parent is added as personOne. And personTwo is left null.
+			if (pairBond.personTwo_id) {
+				parent = this.getPersonById(pairBond.personTwo_id);
 
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
+				if (parent.sexAtBirth === "M") {
+					dad = parent;
+				} else if ( parent.sexAtBirth === "F" ) {
+					mom = parent;
+				}
 			}
 
-			// console.log("mom and dad pair bond", mom, dad);
-
-			if ( !(mom && dad) ) {
-				alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
-				return false;
-			}
+			// now that we call a the ____ function to add single parents to the pairBonds array to be drawn, we do not need to alert the user when this condition exists
+			// if ( !(mom && dad) ) {
+			// 	alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
+			// 	return false;
+			// }
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
@@ -548,7 +555,7 @@ export default class FamilyMap extends React.Component {
 				(pB.personOne_id === pairBond.personTwo_id &&
 				pB.personTwo_id === pairBond.personOne_id);
 			});
-			if ( foundPairBonds ) {
+			if ( foundPairBonds.length ) {
 				// loop through each record found
 				for (let pBFound of foundPairBonds) {
 					// if there is a color already associated with it, the return that color
@@ -564,6 +571,46 @@ export default class FamilyMap extends React.Component {
 			}
 		} // end function checkForExistingRel
 	} // end function drawAllPairBonds
+
+	addParentsNotInPairBonds = (child_id) => {
+		// check to see what parents are not in a pairBond
+		for (let parent of this.parents) {
+			// if the parent is not found in any of the existing pairBonds, then add that parent to the pairBond array. Add them as personOne, set personTwo to null
+			if (!parentFound(parent, this.pairBonds)) {
+				// find the parental record where this parent is the parent and the child passed into the function is the child. We will use the startDate of this relationship to put into the pairBond record we are going to create
+				var parentalRel = this.props.parentalRelationships.find(
+					function(p) {
+						return p.parent_id === parent._id && p.child_id === child_id;
+					}
+				);
+				var newObject = {
+					// _id: 'Z' + '57fe7b9a47d7491b658a92a8',
+					// personOne_id: '57fe7b9a47d7491b658a92a8',
+					// startDate: '1995-01-01',
+					// startDateUser: 'Jan 1, 1995'
+					_id: 'Z' + parent._id,
+					personOne_id: parent._id,
+					startDate: parentalRel.startDate,
+					startDateUser: parentalRel.startDateUser
+				}
+				this.pairBonds.push(newObject);
+			}
+		}
+
+		function parentFound(parent, pairBonds) {
+			var result = pairBonds.find(
+				function(p) {
+					return p.personOne_id === parent._id ||
+					p.personTwo_id === parent._id;
+				}.bind(this)
+			);
+			if (result) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
 	getAllPairBonds(): boolean {
 		let pairBondTemp = [];
