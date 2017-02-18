@@ -95,7 +95,9 @@ export default class PeopleSearch extends React.Component {
             </div>
             <div id="buffer-div">
             </div>
+            <div class="mappedPeople">
           	{mappedPeople}
+            </div>
           </div>
         </div>
       <Modal

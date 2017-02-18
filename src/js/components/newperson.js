@@ -84,6 +84,9 @@ export default class NewPerson extends React.Component {
 
       return(
       <div>
+        <div class="modalClose2">
+          <i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+        </div>
         <div class="modalH">
             New Person
         </div>
@@ -92,6 +95,22 @@ export default class NewPerson extends React.Component {
         <CompactPeopleDetails person={person} key={person._id}/>
           {mappedEvents}
           {mappedParents}
+          <div class="event-delete-modal">
+  					<button
+  						type="button"
+  						class="btn btn-default modal-delete"
+  						onClick={this.saveRecord}
+  					>
+  						Save
+  					</button>
+  					<button
+  						type="button"
+  						class="btn btn-default modal-delete"
+  						onClick={this.deleteRecord}
+  					>
+  						Delete
+  					</button>
+  				</div>
         <button onClick={this.closeModal}> Close </button>
       </div>);
   }

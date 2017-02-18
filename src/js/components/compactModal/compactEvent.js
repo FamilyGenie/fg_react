@@ -182,7 +182,7 @@ constructor(props) {
 						</div>
 					</div>
 				</div>
-				<div class="buffer-modal">
+				<div class="bufferModal2">
 				</div>
 			</div>)
 		} else {

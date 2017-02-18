@@ -236,7 +236,7 @@
   font-size: 30px;
 }
 .ReactModal__Overlay {
-  width: 50%;
+  width: 720px;
   margin-left: auto;
   margin-right: auto;
   background-color: white;
@@ -517,9 +517,6 @@
 
 /*End styling of connections section*/
 #media (max-width: 1280px) {
-  .ReactModal__Overlay {
-    width: 60%;
-  }
   .PR-row-1 {
     width: 100%;
     align-items: center;
@@ -550,9 +547,6 @@
   }
   .delete-modal {
     margin-bottom: 25px;
-  }
-  .ReactModal__Overlay {
-    width: 70%;
   }
 }
 @media (max-width: 1200px) {
@@ -590,9 +584,6 @@
   .PR-modal-header {
     font-size: 23px;
   }
-  .ReactModal__Overlay {
-    width: 70%;
-  }
 }
 
 @media (max-width: 880px) {
@@ -607,10 +598,10 @@
   .main-detail {
     height: 100%;
   }
-  .ReactModal__Overlay {
+  /*.ReactModal__Overlay {
     width: 70%;
     position: relative;
-  }
+  }*/
   .parents-relationships {
     flex-direction: column;
   }
