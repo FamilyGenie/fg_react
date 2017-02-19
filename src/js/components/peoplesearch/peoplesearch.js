@@ -103,6 +103,7 @@ export default class PeopleSearch extends React.Component {
       <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
+        className="detail-modal"
       >
         <NewPerson/>
       </Modal>

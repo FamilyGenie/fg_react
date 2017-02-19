@@ -258,6 +258,7 @@ html {
   font-size: 18px;
 }*/
 
+/*Begin Footer Styling*/
 .footer {
     position: absolute;
     font-family: "Open Sans", Helvetica, sans-serif;
@@ -266,14 +267,18 @@ html {
     color: #777777;
     bottom: 0;
     width: 100%;
-    height: 30px;
-    background-color: rgb(243, 243, 243);
-    border-top: 2px solid #478652;
+    height: 50px;
+    background-color: #3B42AF;
+    border-top: 3px solid silver;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.footer-container {
+/*.footer-container {
   padding-top: 5px;
-}
+}*/
+/*End Footer Styling*/
 
 /*New Fonts*/
 font-family: 'Frank Ruhl Libre', sans-serif;
