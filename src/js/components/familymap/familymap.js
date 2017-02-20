@@ -508,6 +508,7 @@ export default class FamilyMap extends React.Component {
 			// }
 
 			// if (mom && dad) {
+				debugger;
 			if (personOne && personTwo) {
 				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
@@ -1275,30 +1276,40 @@ export default class FamilyMap extends React.Component {
 			.attr("fill", "black");
 	}
 
-	drawRelLine(mom, dad, color, relType) {
+	drawRelLine(p1, p2, color, relType) {
 		debugger;
-		let lineStrArr = [];
-		let yControlPoint: number;
-		let line;
+		var lineStrArr = [];
+		var yControlPoint: number;
+		var line;
+		var personOne, personTwo;
+
+		// find out which person p1 or p2, is further to the left (has the lower mapXPos), that is the one to set as person1, so that the Bezier curve is drawn correctly. We set four point for the line, going from left to right.
+		if (p1.mapXPos < p2.mapXPos) {
+			personOne = p1;
+			personTwo = p2;
+		} else {
+			personOne = p2;
+			personTwo = p1;
+		}
 
 		lineStrArr.push("M");
-		lineStrArr.push(dad.mapXPos);
-		lineStrArr.push(dad.mapYPos - 40);
+		lineStrArr.push(personOne.mapXPos);
+		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
 		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line
-		console.log("momYPos, momXPos, dadXPos: ", mom.fName, mom.mapYPos, mom.mapXPos, dad.fName, dad.mapXPos);
-		yControlPoint = (mom.mapYPos - 60) / (Math.abs(mom.mapXPos - dad.mapXPos) / 250);
-		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
+		// console.log("momYPos, momXPos, dadXPos: ", mom.fName, mom.mapYPos, mom.mapXPos, dad.fName, dad.mapXPos);
+		yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
-		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 6 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
 		// this is the ending point of the line
-		lineStrArr.push(mom.mapXPos);
-		lineStrArr.push(mom.mapYPos - 40);
+		lineStrArr.push(personTwo.mapXPos);
+		lineStrArr.push(personTwo.mapYPos - 40);
 
 		line = d3.select("svg")
 		.append("path")
-		.attr("id","relline" + mom._id + dad._id)
+		.attr("id","relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent");
 		// .attr("stroke", color)
@@ -1320,7 +1331,7 @@ export default class FamilyMap extends React.Component {
 			d3.select("svg")
 			.append("text")
 			.append("textPath")
-			.attr("xlink:href", "#relline" + mom._id + dad._id)
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.attr("startOffset", "50%")
 			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ");
@@ -1335,32 +1346,44 @@ export default class FamilyMap extends React.Component {
 		return line;
 	}
 
-	drawAdoptiveRelLine(mom, dad, color, relType) {
+	drawAdoptiveRelLine(p1, p2, color, relType) {
 		debugger;
-		let lineStrArr = [];
-		let line;
-		let yControlPoint: number;
+		var lineStrArr = [];
+		var line;
+		var yControlPoint: number;
+		var personOne, personTwo;
+
+		// find out which person p1 or p2, is further to the left (has the lower mapXPos), that is the one to set as person1, so that the Bezier curve is drawn correctly. We set four point for the line, going from left to right.
+		if (p1.mapXPos < p2.mapXPos) {
+			personOne = p1;
+			personTwo = p2;
+		} else {
+			personOne = p2;
+			personTwo = p1;
+		}
 
 		// yControlPoint is the control point of the Bezier curve that connects the adoptive parents. The higher it is on the map, the higher the arc of the curve.
 		// yControlPoint = 225;
 		// the bigger I make 200,000 - the lower the arc.
 		// yControlPoint = 190000 / (mom.mapXPos - dad.mapXPos);
-		yControlPoint = 625 / Math.log10(Math.abs(mom.mapXPos - dad.mapXPos) / 2);
+		yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
 		lineStrArr.push("M");
 		// This is the beginning of the line, at the top of dad
-		lineStrArr.push(dad.mapXPos + 0);
-		lineStrArr.push(dad.mapYPos - 40);
+		lineStrArr.push(personOne.mapXPos + 0);
+		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
 
-		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
+		// var lower = (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
+		// var value = Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push(yControlPoint);
 
-		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 6 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
 		lineStrArr.push(yControlPoint);
 
 		// This is the end point of the line, at the top of mom
-		lineStrArr.push(mom.mapXPos - 0);
-		lineStrArr.push(mom.mapYPos - 40);
+		lineStrArr.push(personTwo.mapXPos - 0);
+		lineStrArr.push(personTwo.mapYPos - 40);
 
 		line = d3.select("svg")
 		.append("path")
