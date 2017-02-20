@@ -104,21 +104,22 @@ export default class PeopleDetails extends React.Component {
 			<div class="buffer-line">
 			</div>
 			<div class="outerContainer">
-				<div class="innerInfo">
-					<div class="titleRow">
-						<div class="blank-person-header">
+				<div class="parents-relationships">
+					<div class="innerInfo">
+						<div class="titleRow">
+							<div class="blank-person-header">
+							</div>
+							<p class="detail-title">Parents</p>
+							<div class="buttonSize">
+								<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
+								</i>
+							</div>
 						</div>
-						<p class="detail-title">Parents</p>
-						<div class="buttonSize">
-							<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
-							</i>
+						<div class="buffer-div">
 						</div>
-					</div>
-					<div class="buffer-div">
-					</div>
-					<div>
-						{mappedParentalRels}
-					</div>
+						<div>
+							{mappedParentalRels}
+						</div>
 				</div>
 				<div class="innerInfo">
 					<div class="titleRow">
@@ -135,21 +136,24 @@ export default class PeopleDetails extends React.Component {
 						{mappedPairBondRels}
 					</div>
 				</div>
-				<div class="innerInfo">
-					<div class="titleRow">
-						<div class="blank-person-header">
+				</div>
+				<div class="chronology-div">
+					<div class="inner-chronology">
+						<div class="titleRow">
+							<div class="blank-person-header">
+							</div>
+							<p class="detail-title">Chronology</p>
+							<div class="buttonSize">
+								<i class="fa-plus-square fa plus"
+								onClick={this.createEvent}>
+								</i>
+							</div>
 						</div>
-						<p class="detail-title">Chronology</p>
-						<div class="buttonSize">
-							<i class="fa-plus-square fa plus"
-							onClick={this.createEvent}>
-							</i>
+						<div class="buffer-div">
 						</div>
-					</div>
-					<div class="buffer-div">
-					</div>
-					<div>
-						{mappedEvents}
+						<div>
+							{mappedEvents}
+						</div>
 					</div>
 				</div>
 			</div>
