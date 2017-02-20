@@ -395,6 +395,7 @@ export default class FamilyMap extends React.Component {
 	drawAllPairBonds (startX, startY, parentDistance): boolean {
 		let mom;
 		let dad;
+		var personOne, personTwo;
 		let parent;
 		let nextMaleX = startX - Math.floor(parentDistance / 3 * 2);
 		let nextFemaleX = startX + Math.floor(parentDistance / 3 * 2);
@@ -407,32 +408,32 @@ export default class FamilyMap extends React.Component {
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
 		console.log('PairBonds after sort: ', this.pairBonds);
-
 		for (let pairBond of this.pairBonds) {
-			// reset the mom and dad variable every time through the loop.
-			mom = null;
-			dad = null;
-			parent = this.getPersonById(pairBond.personOne_id);
-			// console.log("parent is ", parent, parent.sexAtBirth);
+			// // reset the mom and dad variable every time through the loop.
+			// mom = null;
+			// dad = null;
+			// parent = this.getPersonById(pairBond.personOne_id);
 
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
-			}
+			// // TODO. If there are two women married, then the mom variable will only contain the woman who is in personTwo_id. If there are two men married, then the dad variable will only contain the man who is in personTwo_id. The person who is in personOne_id will not appear on the map. This is a problem, we want both to show up in the map.
 
-			// it is possible that there will be just one parent in the pairBond. This would happen if there is a parent of the star that does not have a pairBond with anyone. The function addParentsNotInPairBonds adds the single parents into the this.pairBonds array. The single parent is added as personOne. And personTwo is left null.
-			if (pairBond.personTwo_id) {
-				parent = this.getPersonById(pairBond.personTwo_id);
+			// if (parent.sexAtBirth === "M") {
+			// 	dad = parent;
+			// } else if ( parent.sexAtBirth === "F" ) {
+			// 	mom = parent;
+			// }
 
-				if (parent.sexAtBirth === "M") {
-					dad = parent;
-				} else if ( parent.sexAtBirth === "F" ) {
-					mom = parent;
-				}
-			}
+			// // it is possible that there will be just one parent in the pairBond. This would happen if there is a parent of the star that does not have a pairBond with anyone. The function addParentsNotInPairBonds adds the single parents into the this.pairBonds array. The single parent is added as personOne. And personTwo is left null.
+			// if (pairBond.personTwo_id) {
+			// 	parent = this.getPersonById(pairBond.personTwo_id);
 
-			// now that we call a the ____ function to add single parents to the pairBonds array to be drawn, we do not need to alert the user when this condition exists
+			// 	if (parent.sexAtBirth === "M") {
+			// 		dad = parent;
+			// 	} else if ( parent.sexAtBirth === "F" ) {
+			// 		mom = parent;
+			// 	}
+			// }
+
+			// now that we call the addParentsNotInPairBonds function to add single parents to the pairBonds array to be drawn, we do not need to alert the user when this condition exists
 			// if ( !(mom && dad) ) {
 			// 	alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
 			// 	return false;
@@ -445,49 +446,69 @@ export default class FamilyMap extends React.Component {
 				YPos = startY;
 			}
 
-			// if dad is not yet drawn, then draw and add to alreadyDrawn
-			if ( dad && !this.alreadyDrawn.includes(dad) ) {
-				// The following two variables are stored in the array object, and don't go back to the database.
-				dad.mapXPos = nextMaleX;
-				dad.mapYPos = YPos;
-				dad.d3Circle = this.drawCircle(dad);
-				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-				if (dad.deathDate) {
-					if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
-						this.drawCircleHash(dad);
-					}
+			personOne = null;
+			personTwo = null;
+			var personOne = this.getPersonById(pairBond.personOne_id);
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
+			if (personOne && !this.alreadyDrawn.includes(personOne)) {
+				if (personOne.sexAtBirth === "M") {
+					nextMaleX = this.drawDad(personOne, nextMaleX, YPos, parentDistance);
+				} else if (personOne.sexAtBirth === 'F' ) {
+					nextFemaleX = this.drawMom(personOne, nextFemaleX, YPos, parentDistance);
 				}
-				dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
-				dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
-				nextMaleX -= parentDistance;
-				this.alreadyDrawn.push(dad);
-			} else if ( !dad ) {
-				// throw error
-				console.log("no dad in this pairbond to draw:", pairBond);
 			}
+			if (personTwo && !this.alreadyDrawn.includes(personTwo)) {
+				if (personTwo.sexAtBirth === "M") {
+					nextMaleX = this.drawDad(personTwo, nextMaleX, YPos, parentDistance);
+				} else if (personTwo.sexAtBirth === 'F' ) {
+					nextFemaleX = this.drawMom(personTwo, nextFemaleX, YPos, parentDistance);
+				}
+			}
+
+			// // if dad is not yet drawn, then draw and add to alreadyDrawn
+			// if ( dad && !this.alreadyDrawn.includes(dad) ) {
+			// 	// The following two variables are stored in the array object, and don't go back to the database.
+			// 	dad.mapXPos = nextMaleX;
+			// 	dad.mapYPos = YPos;
+			// 	dad.d3Circle = this.drawCircle(dad);
+			// 	// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			// 	if (dad.deathDate) {
+			// 		if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
+			// 			this.drawCircleHash(dad);
+			// 		}
+			// 	}
+			// 	dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
+			// 	dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			// 	nextMaleX -= parentDistance;
+			// 	this.alreadyDrawn.push(dad);
+			// } else if ( !dad ) {
+			// 	// throw error
+			// 	console.log("no dad in this pairbond to draw:", pairBond);
+			// }
 
 			// if mom is not yet drawn, then draw and add to alreadyDrawn
-			if ( mom && !this.alreadyDrawn.includes(mom) ) {
-				// The following two variables are stored in the array object, and don't go back to the database.
-				mom.mapXPos = nextFemaleX;
-				mom.mapYPos = YPos;
-				mom.d3Circle = this.drawCircle(mom);
-				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-				if (mom.deathDate) {
-					if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
-						this.drawCircleHash(mom);
-					}
-				}
-				mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
-				mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
-				nextFemaleX += parentDistance;
-				this.alreadyDrawn.push(mom);
-			} else if ( !mom ) {
-				// throw error
-				console.log("no mom in this pairbond to draw:", pairBond);
-			}
+			// if ( mom && !this.alreadyDrawn.includes(mom) ) {
+			// 	// The following two variables are stored in the array object, and don't go back to the database.
+			// 	mom.mapXPos = nextFemaleX;
+			// 	mom.mapYPos = YPos;
+			// 	mom.d3Circle = this.drawCircle(mom);
+			// 	// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			// 	if (mom.deathDate) {
+			// 		if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
+			// 			this.drawCircleHash(mom);
+			// 		}
+			// 	}
+			// 	mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
+			// 	mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
+			// 	nextFemaleX += parentDistance;
+			// 	this.alreadyDrawn.push(mom);
+			// } else if ( !mom ) {
+			// 	// throw error
+			// 	console.log("no mom in this pairbond to draw:", pairBond);
+			// }
 
-			if (mom && dad) {
+			// if (mom && dad) {
+			if (personOne && personTwo) {
 				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
 				// the checkForExistingRel function returns the color of the existing relationship if it is found
@@ -499,19 +520,19 @@ export default class FamilyMap extends React.Component {
 
 				// next, check to see if it is an adoptive relationship, because we'll draw the relationship line differently
 				if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
-					this.drawAdoptiveRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
-					this.drawRelText(mom, dad, pairBond);
+					this.drawAdoptiveRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
-						this.drawAdoptiveRelHash(mom, dad, pairBond, pairBond.color);
+						this.drawAdoptiveRelHash(personOne, personTwo, pairBond, pairBond.color);
 					}
 				} else {
 					// this is not adopted parents to the star
-					this.drawRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
-					this.drawRelText(mom, dad, pairBond);
+					this.drawRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
-						this.drawRelHash(mom, dad, pairBond, pairBond.color);
+						this.drawRelHash(personOne, personTwo, pairBond, pairBond.color);
 					}
 				}
 
@@ -572,6 +593,42 @@ export default class FamilyMap extends React.Component {
 		} // end function checkForExistingRel
 	} // end function drawAllPairBonds
 
+		drawDad = (dad, nextMaleX, YPos, parentDistance) => {
+			// The following two variables are stored in the array object, and don't go back to the database.
+			dad.mapXPos = nextMaleX;
+			dad.mapYPos = YPos;
+			dad.d3Circle = this.drawCircle(dad);
+			// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			if (dad.deathDate) {
+				if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
+					this.drawCircleHash(dad);
+				}
+			}
+			dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
+			dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			// nextMaleX -= parentDistance;
+			this.alreadyDrawn.push(dad);
+			return nextMaleX - parentDistance;
+		}
+
+		drawMom = (mom, nextFemaleX, YPos, parentDistance) => {
+			// The following two variables are stored in the array object, and don't go back to the database.
+			mom.mapXPos = nextFemaleX;
+			mom.mapYPos = YPos;
+			mom.d3Circle = this.drawCircle(mom);
+			// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			if (mom.deathDate) {
+				if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
+					this.drawCircleHash(mom);
+				}
+			}
+			mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
+			mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
+			// nextFemaleX += parentDistance;
+			this.alreadyDrawn.push(mom);
+			return nextFemaleX + parentDistance;
+		}
+
 	addParentsNotInPairBonds = (child_id) => {
 		// check to see what parents are not in a pairBond
 		for (let parent of this.parents) {
@@ -583,6 +640,12 @@ export default class FamilyMap extends React.Component {
 						return p.parent_id === parent._id && p.child_id === child_id;
 					}
 				);
+
+				// if one of the single Parents is an adopted parent, then make sure that the first child drawn is below the parentalRel line
+				if (/[Aa]dopted/.test(parentalRel.subType)) {
+					this.firstChildYDistance = this.firstChildYWithAdoptions;
+				}
+
 				var newObject = {
 					// _id: 'Z' + '57fe7b9a47d7491b658a92a8',
 					// personOne_id: '57fe7b9a47d7491b658a92a8',
@@ -591,7 +654,8 @@ export default class FamilyMap extends React.Component {
 					_id: 'Z' + parent._id,
 					personOne_id: parent._id,
 					startDate: parentalRel.startDate,
-					startDateUser: parentalRel.startDateUser
+					startDateUser: parentalRel.startDateUser,
+					subTypeToStar: parentalRel.subType
 				}
 				this.pairBonds.push(newObject);
 			}
@@ -1023,14 +1087,13 @@ export default class FamilyMap extends React.Component {
 		let cx, cy;
 
 		// xPos is halfway between mom and dad, and then minus a few pixels for rough centering
-		cx = (mom.mapXPos - dad.mapXPos) / 2 + dad.mapXPos - 45;
+		cx = Math.abs(mom.mapXPos - dad.mapXPos) / 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos) - 45;
 
 		// if this pair bond shows up on the adopted line, the curve is different, so calculate the y position differently
 		if (pairBondRel.subTypeToStar === "Adopted") {
 			cy = (mom.mapYPos) - 30;
 		} else {
 			// yPos needs to account for the curve of the rel line
-			// cy = (mom.mapYPos - 40) / 2 - 5;
 			cy = (mom.mapYPos - 160);
 		}
 
@@ -1213,6 +1276,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawRelLine(mom, dad, color, relType) {
+		debugger;
 		let lineStrArr = [];
 		let yControlPoint: number;
 		let line;
@@ -1222,11 +1286,11 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(dad.mapYPos - 40);
 		lineStrArr.push("C");
 		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line
-		// console.log("momYPos, momXPos, dadXPos: ", mom.mapYPos, mom.mapXPos, dad.mapXPos);
-		yControlPoint = (mom.mapYPos - 60) / ((mom.mapXPos - dad.mapXPos) / 250);
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 2 + dad.mapXPos);
+		console.log("momYPos, momXPos, dadXPos: ", mom.fName, mom.mapYPos, mom.mapXPos, dad.fName, dad.mapXPos);
+		yControlPoint = (mom.mapYPos - 60) / (Math.abs(mom.mapXPos - dad.mapXPos) / 250);
+		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
 		lineStrArr.push( yControlPoint + ",");
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 6 + dad.mapXPos);
+		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 6 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
 		lineStrArr.push( yControlPoint + ",");
 		// this is the ending point of the line
 		lineStrArr.push(mom.mapXPos);
@@ -1272,6 +1336,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawAdoptiveRelLine(mom, dad, color, relType) {
+		debugger;
 		let lineStrArr = [];
 		let line;
 		let yControlPoint: number;
@@ -1280,17 +1345,17 @@ export default class FamilyMap extends React.Component {
 		// yControlPoint = 225;
 		// the bigger I make 200,000 - the lower the arc.
 		// yControlPoint = 190000 / (mom.mapXPos - dad.mapXPos);
-		yControlPoint = 625 / Math.log10((mom.mapXPos - dad.mapXPos) / 2);
+		yControlPoint = 625 / Math.log10(Math.abs(mom.mapXPos - dad.mapXPos) / 2);
 		lineStrArr.push("M");
 		// This is the beginning of the line, at the top of dad
 		lineStrArr.push(dad.mapXPos + 0);
 		lineStrArr.push(dad.mapYPos - 40);
 		lineStrArr.push("C");
 
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 2 + dad.mapXPos);
+		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
 		lineStrArr.push(yControlPoint);
 
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 6 + dad.mapXPos);
+		lineStrArr.push(Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 6 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos));
 		lineStrArr.push(yControlPoint);
 
 		// This is the end point of the line, at the top of mom
@@ -1425,7 +1490,7 @@ export default class FamilyMap extends React.Component {
 		// yPos needs to account for the curve of the rel line
 		// controlPoint is the controlPoint of the Bezier line that is drawn between the male and female of the relationship. I use it to calculate the y coordinate to draw the relationship hash. It was very experimental to figure out the equation that works
 		// const yControlPoint = (mom.mapYPos - 60) / (768 / dad.mapXPos);
-		const yControlPoint = (mom.mapYPos - 60) / ((mom.mapXPos - dad.mapXPos) / 250);
+		const yControlPoint = (mom.mapYPos - 60) / (Math.abs(mom.mapXPos - dad.mapXPos) / 250);
 		// dad.mapYPos - 40 is the Y position of where the relationship line begins and ends.
 		// What I do is take the control point and then push the hash mark down a little. Push it down by taking the amount of space between the control point and the beginning of the line and then take a fraction of that.
 		let cy = yControlPoint + ( (dad.mapYPos - 40) - yControlPoint ) / 4;
