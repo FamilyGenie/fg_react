@@ -167,7 +167,7 @@ export default class FamilyMap extends React.Component {
 	//  }
 
 
-	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record. This function is not currently being called - still in development
+	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record.
 	checkForBioParents = (star_id) => {
 		// find biological mother relationship
 		var momRel = this.props.parentalRelationships.find(function(parentRel){
@@ -262,14 +262,15 @@ export default class FamilyMap extends React.Component {
 		}
 		console.log("After getAllParents second call: ", this.parents);
 
-		// need some looping here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
+		// need some recursion here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
 
+		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
 		if ( !this.getAllPairBonds() ) {
 			alert("There was an error in drawing the map. You are being re-directed to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
 			hashHistory.push('/');
 			return;
 		}
-		// this function will add single parents to the pairBonds array
+		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
 		this.addParentsNotInPairBonds(this.props.star_id);
 		console.log("all pair bonds:", this.pairBonds);
 
@@ -632,6 +633,7 @@ export default class FamilyMap extends React.Component {
 
 	addParentsNotInPairBonds = (child_id) => {
 		// check to see what parents are not in a pairBond
+		debugger;
 		for (let parent of this.parents) {
 			// if the parent is not found in any of the existing pairBonds, then add that parent to the pairBond array. Add them as personOne, set personTwo to null
 			if (!parentFound(parent, this.pairBonds)) {
@@ -682,6 +684,7 @@ export default class FamilyMap extends React.Component {
 		let oneRel, twoRel;
 
 		// for each parent
+		debugger;
 		for (let parentObj of this.parents) {
 			// get all pair bonds
 			pairBondTemp = this.props.pairBondRelationships.filter(
@@ -749,12 +752,10 @@ export default class FamilyMap extends React.Component {
 		} // end for parentObj
 
 		if (!this.pairBonds.length) {
-			let star = this.getPersonById(this.props.star_id);
-			// alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
-			// return false;
-
 			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
+			// TODO: if there are pairBonds between adopted parents, then this function is not called. Is that a problem??? Maybe we shouldn't call it all, now that we can draw parents not in a pair bond - so that both mom and dad will show on the map without a relationship between them.
 
+			let star = this.getPersonById(this.props.star_id);
 			var momRel = this.parentRels.find(function(pr) {
 				return pr.child_id === star._id && /[Mm]other/.test(pr.relationshipType) && /[Bb]iological/.test(pr.subType)
 			});
