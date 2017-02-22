@@ -43,14 +43,12 @@ export default class MatchedPeopleDetails extends React.Component {
     );
 
     if (person) {
-      return(<div>
-
+      return(
+      <div>
       <MatchedPeopleLineItem person={person} key={person._id} />
-
       <button onClick={this.useRecord}>
         Use Record
       </button>
-
         <div class="container">
           <h3> Events </h3>
           <div class="col-xs-12">

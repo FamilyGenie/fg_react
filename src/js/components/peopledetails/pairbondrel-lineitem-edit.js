@@ -191,8 +191,8 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput
-									initialValue={this.state.startDateUserNew}
+								<DateInput 			 					
+                  initialValue={this.state.startDateUserNew}
 									onNewDate={this.tempStartDate}
 									field="startDate"
 								/>
