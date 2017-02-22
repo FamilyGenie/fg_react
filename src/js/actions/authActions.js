@@ -14,7 +14,8 @@ import { fetchStagedEvents } from '../actions/stagedEventActions';
 import config from '../config.js';
 import { getAxiosConfigForLogin } from './actionFunctions';
 
-export function login(username, password) {
+// showMsg is a boolean. If it is true, then the calling component has an alert container that will show a message if this action calls the msg.show method
+export function login(username, password, showMsg) {
 	const body = {
 		username,
 		password
@@ -33,18 +34,18 @@ export function login(username, password) {
 				dispatch(fetchStagedEvents());
 				// dispatch(fetchStagedParentalRels());
 
+				if (showMsg) {
+					msg.show('Successful Login. Welcome.');
+				}
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
 				hashHistory.push('/');
 
 			})
 			.catch((err) => {
-				alertOptions = {
-			      offset: 15,
-			      position: 'middle',
-			      theme: 'light',
-			      time: 0,
-			      transition: 'scale'
-			    };
+				// this will show a message in the alert box that is on the login.js page
+				if (showMsg) {
+					msg.show('Invalid username or password');
+				}
 				dispatch({type: "LOGIN_ERROR", payload: err})
 			})
 	}
