@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import ChronologyLineItem from './chronology-lineitem';
+// import Something from './coloring';
 
 @connect((store, ownProps) => {
   return {
@@ -15,7 +16,9 @@ export default class Chronology extends React.Component {
     super(props);
     this.state = {
       reverse: false,
-      mappedEvents: [],
+      mappedEvents: this.props.events.map(event =>
+      <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
+    ),
     };
   }
 
@@ -27,7 +30,12 @@ export default class Chronology extends React.Component {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
           // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
-          return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
+          if (b.eventDate && a.eventDate) {
+            return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
+          }
+          else {
+            return a.eventDate - b.eventDate;
+          }
         });
       }
       else if (sortType === 'type') {
@@ -38,7 +46,12 @@ export default class Chronology extends React.Component {
       else if (sortType === 'place') {
         sortedEvents = this.props.events.sort(function(a, b) {
           // Using localeCompare (ES6 function) to compare strings.
-          return b.eventPlace.localeCompare(a.eventPlace);
+          if (b.eventPlace != undefined && a.eventPlace != undefined) {
+            return b.eventPlace.localeCompare(a.eventPlace);
+          }
+          else {
+            return b.eventPlace - a.eventPlace 
+          }
         })
       }
       else {
@@ -50,8 +63,13 @@ export default class Chronology extends React.Component {
     else {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-        // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
-          return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
+          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
+          if (b.eventDate && a.eventDate) {
+            return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
+          }
+          else {
+            return a.eventDate - b.eventDate;
+          }
         });
       }
       else if (sortType === 'type') {
@@ -62,7 +80,12 @@ export default class Chronology extends React.Component {
       else if (sortType === 'place') {
         sortedEvents = this.props.events.sort(function(a, b) {
           // Using localeCompare (ES6 function) to compare strings.
-          return a.eventPlace.localeCompare(b.eventPlace);
+          if (a.eventPlace != undefined && b.eventPlace != undefined) {
+            return a.eventPlace.localeCompare(b.eventPlace);
+          }
+          else {
+            return a.eventPlace - b.eventPlaca;e
+          }
         })
       }
       else {  
@@ -110,23 +133,6 @@ export default class Chronology extends React.Component {
           </div>
         <div class="staged-people-list">
           {this.state.mappedEvents}
-          <div class="staged-item">
-      			<div class="stagedElement">
-      				<p class="staged-name">1990-08-15</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Henry Brigham V</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Birth</p>
-      			</div>
-      			<div class="stagedElement">
-      				<p class="staged-name">Austin, Tx</p>
-      			</div>
-      			<div class="check-duplicate">
-      				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={this.openDetails}></i>
-      			</div>
-      		</div>
         </div>
       </div>
     </div>

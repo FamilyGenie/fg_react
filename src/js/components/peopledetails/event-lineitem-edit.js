@@ -73,7 +73,7 @@ constructor(props) {
 	// 	// As well as updating the database and the store, update the state variable so the display shows the new value.
 	// 	this.setState({eventType: evt.value});
 	// }
-
+  //
 	// // this call returns a function, so that when the field is updated, the fuction will execute.
 	// getUpdateDate = (field, dateUser, dateSet) => {
 	// 	// this is the function that will fire when the field is updated. first, it updates the data store. Then, it updates the appropriate field in the state, so that a display re-render is triggered
@@ -103,32 +103,27 @@ constructor(props) {
 	}
 	tempEventType = (evt) => {
 		this.setState({eventTypeNew: evt.value});
-		// console.log(this.state, "inside eventType");
 	}
 	tempEventPlace = (evt) => {
 		this.setState({eventPlaceNew: evt.target.value});
-		// console.log(this.state, "inside eventPlace");
 	}
 	tempFamilyContext = (evt) => {
 		this.setState({familyContextNew: evt.target.value});
-		// console.log(this.state, "inside family");
 	}
 	tempLocalContext = (evt) => {
 		this.setState({localContextNew: evt.target.value});
-		// console.log(this.state, "inside local");
 	}
 	tempWorldContext = (evt) => {
 		this.setState({worldContextNew: evt.target.value});
-		// console.log(this.state, "inside world");
 	}
 
 	saveRecord = () => {
 		console.log(this.state, "STATE saveRecord-Events");
 		console.log(this.props, "PROPS of saveRecord-Events");
 
-		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
+		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-			// this.UpdateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)

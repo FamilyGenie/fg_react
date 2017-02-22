@@ -49,8 +49,8 @@ export default class ChronologyLineItem extends React.Component {
     const { person, event } = this.props;
     const { modalIsOpen } = this.state;
 
-    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate? event.eventDate.substr(0,10) : '') );
-    const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate? event.eventDate.substr(0,10) : '') );
+    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : '') );
+    const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate ? event.eventDate.substr(0,10) : '') );
 
 
     if (event) {
@@ -75,10 +75,9 @@ export default class ChronologyLineItem extends React.Component {
         <Modal
           isOpen={modalIsOpen}
           contentLabel="Modal"
-          style={modalStyle}
         >
           <div class="row">
-            <div class="col-xs-12" style={headingStyle}>
+            <div class="col-xs-12">
               Event Edit
             </div>
           </div>
