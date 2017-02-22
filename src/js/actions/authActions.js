@@ -2,6 +2,7 @@ import axios from 'axios';
 import cookie from 'react-cookie';
 import { hashHistory } from 'react-router';
 
+
 import { fetchEvents } from '../actions/eventsActions';
 import { fetchPairBondRels } from '../actions/pairBondRelsActions';
 import { fetchParentalRels } from '../actions/parentalRelsActions';
@@ -13,7 +14,8 @@ import { fetchStagedEvents } from '../actions/stagedEventActions';
 import config from '../config.js';
 import { getAxiosConfigForLogin } from './actionFunctions';
 
-export function login(username, password) {
+// showMsg is a boolean. If it is true, then the calling component has an alert container that will show a message if this action calls the msg.show method
+export function login(username, password, showMsg) {
 	const body = {
 		username,
 		password
@@ -30,13 +32,20 @@ export function login(username, password) {
 				dispatch(fetchParentalRels());
 				dispatch(fetchStagedPeople());
 				dispatch(fetchStagedEvents());
-				this.props.dispatch(fetchStagedParentalRels());
+				// dispatch(fetchStagedParentalRels());
 
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
 				hashHistory.push('/');
+				if (showMsg) {
+					msg.show('Successful Login. Welcome.');
+				}
 
 			})
 			.catch((err) => {
+				// this will show a message in the alert box that is on the login.js page
+				if (showMsg) {
+					msg.show('Invalid username or password');
+				}
 				dispatch({type: "LOGIN_ERROR", payload: err})
 			})
 	}
