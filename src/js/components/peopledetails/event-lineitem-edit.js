@@ -116,10 +116,12 @@ constructor(props) {
 	tempWorldContext = (evt) => {
 		this.setState({worldContextNew: evt.target.value});
 	}
+	tempWorldContext = (evt) => {
+		this.setState({worldContextNew: evt.target.value});
+		// console.log(this.state, "inside world");
+	}
 
 	saveRecord = () => {
-		console.log(this.state, "STATE saveRecord-Events");
-		console.log(this.props, "PROPS of saveRecord-Events");
 
 		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
@@ -143,6 +145,7 @@ constructor(props) {
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
+
 	}
 
 	deleteRecord = () => {
