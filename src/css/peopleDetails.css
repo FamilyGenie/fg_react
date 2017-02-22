@@ -5,6 +5,7 @@
    font-weight: 700;
 }
 @font-face {
+
    font-family: SSP-Light;
    src: url("../fonts/Source_Sans_Pro/SourceSansPro-Light.ttf");
    format("opentype");
@@ -547,6 +548,9 @@
   .delete-modal {
     margin-bottom: 25px;
   }
+  .ReactModal__Overlay {
+    width: 70%;
+  }
 }
 @media (max-width: 1200px) {
   /*.PR-row-1 {
@@ -578,6 +582,9 @@
 @media(max-width: 1000px) {
   .PR-modal-header {
     font-size: 23px;
+  }
+  .ReactModal__Overlay {
+    width: 70%;
   }
 }
 

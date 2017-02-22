@@ -42,8 +42,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 		const bDate = (stagedPerson.birthDate ? stagedPerson.birthDate.substr(0,10) : stagedPerson.birthDate);
 		const dDate = (stagedPerson.deathDate ? stagedPerson.deathDate.substr(0,10) : stagedPerson.deathDate);
 
-
-
 		return(
 		<div class="staged-item">
 			<div class="staged-name-div">
@@ -63,6 +61,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={this.openDetails}></i>
 			</div>
 		</div>
-	);
+    );
 	}
 }
