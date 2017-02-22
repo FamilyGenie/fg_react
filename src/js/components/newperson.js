@@ -9,7 +9,8 @@ import { updateEvent } from '../actions/eventsActions';
 import { updateParentalRel } from '../actions/parentalRelsActions';
 import { closeNewPersonModal } from '../actions/modalActions';
 
-/* the following is the code that needs to be inserted into the parent component where you will call this modal to open.
+/* the following is the code that needs to be inserted into the parent component render method where you will call this modal to open.
+You can look in the peoplesearch component for an example of a component that calls this component
  
   <Modal
         isOpen={modalIsOpen}
@@ -67,7 +68,7 @@ export default class NewPerson extends React.Component {
     const { person, events, parents, modalIsOpen } = this.props;
 
     // events must be mapped to the lineItem, and cannot be passed in individually, not sure why this happens, leaving it for now
-    const mappedEvents = events.map(event => 
+    const mappedEvents = events.map(event =>
       <EventLineItemEdit event={event} key={event._id}/>
     )
 
@@ -78,7 +79,6 @@ export default class NewPerson extends React.Component {
 
       return(<div>
           <h3> New Person </h3>
-          
           <PeopleDetailsLineItem person={person} key={person._id}/>
 
           <div class="container">
@@ -97,3 +97,5 @@ export default class NewPerson extends React.Component {
       </div>);
   }
 }
+
+

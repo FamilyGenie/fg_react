@@ -37,6 +37,9 @@ export default class StagedPeopleDetails extends React.Component {
         </div>
         <div class="comparisonDiv">
           <div class="stagedComparison">
+            <div class="stagedHeader1">
+              <h3 class="stagedH3"> Potential Import </h3>
+            </div>
             <div class='staged-header-container'>
               <div class="comparisonNameDiv">
                 <p>Name</p>
@@ -52,13 +55,11 @@ export default class StagedPeopleDetails extends React.Component {
               <StagedPeopleDetailsLineItem person={stagedStar} />
             </div>
           </div>
-          <div class="stagedComparison">
-            <div class="stagedHeader">
-              <h1> Matching People in Your Database </h1>
+          <div class="mappedMatches">
+            <div class="stagedHeader1">
+              <h3 class="stagedH3"> Matches In Your System </h3>
             </div>
-            <div class="comparisonList">
-              {mappedMatches}
-            </div>
+            {mappedMatches}
           </div>
         </div>
       </div>

@@ -65,12 +65,8 @@ export default class ParentalRelLineItemEdit extends React.Component {
 
 			relationshipTypeNew: this.props.parentalRel.relationshipType,
 
-			// subType: ( this.props.parentalRel ?
-			// this.props.parentalRel.subType : " "),
-
 			subTypeNew: this.props.parentalRel.subType,
 
-			// be careful not to mutate startDate or endDate?
 			startDateNew: this.props.parentalRel.startDate,
 			startDateUserNew: this.props.parentalRel.startDateUser,
 
