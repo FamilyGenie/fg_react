@@ -45,27 +45,22 @@ import { resetModalEvent } from '../../actions/modalActions';
 		}
 	}
 )
-export default class EventLineItemEdit extends React.Component {
+export default class CompactEvent extends React.Component {
 constructor(props) {
 	super(props);
+	console.log("in compactEvent with: ", this.props);
 
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
 		eventDateNew: this.props.event.eventDate,
-		
+
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
 
 		eventPlaceNew: this.props.event.eventPlace,
-
-		familyContextNew: this.props.event.familyContext,
-
-		localContextNew: this.props.event.localContext,
-
-		worldContextNew: this.props.event.worldContext,
 	};
 }
 
@@ -103,29 +98,19 @@ constructor(props) {
 	}
 	tempEventType = (evt) => {
 		this.setState({eventTypeNew: evt.value});
+		// console.log(this.state, "inside eventType");
 	}
 	tempEventPlace = (evt) => {
 		this.setState({eventPlaceNew: evt.target.value});
-	}
-	tempFamilyContext = (evt) => {
-		this.setState({familyContextNew: evt.target.value});
-	}
-	tempLocalContext = (evt) => {
-		this.setState({localContextNew: evt.target.value});
-	}
-	tempWorldContext = (evt) => {
-		this.setState({worldContextNew: evt.target.value});
-	}
-	tempWorldContext = (evt) => {
-		this.setState({worldContextNew: evt.target.value});
-		// console.log(this.state, "inside world");
+		// console.log(this.state, "inside eventPlace");
 	}
 
 	saveRecord = () => {
+		// console.log(this.state, "STATE saveRecord-Events");
+		// console.log(this.props, "PROPS of saveRecord-Events");
 
-		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
-			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+		if (this.state.eventDateUserNew !== this.props.event.eventDateUser){
+			this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
@@ -133,29 +118,13 @@ constructor(props) {
 		if (this.state.eventPlace !== this.props.event.eventPlace) {
 			this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
 		}
-		if (this.state.familyContextNew !== this.props.event.familyContext) {
-			this.props.updateEvent(this.props.event._id, "familyContext", this.state.familyContextNew);
-		}
-		if (this.state.localContextNew !== this.props.event.localContext) {
-			this.props.updateEvent(this.props.event._id, "localContext", this.state.localContextNew);
-		}
-		if (this.state.worldContextNew !== this.props.event.worldContext) {
-			this.props.updateEvent(this.props.event._id, "worldContext", this.state.worldContextNew);
-		}
-		if(this.props.closeModal) {
-			this.props.closeModal();
-		}
-
-	}
-
-	deleteRecord = () => {
-		this.props.deleteEvent(this.props.event._id);
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
 	}
 
 	render = () => {
+		// console.log(this.state, 'state of the state')
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
@@ -206,71 +175,7 @@ constructor(props) {
 						</div>
 					</div>
 				</div>
-				<div class="PR-row-3">
-					<div class="PR-date-div">
-						<div class="eventTitle">
-						Family Context
-						</div>
-						<div class="PR-sDate">
-							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempFamilyContext}
-							>
-							{this.state.familyContextNew}
-							</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="PR-row-3">
-					<div class="event-context-div">
-						<div class="eventTitle">
-						Local Context
-						</div>
-						<div class="event-context">
-							<textarea
-								class="event-input"
-								type="text"
-								onChange={this.tempLocalContext}
-							>
-							{this.state.localContextNew}
-						</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="PR-row-3">
-					<div class="PR-date-div">
-						<div class="eventTitle">
-						World Context
-						</div>
-						<div class="PR-sDate">
-							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempWorldContext}
-							>
-							{this.state.worldContextNew}
-							</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="buffer-modal">
-				</div>
-				<div class="event-delete-modal">
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.saveRecord}
-					>
-						Save
-					</button>
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.deleteRecord}
-					>
-						Delete
-					</button>
+				<div class="bufferModal2">
 				</div>
 			</div>)
 		} else {

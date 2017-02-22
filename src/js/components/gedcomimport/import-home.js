@@ -81,9 +81,8 @@ export default class ImportDashboard extends React.Component {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          msg.show('File upload successful', { type: 'success' })
-          this.props.fetchStagedPeople();
-          this.props.fetchStagedEvents();
+          msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+          // TODO reload the store after processes have completed
         } else {
           msg.show('File upload unsuccessful', { type: 'error' })
         }
@@ -94,7 +93,7 @@ export default class ImportDashboard extends React.Component {
 
   runImport = () => {
     this.props.runImport();
-    msg.show('You have imported new documents', { type: 'success' });
+    msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
   }
   // <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
 
@@ -151,6 +150,7 @@ export default class ImportDashboard extends React.Component {
             </div>
             <div class="step-action">
               <div class="action-content">
+                {/*
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.peopleRemaining.length}</p>
@@ -159,6 +159,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.peopleImported.length}</p>
                 </div>
+                */}
                 <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
               </div>
             </div>
@@ -174,6 +175,7 @@ export default class ImportDashboard extends React.Component {
             </div>
             <div class="step-action">
               <div class="action-content">
+                {/*
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.eventsRemaining.length}</p>
@@ -182,6 +184,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
+                */}
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
             </div>
@@ -201,10 +204,8 @@ export default class ImportDashboard extends React.Component {
                 {/*
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.eventsRemaining.length}</p>
-                */}
                 </div>
                 <div class="action-row">
-                {/*
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 */}
@@ -228,10 +229,8 @@ export default class ImportDashboard extends React.Component {
                 {/*
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.eventsRemaining.length}</p>
-                */}
                 </div>
                 <div class="action-row">
-                {/*
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 */}

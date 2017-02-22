@@ -53,10 +53,10 @@ export default class StagedPeopleDetails extends React.Component {
             </div>
           </div>
           <div class="stagedComparison">
-            <div class="row">
+            <div class="stagedHeader">
               <h1> Matching People in Your Database </h1>
             </div>
-            <div>
+            <div class="comparisonList">
               {mappedMatches}
             </div>
           </div>
