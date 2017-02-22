@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
+import AlertContainer from 'react-alert';
 
 @connect(
 	// test
@@ -11,7 +12,7 @@ import { login } from '../../actions/authActions';
 		return {
 			// get the parentalRel object that needs to appear in the modal
 			login: (userName, password) => {
-				dispatch(login(userName, password));
+				dispatch(login(userName, password, true));
 			},
 		}
 	}
@@ -39,6 +40,14 @@ export default class Login extends React.Component {
 		this.setState({password: evt.target.value});
 
 	}
+
+	alertOptions = {
+      offset: 600,
+      position: 'middle',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
 
 	render = () => {
 	    return (
@@ -82,6 +91,8 @@ export default class Login extends React.Component {
 							</div>
 						</form>
 					</div>
+					{/* This is the container for the alerts we are using */}
+			    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 		    </div>
 		)
     }
