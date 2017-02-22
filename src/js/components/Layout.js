@@ -109,9 +109,7 @@ export default class Layout extends React.Component {
 				</div>
 			</div>
 			<footer class="footer navbar-fixed-bottom">
-				<div class="container footer-container">
-					copyright &copy;2016 PsychoGenealogical Research
-				</div>
+					PsychoGenealogical Research 2017 &copy;
 			</footer>
 		</div>
 		);

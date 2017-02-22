@@ -54,6 +54,7 @@ constructor(props) {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
 		eventDateNew: this.props.event.eventDate,
+		
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
@@ -99,23 +100,21 @@ constructor(props) {
 			eventDateUserNew: userDate,
 			eventDateNew: parsedDate
 		});
-		console.log(this.state, "inside eventDate");
 	}
 	tempEventType = (evt) => {
 		this.setState({eventTypeNew: evt.value});
-		// console.log(this.state, "inside eventType");
 	}
 	tempEventPlace = (evt) => {
 		this.setState({eventPlaceNew: evt.target.value});
-		// console.log(this.state, "inside eventPlace");
 	}
 	tempFamilyContext = (evt) => {
 		this.setState({familyContextNew: evt.target.value});
-		// console.log(this.state, "inside family");
 	}
 	tempLocalContext = (evt) => {
 		this.setState({localContextNew: evt.target.value});
-		// console.log(this.state, "inside local");
+	}
+	tempWorldContext = (evt) => {
+		this.setState({worldContextNew: evt.target.value});
 	}
 	tempWorldContext = (evt) => {
 		this.setState({worldContextNew: evt.target.value});
@@ -123,12 +122,10 @@ constructor(props) {
 	}
 
 	saveRecord = () => {
-		console.log(this.state, "STATE saveRecord-Events");
-		console.log(this.props, "PROPS of saveRecord-Events");
 
-		if (this.state.eventDateUsernew !== this.props.event.eventDateNew) {
+		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-			// this.UpdateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
@@ -148,6 +145,7 @@ constructor(props) {
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
+
 	}
 
 	deleteRecord = () => {
@@ -158,7 +156,6 @@ constructor(props) {
 	}
 
 	render = () => {
-		console.log(this.state, 'state of the state')
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 

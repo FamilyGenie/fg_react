@@ -15,7 +15,7 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
       // get all people existing in the FG DB that match our stagedStar
       starMatches:
         store.people.people.filter(function(m) {
-          return ((m.fName === stagedStar.fName || m.lName === stagedStar.lName) && m.sexAtBirth === stagedStar.sexAtBirth)
+          return (((m.fName === stagedStar.fName || m.lName === stagedStar.lName) && m.sexAtBirth === stagedStar.sexAtBirth) || m.birthDate === stagedStar.birthDate)
         })
     };
   },
@@ -53,10 +53,10 @@ export default class StagedPeopleDetails extends React.Component {
             </div>
           </div>
           <div class="stagedComparison">
-            <div class="row">
+            <div class="stagedHeader">
               <h1> Matching People in Your Database </h1>
             </div>
-            <div>
+            <div class="comparisonList">
               {mappedMatches}
             </div>
           </div>

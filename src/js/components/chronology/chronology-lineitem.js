@@ -8,15 +8,8 @@ import { setModalEvent } from '../../actions/modalActions';
 
 @connect(
   (store, ownProps) => {
-    var event = store.events.events.find(function(e) {
-        return e._id === ownProps.eventId;
-    });
-
     return {
-      event : event,
-      person : store.people.people.find(function(p) {
-        return event.person_id === p._id
-      }),
+      event: ownProps.event,
     }
   },
   (dispatch) => {
@@ -46,11 +39,11 @@ export default class ChronologyLineItem extends React.Component {
   }
 
   render = () => {
-    const { person, event } = this.props;
+    const { event } = this.props;
     const { modalIsOpen } = this.state;
 
-    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate? event.eventDate.substr(0,10) : '') );
-    const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate? event.eventDate.substr(0,10) : '') );
+    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : '') );
+    const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate ? event.eventDate.substr(0,10) : '') );
 
 
     if (event) {
@@ -63,7 +56,7 @@ export default class ChronologyLineItem extends React.Component {
             {eventDateUser}
           </div>
           <div class="nameCol col-xs-3">
-            {(person ? person.fName + ' ' + person.lName : "")}
+            {event.personFName}&nbsp;{event.personLName}
           </div>
           <div class="nameCol col-xs-2">
             {(event.eventType ? event.eventType : "")}
@@ -75,10 +68,9 @@ export default class ChronologyLineItem extends React.Component {
         <Modal
           isOpen={modalIsOpen}
           contentLabel="Modal"
-          style={modalStyle}
         >
           <div class="row">
-            <div class="col-xs-12" style={headingStyle}>
+            <div class="col-xs-12">
               Event Edit
             </div>
           </div>

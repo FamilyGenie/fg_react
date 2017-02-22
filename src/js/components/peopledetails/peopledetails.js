@@ -92,15 +92,6 @@ export default class PeopleDetails extends React.Component {
 			<ParentalRelLineItem parentalRel={parentalRel} key={parentalRel._id}/>
 		);
 
-		var modalStyle = {
-			overlay: {
-			position: 'fixed',
-			top: 100,
-			left: 100,
-			right: 100,
-			bottom: 100,
-			}
-		}
 
 		return (
 		<div class="main-detail" ref={(ref) => this._div = ref}>
