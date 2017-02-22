@@ -27,53 +27,35 @@ export default class MatchedPeopleDetailsLineItem extends React.Component {
       this.props.onBlur(this.props.person._id, field, evt.target.value);
     }
   }
+  useRecord = () => {
+    this.props.useRecord();
+  }
 
   render = () => {
     const { person, events, onBlur } = this.props;
 
     if (person) {
-      return(<div>
-        <div class="row person-item">
-          <div class="col-xs-2 custom-input">
-            <input
-              class="form-control"
-              type="text"
-              defaultValue={person.fName}
-              onBlur={this.getOnBlur('fName')}
-            />
+      return(
+        <div class="stagedPerson">
+          <div class="comparisonNameDiv">
+            <p class="staged-name">{this.props.person.fName}</p>
+            <p class="staged-name">{this.props.person.mName}</p>
+            <p class="staged-name">{this.props.person.lName}</p>
           </div>
-
-          <div class="col-xs-2 custom-input">
-            <input
-              class="form-control"
-              type="text"
-              defaultValue={person.mName}
-              onBlur={this.getOnBlur('mName')}
-            />
+          <div class="staged-sex">
+    				<p class="staged-name">{this.props.person.sexAtBirth}</p>
           </div>
-
-          <div class="col-xs-2 custom-input">
-            <input
-              class="form-control"
-              type="text"
-              defaultValue={person.lName}
-              onBlur={this.getOnBlur('lName')}
-            />
-          </div>
-
-          <div class="col-xs-1 custom-input">
-            <input
-              class="form-control"
-              type="text"
-              defaultValue={person.sexAtBirth}
-              onBlur={this.getOnBlur('sexAtBirth')}
-            />
-          </div>
-        </div>
-      </div>);
+          <div class="stagedButton">
+    				<button
+    					class="btn button3"
+    					onClick={this.useRecord}
+    				>
+    					Use
+    				</button>
+    			</div>
+        </div>);
     } else {
       return (<p>Loading...</p>);
     }
   }
 }
-

@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 import { runImport } from '../../actions/importActions';
+import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
+import { fetchStagedEvents } from '../../actions/stagedEventActions';
+import AlertContainer from 'react-alert';
 
 import cookie from "react-cookie";
 
@@ -40,11 +43,25 @@ const fgtoken = cookie.load('fg-access-token');
     return {
       runImport: () => {
         dispatch(runImport())
+      },
+      fetchStagedPeople: () => {
+        dispatch(fetchStagedPeople())
+      },
+      fetchStagedEvents: () => {
+        dispatch(fetchStagedEvents())
       }
     }
   }
 )
 export default class ImportDashboard extends React.Component {
+
+   alertOptions = {
+      offset: 15,
+      position: 'bottom left',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
 
   goToStagedPeopleSearch = () => {
     hashHistory.push('/stagedpeoplesearch');
@@ -64,51 +81,19 @@ export default class ImportDashboard extends React.Component {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          alert('File Upload Successful');
+          msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+          // TODO reload the store after processes have completed
         } else {
-          alert('File Upload Unsuccessful');
+          msg.show('File upload unsuccessful', { type: 'error' })
         }
       }
     }
-    // TODO: Need to reference the config.js to bring in the correct server. Not good to hardcode it.
     this.xhr_post(xhr, config.api_url + '/uploads', formData)
   }
 
   runImport = () => {
     this.props.runImport();
-    alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
-    hashHistory.push('/importhome/')
-  }
-
-  // this is specifically for the gedcom file upload process
-  xhr_post(xhrToSend, url, formData) {
-      xhrToSend.open("POST", url, true);
-      xhrToSend.setRequestHeader("x-access-token", fgtoken);
-      xhrToSend.send(formData);
-  }
-
-  onDrop = (files) => {
-    var formData = new FormData();
-    var xhr = new XMLHttpRequest();
-    formData.append('gedcom', files[0]);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          alert('File Upload Successful, redirecting to Import Dashboard');
-          hashHistory.push('/importhome/')
-        } else {
-          alert('File Upload Unsuccessful');
-        }
-      }
-    }
-    // TODO: Need to reference the config.js to bring in the correct server. Not good to hardcode it.
-    this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
-  }
-
-  runImport = () => {
-    this.props.runImport();
-    alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
-    hashHistory.push('/importhome/')
+    msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
   }
   // <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
 
@@ -136,7 +121,6 @@ export default class ImportDashboard extends React.Component {
                     <p>This currently only accepts files from Ancestry.com</p>
                   </div>
                 </Dropzone>
-                <button class="btn button3" onClick={this.runImport}> Run Import </button>
               </div>
             </div>
           </div>
@@ -147,19 +131,11 @@ export default class ImportDashboard extends React.Component {
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
-              <h3 class="step-header">Review People</h3>
+              <h3 class="step-header">Import Documents</h3>
             </div>
             <div class="step-action">
               <div class="action-content">
-                <div class="action-row">
-                  <label> Ready to be Imported: </label>
-                  <p class="actionItem">{this.props.peopleRemaining.length}</p>
-                </div>
-                <div class="action-row">
-                  <label>  Already Imported: </label>
-                  <p class="actionItem">{this.props.peopleImported.length}</p>
-                </div>
-                <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
+                <button class="btn button3" onClick={this.runImport}> Run Import </button>
               </div>
             </div>
           </div>
@@ -170,19 +146,21 @@ export default class ImportDashboard extends React.Component {
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
-              <h3 class="step-header">Review Events</h3>
+              <h3 class="step-header">Review People</h3>
             </div>
             <div class="step-action">
               <div class="action-content">
+                {/*
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
-                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
+                  <p class="actionItem">{this.props.peopleRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
-                  <p class="actionItem">{this.props.eventsImported.length}</p>
+                  <p class="actionItem">{this.props.peopleImported.length}</p>
                 </div>
-                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+                */}
+                <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
               </div>
             </div>
           </div>
@@ -193,10 +171,11 @@ export default class ImportDashboard extends React.Component {
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
-              <h3 class="step-header">Review Parents</h3>
+              <h3 class="step-header">Review Events</h3>
             </div>
             <div class="step-action">
               <div class="action-content">
+                {/*
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.eventsRemaining.length}</p>
@@ -205,6 +184,7 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
+                */}
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
             </div>
@@ -216,17 +196,44 @@ export default class ImportDashboard extends React.Component {
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
-              <h3 class="step-header">Review Pairbonds</h3>
+              <h3 class="step-header">Review Parents</h3>
             </div>
             <div class="step-action">
               <div class="action-content">
                 <div class="action-row">
+                {/*
                   <label> Ready to be Imported: </label>
                   <p class="actionItem">{this.props.eventsRemaining.length}</p>
                 </div>
                 <div class="action-row">
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
+                */}
+                </div>
+                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="import-row">
+          <div class="import-step">
+            <p>6</p>
+          </div>
+          <div class="import-step-content">
+            <div class="step-instruction">
+              <h3 class="step-header">Review Pairbonds</h3>
+            </div>
+            <div class="step-action">
+              <div class="action-content">
+                <div class="action-row">
+                {/*
+                  <label> Ready to be Imported: </label>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
+                </div>
+                <div class="action-row">
+                  <label>  Already Imported: </label>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
+                */}
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
               </div>
@@ -234,6 +241,7 @@ export default class ImportDashboard extends React.Component {
           </div>
         </div>
       </div>
+      <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
     </div>);
   }
 }

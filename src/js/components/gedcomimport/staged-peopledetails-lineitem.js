@@ -66,7 +66,6 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 					Add
 				</button>
 			</div>
-
 		</div>
 	);
 }

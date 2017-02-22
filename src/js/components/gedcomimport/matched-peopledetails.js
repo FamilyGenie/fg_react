@@ -34,6 +34,9 @@ export default class MatchedPeopleDetails extends React.Component {
     this.props.useRecord(this.props.starId, 'ignore', true);
     hashHistory.push('/stagedpeoplesearch/');
   }
+  /*<button onClick={this.useRecord}>
+    Use Record
+  </button>*/
 
   render = () => {
     const { person, events, onBlur } = this.props;
@@ -43,22 +46,14 @@ export default class MatchedPeopleDetails extends React.Component {
     );
 
     if (person) {
-      return(<div>
-
-      <MatchedPeopleLineItem person={person} key={person._id} />
-
-      <button onClick={this.useRecord}>
-        Use Record
-      </button>
-
-        <div class="container">
-          <h3> Events </h3>
-          <div class="col-xs-12">
+      return(
+        <div class="comparisonList">
+          <MatchedPeopleLineItem person={person} key={person._id} useRecord={this.useRecord} />
+          <h3 class="stagedHeader">Events</h3>
+          <div class="">
             {mappedEvents}
           </div>
-        </div>
-
-      </div>);
+        </div>);
     } else {
       return (<p>Loading...</p>);
     }
