@@ -91,22 +91,18 @@ export default class PairBondRelLineItem extends React.Component {
 						contentLabel="Modal"
 						>
 						{/* Everything between here and <ParentalRelLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
-
-						<div class="modal-header">
-							<div class="modal-header-1">
-							</div>
-							<div class="modal-header-2">
-								<div class="PR-modal-header">
-									PairBond Relationship Edit
-								</div>
-							</div>
-							<div class="modal-header-3">
-								<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
-							</div>
+						<div class="modalClose">
+							<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+						</div>
+						<div class="modalH">
+								Pairbond Relationship Edit
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<PairBondRelLineItemEdit pairBondRel={pairBondRel} star={star}/>
+						<PairBondRelLineItemEdit
+							pairBondRel={pairBondRel}
+							star={star}
+							closeModal={this.closeModal}/>
 						<div><p></p></div>
 					</Modal>
 				</div>)

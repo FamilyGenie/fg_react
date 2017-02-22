@@ -1,19 +1,14 @@
 import axios from "axios";
-import cookie from "react-cookie";
 
 import config from "../config.js";
-
-const fgtoken = cookie.load('fg-access-token');
-
-var axiosConfig = {
-	headers: {'x-access-token': fgtoken}
-};
+import { getAxiosConfig } from './actionFunctions';
 
 export function fetchEvents() {
 
+	// var axiosConfig = getAxiosConfig();
 	return function(dispatch) {
 		dispatch({type: "FETCH_EVENTS"});
-		axios.get(config.api_url + "/api/v2/events", axiosConfig)
+		axios.get(config.api_url + "/api/v2/events", getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "FETCH_EVENTS_FULFILLED", payload: response.data})
 			})
@@ -34,7 +29,7 @@ export function updateEvent(_id, field, value) {
 
 	return (dispatch) => {
 		dispatch({type: "UPDATE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/update", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/event/update", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "UPDATE_EVENT_FULFILLED", payload: response.data})
 			})
@@ -60,7 +55,7 @@ export function createEvent(eventDateUser, eventDate, person_id, eventType, even
 	};
 	return (dispatch) => {
 		dispatch({type: "CREATE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/create", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/event/create", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
 			})
@@ -80,9 +75,10 @@ export function deleteEvent(field, value) {
 		}
 	};
 
+
 	return (dispatch) => {
 		dispatch({type: "DELETE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/delete", body, axiosConfig)
+		axios.post(config.api_url + "/api/v2/event/delete", body, getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
 			})

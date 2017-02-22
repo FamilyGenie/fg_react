@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Modal from 'react-modal';
 
 import EventLineItemEdit from './event-lineitem-edit';
-import { setEvent } from '../../actions/modalActions';
+import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
 
 @connect(
 	(store, ownProps) => {
@@ -14,7 +14,10 @@ import { setEvent } from '../../actions/modalActions';
 		return {
 			// get the parentalRel object that needs to appear in the modal
 			setEvent: (event) => {
-				dispatch(setEvent(event));
+				dispatch(setModalEvent(event));
+			},
+			resetEvent: () => {
+				dispatch(resetModalEvent());
 			},
 		}
 	}
@@ -35,6 +38,8 @@ export default class EventLineItem extends React.Component {
 	}
 
 	closeModal = () => {
+		// first call the action that will set the store.modal.event to empty string, so that the event currently set for the EventLineItemEdit is not accidentally opened the next time this modal is opened.
+		this.props.resetEvent();
 		this.setState({modalIsOpen: false});
 	}
 
@@ -47,11 +52,11 @@ export default class EventLineItem extends React.Component {
 
 		if (event) {
 			return (
-				<div class="infoRow">
+				<div class="chronology-row">
 					<div class="buttonCol" onClick={this.openModal}>
-						<i class="fa fa-pencil-square-o button2"></i>
+						<i class="fa fa-pencil-square-o chronology-edit"></i>
 					</div>
-					<div class="inner-name-div">
+					<div class="inner-event-name">
 						<div class="nameCol" onClick={this.openModal}>
 							<div class="relTypeWord">{eventDateUser}</div>
 						</div>
@@ -68,21 +73,15 @@ export default class EventLineItem extends React.Component {
 						contentLabel="Modal"
 						>
 						{/* Everything between here and <EventLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
-						<div class="modal-header">
-							<div class="modal-header-1">
-							</div>
-							<div class="modal-header-2">
-								<div class="PR-modal-header">
-									Event Edit
-								</div>
-							</div>
-							<div class="modal-header-3">
-								<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
-							</div>
+						<div class="modalClose">
+							<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+						</div>
+						<div class="modalH">
+								Event Edit
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<EventLineItemEdit event={event} star={event.person_id}/>
+						<EventLineItemEdit event={event} star={event.person_id} closeModal={this.closeModal}/>
 					</Modal>
 				</div>)
 		} else {

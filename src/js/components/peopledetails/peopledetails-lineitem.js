@@ -81,14 +81,14 @@ export default class PeopleDetailsLineItem extends React.Component {
 					<div class="button-group">
 						<button
 							type="button"
-							class="btn btn-default"
+							class="btn btn-default btn-PD"
 							onClick={this.deletePerson}
 						>
 							Delete
 						</button>
 						<button
 							type="button"
-							class="btn btn-default"
+							class="btn btn-default btn-PD"
 							onClick={this.openMap}
 						>
 							Map
