@@ -54,7 +54,7 @@ constructor(props) {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
 
 		eventDateNew: this.props.event.eventDate,
-		
+
 		eventDateUserNew: this.props.event.eventDateUser,
 
 		eventTypeNew: this.props.event.eventType,
@@ -123,9 +123,9 @@ constructor(props) {
 
 	saveRecord = () => {
 
-		if (this.state.eventDateUserNew !== this.props.event.eventDateNew) {
+		if (this.state.eventDateUserNew !== this.props.event.eventDateUser) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateUserNew);
+      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)

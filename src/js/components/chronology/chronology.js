@@ -39,7 +39,7 @@ export default class Chronology extends React.Component {
     if (this.state.reverse) {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
+          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
           if (b.eventDate && a.eventDate) {
             return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
@@ -60,7 +60,7 @@ export default class Chronology extends React.Component {
             return b.eventPlace.localeCompare(a.eventPlace);
           }
           else {
-            return b.eventPlace - a.eventPlace 
+            return b.eventPlace - a.eventPlace
           }
         })
       }
@@ -89,7 +89,7 @@ export default class Chronology extends React.Component {
     else {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue 
+          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
           if (b.eventDate && a.eventDate) {
             return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
@@ -130,7 +130,7 @@ export default class Chronology extends React.Component {
           }
         })
       }
-      else {  
+      else {
         sortedEvents = this.props.events.sort(function(a, b) {
           return moment(a.eventDate) - moment(b.eventDate);
         });
@@ -144,7 +144,7 @@ export default class Chronology extends React.Component {
     return mappedEvents
   }
 
-  render = () => { 
+  render = () => {
     const { events, people } = this.props;
     const { reverse, mappedEvents }  = this.state;
 
