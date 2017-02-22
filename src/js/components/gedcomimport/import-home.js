@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 import { runImport } from '../../actions/importActions';
+import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
+import { fetchStagedEvents } from '../../actions/stagedEventActions';
+import AlertContainer from 'react-alert';
 
 import cookie from "react-cookie";
 
@@ -40,11 +43,25 @@ const fgtoken = cookie.load('fg-access-token');
     return {
       runImport: () => {
         dispatch(runImport())
+      },
+      fetchStagedPeople: () => {
+        dispatch(fetchStagedPeople())
+      },
+      fetchStagedEvents: () => {
+        dispatch(fetchStagedEvents())
       }
     }
   }
 )
 export default class ImportDashboard extends React.Component {
+
+   alertOptions = {
+      offset: 15,
+      position: 'bottom left',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
 
   goToStagedPeopleSearch = () => {
     hashHistory.push('/stagedpeoplesearch');
@@ -64,9 +81,11 @@ export default class ImportDashboard extends React.Component {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          alert('File Upload Successful');
+          msg.show('File upload successful', { type: 'success' })
+          this.props.fetchStagedPeople();
+          this.props.fetchStagedEvents();
         } else {
-          alert('File Upload Unsuccessful');
+          msg.show('File upload unsuccessful', { type: 'error' })
         }
       }
     }
@@ -76,39 +95,7 @@ export default class ImportDashboard extends React.Component {
 
   runImport = () => {
     this.props.runImport();
-    alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
-    hashHistory.push('/importhome/')
-  }
-
-  // this is specifically for the gedcom file upload process
-  xhr_post(xhrToSend, url, formData) {
-      xhrToSend.open("POST", url, true);
-      xhrToSend.setRequestHeader("x-access-token", fgtoken);
-      xhrToSend.send(formData);
-  }
-
-  onDrop = (files) => {
-    var formData = new FormData();
-    var xhr = new XMLHttpRequest();
-    formData.append('gedcom', files[0]);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          alert('File Upload Successful, redirecting to Import Dashboard');
-          hashHistory.push('/importhome/')
-        } else {
-          alert('File Upload Unsuccessful');
-        }
-      }
-    }
-    // TODO: Need to reference the config.js to bring in the correct server. Not good to hardcode it.
-    this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
-  }
-
-  runImport = () => {
-    this.props.runImport();
-    alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
-    hashHistory.push('/importhome/')
+    msg.show('You have imported new documents', { type: 'success' });
   }
   // <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
 
@@ -234,6 +221,7 @@ export default class ImportDashboard extends React.Component {
           </div>
         </div>
       </div>
+      <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
     </div>);
   }
 }
