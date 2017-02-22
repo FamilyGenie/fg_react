@@ -49,21 +49,21 @@ export default class ChronologyLineItem extends React.Component {
     if (event) {
       return (<div>
         <div class="staged-item">
-					<div class="buttonCol col-xs-1" onClick={this.openModal}>
-						<i class="fa fa-pencil-square-o"></i>
+          <div class="stagedChronDiv">
+            <p class="stagedChron">{eventDateUser}</p>
+          </div>
+          <div class="stagedChronDiv">
+            <p class="stagedChron">{event.personFName}&nbsp;{event.personLName}</p>
+          </div>
+          <div class="stagedChronDiv">
+            <p class="stagedChron">{(event.eventType ? event.eventType : "")}</p>
+          </div>
+          <div class="stagedChronDiv">
+            <p class="stagedChron">{(event.eventPlace ? event.eventPlace : "")}</p>
+          </div>
+          <div class="check-duplicate" onClick={this.openModal}>
+						<i class="fa fa-pencil-square-o button2"></i>
 					</div>
-          <div class="nameCol col-xs-2">
-            {eventDateUser}
-          </div>
-          <div class="nameCol col-xs-3">
-            {event.personFName}&nbsp;{event.personLName}
-          </div>
-          <div class="nameCol col-xs-2">
-            {(event.eventType ? event.eventType : "")}
-          </div>
-          <div class="nameCol col-xs-2">
-            {(event.eventPlace ? event.eventPlace : "")}
-          </div>
         </div>
         <Modal
           isOpen={modalIsOpen}

@@ -45,6 +45,11 @@
   flex-direction: row;
   width: 350px;
 }
+.stagedChronDiv {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+}
 .comparisonNameDiv {
   display: flex;
   flex-direction: row;
@@ -56,6 +61,15 @@
   margin-bottom: 0;
   font-size: 20px;
   align-items: center;
+  overflow: hidden;
+}
+.stagedChron {
+  margin-right: 5px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
 }
 .staged-container {
   width: 800px;
