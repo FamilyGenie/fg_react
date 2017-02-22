@@ -7,7 +7,16 @@ import ChronologyLineItem from './chronology-lineitem';
 
 @connect((store, ownProps) => {
   return {
-    events: store.events.events,
+    events: store.events.events.map((event) => {
+      var person = store.people.people.find((p) => {
+        return event.person_id === p._id;
+      })
+      if (person) {
+        event.personFName = person.fName;
+        event.personLName = person.lName;
+      }
+      return event
+    }),
     people: store.people.people,
   }
 })
@@ -55,6 +64,22 @@ export default class Chronology extends React.Component {
           }
         })
       }
+      else if (sortType === 'person') {
+        sortedEvents = this.props.events.sort(function(a, b) {
+          if (a.personLName != undefined && b.personLName != undefined) {
+          // Using localeCompare (ES6 function) to compare strings.
+            if (b.personLName !== a.personLName) {
+              return b.personLName.localeCompare(a.personLName);
+            }
+            else {
+              return b.personFName.localeCompare(a.personFName);
+            }
+          }
+          else {
+            return b.personLName - a.personLName;
+          }
+        })
+      }
       else {
         sortedEvents = this.props.events.sort(function(a, b) {
           return moment(a.eventDate) - moment(b.eventDate);
@@ -85,7 +110,23 @@ export default class Chronology extends React.Component {
             return a.eventPlace.localeCompare(b.eventPlace);
           }
           else {
-            return a.eventPlace - b.eventPlaca;e
+            return a.eventPlace - b.eventPlace;
+          }
+        })
+      }
+      else if (sortType === 'person') {
+        sortedEvents = this.props.events.sort(function(a, b) {
+          if (a.personLName != undefined && b.personLName != undefined) {
+          // Using localeCompare (ES6 function) to compare strings.
+            if (a.personLName !== b.personLName) {
+              return a.personLName.localeCompare(b.personLName);
+            }
+            else {
+              return a.personFName.localeCompare(b.personFName);
+            }
+          }
+          else {
+            return a.personLName - b.personLName;
           }
         })
       }
@@ -120,7 +161,7 @@ export default class Chronology extends React.Component {
               <span onClick={() => this.sortEvents('date')}> Date </span>
             </div>
             <div class="staged-header">
-              <p>Person</p>
+              <span onClick={() => this.sortEvents('person')}>Person</span>
             </div>
             <div class="staged-header">
               <span onClick={() => this.sortEvents('type')}>Type</span>

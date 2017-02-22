@@ -1,9 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import CompactEvent from './compactModal/compactEvent';
-import CompactPeopleDetails from './compactModal/CompactPeopleDetails';
-import CompactParentalRel from './compactModal/compactParentalRel';
 import { updatePerson } from '../actions/peopleActions';
 import { updateEvent } from '../actions/eventsActions';
 import { updateParentalRel } from '../actions/parentalRelsActions';
