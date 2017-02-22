@@ -34,11 +34,11 @@ export function login(username, password, showMsg) {
 				dispatch(fetchStagedEvents());
 				// dispatch(fetchStagedParentalRels());
 
+				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
+				hashHistory.push('/');
 				if (showMsg) {
 					msg.show('Successful Login. Welcome.');
 				}
-				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
-				hashHistory.push('/');
 
 			})
 			.catch((err) => {
