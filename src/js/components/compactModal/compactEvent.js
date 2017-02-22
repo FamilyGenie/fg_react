@@ -123,13 +123,6 @@ constructor(props) {
 		}
 	}
 
-	deleteRecord = () => {
-		this.props.deleteEvent(this.props.event._id);
-		if(this.props.closeModal) {
-			this.props.closeModal();
-		}
-	}
-
 	render = () => {
 		// console.log(this.state, 'state of the state')
 		const { event, eventTypes} = this.props;

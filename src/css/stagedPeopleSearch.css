@@ -14,7 +14,7 @@
   overflow: scroll;
   margin-right: auto;
   margin-left: auto;
-  border: 1px solid silver;
+  /*border: 1px solid silver;*/
   border-radius: 5px;
 }
 .staged-item {
@@ -137,4 +137,7 @@
 .comparisonDiv {
   display: flex;
   flex-direction: row;
+}
+.stagedHeader {
+  text-align: center;
 }

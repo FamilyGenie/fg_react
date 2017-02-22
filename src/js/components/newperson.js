@@ -1,16 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import PeopleDetailsLineItem from './peopledetails/peopledetails-lineitem';
-import EventLineItemEdit from './peopledetails/event-lineitem-edit';
-import ParentalRelLineItemEdit from './peopledetails/parentalrel-lineitem-edit';
 import CompactEvent from './compactModal/compactEvent';
 import CompactPeopleDetails from './compactModal/CompactPeopleDetails';
 import CompactParentalRel from './compactModal/compactParentalRel';
 import { updatePerson } from '../actions/peopleActions';
 import { updateEvent } from '../actions/eventsActions';
 import { updateParentalRel } from '../actions/parentalRelsActions';
-import { closeNewPersonModal } from '../actions/modalActions';
+import { closeNewPersonModal, deleteNewPerson, saveNewPerson } from '../actions/modalActions';
 
 
 
@@ -47,6 +44,12 @@ You can look in the peoplesearch component for an example of a component that ca
       closeNewPersonModal: () => {
         dispatch(closeNewPersonModal());
       },
+      deleteNewPerson: (_id) => {
+        dispatch(deleteNewPerson());
+      },
+      saveNewPerson: () => {
+        dispatch(saveNewPerson());
+      },
     }
   }
 )
@@ -65,6 +68,21 @@ export default class NewPerson extends React.Component {
       })
     } else {
       this.props.closeNewPersonModal();
+    }
+  }
+
+  deleteNewPerson = () => {
+    console.log("inside delete new person")
+    this.props.deleteNewPerson(this.props.newPerson.id, evt.value);
+
+    if (this.props.closeNewPersonModal) {
+      this.props.closeModal();
+    }
+  }
+  savePerson = () => {
+    this.props.saveNewPerson(this.props.newPerson.id, evt.value);
+    if (this.props.closeNewPersonModal) {
+      this.props.closeModal();
     }
   }
 
@@ -99,16 +117,16 @@ export default class NewPerson extends React.Component {
 					<button
 						type="button"
 						class="btn btn-default modal-delete"
-						onClick={this.saveRecord}
+						onClick={this.savePerson}
 					>
 						Save
 					</button>
 					<button
 						type="button"
 						class="btn btn-default modal-delete"
-						onClick={this.deleteRecord}
+						onClick={this.deleteNewPerson}
 					>
-						Delete
+						Cancel
 					</button>
 				</div>
       </div>);

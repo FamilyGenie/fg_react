@@ -39,7 +39,6 @@ export default class StagedPeopleSearchLineItem extends React.Component {
 
 	render = () => {
 		const {stagedPerson} = this.props;
-		console.log(stagedPerson, "start of render");
 		const bDate = (stagedPerson.birthDate ? stagedPerson.birthDate.substr(0,10) : stagedPerson.birthDate);
 		const dDate = (stagedPerson.deathDate ? stagedPerson.deathDate.substr(0,10) : stagedPerson.deathDate);
 

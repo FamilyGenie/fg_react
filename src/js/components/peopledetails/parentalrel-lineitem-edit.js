@@ -50,8 +50,7 @@ import { updateParentalRel, deleteParentalRel } from '../../actions/parentalRels
 				dispatch(updateParentalRel(_id, field, value));
 			},
 			deleteParentalRel: (_id) => {
-				// the deleteParentalRel action requires you to send the field that you want to delete by, and then the value of that field for the record you want to delete.
-				dispatch(deleteParentalRel('_id', _id));
+				dispatch(deleteParentalRel(_id));
 			}
 		}
 	}
@@ -78,6 +77,8 @@ export default class ParentalRelLineItemEdit extends React.Component {
 			endDateUserNew: this.props.parentalRel.endDateUser
 
 			// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.parentalRel
+
+
 		}
 	}
 
@@ -137,7 +138,7 @@ export default class ParentalRelLineItemEdit extends React.Component {
 		}
 	}
 	deleteRecord = () => {
-		this.props.deleteParentalRel(this.props.parentalRel._id);
+		this.props.deleteParentalRel(this.props.parentalRel._id, evt.value);
 
 		if (this.props.closeModal) {
 			this.props.closeModal();

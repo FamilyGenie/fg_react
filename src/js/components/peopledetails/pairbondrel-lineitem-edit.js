@@ -54,7 +54,7 @@ import { updatePairBondRel, deletePairBondRel } from '../../actions/pairBondRels
 				dispatch(updatePairBondRel(_id, field, value));
 			},
 			deletePairBondRel: (_id) => {
-				// the deletePairBondRel action requires you to send the field that you want to delete by, and then the value of that field for the record you want to delete.
+				// the action to delete a pairBondRel requires a pass of the field name and the value
 				dispatch(deletePairBondRel('_id', _id));
 			}
 		}
@@ -142,7 +142,7 @@ constructor(props) {
 		}
 	}
 	deleteRecord = () => {
-		this.props.deletePairBondRel(this.props.pairBondRel._id);
+		console.log(this.state, "this is the state");
 		if(this.props.closeModal) {
 			this.props.closeModal();
 		}
@@ -191,8 +191,7 @@ constructor(props) {
 							Start Date
 							</div>
 							<div class="PR-sDate">
-								<DateInput
-									initialValue={this.state.startDateUserNew}
+								<DateInput 			 					initialValue={this.state.startDateUserNew}
 									onNewDate={this.tempStartDate}
 									field="startDate"
 								/>
