@@ -169,6 +169,10 @@ export default class FamilyMap extends React.Component {
 
 	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record.
 	checkForBioParents = (star_id) => {
+		// get the star, so we can use star's birthdate
+		var star = this.getPersonById(star_id);
+		var createPairBond = false;
+		debugger;
 		// find biological mother relationship
 		var momRel = this.props.parentalRelationships.find(function(parentRel){
 			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -185,11 +189,14 @@ export default class FamilyMap extends React.Component {
 				endDate: '',
 				parent_id: '',
 				relationshipType: 'Mother',
-				startDate: '',
+				startDate: star.birthDate,
+				startDateUser: star.birthDateUser,
 				subType: 'Biological',
 			}
-
+			// push this relationship onto the parentalRelationships record
 			this.props.parentalRelationships.push(momRel);
+			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
+			createPairBond = true;
 		}
 
 		// find biological dad relationship record
@@ -208,11 +215,28 @@ export default class FamilyMap extends React.Component {
 				endDate: '',
 				parent_id: '',
 				relationshipType: 'Father',
-				startDate: '',
+				startDate: star.birthDate,
+				startDateUser: star.birthDateUser,
 				subType: 'Biological',
 			}
-
+			// push this relationship onto the parentalRelationships record
 			this.props.parentalRelationships.push(dadRel);
+			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
+			createPairBond = true;
+		}
+
+		if (createPairBond) {
+			// If there we had to create a momRel or dadRel in this function, then we also will create a pairBond between mom and dad. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
+			// TODO: if there are pairBonds between adopted parents, then this function is not called. Is that a problem??? Maybe we shouldn't call it all, now that we can draw parents not in a pair bond - so that both mom and dad will show on the map without a relationship between them.
+
+			var pairBond = {
+				personOne_id : momRel.parent_id,
+				personTwo_id : dadRel.parent_id,
+				relationshipType : "???",
+				startDate : null
+			};
+
+			this.pairBonds.push(pairBond);
 		}
 	}
 
@@ -410,35 +434,7 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(subTypeCompare);
 		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
-			// // reset the mom and dad variable every time through the loop.
-			// mom = null;
-			// dad = null;
-			// parent = this.getPersonById(pairBond.personOne_id);
-
-			// // TODO. If there are two women married, then the mom variable will only contain the woman who is in personTwo_id. If there are two men married, then the dad variable will only contain the man who is in personTwo_id. The person who is in personOne_id will not appear on the map. This is a problem, we want both to show up in the map.
-
-			// if (parent.sexAtBirth === "M") {
-			// 	dad = parent;
-			// } else if ( parent.sexAtBirth === "F" ) {
-			// 	mom = parent;
-			// }
-
-			// // it is possible that there will be just one parent in the pairBond. This would happen if there is a parent of the star that does not have a pairBond with anyone. The function addParentsNotInPairBonds adds the single parents into the this.pairBonds array. The single parent is added as personOne. And personTwo is left null.
-			// if (pairBond.personTwo_id) {
-			// 	parent = this.getPersonById(pairBond.personTwo_id);
-
-			// 	if (parent.sexAtBirth === "M") {
-			// 		dad = parent;
-			// 	} else if ( parent.sexAtBirth === "F" ) {
-			// 		mom = parent;
-			// 	}
-			// }
-
-			// now that we call the addParentsNotInPairBonds function to add single parents to the pairBonds array to be drawn, we do not need to alert the user when this condition exists
-			// if ( !(mom && dad) ) {
-			// 	alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
-			// 	return false;
-			// }
+			debugger;
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
@@ -465,51 +461,7 @@ export default class FamilyMap extends React.Component {
 					nextFemaleX = this.drawMom(personTwo, nextFemaleX, YPos, parentDistance);
 				}
 			}
-
-			// // if dad is not yet drawn, then draw and add to alreadyDrawn
-			// if ( dad && !this.alreadyDrawn.includes(dad) ) {
-			// 	// The following two variables are stored in the array object, and don't go back to the database.
-			// 	dad.mapXPos = nextMaleX;
-			// 	dad.mapYPos = YPos;
-			// 	dad.d3Circle = this.drawCircle(dad);
-			// 	// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-			// 	if (dad.deathDate) {
-			// 		if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
-			// 			this.drawCircleHash(dad);
-			// 		}
-			// 	}
-			// 	dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
-			// 	dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
-			// 	nextMaleX -= parentDistance;
-			// 	this.alreadyDrawn.push(dad);
-			// } else if ( !dad ) {
-			// 	// throw error
-			// 	console.log("no dad in this pairbond to draw:", pairBond);
-			// }
-
-			// if mom is not yet drawn, then draw and add to alreadyDrawn
-			// if ( mom && !this.alreadyDrawn.includes(mom) ) {
-			// 	// The following two variables are stored in the array object, and don't go back to the database.
-			// 	mom.mapXPos = nextFemaleX;
-			// 	mom.mapYPos = YPos;
-			// 	mom.d3Circle = this.drawCircle(mom);
-			// 	// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-			// 	if (mom.deathDate) {
-			// 		if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
-			// 			this.drawCircleHash(mom);
-			// 		}
-			// 	}
-			// 	mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
-			// 	mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
-			// 	nextFemaleX += parentDistance;
-			// 	this.alreadyDrawn.push(mom);
-			// } else if ( !mom ) {
-			// 	// throw error
-			// 	console.log("no mom in this pairbond to draw:", pairBond);
-			// }
-
-			// if (mom && dad) {
-				debugger;
+			debugger;
 			if (personOne && personTwo) {
 				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
@@ -633,7 +585,6 @@ export default class FamilyMap extends React.Component {
 
 	addParentsNotInPairBonds = (child_id) => {
 		// check to see what parents are not in a pairBond
-		debugger;
 		for (let parent of this.parents) {
 			// if the parent is not found in any of the existing pairBonds, then add that parent to the pairBond array. Add them as personOne, set personTwo to null
 			if (!parentFound(parent, this.pairBonds)) {
@@ -684,7 +635,6 @@ export default class FamilyMap extends React.Component {
 		let oneRel, twoRel;
 
 		// for each parent
-		debugger;
 		for (let parentObj of this.parents) {
 			// get all pair bonds
 			pairBondTemp = this.props.pairBondRelationships.filter(
@@ -751,6 +701,7 @@ export default class FamilyMap extends React.Component {
 			} // end for pairbond
 		} // end for parentObj
 
+		/*
 		if (!this.pairBonds.length) {
 			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
 			// TODO: if there are pairBonds between adopted parents, then this function is not called. Is that a problem??? Maybe we shouldn't call it all, now that we can draw parents not in a pair bond - so that both mom and dad will show on the map without a relationship between them.
@@ -773,6 +724,7 @@ export default class FamilyMap extends React.Component {
 
 			this.pairBonds.push(pairBond);
 		}
+		*/
 
 		// if we got here, everything was executed successfully, so return true so map drawing can continue.
 		return true;
@@ -1278,7 +1230,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawRelLine(p1, p2, color, relType) {
-		debugger;
 		var lineStrArr = [];
 		var yControlPoint: number;
 		var line;
@@ -1348,7 +1299,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawAdoptiveRelLine(p1, p2, color, relType) {
-		debugger;
 		var lineStrArr = [];
 		var line;
 		var yControlPoint: number;
