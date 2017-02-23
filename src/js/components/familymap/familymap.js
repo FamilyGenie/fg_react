@@ -95,24 +95,19 @@ export default class FamilyMap extends React.Component {
 		this.componentDidMount();
 	}
 
-	// updateStarAge = (evt) => {
-	// 	console.log('in updateStarAge with ', evt.target.value)
-	// 	this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
-	// 	this.setState({
-	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-	// 		starAge: evt.target.value
-	// 	});
-	// 	this.componentDidMount();
-	// }
-
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
 		console.log("onAgeChange", evt.target.value);
-		this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
+		var star = this.getPersonById(this.props.star_id);
+		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
+
+		// this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
+			// dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
+		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
 		this.componentDidMount();
 	}
 
@@ -912,7 +907,7 @@ export default class FamilyMap extends React.Component {
 				return;
 			} else {
 				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
-				this.dateFilterString = moment(star.birthDate.toString()).add(18,'y').format('YYYY-MM-DD');
+				this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
 				dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 				starAge: 18
