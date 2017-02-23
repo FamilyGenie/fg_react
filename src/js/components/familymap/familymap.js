@@ -78,7 +78,7 @@ export default class FamilyMap extends React.Component {
 		var vStarAge = parseInt(this.state.starAge) - 1;
 		// also set the state variable
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
 		this.componentDidMount();
@@ -89,7 +89,7 @@ export default class FamilyMap extends React.Component {
 		var vStarAge = parseInt(this.state.starAge) + 1;
 		// also set the state variable
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
 		this.componentDidMount();
@@ -110,7 +110,7 @@ export default class FamilyMap extends React.Component {
 		console.log("onAgeChange", evt.target.value);
 		this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
 		this.componentDidMount();
@@ -176,7 +176,6 @@ export default class FamilyMap extends React.Component {
 		// get the star, so we can use star's birthdate
 		var star = this.getPersonById(star_id);
 		var createPairBond = false;
-		debugger;
 		// find biological mother relationship
 		var momRel = this.props.parentalRelationships.find(function(parentRel){
 			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -435,27 +434,26 @@ export default class FamilyMap extends React.Component {
 		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
 
-			parent = this.getPersonById(pairBond.personOne_id);
+			// parent = this.getPersonById(pairBond.personOne_id);
 
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
-			}
+			// if (parent.sexAtBirth === "M") {
+			// 	dad = parent;
+			// } else if ( parent.sexAtBirth === "F" ) {
+			// 	mom = parent;
+			// }
 
-			parent = this.getPersonById(pairBond.personTwo_id);
+			// parent = this.getPersonById(pairBond.personTwo_id);
 
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
-			}
+			// if (parent.sexAtBirth === "M") {
+			// 	dad = parent;
+			// } else if ( parent.sexAtBirth === "F" ) {
+			// 	mom = parent;
+			// }
 
-			if ( !(mom && dad) ) {
-				alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
-				return false;
-			}
->>>>>>> 547ab5e8ff9c7a2e69e1432eb5b3e34d125aa708
+			// if ( !(mom && dad) ) {
+			// 	alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
+			// 	return false;
+			// }
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
@@ -482,7 +480,6 @@ export default class FamilyMap extends React.Component {
 					nextFemaleX = this.drawMom(personTwo, nextFemaleX, YPos, parentDistance);
 				}
 			}
-			debugger;
 			if (personOne && personTwo) {
 				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
@@ -914,13 +911,16 @@ export default class FamilyMap extends React.Component {
 				alert('Star does not have a birthdate, map will not be drawn');
 				return;
 			} else {
-				this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				this.dateFilterString = moment(star.birthDate.toString()).add(18,'y').format('YYYY-MM-DD');
 				this.setState({
-				dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+				dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 				starAge: 18
 				});
 			}
 		}
+		console.log("Date: ", this.dateFilterString, star.birthDate);
+
 	}
 
 	getPersonById = (_id) => {
@@ -966,10 +966,10 @@ export default class FamilyMap extends React.Component {
 	drawCircleText(cx, cy, person) {
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
-		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
+		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
-			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
+			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 			textData = [
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
