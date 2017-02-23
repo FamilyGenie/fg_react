@@ -163,35 +163,42 @@ export default class FamilyMap extends React.Component {
 	//    this.componentDidMount();
 	//  }
 
+	checkAllChildrenForBioParents = () => {
+		for (let child of this.children) {
+			this.checkForBioParents(child._id);
+		}
+	}
 
 	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will also create the person (who is the mom and/or dad), if they don't exist.
-	checkForBioParents = (star_id) => {
+	checkForBioParents = (child_id) => {
 		console.log('Pair Bonds: ', this.pairBonds);
 		// get the star, so we can use star's birthdate
-		var star = this.getPersonById(star_id);
+		var child = this.getPersonById(child_id);
 		var createPairBond = false;
 		// find biological mother relationship
 		var momRel = this.props.parentalRelationships.find(function(parentRel){
 			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
 			return /[Mm]other/.test(parentRel.relationshipType) &&
 				/[Bb]iological/.test(parentRel.subType) &&
-				parentRel.child_id === star_id;
+				parentRel.child_id === child_id;
 		});
 
-		// if there is not a momRel, then create one for the star.
+		// if there is not a momRel, then create one for the child.
 		if (!momRel) {
 			momRel = {
-				_id: 'ZMom'+ star_id,
-				child_id: star_id,
+				_id: 'ZMom'+ child_id,
+				child_id: child_id,
 				endDate: '',
 				parent_id: '',
 				relationshipType: 'Mother',
-				startDate: star.birthDate,
-				startDateUser: star.birthDateUser,
+				startDate: child.birthDate,
+				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
 			// push this relationship onto the parentalRelationships record
+			debugger;
 			this.props.parentalRelationships.push(momRel);
+			console.log("parentalRels ", this.props.parentalRelationships);
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
 		}
@@ -200,19 +207,19 @@ export default class FamilyMap extends React.Component {
 		if (!momRel.parent_id) {
 			parent = {
 				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
-				_id: "ZMom" + star_id,
+				_id: "ZMom" + child_id,
 				birthDate: null,
 				birthPlace: "",
 				deathDate: null,
 				deathPlace:"",
-				fName: star.fName + "'s Mother",
+				fName: child.fName + "'s Mother",
 				lName: "",
 				mName: "",
 				notes: null,
 				sexAtBirth: "F"
 			};
 			this.people.push(parent);
-			momRel.parent_id = "ZMom" + star_id;
+			momRel.parent_id = "ZMom" + child_id;
 		}
 
 		// find biological dad relationship record
@@ -220,19 +227,19 @@ export default class FamilyMap extends React.Component {
 			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
 			return /[Ff]ather/.test(parentRel.relationshipType) &&
 				/[Bb]iological/.test(parentRel.subType) &&
-				parentRel.child_id === star_id;
+				parentRel.child_id === child_id;
 		});
 
-		// if there is not a dadRel, then create one for the star.
+		// if there is not a dadRel, then create one for the child.
 		if (!dadRel) {
 			dadRel = {
-				_id: 'ZDad' + star_id,
-				child_id: star_id,
+				_id: 'ZDad' + child_id,
+				child_id: child_id,
 				endDate: '',
 				parent_id: '',
 				relationshipType: 'Father',
-				startDate: star.birthDate,
-				startDateUser: star.birthDateUser,
+				startDate: child.birthDate,
+				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
 			// push this relationship onto the parentalRelationships record
@@ -245,19 +252,19 @@ export default class FamilyMap extends React.Component {
 		if (!dadRel.parent_id) {
 			parent = {
 				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
-				_id: "ZDad" + star_id,
+				_id: "ZDad" + child_id,
 				birthDate: null,
 				birthPlace: "",
 				deathDate: null,
 				deathPlace:"",
-				fName: star.fName + "'s Father",
+				fName: child.fName + "'s Father",
 				lName: "",
 				mName: "",
 				notes: null,
 				sexAtBirth: "M"
 			};
 			this.people.push(parent);
-			dadRel.parent_id = "ZDad" + star_id;
+			dadRel.parent_id = "ZDad" + child_id;
 		}
 
 		if (createPairBond) {
@@ -283,45 +290,46 @@ export default class FamilyMap extends React.Component {
 		const parentDistance = 220;
 		const childDistance = 120;
 
-		// I can't get setState to work here. Setting the dateFilterString to a value for testing purposes
-		// this.setState({dateFilterString: "1947-08-29"});
-		// this.dateFilterString = '1990-08-27';
-
-
 		this.initializeVariables();
 		// this.drawTicks();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
-		this.checkForBioParents(this.props.star_id);
+		// this.checkForBioParents(this.props.star_id);
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
+		// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+		this.checkAllChildrenForBioParents();
 
-		// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
-		if ( !this.getAllParentsOfChildren() ) {
-			hashHistory.push('/');
-			return;
+		var stillNewChildren = true;
+		var lastCount = this.children.length;
+
+		// loop through finding parents and children until we know we are not finding any more children.
+		while ( stillNewChildren ) {
+
+			// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
+			if ( !this.getAllParentsOfChildren() ) {
+				// function will already show an error, so don't need to show another one
+				hashHistory.push('/');
+				return;
+			}
+			console.log("After getAllParents: ", this.parents);
+
+			// this function will get all the children of the parents in the parents array
+			this.getAllChildrenOfParents();
+
+			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+			this.checkAllChildrenForBioParents();
+
+			console.log("After getAllChildren:", this.children);
+
+			// TODO: Is this a suitable test? I think there may be cases where there are still children not found. I think we need to test that no new children AND no new parents have been found.
+			if ( this.children.length === lastCount) {
+				stillNewChildren = false;
+			}
+			lastCount = this.children.length;
 		}
-		console.log("After getAllParents: ", this.parents);
-
-		if (this.parents.length === 0) {
-			alert("No parents for this person, map will not be drawn.");
-			hashHistory.push('/');
-			return;
-		}
-
-		this.getAllChildrenOfParents();
-		console.log("children:", this.children);
-
-		// then call getAllParents of Children again to get all the parents of all the children, not just parents of the star. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
-		if ( !this.getAllParentsOfChildren() ) {
-			hashHistory.push('/');
-			return;
-		}
-		console.log("After getAllParents second call: ", this.parents);
-
-		// need some recursion here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
 
 		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
 		if ( !this.getAllPairBonds() ) {
@@ -364,8 +372,7 @@ export default class FamilyMap extends React.Component {
 		this.children.sort(birthDateCompare);
 
 		for (let child of this.children) {
-			// get mom relationship record
-
+			debugger;
 			// find biological mother relationship
 			momRel = this.props.parentalRelationships.find(function(parentRel){
 				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -384,6 +391,7 @@ export default class FamilyMap extends React.Component {
 
 			// if we found both bio mom and bio dad, draw child halfway between them
 			if ( momRel && dadRel ) {
+				debugger;
 				mom = this.parents.find(function(parent){
 					return parent._id === momRel.parent_id;
 				});
@@ -434,7 +442,7 @@ export default class FamilyMap extends React.Component {
 
 			} else {
 				// if not both a mom and or a dad, print error message.
-				// alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
+				alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
 			}
 		} // end of let child of this.children
 
@@ -769,6 +777,7 @@ export default class FamilyMap extends React.Component {
 
 		// for each child
 		for (let child of this.children) {
+			debugger;
 			// get all parental relationships. if there is no start date, then make value empty string, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will still show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
