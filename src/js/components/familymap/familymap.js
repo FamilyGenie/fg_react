@@ -10,7 +10,6 @@ import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {
-		console.log("in familymap @connect with: ", store.people.people);
 		return {
 			star_id:
 				ownProps.params.star_id,
@@ -41,7 +40,6 @@ import NewPerson from '../newperson';
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log("in familymap with props: ", this.props);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -166,8 +164,9 @@ export default class FamilyMap extends React.Component {
 	//  }
 
 
-	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record.
+	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will also create the person (who is the mom and/or dad), if they don't exist.
 	checkForBioParents = (star_id) => {
+		console.log('Pair Bonds: ', this.pairBonds);
 		// get the star, so we can use star's birthdate
 		var star = this.getPersonById(star_id);
 		var createPairBond = false;
@@ -197,6 +196,25 @@ export default class FamilyMap extends React.Component {
 			createPairBond = true;
 		}
 
+		// if there is not a parent_id in the parental relationship found, add the person who will serve as a placeholder in the map as the star's biological mother. If the user clicks on this person, the person will be created.
+		if (!momRel.parent_id) {
+			parent = {
+				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
+				_id: "ZMom" + star_id,
+				birthDate: null,
+				birthPlace: "",
+				deathDate: null,
+				deathPlace:"",
+				fName: star.fName + "'s Mother",
+				lName: "",
+				mName: "",
+				notes: null,
+				sexAtBirth: "F"
+			};
+			this.people.push(parent);
+			momRel.parent_id = "ZMom" + star_id;
+		}
+
 		// find biological dad relationship record
 		var dadRel = this.props.parentalRelationships.find(function(parentRel){
 			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -221,6 +239,25 @@ export default class FamilyMap extends React.Component {
 			this.props.parentalRelationships.push(dadRel);
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
+		}
+
+		// if there is not a parent_id in the parental relationship found, add the person who will serve as a placeholder in the map as the star's biological father. If the user clicks on this person, the person will be created.
+		if (!dadRel.parent_id) {
+			parent = {
+				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
+				_id: "ZDad" + star_id,
+				birthDate: null,
+				birthPlace: "",
+				deathDate: null,
+				deathPlace:"",
+				fName: star.fName + "'s Father",
+				lName: "",
+				mName: "",
+				notes: null,
+				sexAtBirth: "M"
+			};
+			this.people.push(parent);
+			dadRel.parent_id = "ZDad" + star_id;
 		}
 
 		if (createPairBond) {
@@ -429,27 +466,6 @@ export default class FamilyMap extends React.Component {
 		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
 
-			// parent = this.getPersonById(pairBond.personOne_id);
-
-			// if (parent.sexAtBirth === "M") {
-			// 	dad = parent;
-			// } else if ( parent.sexAtBirth === "F" ) {
-			// 	mom = parent;
-			// }
-
-			// parent = this.getPersonById(pairBond.personTwo_id);
-
-			// if (parent.sexAtBirth === "M") {
-			// 	dad = parent;
-			// } else if ( parent.sexAtBirth === "F" ) {
-			// 	mom = parent;
-			// }
-
-			// if ( !(mom && dad) ) {
-			// 	alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
-			// 	return false;
-			// }
-
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
 				YPos = startY + 150;
@@ -457,10 +473,9 @@ export default class FamilyMap extends React.Component {
 				YPos = startY;
 			}
 
+			// find personOne and draw them if they haven't been drawn yet
 			personOne = null;
-			personTwo = null;
 			var personOne = this.getPersonById(pairBond.personOne_id);
-			var personTwo = this.getPersonById(pairBond.personTwo_id);
 			if (personOne && !this.alreadyDrawn.includes(personOne)) {
 				if (personOne.sexAtBirth === "M") {
 					nextMaleX = this.drawDad(personOne, nextMaleX, YPos, parentDistance);
@@ -468,6 +483,10 @@ export default class FamilyMap extends React.Component {
 					nextFemaleX = this.drawMom(personOne, nextFemaleX, YPos, parentDistance);
 				}
 			}
+
+			// find personOne and draw them if they haven't been drawn yet
+			personTwo = null;
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
 			if (personTwo && !this.alreadyDrawn.includes(personTwo)) {
 				if (personTwo.sexAtBirth === "M") {
 					nextMaleX = this.drawDad(personTwo, nextMaleX, YPos, parentDistance);
@@ -475,8 +494,9 @@ export default class FamilyMap extends React.Component {
 					nextFemaleX = this.drawMom(personTwo, nextFemaleX, YPos, parentDistance);
 				}
 			}
+
+			// if this pairBond record has two people, draw a relationship line between them
 			if (personOne && personTwo) {
-				// draw a relationship line
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
 				// the checkForExistingRel function returns the color of the existing relationship if it is found
 				pairBond.color = checkForExistingRel(pairBond, this.pairBonds);
@@ -714,6 +734,7 @@ export default class FamilyMap extends React.Component {
 			} // end for pairbond
 		} // end for parentObj
 
+		// TODO: Maybe what we need to do here is to see if there is a pair bond between the bio mom and dad, and create that here?
 		/*
 		if (!this.pairBonds.length) {
 			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
@@ -758,39 +779,25 @@ export default class FamilyMap extends React.Component {
 			// for each parental relationship of each child
 			for (let parentRel of parentalRelTemp) {
 				// first, push parentRel onto array of relationships to track
-				// this.parentRels = this.addToArray(this.parentRels, parentRel);
 				if (!this.parentRels.includes(parentRel)) {
 						this.parentRels.push(parentRel);
 					}
 				// find the parent
 				let parent = this.getPersonById(parentRel.parent_id);
+
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					// alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					// return false;
-
-					// add a parent record with name of Star as fName for this child so that a parent still shows on the map. Also, Create a unique _id to this record and then update the parentRels object so that the parentalRel record between this parent and child exists. Last, push the parent onto the people array for this map.
-
-					var star = this.getPersonById(this.props.star_id);
-					parent = {
-						// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
-						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id,
-						birthDate: null,
-						birthPlace: "",
-						deathDate: null,
-						deathPlace:"",
-						fName: star.fName + "'s " + (/[Mm]other/.test(parentRel.relationshipType) ? "Mother" : "Father"),
-						lName: "",
-						mName: "",
-						notes: null,
-						parentalRel_id: parentRel._id,
-						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
-					};
-					this.people.push(parent);
-					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id;
+					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+					return false;
+					// TODO: We can instead just remove this record from the parentalRel array.
+					// console.log('before splice ', this.parentRels);
+					// var i = this.parentRels.indexOf(parentRel);
+					// this.parentRels.splice(i, 1);
+					// console.log('after splice ', this.parentRels);
+					// alert("There was a parent record for child: " + child.fName + " " + child.lName + "that had a blank value. That parent is not appearing on this map.");
 				}
+
 				// put the parent into the parents array, if they don't yet exist
-				// this.parents = this.dataService.addToArray(this.parents, parent);
 				if (!this.parents.includes(parent)) {
 						this.parents.push(parent);
 					}
@@ -1432,7 +1439,8 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// mom is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
+					// alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
 				}
 			}
 
@@ -1455,7 +1463,9 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// dad is not drawn, so tell the user there is something fishy, and continue
-					 alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
+					//	alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+
 				}
 			}
 		}
