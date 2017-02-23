@@ -8,15 +8,8 @@ import { setModalEvent } from '../../actions/modalActions';
 
 @connect(
   (store, ownProps) => {
-    var event = store.events.events.find(function(e) {
-        return e._id === ownProps.eventId;
-    });
-
     return {
-      event : event,
-      person : store.people.people.find(function(p) {
-        return event.person_id === p._id
-      }),
+      event: ownProps.event,
     }
   },
   (dispatch) => {
@@ -46,54 +39,38 @@ export default class ChronologyLineItem extends React.Component {
   }
 
   render = () => {
-    const { person, event } = this.props;
+    const { event } = this.props;
     const { modalIsOpen } = this.state;
 
-    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate? event.eventDate.substr(0,10) : "DATE") );
+    const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : '') );
+    const eventDate = ( event.eventDate ? event.eventDate : (event.eventDate ? event.eventDate.substr(0,10) : '') );
 
-		var modalStyle = {
-			overlay: {
-			position: 'fixed',
-			top: 100,
-			left: 100,
-			right: 100,
-			bottom: 100,
-			}
-		}
-		var headingStyle = {
-			textAlign: "center",
-			color: "#333333",
-			fontWeight: "bold",
-			fontSize: "1.25em",
-			marginBottom: 10,
-		}
 
     if (event) {
       return (<div>
-        <div class="infoRow">
+        <div class="staged-item">
 					<div class="buttonCol col-xs-1" onClick={this.openModal}>
 						<i class="fa fa-pencil-square-o"></i>
 					</div>
           <div class="nameCol col-xs-2">
-            {moment(eventDateUser).format('MM/DD/YYYY')}
+            {eventDateUser}
           </div>
           <div class="nameCol col-xs-3">
-            {person.fName + ' ' + person.lName}
+            {event.personFName}&nbsp;{event.personLName}
           </div>
           <div class="nameCol col-xs-2">
-            {event.eventType}
+            {(event.eventType ? event.eventType : "")}
           </div>
           <div class="nameCol col-xs-2">
-            {event.eventPlace}
+            {(event.eventPlace ? event.eventPlace : "")}
           </div>
         </div>
         <Modal
           isOpen={modalIsOpen}
           contentLabel="Modal"
-          style={modalStyle}
         >
           <div class="row">
-            <div class="col-xs-12" style={headingStyle}>
+            <div class="col-xs-12">
               Event Edit
             </div>
           </div>
@@ -101,7 +78,7 @@ export default class ChronologyLineItem extends React.Component {
           <div><p></p></div>
           <button onClick={this.closeModal}>Close</button>
         </Modal>
-         
+
       </div>)
     } else {
       return (<p>Loading...</p>);

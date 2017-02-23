@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
+import AlertContainer from 'react-alert';
 
 @connect(
 	// test
@@ -11,7 +12,7 @@ import { login } from '../../actions/authActions';
 		return {
 			// get the parentalRel object that needs to appear in the modal
 			login: (userName, password) => {
-				dispatch(login(userName, password));
+				dispatch(login(userName, password, true));
 			},
 		}
 	}
@@ -40,47 +41,58 @@ export default class Login extends React.Component {
 
 	}
 
+	alertOptions = {
+      offset: 600,
+      position: 'middle',
+      theme: 'light',
+      time: 0,
+      transition: 'scale'
+    };
+
 	render = () => {
 	    return (
-	    	<div class="container main">
-		        <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
-		        <div class="container">
-		            <form role="form">
-		                <div class="form-group userName">
-		                    <label for="userName"><span class="glyphicon glyphicon-user"></span> Username</label>
-		                    <input
-		                            type="email"
-		                            name="email"
-		                            class="form-control"
-		                            id="userName"
-		                            placeholder="Enter email"
-		                            required
-		                            onBlur={this.updateEmail.bind(this)}
+	    	<div class="main-div">
+					<div className="login-body">
+						<form className="name-form">
+							<div className="login-h3">
+								<p className="login-header">Log In</p>
+								<a className="or-sign-up" onClick={this.signUpClick}>Or, Sign Up</a>
+							</div>
+							<br/>
+							<div class="login-inputs">
+								<input
+										type="email"
+										name="email"
+										class="form-control form"
+										id="userName"
+										placeholder="Enter email"
+										required
+										onBlur={this.updateEmail.bind(this)}
 
-		                    />
-		                </div>
-		                <div class="form-group">
-		                    <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-		                    <input
-		                            type="password"
-		                            class="form-control"
-		                            id="psw"
-		                            placeholder="Enter password"
-		                            required
-		                            onBlur={this.updatePassword.bind(this)}
+								/>
+								<input
+									type="password"
+									class="form-control form"
+									id="psw"
+									placeholder="Enter password"
+									required
+									onBlur={this.updatePassword.bind(this)}
 
-		                    />
-		                </div>
-		                <button
-		                        type="submit"
-		                        class="btn btn-default btn-success btn-block loginButton"
-		                        data-dismiss="modal"
-		                        onClick={this.submitCredentials.bind(this)}
-		                >
-		                    <span class="glyphicon glyphicon-off"></span> Login
-		                </button>
-		            </form>
-		        </div>
+								/>
+							</div>
+							<br/>
+							<div className="w-login-button">
+								<button onClick={this.submitCredentials.bind(this)} className="btn w-l-button btn-info">LOG IN
+								</button>
+							</div>
+							<div className="checkbox">
+								<label className="remember-user"><input type="checkbox" value=""/>Remember Me</label>
+								<a className="forgot" href="">Forgot password?</a>
+							</div>
+						</form>
+					</div>
+					{/* This is the container for the alerts we are using */}
+			    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 		    </div>
 		)
     }

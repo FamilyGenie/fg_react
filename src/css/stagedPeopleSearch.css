@@ -8,11 +8,33 @@
   border: 1px solid silver;
   border-radius: 5px;
 }
-.staged-person {
+.comparisonList {
+  background-color: white;
+  width: 600px;
+  overflow: scroll;
+  margin-right: auto;
+  margin-left: auto;
+  /*border: 1px solid silver;*/
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.staged-item {
   display: flex;
   flex-direction: row;
   width: 95%;
   height: 50px;
+  align-items: center;
+  border-bottom: 1px solid silver;
+  margin-left: auto;
+  margin-right: auto;
+}
+.stagedPerson {
+  font-family: SSP-Light;
+  height: 50px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  width: 95%;
   align-items: center;
   border-bottom: 1px solid silver;
   margin-left: auto;
@@ -23,6 +45,11 @@
   flex-direction: row;
   width: 350px;
 }
+.comparisonNameDiv {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+}
 .staged-name {
   margin-right: 5px;
   font-family: Cabin;
@@ -30,12 +57,18 @@
   font-size: 20px;
   align-items: center;
 }
-#staged-container {
+.staged-container {
   width: 800px;
   height: 600px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
+}
+.stagedComparison {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: scroll;
 }
 .staged-header-container {
   display: flex;
@@ -56,19 +89,39 @@
   margin-right: auto;
   margin-left: auto;
 }
-.staged-date-header-1 {
+.stagedHB {
   display: flex;
   align-items: center;
   width: 80px;
   margin-right: auto;
-  margin-left: 29px;
+  margin-left: 31px;
 }
-.staged-date-header-2 {
+.stagedHDob {
   display: flex;
   align-items: center;
   width: 80px;
   margin-right: auto;
-  margin-left: 39px;
+  margin-left: 44px;
+}
+.stagedHD {
+  display: flex;
+  align-items: center;
+  width: 83px;
+  margin-right: auto;
+  margin-left: 47px;
+}
+.staged-header {
+  width: 25%;
+  height: 30px;
+  text-align: center;
+}
+.stagedElement {
+  width: 25%;
+  text-align: center;
+}
+.stagedHeaderReview {
+  margin-left: auto;
+  margin-right: 4px;
 }
 .staged-sex {
   width: 30px;
@@ -80,4 +133,29 @@
 .check-duplicate {
   margin-left: auto;
   margin-right: 8px;
+}
+.comparisonDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stagedHeader {
+  text-align: center;
+}
+.stagedHeader1 {
+  text-align: left;
+  border-bottom: 2px solid silver;
+  margin-bottom: 20px;
+}
+.stagedH3 {
+  font-family: CabinMI;
+}
+.stagedButton {
+  margin-left: auto;
+}
+.mappedMatches {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 600px;
 }

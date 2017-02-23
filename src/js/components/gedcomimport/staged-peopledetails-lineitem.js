@@ -44,31 +44,28 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 
 	render = () => (
 
-		<div class="staged-person">
-      <div>
-				{this.props.person.fName}
+		<div class="stagedPerson">
+			<div class="comparisonNameDiv">
+				<p class="staged-name">{this.props.person.fName}</p>
+				<p class="staged-name">{this.props.person.lName}</p>
+			</div>
+      <div class="staged-sex">
+				<p class="staged-name">{this.props.person.sexAtBirth}</p>
       </div>
-      <div>
-				{this.props.person.lName}
+      <div class="staged-date">
+        <p class="staged-name">{this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}</p>
       </div>
-      <div>
-				{this.props.person.sexAtBirth}
+      <div class="stagd-date">
+        <p class="staged-name">{(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}</p>
       </div>
-      <div>
-        {this.props.person.birthDate ? this.props.person.birthDate.toString().substr(0,10) : ''}
-      </div>
-      <div>
-        {(this.props.person.deathDate ? this.props.person.deathDate.toString().substr(0,10) : '')}
-      </div>
-			<div class="col-xs-3 custom-input">
+			<div class="">
 				<button
-					class="form-control"
+					class="btn button3"
 					onClick={this.importPerson}
 				>
-					Add To DB
+					Add
 				</button>
 			</div>
-
 		</div>
 	);
 }

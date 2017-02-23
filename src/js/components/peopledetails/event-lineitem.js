@@ -73,21 +73,15 @@ export default class EventLineItem extends React.Component {
 						contentLabel="Modal"
 						>
 						{/* Everything between here and <EventLineItemEdit/> is the header of the modal that will open to edit the parental relationship info */}
-						<div class="modal-header">
-							<div class="modal-header-1">
-							</div>
-							<div class="modal-header-2">
-								<div class="PR-modal-header">
-									Event Edit
-								</div>
-							</div>
-							<div class="modal-header-3">
-								<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
-							</div>
+						<div class="modalClose">
+							<i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
+						</div>
+						<div class="modalH">
+								Event Edit
 						</div>
 						<div class="buffer-modal">
 						</div>
-						<EventLineItemEdit event={event} star={event.person_id}/>
+						<EventLineItemEdit event={event} star={event.person_id} closeModal={this.closeModal}/>
 					</Modal>
 				</div>)
 		} else {
