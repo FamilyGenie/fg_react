@@ -95,19 +95,25 @@ export default class FamilyMap extends React.Component {
 		this.componentDidMount();
 	}
 
-	updateStarAge = (evt) => {
-		console.log('in updateStarAge with ', evt.target.value)
+	// updateStarAge = (evt) => {
+	// 	console.log('in updateStarAge with ', evt.target.value)
+	// 	this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
+	// 	this.setState({
+	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+	// 		starAge: evt.target.value
+	// 	});
+	// 	this.componentDidMount();
+	// }
+
+	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
+	onAgeChange = (evt) => {
+		console.log("onAgeChange", evt.target.value);
 		this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
 			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
 		this.componentDidMount();
-	}
-
-	// this function it to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
-	onAgeChange = (evt) => {
-		this.setState({starAge: evt.target.value});
 	}
 
 	render = () => {
@@ -118,29 +124,27 @@ export default class FamilyMap extends React.Component {
 					<div class="header-div">
 						<h1 class="family-header">Family Map</h1>
 					</div>
-					<div class="main-date">
-						<div class="map-date">
-							<div class="map-date-1">
-								Date: {this.state.dateFilterString}
+					<div class="mainDate">
+						<div class="mapDate">
+							<div class="mapDateContents">
+								<p>Date:</p>
+								<p class="mapDateText">{this.state.dateFilterString}</p>
 							</div>
-							<div class="map-date-1">
-								Star's Age:
+							<div class="starAge">
+								<p>Star's Age:</p>
 								<input
 									id="ageInput"
-									class="form-control"
+									class="form-control ageInput"
 									type="text"
 									value={this.state.starAge}
 									onChange={this.onAgeChange}
-									onBlur={this.updateStarAge}
 								/>
 							</div>
 						</div>
-						<div class="map-arrow">
+						<div class="mapArrow">
 							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
 							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 						</div>
-					</div>
-					<div>
 					</div>
 				</div>
 				<div class="map">
@@ -325,8 +329,6 @@ export default class FamilyMap extends React.Component {
 		let dadRels = [];
 		let xPos: number;
 
-		// console.log("in drawAllChildren", this.children);
-
 		// sort children by birthdate
 		this.children.sort(birthDateCompare);
 
@@ -357,14 +359,12 @@ export default class FamilyMap extends React.Component {
 				dad = this.parents.find(function(parent){
 					return parent._id === dadRel.parent_id;
 				});
-				// console.log("drawing kid for mom and dad: ", mom, dad);
 				// calculate xPos of child
 				// find the amount that is halfway between the two parents
 				xPos = Math.abs(mom.mapXPos - dad.mapXPos) / 2;
 				// whichever parent is further left, add the amount to their xPos to get xPos for child
 				xPos = (mom.mapXPos < dad.mapXPos) ? mom.mapXPos + xPos : dad.mapXPos + xPos;
 
-				// console.log("in drawAllChildren:", child, mom, dad, xPos);
 				// set x and y values inside of child object, they are used by the drawParentalLine functions
 				child.mapXPos = xPos;
 				child.mapYPos = nextChildY;
@@ -434,7 +434,28 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(subTypeCompare);
 		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
-			debugger;
+
+			parent = this.getPersonById(pairBond.personOne_id);
+
+			if (parent.sexAtBirth === "M") {
+				dad = parent;
+			} else if ( parent.sexAtBirth === "F" ) {
+				mom = parent;
+			}
+
+			parent = this.getPersonById(pairBond.personTwo_id);
+
+			if (parent.sexAtBirth === "M") {
+				dad = parent;
+			} else if ( parent.sexAtBirth === "F" ) {
+				mom = parent;
+			}
+
+			if ( !(mom && dad) ) {
+				alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
+				return false;
+			}
+>>>>>>> 547ab5e8ff9c7a2e69e1432eb5b3e34d125aa708
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
@@ -742,7 +763,6 @@ export default class FamilyMap extends React.Component {
 					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
-			// console.log("in getAllParents, parentalRelTemp: ", parentalRelTemp);
 			// for each parental relationship of each child
 			for (let parentRel of parentalRelTemp) {
 				// first, push parentRel onto array of relationships to track
@@ -776,7 +796,6 @@ export default class FamilyMap extends React.Component {
 					};
 					this.people.push(parent);
 					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id;
-					console.log("parentRels: ", this.parentRels);
 				}
 				// put the parent into the parents array, if they don't yet exist
 				// this.parents = this.dataService.addToArray(this.parents, parent);
@@ -791,7 +810,6 @@ export default class FamilyMap extends React.Component {
 
 	getAllChildrenOfParents = () => {
 
-		// console.log("in getAllChildrenOfStarParents", this.state, this.props);
 		let parentalRelTemp = [];
 
 		// for each parent of star
@@ -804,15 +822,12 @@ export default class FamilyMap extends React.Component {
 				}.bind(this)
 			);
 
-			// console.log("Parent & ParentalRelTemp: ", parent, parentalRelTemp);
 			// for every parental relationship of each parent
 			for (let parentRel of parentalRelTemp) {
 				// find the child
 				let child = this.getPersonById(parentRel.child_id);
-				// console.log("Child Found: ", child);
 				// if child was born on or before the dateFilter
 				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.dateFilterString) {
-					// console.log("Child Found with birthdate: ", child);
 					// if child does not yet exist in children array, push onto it
 					// this.children = addToArray(this.children, child);
 					if (!this.children.includes(child)) {
@@ -892,10 +907,8 @@ export default class FamilyMap extends React.Component {
 		this.firstChildYDistance = 20;
 		this.firstChildYWithAdoptions = 130;
 		var star = this.getPersonById(this.props.star_id);
-		console.log("star: ", star);
 		this.fullName = star.fName + " " + star.lName;
 		// if dateFilter not yet set, set it to Star's 18th birthday
-		console.log("date to draw: ", this.dateFilterString);
 		if (!this.dateFilterString) {
 			if (!star.birthDate) {
 				alert('Star does not have a birthdate, map will not be drawn');
@@ -908,7 +921,6 @@ export default class FamilyMap extends React.Component {
 				});
 			}
 		}
-		console.log("Date: ", this.dateFilterString);
 	}
 
 	getPersonById = (_id) => {
@@ -940,7 +952,6 @@ export default class FamilyMap extends React.Component {
 	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
 	personClick(person, star) {
 		return() => {
-			console.log('Person was clicked: ', person, star);
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
 				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
@@ -953,7 +964,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircleText(cx, cy, person) {
-		// console.log("draw text for: ", person);
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
 		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
@@ -1105,7 +1115,6 @@ export default class FamilyMap extends React.Component {
 			}
 		);
 
-		// console.log("in draw rel text box, drawnCoords:", this.drawnCoords);
 		// append the pairBond ID so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
 		 return d3.select("svg").selectAll("text" + pairBondRel._id)
@@ -1669,7 +1678,6 @@ export default class FamilyMap extends React.Component {
 		};
 
 		for (let child of this.children) {
-			// console.log("bring to front", child);
 			// bringing the circle to front is not working, so going to draw it again
 			if (child.mapXPos && child.mapYPos) {
 				this.drawCircle(child);

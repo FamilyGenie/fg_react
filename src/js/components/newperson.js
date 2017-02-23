@@ -11,7 +11,7 @@ import { closeNewPersonModal } from '../actions/modalActions';
 
 /* the following is the code that needs to be inserted into the parent component render method where you will call this modal to open.
 You can look in the peoplesearch component for an example of a component that calls this component
-
+ 
   <Modal
         isOpen={modalIsOpen}
         contentLabel="Modal"
@@ -19,11 +19,11 @@ You can look in the peoplesearch component for an example of a component that ca
       >
         <NewPerson/>
       </Modal>
-
 */
 
 @connect(
   (store, ownProps) => {
+  console.log('in newperson@connect with: ', store);
     return {
       person: store.people.people.find(function(s) {
         return (store.modal.newPerson.id === s._id)
@@ -47,7 +47,7 @@ You can look in the peoplesearch component for an example of a component that ca
 )
 
 export default class NewPerson extends React.Component {
-
+ 
   closeModal = () => {
     // This is validation for the contents of the modal. The user must either delete the person or enter the required information.
     if (!this.props.events[0].eventDate) { // the first record should be the newly created Birth record, might need some validation here.
@@ -79,7 +79,6 @@ export default class NewPerson extends React.Component {
 
       return(<div>
           <h3> New Person </h3>
-
           <PeopleDetailsLineItem person={person} key={person._id}/>
 
           <div class="container">
