@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import Modal from 'react-modal';
+import { hashHistory } from 'react-router';
 
 import PairBondRelLineItemEdit from './pairbondrel-lineitem-edit';
 import { setPairBondRel } from '../../actions/modalActions';
@@ -59,9 +60,12 @@ export default class PairBondRelLineItem extends React.Component {
 		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
+	goToPairBond = () => {
+		hashHistory.push('/peopledetails/' + this.props.pairBondPerson._id);
+	}
 
 	render = () => {
-
+		console.log(this.props);
 		const { pairBondRel, pairBondPerson, star } = this.props;
 		const { modalIsOpen } = this.state;
 
@@ -76,7 +80,7 @@ export default class PairBondRelLineItem extends React.Component {
 						<i class="fa fa-pencil-square-o button2"></i>
 					</div>
 					<div class="inner-name-div">
-						<div class="nameCol" onClick={this.openModal}>
+						<div class="nameCol" onClick={this.goToPairBond}>
 								<div class="relTypeWord">{pairBondPersonFName}</div>
 								<div class="relTypeWord">{pairBondPersonLName}</div>
 						</div>

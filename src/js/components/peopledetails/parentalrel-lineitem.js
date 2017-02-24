@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import Modal from 'react-modal';
+import { hashHistory } from 'react-router';
 
 import ParentalRelLineItemEdit from './parentalrel-lineitem-edit';
 import { setParentalRel } from '../../actions/modalActions';
@@ -42,6 +43,11 @@ export default class ParentalRelLineItem extends React.Component {
 		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
+	goToParent = () => {
+		hashHistory.push('/peopledetails/' + this.props.parent._id);
+		// this.props.dispatch(fetchPeople());
+
+	}
 
 	render = () => {
 
@@ -63,7 +69,7 @@ export default class ParentalRelLineItem extends React.Component {
 							<i class="fa fa-pencil-square-o button2"></i>
 						</div>
 						<div class="inner-name-div">
-							<div class="nameCol" onClick={this.openModal}>
+							<div class="nameCol" onClick={this.goToParent}>
 								<div class="relTypeWord">{parentFName}</div>
 								<div class="relTypeWord">{parentLName}</div>
 							</div>
