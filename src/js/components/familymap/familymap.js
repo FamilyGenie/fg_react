@@ -372,7 +372,6 @@ export default class FamilyMap extends React.Component {
 		this.children.sort(birthDateCompare);
 
 		for (let child of this.children) {
-			debugger;
 			// find biological mother relationship
 			momRel = this.props.parentalRelationships.find(function(parentRel){
 				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -391,7 +390,6 @@ export default class FamilyMap extends React.Component {
 
 			// if we found both bio mom and bio dad, draw child halfway between them
 			if ( momRel && dadRel ) {
-				debugger;
 				mom = this.parents.find(function(parent){
 					return parent._id === momRel.parent_id;
 				});
@@ -777,7 +775,6 @@ export default class FamilyMap extends React.Component {
 
 		// for each child
 		for (let child of this.children) {
-			debugger;
 			// get all parental relationships. if there is no start date, then make value empty string, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will still show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
