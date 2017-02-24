@@ -62,7 +62,7 @@ export default class ChronologyLineItem extends React.Component {
             <p class="stagedChron">{(event.eventPlace ? event.eventPlace : "")}</p>
           </div>
           <div class="check-duplicate" onClick={this.openModal}>
-						<i class="fa fa-pencil-square-o button2"></i>
+						<i class="fa fa-pencil-square-o button2 pencil2"></i>
 					</div>
         </div>
         <Modal
