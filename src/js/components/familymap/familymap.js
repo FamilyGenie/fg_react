@@ -196,7 +196,6 @@ export default class FamilyMap extends React.Component {
 				subType: 'Biological',
 			}
 			// push this relationship onto the parentalRelationships record
-			debugger;
 			this.props.parentalRelationships.push(momRel);
 			console.log("parentalRels ", this.props.parentalRelationships);
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
@@ -1063,7 +1062,7 @@ export default class FamilyMap extends React.Component {
 
 		// if this pair bond shows up on the adopted line, the curve is different, so calculate the y position differently
 		if (pairBondRel.subTypeToStar === "Adopted") {
-			cy = (mom.mapYPos) - 30;
+			cy = (mom.mapYPos) - 50;
 		} else {
 			// yPos needs to account for the curve of the rel line
 			cy = (mom.mapYPos - 160);
@@ -1085,8 +1084,8 @@ export default class FamilyMap extends React.Component {
 			);
 		}
 
-		// only include divorce info if there is a divorce
-		if ( pairBondRel.endDate ) {
+		// only show start date and end date if both of them exist
+		if ( pairBondRel.startDate && pairBondRel.endDate ) {
 			textData = [
 				// together info
 				{
@@ -1103,7 +1102,8 @@ export default class FamilyMap extends React.Component {
 					moment(pairBondRel.endDate).format("MM/DD/YYYY")
 				},
 			];
-		} else {
+		} else if ( pairBondRel.startDate ) {
+			// only show startDate if one exists.
 			textData = [
 				// together info
 				{
@@ -1265,9 +1265,13 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personOne.mapXPos);
 		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
-		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line
-		// console.log("momYPos, momXPos, dadXPos: ", mom.fName, mom.mapYPos, mom.mapXPos, dad.fName, dad.mapXPos);
-		yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
+		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
+		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+		} else {
+			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+		}
 		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
 		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
@@ -1331,10 +1335,16 @@ export default class FamilyMap extends React.Component {
 		}
 
 		// yControlPoint is the control point of the Bezier curve that connects the adoptive parents. The higher it is on the map, the higher the arc of the curve.
-		// yControlPoint = 225;
-		// the bigger I make 200,000 - the lower the arc.
-		// yControlPoint = 190000 / (mom.mapXPos - dad.mapXPos);
-		yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
+		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
+		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
+		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
+		} else {
+			// yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 1);
+
+		}
+		// yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
 		lineStrArr.push("M");
 		// This is the beginning of the line, at the top of dad
 		lineStrArr.push(personOne.mapXPos + 0);
