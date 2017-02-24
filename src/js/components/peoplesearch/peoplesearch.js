@@ -6,7 +6,7 @@ import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
-import NewPerson from '../newperson';
+import NewPerson from '../newperson/newperson';
 import { newPerson } from '../../actions/createNewPersonActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
 
