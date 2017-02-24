@@ -1423,6 +1423,14 @@ export default class FamilyMap extends React.Component {
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("4,8"))
 				.attr("fill", "none");
+		} else if ( /Foster/.test(subType) ) {
+			return d3.select("svg")
+				.append("path")
+				.attr("d", lineFunction(lineData))
+				.attr("stroke", "blue")
+				.attr("stroke-width", 2)
+				.style("stroke-dasharray", ("2,8"))
+				.attr("fill", "none");
 		} else {
 			alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
 		}
