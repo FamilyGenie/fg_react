@@ -4,6 +4,7 @@ import { fetchPeople } from "./peopleActions";
 import { fetchStagedPeople } from "./stagedPeopleActions";
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
+import { fetchParentalRels } from './parentalRelsActions';
 
 import config from "../config.js";
 import { getAxiosConfig } from './actionFunctions';
@@ -28,6 +29,25 @@ export function runImport() {
       .catch((err) => {
         dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
       })
+  }
+}
+
+export function importRelationships() {
+  const body = {};
+
+  return (dispatch) => { 
+  dispatch({type: "IMPORT_RELATIONSHIPS"});
+  axios.post(config.api_url + '/api/v2/autoimportrels', body, getAxiosConfig())
+    .then((response) => {
+      dispatch({type: "IMPORT_RELATIONSHIPS_FULFILLED", payload: response.data})
+        // after running import, refresh the store.
+        // TODO: recieve the data through the response.data and append that information to the store.
+        dispatch(fetchPeople());
+        dispatch(fetchParentalRels());
+    })
+    .catch((err) => {
+      dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
+    })
   }
 }
 
