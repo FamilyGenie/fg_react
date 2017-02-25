@@ -1,19 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
-
 import DateInput from '../date-input';
-// import CompactEvent from './compactModal/compactEvent';
-import CompactPeopleDetails from './CompactPeopleDetails';
-// import CompactParentalRel from './compactModal/compactParentalRel';
-import { updatePerson } from '../../actions/peopleActions';
-import { updateEvent } from '../../actions/eventsActions';
+import { updatePerson, updateEvent } from '../../actions/peopleActions';
 import { updateParentalRel } from '../../actions/parentalRelsActions';
-import { closeNewPersonModal, deleteNewPerson, saveNewPerson } from '../../actions/modalActions';
-import { resetModalEvent } from '../../actions/modalActions';
-
-
-
+import { closeNewPersonModal } from '../../actions/modalActions';
+// import { resetModalEvent } from '../../actions/modalActions';
 
 /* the following is the code that needs to be inserted into the parent component render method where you will call this modal to open.
 You can look in the peoplesearch component for an example of a component that calls this component
@@ -30,28 +22,10 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
+    console.log('in newperson @connect: ', store);
     return {
       ...ownProps,
-      event:
-        store.modal.event,
-      eventTypes:
-        store.eventTypes.eventTypes,
-        star:
-          store.people.people.find (function(p) {
-            return p._id === store.modal.parentalRel.child_id;
-          }),
-        parentalRel:
-          store.modal.parentalRel,
-        // with the parent_id from the parentalRel object, get the details of the person who is the parent
-        parentalRelTypes:
-          store.parentalRelTypes.parentalRelTypes,
-        parentalRelSubTypes:
-          store.parentalRelSubTypes.parentalRelSubTypes,
-        parent:
-          store.people.people.find(function(p) {
-            return p._id === store.modal.parentalRel.parent_id;
-          }),
-        peopleArray:
+      peopleArray:
           store.people.people.map(function(person) {
             var newObj = {};
             var label = person.fName + ' ' + person.lName;
@@ -60,16 +34,12 @@ You can look in the peoplesearch component for an example of a component that ca
             newObj["label"] = label;
             return newObj;
           }),
-        person: store.people.people.find(function(s) {
-          return (store.modal.newPerson.id === s._id)
-        }),
-      events: store.events.events.filter(function(e) { // doing a find returns a single object, instead of an array, which cannot be mapped to the lineItem
-        return (e.person_id === store.modal.newPerson.id && e.eventType === 'Birth')
-      }),
-      parents: store.parentalRels.parentalRels.filter(function(p) {
-        return (p.child_id === store.modal.newPerson.id)
-      }),
-      modalIsOpen: store.modal.newPerson.modalIsOpen,
+      eventTypes:
+        store.eventTypes.eventTypes,
+      parentalRelTypes:
+          store.parentalRelTypes.parentalRelTypes,
+      parentalRelSubTypes:
+          store.parentalRelSubTypes.parentalRelSubTypes,
     };
   },
   (dispatch) => {
@@ -77,12 +47,15 @@ You can look in the peoplesearch component for an example of a component that ca
       closeNewPersonModal: () => {
         dispatch(closeNewPersonModal());
       },
-      deleteNewPerson: (_id) => {
-        dispatch(deleteNewPerson());
-      },
+      // deleteNewPerson: (_id) => {
+      //   dispatch(deleteNewPerson());
+      // },
       saveNewPerson: () => {
         dispatch(saveNewPerson());
       },
+      onBlur: (_id, field, value) => {
+				dispatch(updatePerson(_id, field, value));
+			},
     }
   }
 )
@@ -92,91 +65,73 @@ export default class NewPerson extends React.Component {
   	super(props);
   	console.log("in new Person State", this.props);
 
-  	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
   	this.state = {
-  		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
-
-  		eventDateNew: this.props.events.eventDate ? this.props.events.eventDate: "",
-
-  		eventDateUserNew: this.props.events.eventDate ? this.props.events.eventDate: "",
-
-  		eventTypeNew: this.props.events.eventType ? this.props.events.eventType: "",
-
-  		eventPlaceNew: this.props.events.eventPlace ? this.props.events.eventPlace: "",
-
-
-      parent_idNew1: this.props.parent ? this.props.parent._id : "",
-
-			relationshipTypeNew1: this.props.parentalRel.relationshipTypeNew ? this.props.relationShipTypeNew.eventDate: "",
-
-			subTypeNew1: this.props.parentalRel.subTypeNew1 ? this.props.parentalRel.subTypeNew1: "",
-
-			parentStartDateNew1: this.props.parentalRel.startDateNew1 ? this.props.parentalRel.startDateNew1: "",
-
-			parentStartDateUserNew1: this.props.parentalRel.startDateUserNew1 ? this.props.parentalRel.startDateUserNew1: "",
-
-			parentEndDateNew1: this.props.parentalRel.endDateNew1 ? this.props.parentalRel.endDateNew1: "",
-
-			parentEndDateUserNew1: this.props.parentalRel.endDateUserNew1 ? this.props.parentalRel.endDateUserNew1: "",
-
-      parent_idNew2: this.props.parent ? this.props.parent._id : "",
-
-      relationshipTypeNew2: this.props.parentalRel.relationshipTypeNew ? this.props.relationShipTypeNew.eventDate: "",
-
-      subTypeNew2: this.props.parentalRel.subTypeNew2 ? this.props.parentalRel.subTypeNew2: "",
-
-      parentStartDateNew2: this.props.parentalRel.startDateNew2 ? this.props.parentalRel.startDateNew2: "",
-
-      parentStartDateUserNew2: this.props.parentalRel.startDateUserNew2 ? this.props.parentalRel.startDateUserNew2: "",
-
-      parentEndDateNew2: this.props.parentalRel.endDateNew2 ? this.props.parentalRel.endDateNew2: "",
-
-      parentEndDateUserNew2: this.props.parentalRel.endDateUserNew2 ? this.props.parentalRel.endDateUserNew2: "",
-
+      // set all initial values for the new person modal.
+      personFName: '',
+      personMName: '',
+      personLName: '',
+      personSexAtBirth: '',
+  		eventDateNew: "",
+  		eventDateUserNew: "",
+      // We are suggesting to the end user that they enter a birth date
+  		eventTypeNew: 'Birth',
+  		eventPlaceNew: "",
+      parent_idNew1: "",
+      // We suggest they enter a biological mother
+      relationshipTypeNew1: 'Mother',
+      subTypeNew1: 'Biological',
+			parentStartDateNew1: "",
+			parentStartDateUserNew1: "",
+			parentEndDateNew1: "",
+			parentEndDateUserNew1: "",
+      parent_idNew2: "",
+      // We suggest they enter a biological father
+      relationshipTypeNew2: 'Father',
+      subTypeNew2: 'Biological',
+      parentStartDateNew2: "",
+      parentStartDateUserNew2: "",
+      parentEndDateNew2: "",
+      parentEndDateUserNew2: "",
   	};
   }
+
   tempEventDate = (parsedDate, userDate) => {
     this.setState({
       eventDateUserNew: userDate,
       eventDateNew: parsedDate
     });
-    console.log(this.state, "inside tempEventDate");
   }
   tempEventType = (evt) => {
     this.setState({eventTypeNew: evt.value});
-    console.log(this.state, "inside eventType");
+    // console.log(this.state, "inside eventType");
   }
   tempEventPlace = (evt) => {
     this.setState({eventPlaceNew: evt.target.value});
-    console.log(this.state, "inside eventPlace");
   }
-
   tempSubTypeChange1 = (evt) => {
 		this.setState({subTypeNew1: evt.value});
-    console.log(this.state, "inside tempsubtypechange1");
+    // console.log(this.state, "inside tempsubtypechange1");
 
 	}
  	tempParentChange1 = (evt) => {
 		this.setState({parent_idNew1: evt.value});
-    console.log(this.state, "inside tempParentchange1");
+    // console.log(this.state, "inside tempParentchange1");
 	}
 	tempRelTypeChange1 = (evt) => {
 		this.setState({relationshipTypeNew1: evt.value});
-    console.log(this.state, "inside tempReltypechange1");
+    // console.log(this.state, "inside tempReltypechange1");
 	}
   tempParentStartDate1 = (parsedDate, userDate) => {
     this.setState({
       parentStartDateUserNew1: userDate,
       parentStartDateNew1: parsedDate
     });
-    console.log(this.state, "inside tempstartdate1");
   }
   tempParentEndDate1 = (parsedDate, userDate) => {
     this.setState({
       parentEndDateUserNew1: userDate,
       parentEndDateNew1: parsedDate
     });
-    console.log(this.state, "inside tempEndDatetypeChange1");
   }
 
   tempSubTypeChange2 = (evt) => {
@@ -200,63 +155,74 @@ export default class NewPerson extends React.Component {
 			endDateNew2: parsedDate
 		});
 	}
+  tempFName = (evt) => {
+    // console.log('in tempChange: ', evt.target.value);
+    this.setState({personFName: evt.target.value});
+  }
+  tempMName = (evt) => {
+    // console.log("inside eventPlace ", evt.target.value);
+    this.setState({personMName: evt.target.value});
+  }
+  tempLName = (evt) => {
+    // console.log("inside eventPlace ", evt.target.value);
+    this.setState({personLName: evt.target.value});
+  }
+  tempSexAtBirth = (evt) => {
+    // console.log("inside eventPlace ", evt.target.value);
+    this.setState({personSexAtBirth: evt.target.value});
+  }
 
   closeModal = () => {
-    // This is validation for the contents of the modal. The user must either delete the person or enter the required information.
-    if (!this.props.events[0].eventDate) { // the first record should be the newly created Birth record, might need some validation here.
-      msg.show('Need to enter a valid birth date', {
-        type: 'error'
-      });
-    } else if (!this.props.person.fName) {
-      msg.show('Need to enter a valid first name', {
-        type: 'error'
-      })
-    } else {
-      this.props.closeNewPersonModal();
-    }
+    this.props.closeNewPersonModal();
+  }
+  cancelButton = () => {
+    this.props.closeNewPersonModal();
   }
 
-  deleteNewPerson = () => {
-    console.log("inside delete new person")
-    this.props.deleteNewPerson(this.props.newPerson.id, evt.value);
+  // deleteNewPerson = () => {
+  //   console.log("inside delete new person")
+  //   this.props.deleteNewPerson(this.props.newPerson.id, evt.value);
 
-    if (this.props.closeNewPersonModal) {
-      this.props.closeModal();
-    }
-  }
+  //   if (this.props.closeNewPersonModal) {
+  //     this.props.closeModal();
+  //   }
+  // }
   savePerson = () => {
-    // this.props.saveNewPerson(this.props.newPerson.id, evt.value);
-    if (this.state.eventDateUserNew !== this.props.event.eventDateUser){
-			this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
-		}
-		if (this.state.eventTypeNew !== this.props.event.eventType) {
-			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
-		}
-		if (this.state.eventPlace !== this.props.event.eventPlace) {
-			this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
-		}
-    if (this.props.closeNewPersonModal) {
-      this.props.closeModal();
+    console.log("State: ", this.state);
+    // first, check to make sure all the data that is needed is valid
+    if (!this.state.personFName) {
+      alert('Must enter a valid first name');
+      return;
     }
+    if (!this.state.eventDateNew) {
+      alert('Must enter a valid birth date');
+      return;
+    }
+    if (this.state.eventTypeNew !== 'Birth') {
+      alert("Must enter a birth date, please make sure the event type is set to Birth");
+      return;
+    }
+
+    console.log('if get here, then save the record');
+
+    // this.props.saveNewPerson(this.props.newPerson.id, evt.value);
+  //   if (this.state.eventDateUserNew !== this.props.event.eventDateUser){
+		// 	this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
+		// }
+		// if (this.state.eventTypeNew !== this.props.event.eventType) {
+		// 	this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
+		// }
+		// if (this.state.eventPlace !== this.props.event.eventPlace) {
+		// 	this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
+		// }
+  //   if (this.props.closeNewPersonModal) {
+  //     this.props.closeModal();
+  //   }
   }
 
   render = () => {
 
-    // const { person, events, parents, modalIsOpen } = this.props;
-
-    // events must be mapped to the lineItem, and cannot be passed in individually, not sure why this happens, leaving it for now
-    // const mappedEvents = events.map(event =>
-    //   <CompactEvent event={event} key={event._id}/>
-    // )
-
-    // const mappedParents = parents.map(parentalRel =>
-    // <CompactParentalRel parentalRel={parentalRel} key={parentalRel._id}/>
-    // );
-
-    // const { event, eventTypes, parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes  } = this.props;
-    // const { eventDateUser, eventType } = this.state;
-    /*{mappedEvents}*/
-    console.log("props and state in the render", this.props.events.eventType, this.props, this.state);
+    // console.log("props and state in the render", this.props.events.eventType, this.props, this.state);
 
 
       return(
@@ -269,7 +235,45 @@ export default class NewPerson extends React.Component {
         </div>
         <div class="buffer-modal">
         </div>
-        <CompactPeopleDetails person={this.props.person} key={this.props.person._id}/>
+        {/*<CompactPeopleDetails person={this.props.person} key={this.props.person._id}/>*/}
+          <div class="compactPerson">
+    				<div class="personDetails">
+    					<div class="pDetail">
+    						<input
+    							class="form-control"
+    							type="text"
+    							placeholder="Enter First Name"
+                  value={this.state.personFName}
+    							onChange={this.tempFName}
+    						/>
+    						<input
+    							class="form-control detail-input"
+    							type="text"
+    							placeholder="Enter Middle Name"
+                  value={this.state.personMName}
+                  onChange={this.tempMName}
+    						/>
+    				</div>
+    				<div class="pDetail">
+    					<input
+    						class="form-control detail-input"
+    						type="text"
+    						placeholder="Enter Last Name"
+    						value={this.state.personLName}
+                onChange={this.tempLName}
+    					/>
+    					<input
+    						class="form-control detail-input"
+    						type="text"
+    						placeholder="Enter Gender At Birth"
+    						value={this.state.personSexAtBirth}
+                onChange={this.tempSexAtBirth}
+    					/>
+    				</div>
+    			</div>
+    			<div class="buffer-modal">
+    			</div>
+    		</div>
         <div class="event-main">
           <div class="event-row">
             <div class="PR-div">
@@ -294,7 +298,7 @@ export default class NewPerson extends React.Component {
                 <Select
                   options={this.props.eventTypes}
                   onChange={this.tempEventType}
-                  value={(this.state.eventTypeNew ? this.state.eventTypeNew : (this.props.events[0] ? this.props.events[0].eventType : ""))}
+                  value={this.state.eventTypeNew}
                 />
               </div>
             </div>
@@ -480,7 +484,7 @@ export default class NewPerson extends React.Component {
 					<button
 						type="button"
 						class="btn btn-default modal-delete"
-						onClick={this.deleteNewPerson}
+						onClick={this.cancelButton}
 					>
 						Cancel
 					</button>
