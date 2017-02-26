@@ -6,7 +6,6 @@ import { createPerson, deletePerson, updatePerson } from '../../actions/peopleAc
 
 @connect(
 	(store, ownProps) => {
-		console.log('in @connect: ', ownProps);
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now). However, soon, we will add the parentrelationships, pairbondrelationships, and events into the props (maybe)
 		return ownProps;
 	},

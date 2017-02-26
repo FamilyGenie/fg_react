@@ -23,7 +23,6 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
-    console.log('in newperson @connect: ', store);
     return {
       ...ownProps,
       peopleArray:
@@ -49,7 +48,7 @@ You can look in the peoplesearch component for an example of a component that ca
         dispatch(closeNewPersonModal());
       },
       createNewPerson: (person, event, parentRel1, parentRel2) => {
-        dispatch(createNewPerson());
+        dispatch(createNewPerson(person, event, parentRel1, parentRel2));
       },
     }
   }
@@ -66,27 +65,27 @@ export default class NewPerson extends React.Component {
       personMName: '',
       personLName: '',
       personSexAtBirth: '',
-  		eventDate: "",
-  		eventDateUser: "",
+  		eventDate: '',
+  		eventDateUser: '',
       // We are suggesting to the end user that they enter a birth date
   		eventType: 'Birth',
-  		eventPlace: "",
-      parent_id1: "",
+  		eventPlace: '',
+      parent_id1: '',
       // We suggest they enter a biological mother
       relationshipType1: 'Mother',
       subType1: 'Biological',
-			parentStartDate1: "",
-			parentStartDateUser1: "",
-			parentEndDate1: "",
-			parentEndDateUser1: "",
-      parent_id2: "",
+			parentStartDate1: '',
+			parentStartDateUser1: '',
+			parentEndDate1: '',
+			parentEndDateUser1: '',
+      parent_id2: '',
       // We suggest they enter a biological father
       relationshipType2: 'Father',
       subType2: 'Biological',
-      parentStartDate2: "",
-      parentStartDateUser2: "",
-      parentEndDate2: "",
-      parentEndDateUser2: "",
+      parentStartDate2: '',
+      parentStartDateUser2: '',
+      parentEndDate2: '',
+      parentEndDateUser2: '',
   	};
   }
 
@@ -140,14 +139,14 @@ export default class NewPerson extends React.Component {
 	}
   tempParentStartDate2 = (parsedDate, userDate) => {
 		this.setState({
-			startDateUser2: userDate,
-			startDate2: parsedDate
+			parentStartDateUser2: userDate,
+			parentStartDate2: parsedDate
 		});
 	}
 	tempParentEndDate2 = (parsedDate, userDate) => {
 		this.setState({
-			endDateUser2: userDate,
-			endDate2: parsedDate
+			parentEndDateUser2: userDate,
+			parentEndDate2: parsedDate
 		});
 	}
   tempFName = (evt) => {
@@ -224,14 +223,11 @@ export default class NewPerson extends React.Component {
       endDate: this.state.parentEndDate2,
       endDateUser: this.state.parentEndDateUser2,
     }
+    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2);
 
-    console.log('if get here, then save the record', person);
   }
 
   render = () => {
-
-    // console.log("props and state in the render", this.props.events.eventType, this.props, this.state);
-
 
       return(
       <div>
