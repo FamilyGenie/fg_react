@@ -6,9 +6,9 @@ import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
+// this next line is for the new person modal
 import NewPerson from '../newperson/newperson';
-import { newPerson } from '../../actions/createNewPersonActions';
-import { closeNewPersonModal } from '../../actions/modalActions';
+import { openNewPersonModal } from '../../actions/modalActions';
 
 
 @connect((store, ownProps) => {
@@ -22,38 +22,13 @@ import { closeNewPersonModal } from '../../actions/modalActions';
 },
   (dispatch) => {
     return {
-      createNewPerson: () => {
-        dispatch(newPerson());
-      },
+      openNewPersonModal: () => {
+        dispatch(openNewPersonModal());
+      }
     }
   }
 )
 export default class PeopleSearch extends React.Component {
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     sidebarOpen: true,
-  //   };
-  // }
-  // onSetSidebarOpen = (open) => {
-  //   this.setState({sidebarOpen: open});
-  // }
-  //
-  // // for the history bar showing or not
-  // componentWillMount = () => {
-  //   var mql = window.matchMedia('(min-width: 800px)');
-  //   mql.addListener(this.mediaQueryChanged);
-  //   this.setState({mql: mql, sidebarDocked: mql.matches});
-  // }
-  //
-  // // for the history bar showing or not
-  // componentWillUnmount = () => {
-  //   this.state.mql.removeListener(this.mediaQueryChanged);
-  // }
-  // // for the history bar showing or not
-  // mediaQueryChanged = () => {
-  //   this.setState({sidebarDocked: this.state.mql.matches});
-  // }
 
   alertOptions = {
       offset: 15,
@@ -64,7 +39,7 @@ export default class PeopleSearch extends React.Component {
     };
 
   createNewPerson = () => {
-    this.props.createNewPerson();
+    this.props.openNewPersonModal();
   }
 
 	render = () => {
@@ -73,7 +48,6 @@ export default class PeopleSearch extends React.Component {
     const mappedPeople = people.map(person =>
         <PeopleSearchLineItem person={person} key={person._id}/>
     );
-    // const sidebarContent = <div><h1>Help</h1></div>;
 
         return (
       <div class="mainDiv">

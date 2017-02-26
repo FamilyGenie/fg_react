@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import DateInput from '../date-input';
-import { updatePerson, updateEvent } from '../../actions/peopleActions';
+// import { updatePerson, updateEvent } from '../../actions/peopleActions';
 import { updateParentalRel } from '../../actions/parentalRelsActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
+import { createNewPerson } from '../../actions/createNewPersonActions';
 // import { resetModalEvent } from '../../actions/modalActions';
 
 /* the following is the code that needs to be inserted into the parent component render method where you will call this modal to open.
@@ -47,15 +48,9 @@ You can look in the peoplesearch component for an example of a component that ca
       closeNewPersonModal: () => {
         dispatch(closeNewPersonModal());
       },
-      // deleteNewPerson: (_id) => {
-      //   dispatch(deleteNewPerson());
-      // },
-      saveNewPerson: () => {
-        dispatch(saveNewPerson());
+      createNewPerson: (person, event, parentRel1, parentRel2) => {
+        dispatch(createNewPerson());
       },
-      onBlur: (_id, field, value) => {
-				dispatch(updatePerson(_id, field, value));
-			},
     }
   }
 )
@@ -71,88 +66,88 @@ export default class NewPerson extends React.Component {
       personMName: '',
       personLName: '',
       personSexAtBirth: '',
-  		eventDateNew: "",
-  		eventDateUserNew: "",
+  		eventDate: "",
+  		eventDateUser: "",
       // We are suggesting to the end user that they enter a birth date
-  		eventTypeNew: 'Birth',
-  		eventPlaceNew: "",
-      parent_idNew1: "",
+  		eventType: 'Birth',
+  		eventPlace: "",
+      parent_id1: "",
       // We suggest they enter a biological mother
-      relationshipTypeNew1: 'Mother',
-      subTypeNew1: 'Biological',
-			parentStartDateNew1: "",
-			parentStartDateUserNew1: "",
-			parentEndDateNew1: "",
-			parentEndDateUserNew1: "",
-      parent_idNew2: "",
+      relationshipType1: 'Mother',
+      subType1: 'Biological',
+			parentStartDate1: "",
+			parentStartDateUser1: "",
+			parentEndDate1: "",
+			parentEndDateUser1: "",
+      parent_id2: "",
       // We suggest they enter a biological father
-      relationshipTypeNew2: 'Father',
-      subTypeNew2: 'Biological',
-      parentStartDateNew2: "",
-      parentStartDateUserNew2: "",
-      parentEndDateNew2: "",
-      parentEndDateUserNew2: "",
+      relationshipType2: 'Father',
+      subType2: 'Biological',
+      parentStartDate2: "",
+      parentStartDateUser2: "",
+      parentEndDate2: "",
+      parentEndDateUser2: "",
   	};
   }
 
   tempEventDate = (parsedDate, userDate) => {
     this.setState({
-      eventDateUserNew: userDate,
-      eventDateNew: parsedDate
+      eventDateUser: userDate,
+      eventDate: parsedDate
     });
   }
   tempEventType = (evt) => {
-    this.setState({eventTypeNew: evt.value});
+    this.setState({eventType: evt.value});
     // console.log(this.state, "inside eventType");
   }
   tempEventPlace = (evt) => {
-    this.setState({eventPlaceNew: evt.target.value});
+    this.setState({eventPlace: evt.target.value});
   }
   tempSubTypeChange1 = (evt) => {
-		this.setState({subTypeNew1: evt.value});
+		this.setState({subType1: evt.value});
     // console.log(this.state, "inside tempsubtypechange1");
 
 	}
  	tempParentChange1 = (evt) => {
-		this.setState({parent_idNew1: evt.value});
+		this.setState({parent_id1: evt.value});
     // console.log(this.state, "inside tempParentchange1");
 	}
 	tempRelTypeChange1 = (evt) => {
-		this.setState({relationshipTypeNew1: evt.value});
+		this.setState({relationshipType1: evt.value});
     // console.log(this.state, "inside tempReltypechange1");
 	}
   tempParentStartDate1 = (parsedDate, userDate) => {
     this.setState({
-      parentStartDateUserNew1: userDate,
-      parentStartDateNew1: parsedDate
+      parentStartDateUser1: userDate,
+      parentStartDate1: parsedDate
     });
   }
   tempParentEndDate1 = (parsedDate, userDate) => {
     this.setState({
-      parentEndDateUserNew1: userDate,
-      parentEndDateNew1: parsedDate
+      parentEndDateUser1: userDate,
+      parentEndDate1: parsedDate
     });
   }
 
   tempSubTypeChange2 = (evt) => {
-		this.setState({subTypeNew2: evt.value})
+		this.setState({subType2: evt.value})
 	}
  	tempParentChange2 = (evt) => {
-		this.setState({parent_idNew2: evt.value});
+		this.setState({parent_id2: evt.value});
 	}
 	tempRelTypeChange2 = (evt) => {
-		this.setState({relationshipTypeNew2: evt.value});
+		this.setState({relationshipType2: evt.value});
 	}
   tempParentStartDate2 = (parsedDate, userDate) => {
 		this.setState({
-			startDateUserNew2: userDate,
-			startDateNew2: parsedDate
+			startDateUser2: userDate,
+			startDate2: parsedDate
 		});
 	}
 	tempParentEndDate2 = (parsedDate, userDate) => {
 		this.setState({
-			endDateUserNew2: userDate,
-			endDateNew2: parsedDate
+			endDateUser2: userDate,
+			endDate2: parsedDate
 		});
 	}
   tempFName = (evt) => {
@@ -179,14 +174,6 @@ export default class NewPerson extends React.Component {
     this.props.closeNewPersonModal();
   }
 
-  // deleteNewPerson = () => {
-  //   console.log("inside delete new person")
-  //   this.props.deleteNewPerson(this.props.newPerson.id, evt.value);
-
-  //   if (this.props.closeNewPersonModal) {
-  //     this.props.closeModal();
-  //   }
-  // }
   savePerson = () => {
     console.log("State: ", this.state);
     // first, check to make sure all the data that is needed is valid
@@ -194,30 +181,51 @@ export default class NewPerson extends React.Component {
       alert('Must enter a valid first name');
       return;
     }
-    if (!this.state.eventDateNew) {
+    if (!this.state.eventDate) {
       alert('Must enter a valid birth date');
       return;
     }
-    if (this.state.eventTypeNew !== 'Birth') {
+    if (this.state.eventType !== 'Birth') {
       alert("Must enter a birth date, please make sure the event type is set to Birth");
       return;
     }
 
-    console.log('if get here, then save the record');
+    var person = {
+      fName: this.state.personFName,
+      mName: this.state.personMName,
+      lName: this.state.personLName,
+      sexAtBirth: this.state.personSexAtBirth
+    };
 
-    // this.props.saveNewPerson(this.props.newPerson.id, evt.value);
-  //   if (this.state.eventDateUserNew !== this.props.event.eventDateUser){
-		// 	this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
-		// }
-		// if (this.state.eventTypeNew !== this.props.event.eventType) {
-		// 	this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
-		// }
-		// if (this.state.eventPlace !== this.props.event.eventPlace) {
-		// 	this.props.updateEvent(this.props.event._id, "eventPlace", this.state.eventPlaceNew);
-		// }
-  //   if (this.props.closeNewPersonModal) {
-  //     this.props.closeModal();
-  //   }
+    var birthEvent = {
+      eventType: this.state.eventType,
+      eventPlace: this.state.eventPlace,
+      eventDate: this.state.eventDate,
+      eventDateUser: this.state.eventDateUser,
+
+    }
+
+    var parentalRel1 = {
+      parent_id: this.state.parent_id1,
+      relationshipType: this.state.relationshipType1,
+      subType: this.state.subType1,
+      startDate: this.state.parentStartDate1,
+      startDateUser: this.state.parentStartDateUser1,
+      endDate: this.state.parentEndDate1,
+      endDateUser: this.state.parentEndDateUser1,
+    }
+
+    var parentalRel2 = {
+      parent_id: this.state.parent_id2,
+      relationshipType: this.state.relationshipType2,
+      subType: this.state.subType2,
+      startDate: this.state.parentStartDate2,
+      startDateUser: this.state.parentStartDateUser2,
+      endDate: this.state.parentEndDate2,
+      endDateUser: this.state.parentEndDateUser2,
+    }
+
+    console.log('if get here, then save the record', person);
   }
 
   render = () => {
@@ -283,7 +291,7 @@ export default class NewPerson extends React.Component {
               <div class="PR-drop-1">
                 <DateInput
                   onNewDate={this.tempEventDate}
-                  initialValue={this.state.eventDateUserNew}
+                  initialValue={this.state.eventDateUser}
                   field="eventDate"
                 />
               </div>
@@ -298,7 +306,7 @@ export default class NewPerson extends React.Component {
                 <Select
                   options={this.props.eventTypes}
                   onChange={this.tempEventType}
-                  value={this.state.eventTypeNew}
+                  value={this.state.eventType}
                 />
               </div>
             </div>
@@ -310,7 +318,7 @@ export default class NewPerson extends React.Component {
                 <input
                     class="form-control"
                     type="text"
-                    value={this.state.eventPlaceNew}
+                    value={this.state.eventPlace}
                     onChange={this.tempEventPlace}
                 />
               </div>
@@ -330,7 +338,7 @@ export default class NewPerson extends React.Component {
 								<Select
 									options={this.props.peopleArray}
 									onChange={this.tempParentChange1}
-									value={this.state.parent_idNew1}
+									value={this.state.parent_id1}
 								/>
 							</div>
 						</div>
@@ -346,7 +354,7 @@ export default class NewPerson extends React.Component {
 										<Select
 											options={this.props.parentalRelTypes}
 											onChange={this.tempRelTypeChange1}
-											value={this.state.relationshipTypeNew1}
+											value={this.state.relationshipType1}
 										/>
 									</div>
 								</div>
@@ -360,7 +368,7 @@ export default class NewPerson extends React.Component {
 										<Select
 											options={this.props.parentalRelSubTypes}
 											onChange={this.tempSubTypeChange1}
-											value={this.state.subTypeNew1}
+											value={this.state.subType1}
 										/>
 									</div>
 								</div>
@@ -374,7 +382,7 @@ export default class NewPerson extends React.Component {
 							</div>
 							<div class="PR-sDate">
 								<DateInput
-									initialValue={this.state.parentStartDateUserNew1}
+									initialValue={this.state.parentStartDateUser1}
 									onNewDate={this.tempParentStartDate1}
 									field="startDate"
 								/>
@@ -386,7 +394,7 @@ export default class NewPerson extends React.Component {
 							</div>
 							<div class="PR-eDate">
 								<DateInput
-									initialValue={this.state.parentEndDateUserNew1}
+									initialValue={this.state.parentEndDateUser1}
 									onNewDate={this.tempParentEndDate1}
 									field="endDate"
 								/>
@@ -406,7 +414,7 @@ export default class NewPerson extends React.Component {
 								<Select
 									options={this.props.peopleArray}
 									onChange={this.tempParentChange2}
-									value={this.state.parent_idNew2}
+									value={this.state.parent_id2}
 								/>
 							</div>
 						</div>
@@ -422,7 +430,7 @@ export default class NewPerson extends React.Component {
 										<Select
 											options={this.props.parentalRelTypes}
 											onChange={this.tempRelTypeChange2}
-											value={this.state.relationshipTypeNew2}
+											value={this.state.relationshipType2}
 										/>
 									</div>
 								</div>
@@ -436,7 +444,7 @@ export default class NewPerson extends React.Component {
 										<Select
 											options={this.props.parentalRelSubTypes}
 											onChange={this.tempSubTypeChange2}
-											value={this.state.subTypeNew2}
+											value={this.state.subType2}
 										/>
 									</div>
 								</div>
@@ -450,7 +458,7 @@ export default class NewPerson extends React.Component {
 							</div>
 							<div class="PR-sDate">
 								<DateInput
-									initialValue={this.state.parentStartDateUserNew2}
+									initialValue={this.state.parentStartDateUser2}
 									onNewDate={this.tempParentStartDate2}
 									field="startDate"
 								/>
@@ -462,7 +470,7 @@ export default class NewPerson extends React.Component {
 							</div>
 							<div class="PR-eDate">
 								<DateInput
-									initialValue={this.state.parentEndDateUserNew2}
+									initialValue={this.state.parentEndDateUser2}
 									onNewDate={this.tempParentEndDate2}
 									field="endDate"
 								/>

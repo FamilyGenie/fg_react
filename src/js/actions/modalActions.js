@@ -27,10 +27,10 @@ export function resetModalEvent(event) {
 	}
 }
 
-export function setNewPerson(newPerson) {
+export function openNewPersonModal() {
 	// set the type to tell the newPersonModal to open, and pass the object to be edited in the modal window as the payload
 	return function(dispatch) {
-		dispatch({type: "SET_NEWPERSON", payload: newPerson});
+		dispatch({type: "OPEN_NEWPERSON_MODAL"});
 	}
 }
 

@@ -30,10 +30,13 @@ export default function reducer(state={
 					...state,
 					event: ""}
 			}
-      case "SET_NEWPERSON" : {
+      case "OPEN_NEWPERSON_MODAL" : {
         return {
           ...state,
-          newPerson: action.payload
+          newPerson: {
+            ...state.newPerson,
+            modalIsOpen: true,
+          }
         }
       }
       case "CLOSE_NEWPERSON_MODAL": {
