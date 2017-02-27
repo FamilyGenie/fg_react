@@ -5,6 +5,9 @@ import { fetchStagedPeople } from "./stagedPeopleActions";
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
 import { fetchParentalRels } from './parentalRelsActions';
+import { fetchStagedParentalRels } from './stagedParentalRelActions';
+// need to create pairbondrelsactions
+// import { fetchStagedPairBondRels } from './stagedPairBondRelsActions';
 
 import config from "../config.js";
 import { getAxiosConfig } from './actionFunctions';
@@ -44,6 +47,9 @@ export function importRelationships() {
         // TODO: recieve the data through the response.data and append that information to the store.
         dispatch(fetchPeople());
         dispatch(fetchParentalRels());
+        dispatch(fetchPairBondRels())
+        dispatch(fetchStagedParentalRels());
+        // dispatch(fetchStagedPairBondRels());
     })
     .catch((err) => {
       dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
