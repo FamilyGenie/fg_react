@@ -157,11 +157,84 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
-	// sometimes we add a person while processing the map. If that happens, this lifecycle hook is triggered, so we then want to draw the map again, so that it uses that new information
-	// componentDidUpdate() {
-	//    console.log("in component did update, with: ", this.props.people);
-	//    this.componentDidMount();
-	//  }
+	componentDidMount = () => {
+		// there are some constants at the top of the component class definition as well.
+		// these constants determine where to start drawing the map
+		const startX = 775;
+		const startY = 200;
+		const parentDistance = 220;
+		const childDistance = 120;
+
+		this.initializeVariables();
+		// this.drawTicks();
+		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
+		this.clearMapData();
+
+		// this.checkForBioParents(this.props.star_id);
+
+		// push the star onto the empty children array, because we know they will be a child on the map
+		this.children.push(this.getPersonById(this.props.star_id));
+		// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+		this.checkAllChildrenForBioParents();
+
+		var stillNewChildren = true;
+		// lastCount will be used to see if when we do a run through getting parents and children of parents
+		var lastCount = this.children.length + this.parents.length + this.parentRels.length;
+
+		// loop through finding parents and children until we know we are not finding any more children.
+		while ( stillNewChildren ) {
+
+			// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
+			if ( !this.getAllParentsOfChildren() ) {
+				// function will already show an error, so don't need to show another one
+				hashHistory.push('/');
+				return;
+			}
+			console.log("After getAllParents: ", this.parents);
+
+			// this function will get all the children of the parents in the parents array
+			this.getAllChildrenOfParents();
+
+			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+			this.checkAllChildrenForBioParents();
+
+			console.log("After getAllChildren:", this.children);
+
+			// TODO: Is this a suitable test?
+			if ( this.children.length + this.parents.length + this.parentRels.length === lastCount) {
+				stillNewChildren = false;
+			}
+			lastCount = this.children.length + this.parents.length + this.pairBonds.length;
+		}
+
+		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
+		if ( !this.getAllPairBonds() ) {
+			alert("There was an error in drawing the map. You are being re-directed to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
+			hashHistory.push('/');
+			return;
+		}
+		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
+		this.addParentsNotInPairBonds(this.props.star_id);
+		console.log("all pair bonds:", this.pairBonds);
+
+		// this includes drawing the parents in the pair bonds. this currently
+		// if neither parent is biological or step, then draw both parents down a level vertically
+		 if ( !this.drawAllPairBonds(startX, startY, parentDistance) ) {
+			 alert("There was an error in drawing the map. You are being re-directid to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
+			hashHistory.push('/');
+			return;
+		 }
+
+		 // this function also draws the relationship lines to Biological parents
+		this.drawAllChildren (startY, childDistance);
+
+		this.drawNonBioParentLines();
+
+		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
+		this.bringAllChildrenToFront();
+
+		// Last, we need to see about resizing the drawing
+	} // end of ComponentDidMount
 
 	checkAllChildrenForBioParents = () => {
 		for (let child of this.children) {
@@ -279,84 +352,6 @@ export default class FamilyMap extends React.Component {
 
 			this.pairBonds.push(pairBond);
 		}
-	}
-
-	componentDidMount = () => {
-		// there are some constants at the top of the component class definition as well.
-		// these constants determine where to start drawing the map
-		const startX = 775;
-		const startY = 200;
-		const parentDistance = 220;
-		const childDistance = 120;
-
-		this.initializeVariables();
-		// this.drawTicks();
-		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
-		this.clearMapData();
-
-		// this.checkForBioParents(this.props.star_id);
-
-		// push the star onto the empty children array, because we know they will be a child on the map
-		this.children.push(this.getPersonById(this.props.star_id));
-		// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
-		this.checkAllChildrenForBioParents();
-
-		var stillNewChildren = true;
-		var lastCount = this.children.length;
-
-		// loop through finding parents and children until we know we are not finding any more children.
-		while ( stillNewChildren ) {
-
-			// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
-			if ( !this.getAllParentsOfChildren() ) {
-				// function will already show an error, so don't need to show another one
-				hashHistory.push('/');
-				return;
-			}
-			console.log("After getAllParents: ", this.parents);
-
-			// this function will get all the children of the parents in the parents array
-			this.getAllChildrenOfParents();
-
-			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
-			this.checkAllChildrenForBioParents();
-
-			console.log("After getAllChildren:", this.children);
-
-			// TODO: Is this a suitable test? I think there may be cases where there are still children not found. I think we need to test that no new children AND no new parents have been found.
-			if ( this.children.length === lastCount) {
-				stillNewChildren = false;
-			}
-			lastCount = this.children.length;
-		}
-
-		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
-		if ( !this.getAllPairBonds() ) {
-			alert("There was an error in drawing the map. You are being re-directed to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
-			hashHistory.push('/');
-			return;
-		}
-		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
-		this.addParentsNotInPairBonds(this.props.star_id);
-		console.log("all pair bonds:", this.pairBonds);
-
-		// this includes drawing the parents in the pair bonds. this currently
-		// if neither parent is biological or step, then draw both parents down a level vertically
-		 if ( !this.drawAllPairBonds(startX, startY, parentDistance) ) {
-			 alert("There was an error in drawing the map. You are being re-directid to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
-			hashHistory.push('/');
-			return;
-		 }
-
-		 // this function also draws the relationship lines to Biological parents
-		this.drawAllChildren (startY, childDistance);
-
-		this.drawNonBioParentLines();
-
-		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
-		this.bringAllChildrenToFront();
-
-		// Last, we need to see about resizing the drawing
 	}
 
 	drawAllChildren (startY, childDistance): void {
