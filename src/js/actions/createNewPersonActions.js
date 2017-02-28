@@ -6,7 +6,7 @@ import { createParentalRel } from './parentalRelsActions';
 import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function createNewPerson(person, birthEvent, parentRel1, parentRel2, childFromMap_id) {
+export function createNewPerson(person, birthEvent, parentRel1, parentRel2, starFromMap) {
 	// create the body in the format that the API is expecting
   	var body = { object: person };
   	var newChild;
@@ -35,6 +35,12 @@ export function createNewPerson(person, birthEvent, parentRel1, parentRel2, chil
           // the newly created person id is passed to the createParentalRel action, as the child_id, and we create the parental rel record with the parent selected by the user in the modal.
           dispatch({type: "CREATE_PARENTALREL"});
           dispatch(createParentalRel(newChild._id, parentRel2.parent_id, parentRel2.relationshipType, parentRel2.subType, parentRel2.startDateUser, parentRel2.startDate, parentRel2.endDateUser, parentRel2.endDate));
+        }
+
+        // if the newPerson modal passes in starFromMap_id, that means that the newPerson modal was opened by the FamilyMap component, and we then need to make this newly created person the parent of the star of the map. because the only time the Map would call newPerson modal is if it is to create a biological parent for the star.
+        if (starFromMap) {
+          dispatch({type: "CREATE_PARENTALREL"});
+          dispatch(createParentalRel(starFromMap._id, newChild._id, (person.sexAtBirth === 'M' ? 'Father' : 'Mother'), 'Biological', birthEvent.eventDateUser, birthEvent.eventDate));
         }
 
         // close the modal here
