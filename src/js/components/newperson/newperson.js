@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import DateInput from '../date-input';
-// import { updatePerson, updateEvent } from '../../actions/peopleActions';
 import { updateParentalRel } from '../../actions/parentalRelsActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
 import { createNewPerson } from '../../actions/createNewPersonActions';
@@ -57,8 +56,6 @@ You can look in the peoplesearch component for an example of a component that ca
 export default class NewPerson extends React.Component {
   constructor(props) {
   	super(props);
-  	console.log("in new Person State", this.props);
-
   	this.state = {
       // set all initial values for the new person modal.
       personFName: '',
@@ -90,9 +87,14 @@ export default class NewPerson extends React.Component {
   }
 
   tempEventDate = (parsedDate, userDate) => {
+    // their birthDate is the same date that the relationship with the biological mother and biological father began
     this.setState({
       eventDateUser: userDate,
-      eventDate: parsedDate
+      eventDate: parsedDate,
+      parentStartDateUser1: userDate,
+      parentStartDate1: parsedDate,
+      parentStartDateUser2: userDate,
+      parentStartDate2: parsedDate,
     });
   }
   tempEventType = (evt) => {
@@ -174,20 +176,24 @@ export default class NewPerson extends React.Component {
   }
 
   savePerson = () => {
-    console.log("State: ", this.state);
     // first, check to make sure all the data that is needed is valid
     if (!this.state.personFName) {
-      alert('Must enter a valid first name');
+      alert('Please enter a valid first name');
       return;
     }
     if (!this.state.eventDate) {
-      alert('Must enter a valid birth date');
+      alert('Please enter a valid birth date');
       return;
     }
     if (this.state.eventType !== 'Birth') {
-      alert("Must enter a birth date, please make sure the event type is set to Birth");
+      alert("Please enter a birth date, please make sure the event type is set to Birth");
       return;
     }
+    if (!(this.state.personSexAtBirth === "M" || this.state.personSexAtBirth === "F")) {
+      alert("Please enter sexAtBirth as either 'M' or 'F'");
+      return;
+    }
+
 
     var person = {
       fName: this.state.personFName,
@@ -228,7 +234,7 @@ export default class NewPerson extends React.Component {
   }
 
   render = () => {
-
+    console.log('in new person render: ', this.state);
       return(
       <div>
         <div class="modalClose2">
@@ -239,7 +245,6 @@ export default class NewPerson extends React.Component {
         </div>
         <div class="buffer-modal">
         </div>
-        {/*<CompactPeopleDetails person={this.props.person} key={this.props.person._id}/>*/}
           <div class="compactPerson">
     				<div class="personDetails">
     					<div class="pDetail">
@@ -269,7 +274,7 @@ export default class NewPerson extends React.Component {
     					<input
     						class="form-control detail-input"
     						type="text"
-    						placeholder="Enter Gender At Birth"
+    						placeholder="Sex at Birth (M or F)"
     						value={this.state.personSexAtBirth}
                 onChange={this.tempSexAtBirth}
     					/>
@@ -282,7 +287,7 @@ export default class NewPerson extends React.Component {
           <div class="event-row">
             <div class="PR-div">
               <div class="PR-title">
-                Date
+                Birth Date
               </div>
               <div class="PR-drop-1">
                 <DateInput
@@ -316,6 +321,7 @@ export default class NewPerson extends React.Component {
                     type="text"
                     value={this.state.eventPlace}
                     onChange={this.tempEventPlace}
+                    placeholder="Enter birth place"
                 />
               </div>
             </div>
@@ -328,152 +334,34 @@ export default class NewPerson extends React.Component {
 					<div class="PR-row-1">
 						<div class="PR-div">
 							<div class="PR-title">
-								Parent Name
+								Biological Mother
 							</div>
 							<div class="PR-drop-name">
 								<Select
 									options={this.props.peopleArray}
 									onChange={this.tempParentChange1}
 									value={this.state.parent_id1}
+                  placeholder="select Mother (or leave blank)"
 								/>
 							</div>
 						</div>
-					</div>
-					<div class="PR-row-2">
-						<div class="PR-sub-div">
-							<div class="PR-div">
-								<div class="PR-title">
-									Relationship
-								</div>
-								<div class="PR-drops">
-									<div class="PR-drop-2">
-										<Select
-											options={this.props.parentalRelTypes}
-											onChange={this.tempRelTypeChange1}
-											value={this.state.relationshipType1}
-										/>
-									</div>
-								</div>
-							</div>
-							<div class="PR-div">
-								<div class="PR-title">
-									Sub Type
-								</div>
-								<div class="PR-drops">
-									<div class="PR-drop-2">
-										<Select
-											options={this.props.parentalRelSubTypes}
-											onChange={this.tempSubTypeChange1}
-											value={this.state.subType1}
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="PR-row-3">
-						<div class="PR-date-div">
-							<div class="PR-title">
-							Start Date
-							</div>
-							<div class="PR-sDate">
-								<DateInput
-									initialValue={this.state.parentStartDateUser1}
-									onNewDate={this.tempParentStartDate1}
-									field="startDate"
-								/>
-							</div>
-						</div>
-						<div class="PR-date-div">
-							<div class="PR-title">
-							End Date
-							</div>
-							<div class="PR-eDate">
-								<DateInput
-									initialValue={this.state.parentEndDateUser1}
-									onNewDate={this.tempParentEndDate1}
-									field="endDate"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="buffer-modal">
 					</div>
 				</div>
         <div class="PR-main">
 					<div class="PR-row-1">
 						<div class="PR-div">
 							<div class="PR-title">
-								Parent Name
+								Father
 							</div>
 							<div class="PR-drop-name">
 								<Select
 									options={this.props.peopleArray}
 									onChange={this.tempParentChange2}
 									value={this.state.parent_id2}
+                  placeholder="select Father (or leave blank)"
 								/>
 							</div>
 						</div>
-					</div>
-					<div class="PR-row-2">
-						<div class="PR-sub-div">
-							<div class="PR-div">
-								<div class="PR-title">
-									Relationship
-								</div>
-								<div class="PR-drops">
-									<div class="PR-drop-2">
-										<Select
-											options={this.props.parentalRelTypes}
-											onChange={this.tempRelTypeChange2}
-											value={this.state.relationshipType2}
-										/>
-									</div>
-								</div>
-							</div>
-							<div class="PR-div">
-								<div class="PR-title">
-									Sub Type
-								</div>
-								<div class="PR-drops">
-									<div class="PR-drop-2">
-										<Select
-											options={this.props.parentalRelSubTypes}
-											onChange={this.tempSubTypeChange2}
-											value={this.state.subType2}
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="PR-row-3">
-						<div class="PR-date-div">
-							<div class="PR-title">
-							Start Date
-							</div>
-							<div class="PR-sDate">
-								<DateInput
-									initialValue={this.state.parentStartDateUser2}
-									onNewDate={this.tempParentStartDate2}
-									field="startDate"
-								/>
-							</div>
-						</div>
-						<div class="PR-date-div">
-							<div class="PR-title">
-							End Date
-							</div>
-							<div class="PR-eDate">
-								<DateInput
-									initialValue={this.state.parentEndDateUser2}
-									onNewDate={this.tempParentEndDate2}
-									field="endDate"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="buffer-modal">
 					</div>
 				</div>
         </div>
