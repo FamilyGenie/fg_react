@@ -44,7 +44,8 @@ export default class FamilyMap extends React.Component {
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
-			starAge: 18
+			starAge: 18,
+			legendShowing: false,
 		};
 	}
 
@@ -92,6 +93,16 @@ export default class FamilyMap extends React.Component {
 			starAge: vStarAge
 		});
 		this.componentDidMount();
+	}
+	toggleLegend = () => {
+		if(this.state.legendShowing === false) {
+			$("#legend").css({"display": "flex"});
+			this.setState({legendShowing: true});
+		}
+		if (this.state.legendShowing === true) {
+			$("#legend").css({"display": "none"});
+			this.setState({legendShowing: false});
+		}
 	}
 
 	// updateStarAge = (evt) => {
@@ -147,7 +158,10 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
 						</div>
-						<div class="legendDiv">
+						<div class="legendToggle">
+							<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
+						</div>
+						<div class="legendDiv" id="legend">
 							<div class="help-header">
 								<h3 class="history-title-1">Legend</h3>
 							</div>

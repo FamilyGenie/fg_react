@@ -11,6 +11,7 @@
 .mainMap {
   display: flex;
   flex-direction: row;
+  min-height: 800px;
 }
 .dateToggle {
   display: flex;
@@ -23,11 +24,7 @@
   margin-bottom: 30px;
 }
 .legendDiv {
-  height: 600px;
-  width: 240px;
-  background-color: white;
-  border: 2px solid silver;
-  border-radius: 5px;
+
 }
 .mapArrow {
   display: flex;
@@ -92,4 +89,20 @@
 .legendType {
   text-align: center;
   font-family: Cabin;
+}
+#legend {
+  display: none;
+  height: 600px;
+  width: 340px;
+  background-color: white;
+  border: 2px solid silver;
+  border-radius: 5px;
+  flex-direction: column;
+}
+.legendToggle {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+  width: 240px;
+  float: left;
 }
