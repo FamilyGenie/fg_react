@@ -204,7 +204,7 @@ export default class FamilyMap extends React.Component {
 			if ( this.children.length + this.parents.length + this.parentRels.length === lastCount) {
 				stillNewChildren = false;
 			}
-			lastCount = this.children.length + this.parents.length + this.pairBonds.length;
+			lastCount = this.children.length + this.parents.length + this.parentRels.length;
 		}
 
 		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
@@ -1280,10 +1280,6 @@ export default class FamilyMap extends React.Component {
 		.attr("id","relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent");
-		// .attr("stroke", color)
-		// .attr("stroke-width", 2);
-
-
 
 		if ( /[Mm]arriage/.test(relType) ) {
 			// if it is a marriage, leave the line as a solid line
@@ -1293,22 +1289,53 @@ export default class FamilyMap extends React.Component {
 		} else if ( /\?/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			.attr("stroke", "transparent")
-			.attr("stroke-width", 1);
-
 			d3.select("svg")
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
 			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ");
-		} else {
-			// get here if it is an informal relationship
+			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
+		} else if ( /Extra-Marital-Mated/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+		} else if ( /Extra-Marital/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("****************************************************************************************************************************************************************************************************************");
+		} else if ( /Mated/.test(relType) ) {
+			// get here if it is a mated relationship
 			line = line
 			.attr("stroke", color)
 			.attr("stroke-width", 2)
 			.style("stroke-dasharray", ("2,8"));
+		} else {
+			// get here Casual or Informal (need to move all Informals to Casual)
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 		}
 
 		return line;
@@ -1496,8 +1523,8 @@ export default class FamilyMap extends React.Component {
 
 		// yPos needs to account for the curve of the rel line
 		// controlPoint is the controlPoint of the Bezier line that is drawn between the male and female of the relationship. I use it to calculate the y coordinate to draw the relationship hash. It was very experimental to figure out the equation that works
-		// const yControlPoint = (mom.mapYPos - 60) / (768 / dad.mapXPos);
 		const yControlPoint = (mom.mapYPos - 60) / (Math.abs(mom.mapXPos - dad.mapXPos) / 250);
+
 		// dad.mapYPos - 40 is the Y position of where the relationship line begins and ends.
 		// What I do is take the control point and then push the hash mark down a little. Push it down by taking the amount of space between the control point and the beginning of the line and then take a fraction of that.
 		let cy = yControlPoint + ( (dad.mapYPos - 40) - yControlPoint ) / 4;
