@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
 import Modal from 'react-modal';
+import Legend from './legend';
 
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
 import NewPerson from '../newperson';
@@ -132,7 +133,7 @@ export default class FamilyMap extends React.Component {
 			return (
 			<div class="mainDiv">
 				<div class="header-div">
-					<h1 class="family-header">Family Map</h1>
+					<h1 class="family-header">{this.fullName}'s Family Map </h1>			
 				</div>
 				<div class="mainMap">
 					<div class="dateLegend">
@@ -161,42 +162,12 @@ export default class FamilyMap extends React.Component {
 						<div class="legendToggle">
 							<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
 						</div>
-						<div class="legendDiv" id="legend">
-							<div class="help-header">
-								<h3 class="history-title-1">Legend</h3>
-							</div>
-							<div class="buffer-div">
-							</div>
-							<div class="legends">
-								<div class="legendContent">
-									<h3 class="legendHeader">Parent-Child</h3>
-									<div class="bufferLegend">
-									</div>
-									<h4 class="legendType">Biological</h4>
-									<p class="legendType">___________</p>
-									<h4 class="legendType">Step</h4>
-									<p class="legendType">-- -- -- -- --</p>
-									<h4 class="legendType">Adopted</h4>
-									<p class="legendType">- - - - -</p>
-								</div>
-								<div class="legendContent">
-									<h3 class="legendHeader">Pair Bonds</h3>
-									<div class="bufferLegend">
-									</div>
-									<h4 class="legendType">Marriage</h4>
-									<p class="legendType">___________</p>
-									<h4 class="legendType">Informal Relationship</h4>
-									<p class="legendType">- - - - -</p>
-									<h4 class="legendType">Not Yet Designated</h4>
-									<p class="legendType">???????</p>
-								</div>
-							</div>
+						<div id="legend">
+							<Legend/>
 						</div>
 					</div>
-					<div class="map">
-						<svg class="svg-map">
-						</svg>
-					</div>
+					<svg class="svg-map">
+					</svg>
 				</div>
 				<Modal
 			      isOpen={newPersonModalIsOpen}

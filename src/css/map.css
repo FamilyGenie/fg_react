@@ -57,8 +57,8 @@
 }
 .svg-map {
   /*height: 1400px;*/
-  width: 1400px;
-  padding-top: 75px;
+  width: 1100px;
+  /*padding-top: 75px;*/
 }
 .map {
   width: 100%;
@@ -74,6 +74,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  justify-content: center;
 }
 .legendHeader {
   text-align: center;
@@ -89,10 +90,13 @@
 .legendType {
   text-align: center;
   font-family: Cabin;
+  height: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 #legend {
   display: none;
-  height: 600px;
+  height: 900px;
   width: 340px;
   background-color: white;
   border: 2px solid silver;
@@ -105,4 +109,16 @@
   justify-content: center;
   width: 240px;
   float: left;
+}
+.legendInfo {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.legendBox {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
 }
