@@ -6,8 +6,6 @@ import { createPerson, deletePerson, updatePerson } from '../../actions/peopleAc
 
 @connect(
 	(store, ownProps) => {
-		// console.log('in @connect: ', ownProps);
-
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now). However, soon, we will add the parentrelationships, pairbondrelationships, and events into the props (maybe)
 		return ownProps;
 	},
@@ -22,7 +20,7 @@ import { createPerson, deletePerson, updatePerson } from '../../actions/peopleAc
 		}
 	}
 )
-export default class PeopleDetailsLineItem extends React.Component {
+export default class CompactPeopleDetails extends React.Component {
 
 	getOnBlur = (field) => {
 		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)
@@ -40,14 +38,17 @@ export default class PeopleDetailsLineItem extends React.Component {
 		hashHistory.push('/familymap/' + this.props.person._id);
 	}
 
+
+
 	render = () => {
 		const { person, onBlur } = this.props;
-		console.log("in render", person);
+
 		// put in code to test if person._id === 0, and then say person cannot be found
 		if (person) {
 			return (
-				<div class="person-item">
-					<div class="detail-names">
+			<div class="compactPerson">
+				<div class="personDetails">
+					<div class="pDetail">
 						<input
 							class="form-control detail-input"
 							type="text"
@@ -62,40 +63,27 @@ export default class PeopleDetailsLineItem extends React.Component {
 							placeholder="Enter Middle Name"
 							onChange={this.getOnBlur('mName')}
 						/>
-						<input
-							class="form-control detail-input"
-							type="text"
-							value={person.lName}
-							placeholder="Enter Last Name"
-							onChange={this.getOnBlur('lName')}
-						/>
-					</div>
-					<div class="detail-names">
-						<input
-							class="form-control detail-input"
-							type="text"
-							defaultValue={person.sexAtBirth}
-							placeholder="Enter Gender At Birth"
-							onBlur={this.getOnBlur('sexAtBirth')}
-						/>
-					<div class="button-group">
-						<button
-							type="button"
-							class="btn btn-default btn-PD"
-							onClick={this.deletePerson}
-						>
-							Delete
-						</button>
-						<button
-							type="button"
-							class="btn btn-default btn-PD"
-							onClick={this.openMap}
-						>
-							Map
-						</button>
-					</div>
-					</div>
 				</div>
+				<div class="pDetail">
+					<input
+						class="form-control detail-input"
+						type="text"
+						value={person.lName}
+						placeholder="Enter Last Name"
+						onChange={this.getOnBlur('lName')}
+					/>
+					<input
+						class="form-control detail-input"
+						type="text"
+						defaultValue={person.sexAtBirth}
+						placeholder="Enter Gender At Birth"
+						onChange={this.getOnBlur('sexAtBirth')}
+					/>
+				</div>
+			</div>
+			<div class="buffer-modal">
+			</div>
+		</div>
 			);
 		} else {
 			return (<p>Loading...</p>);

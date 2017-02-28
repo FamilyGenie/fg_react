@@ -63,11 +63,11 @@ export default class Layout extends React.Component {
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
 			$("#allContent").css({"width": "80%"});
-			$("#history").css({"width": "20%"});
+			$("#history").css({"display": "flex"});
 			this.setState({historyBarShowing: true});
 		}
 		if (this.state.historyBarShowing === true) {
-			$("#history").css({"width": "0"});
+			$("#history").css({"display": "none"});
 			$("#allContent").css({"width": "100%"});
 			this.setState({historyBarShowing: false});
 		}
@@ -124,11 +124,7 @@ export default class Layout extends React.Component {
         <div class="mainHistory" id="history">
           <div class="help-menu">
             <div class="help-header">
-              <div class="blank-person-header">
-              </div>
               <h3 class="history-title-1">Help Menu</h3>
-              <div class="help-close">
-              </div>
             </div>
           </div>
           <div class="history-context">
@@ -145,7 +141,7 @@ export default class Layout extends React.Component {
         </div>
 			</div>
 			<footer class="footer navbar-fixed-bottom">
-					PsychoGenealogical Research 2017 &copy;
+				&copy; 2017 PsychoGenealogical Research
 			</footer>
 		</div>
 		);

@@ -51,12 +51,12 @@ export default class Login extends React.Component {
 
 	render = () => {
 	    return (
-	    	<div class="main-div">
+	    	<div class="mainDiv">
 					<div className="login-body">
-						<form className="name-form">
+						<form className="authForm">
 							<div className="login-h3">
-								<p className="login-header">Log In</p>
-								<a className="or-sign-up" onClick={this.signUpClick}>Or, Sign Up</a>
+								<p className="loginHeader">Log In</p>
+								{/*<a className="or-sign-up" onClick={this.signUpClick}>Or, Sign Up</a>*/}
 							</div>
 							<br/>
 							<div class="login-inputs">
@@ -67,7 +67,7 @@ export default class Login extends React.Component {
 										id="userName"
 										placeholder="Enter email"
 										required
-										onBlur={this.updateEmail.bind(this)}
+										onChange={this.updateEmail.bind(this)}
 
 								/>
 								<input
@@ -76,7 +76,7 @@ export default class Login extends React.Component {
 									id="psw"
 									placeholder="Enter password"
 									required
-									onBlur={this.updatePassword.bind(this)}
+									onChange={this.updatePassword.bind(this)}
 
 								/>
 							</div>
@@ -86,7 +86,7 @@ export default class Login extends React.Component {
 								</button>
 							</div>
 							<div className="checkbox">
-								<label className="remember-user"><input type="checkbox" value=""/>Remember Me</label>
+								{/*<label className="rememberUser"><input type="checkbox" value=""/>Remember Me</label>*/}
 								<a className="forgot" href="">Forgot password?</a>
 							</div>
 						</form>

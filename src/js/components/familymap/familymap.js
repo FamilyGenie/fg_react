@@ -118,47 +118,81 @@ export default class FamilyMap extends React.Component {
 	render = () => {
 		const { people, newPersonModalIsOpen } = this.props;
 		if (people) {
-			return (<div>
-				<div class="main-map-header">
-					<div class="header-div">
-						<h1 class="family-header">Family Map</h1>
-					</div>
-					<div class="mainDate">
-						<div class="mapDate">
-							<div class="mapDateContents">
-								<p>Date:</p>
-								<p class="mapDateText">{this.state.dateFilterString}</p>
-							</div>
-							<div class="starAge">
-								<p>Star's Age:</p>
-								<input
-									id="ageInput"
-									class="form-control ageInput"
-									type="text"
-									value={this.state.starAge}
-									onChange={this.onAgeChange}
-								/>
-							</div>
-						</div>
-						<div class="mapArrow">
-							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
-							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
-						</div>
-					</div>
+			return (
+			<div class="mainDiv">
+				<div class="header-div">
+					<h1 class="family-header">Family Map</h1>
 				</div>
-				<div class="map">
-					<svg class="svg-map">
-					</svg>
+				<div class="mainMap">
+					<div class="dateLegend">
+						<div class="dateToggle">
+							<div class="mapDate">
+								<div class="mapDateContents">
+									<p>Date:</p>
+									<p class="mapDateText">{this.state.dateFilterString}</p>
+								</div>
+								<div class="starAge">
+									<p>Star's Age:</p>
+									<input
+										id="ageInput"
+										class="form-control ageInput"
+										type="text"
+										value={this.state.starAge}
+										onChange={this.onAgeChange}
+									/>
+								</div>
+							</div>
+							<div class="mapArrow">
+								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
+								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
+							</div>
+						</div>
+						<div class="legendDiv">
+							<div class="help-header">
+								<h3 class="history-title-1">Legend</h3>
+							</div>
+							<div class="buffer-div">
+							</div>
+							<div class="legends">
+								<div class="legendContent">
+									<h3 class="legendHeader">Parent-Child</h3>
+									<div class="bufferLegend">
+									</div>
+									<h4 class="legendType">Biological</h4>
+									<p class="legendType">___________</p>
+									<h4 class="legendType">Step</h4>
+									<p class="legendType">-- -- -- -- --</p>
+									<h4 class="legendType">Adopted</h4>
+									<p class="legendType">- - - - -</p>
+								</div>
+								<div class="legendContent">
+									<h3 class="legendHeader">Pair Bonds</h3>
+									<div class="bufferLegend">
+									</div>
+									<h4 class="legendType">Marriage</h4>
+									<p class="legendType">___________</p>
+									<h4 class="legendType">Informal Relationship</h4>
+									<p class="legendType">- - - - -</p>
+									<h4 class="legendType">Not Yet Designated</h4>
+									<p class="legendType">???????</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="map">
+						<svg class="svg-map">
+						</svg>
+					</div>
 				</div>
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"
 			    >
 			      <NewPerson/>
-			    </Modal>
+			  </Modal>
 
-			    // This is the container for the alerts we are using
-			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
+			    {/* This is the container for the alerts we are using*/}
+			  <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 			</div>)
 		}
 	}

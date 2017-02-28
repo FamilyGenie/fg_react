@@ -111,6 +111,7 @@ h3 {
 	color: #640FF3;
 	font-size: 2.5em;
   text-shadow: -1px 0 #E9EBEE, 0 1px #E9EBEE, 1px 0 #E9EBEE, 0 -1px #E9EBEE;
+  cursor: pointer;
 }
 
 /* this is to accomodate for the poor icon I took from the internet. when we get a vector image, we will either change this or remove it */
@@ -168,7 +169,6 @@ div.container.select-container {
 .btn-primary:hover {
 	background-color: rgb(71, 182, 82);
   border-color: #478652;
-	box-shadow: none;
 }
 
 .btn-primary:focus, button.btn.btn-primary:focus, button:focus, .btn:focus, .btn.btn-primary:focus {

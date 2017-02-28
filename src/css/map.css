@@ -3,9 +3,16 @@
   width: 100%;
   height: 100%;
 }
-
-.mainDate {
+.dateLegend {
+  display: flex;
   margin-left: 30px;
+  flex-direction: column;
+}
+.mainMap {
+  display: flex;
+  flex-direction: row;
+}
+.dateToggle {
   display: flex;
   flex-direction: row;
   border: 2px solid silver;
@@ -13,6 +20,14 @@
   border-radius: 5px;
   background-color: white;
   font-size: 20px;
+  margin-bottom: 30px;
+}
+.legendDiv {
+  height: 600px;
+  width: 240px;
+  background-color: white;
+  border: 2px solid silver;
+  border-radius: 5px;
 }
 .mapArrow {
   display: flex;
@@ -44,18 +59,37 @@
   margin-bottom: 10px;
 }
 .svg-map {
-  height: 1400px;
+  /*height: 1400px;*/
   width: 1400px;
   padding-top: 75px;
-  background-color: #E9EBEE;
 }
 .map {
   width: 100%;
-  height: 1400px;
+  /*height: 1400px;*/
   display: flex;
   justify-content: center;
 }
 .ageInput {
   margin-left: 20px;
   width: 60px;
+}
+.legends {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.legendHeader {
+  text-align: center;
+  font-family: CabinMI;
+}
+.bufferLegend {
+  background-color: silver;
+  height: 3px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.legendType {
+  text-align: center;
+  font-family: Cabin;
 }
