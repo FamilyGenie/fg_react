@@ -10,7 +10,6 @@ import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {
-		console.log("in familymap @connect with: ", store.people.people);
 		return {
 			star_id:
 				ownProps.params.star_id,
@@ -19,7 +18,8 @@ import NewPerson from '../newperson';
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
 				JSON.parse(JSON.stringify(store.people.people)),
 			pairBondRelationships:
-				store.pairBondRels.pairBondRels,
+				// store.pairBondRels.pairBondRels,
+				JSON.parse(JSON.stringify(store.pairBondRels.pairBondRels)),
 			parentalRelationships:
 				// store.parentalRels.parentalRels,
 				JSON.parse(JSON.stringify(store.parentalRels.parentalRels)),
@@ -40,7 +40,6 @@ import NewPerson from '../newperson';
 export default class FamilyMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log("in familymap with props: ", this.props);
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
@@ -77,7 +76,7 @@ export default class FamilyMap extends React.Component {
 		var vStarAge = parseInt(this.state.starAge) - 1;
 		// also set the state variable
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
 		this.componentDidMount();
@@ -88,30 +87,25 @@ export default class FamilyMap extends React.Component {
 		var vStarAge = parseInt(this.state.starAge) + 1;
 		// also set the state variable
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
 		this.componentDidMount();
 	}
 
-	// updateStarAge = (evt) => {
-	// 	console.log('in updateStarAge with ', evt.target.value)
-	// 	this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
-	// 	this.setState({
-	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-	// 		starAge: evt.target.value
-	// 	});
-	// 	this.componentDidMount();
-	// }
-
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
 		console.log("onAgeChange", evt.target.value);
-		this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
+		var star = this.getPersonById(this.props.star_id);
+		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
+
+		// this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
 		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			// dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
+		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
 		this.componentDidMount();
 	}
 
@@ -163,62 +157,6 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
-	// sometimes we add a person while processing the map. If that happens, this lifecycle hook is triggered, so we then want to draw the map again, so that it uses that new information
-	// componentDidUpdate() {
-	//    console.log("in component did update, with: ", this.props.people);
-	//    this.componentDidMount();
-	//  }
-
-
-	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will not create the person (who is the mom and/or dad), it will only create the parental relationship record. This function is not currently being called - still in development
-	checkForBioParents = (star_id) => {
-		// find biological mother relationship
-		var momRel = this.props.parentalRelationships.find(function(parentRel){
-			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
-			return /[Mm]other/.test(parentRel.relationshipType) &&
-				/[Bb]iological/.test(parentRel.subType) &&
-				parentRel.child_id === star_id;
-		});
-
-		// if there is not a momRel, then create one for the star.
-		if (!momRel) {
-			momRel = {
-				_id: 'ZMom'+ star_id,
-				child_id: star_id,
-				endDate: '',
-				parent_id: '',
-				relationshipType: 'Mother',
-				startDate: '',
-				subType: 'Biological',
-			}
-
-			this.props.parentalRelationships.push(momRel);
-		}
-
-		// find biological dad relationship record
-		var dadRel = this.props.parentalRelationships.find(function(parentRel){
-			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
-			return /[Ff]ather/.test(parentRel.relationshipType) &&
-				/[Bb]iological/.test(parentRel.subType) &&
-				parentRel.child_id === star_id;
-		});
-
-		// if there is not a dadRel, then create one for the star.
-		if (!dadRel) {
-			dadRel = {
-				_id: 'ZDad' + star_id,
-				child_id: star_id,
-				endDate: '',
-				parent_id: '',
-				relationshipType: 'Father',
-				startDate: '',
-				subType: 'Biological',
-			}
-
-			this.props.parentalRelationships.push(dadRel);
-		}
-	}
-
 	componentDidMount = () => {
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
@@ -227,51 +165,56 @@ export default class FamilyMap extends React.Component {
 		const parentDistance = 220;
 		const childDistance = 120;
 
-		// I can't get setState to work here. Setting the dateFilterString to a value for testing purposes
-		// this.setState({dateFilterString: "1947-08-29"});
-		// this.dateFilterString = '1990-08-27';
-
-
 		this.initializeVariables();
 		// this.drawTicks();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
-		this.checkForBioParents(this.props.star_id);
+		// this.checkForBioParents(this.props.star_id);
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
+		// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+		this.checkAllChildrenForBioParents();
 
-		// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
-		if ( !this.getAllParentsOfChildren() ) {
-			hashHistory.push('/');
-			return;
+		var stillNewChildren = true;
+		// lastCount will be used to see if when we do a run through getting parents and children of parents
+		var lastCount = this.children.length + this.parents.length + this.parentRels.length;
+
+		// loop through finding parents and children until we know we are not finding any more children.
+		while ( stillNewChildren ) {
+
+			// call function to find all the parents for children that are in the children array. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
+			if ( !this.getAllParentsOfChildren() ) {
+				// function will already show an error, so don't need to show another one
+				hashHistory.push('/');
+				return;
+			}
+			console.log("After getAllParents: ", this.parents);
+
+			// this function will get all the children of the parents in the parents array
+			this.getAllChildrenOfParents();
+
+			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
+			this.checkAllChildrenForBioParents();
+
+			console.log("After getAllChildren:", this.children);
+
+			// TODO: Is this a suitable test?
+			if ( this.children.length + this.parents.length + this.parentRels.length === lastCount) {
+				stillNewChildren = false;
+			}
+			lastCount = this.children.length + this.parents.length + this.parentRels.length;
 		}
-		console.log("After getAllParents: ", this.parents);
 
-		if (this.parents.length === 0) {
-			alert("No parents for this person, map will not be drawn.");
-			hashHistory.push('/');
-			return;
-		}
-
-		this.getAllChildrenOfParents();
-		console.log("children:", this.children);
-
-		// then call getAllParents of Children again to get all the parents of all the children, not just parents of the star. If it returns false, there was an error and the map should not be drawn. An erros alert was already displayed to the end user.
-		if ( !this.getAllParentsOfChildren() ) {
-			hashHistory.push('/');
-			return;
-		}
-		console.log("After getAllParents second call: ", this.parents);
-
-		// need some looping here: get parents, get children, get parents, get children, etc... until all parents that were found are the same as the last time all parents were found (because then there are no more to find)
-
+		// getAllPairBonds will find all the pairbonds that the parents are in and push them onto the local this.pairBonds array. This array is then used in the drawAllPairBonds function to draw the parents on the map.
 		if ( !this.getAllPairBonds() ) {
 			alert("There was an error in drawing the map. You are being re-directed to the FamilyList page. You should have seen an error message previous to this to assist with the problem. If not, please contact support.");
 			hashHistory.push('/');
 			return;
 		}
+		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
+		this.addParentsNotInPairBonds(this.props.star_id);
 		console.log("all pair bonds:", this.pairBonds);
 
 		// this includes drawing the parents in the pair bonds. this currently
@@ -291,6 +234,124 @@ export default class FamilyMap extends React.Component {
 		this.bringAllChildrenToFront();
 
 		// Last, we need to see about resizing the drawing
+	} // end of ComponentDidMount
+
+	checkAllChildrenForBioParents = () => {
+		for (let child of this.children) {
+			this.checkForBioParents(child._id);
+		}
+	}
+
+	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will also create the person (who is the mom and/or dad), if they don't exist.
+	checkForBioParents = (child_id) => {
+		console.log('Pair Bonds: ', this.pairBonds);
+		// get the star, so we can use star's birthdate
+		var child = this.getPersonById(child_id);
+		var createPairBond = false;
+		// find biological mother relationship
+		var momRel = this.props.parentalRelationships.find(function(parentRel){
+			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+			return /[Mm]other/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === child_id;
+		});
+
+		// if there is not a momRel, then create one for the child.
+		if (!momRel) {
+			momRel = {
+				_id: 'ZMom'+ child_id,
+				child_id: child_id,
+				endDate: '',
+				parent_id: '',
+				relationshipType: 'Mother',
+				startDate: child.birthDate,
+				startDateUser: child.birthDateUser,
+				subType: 'Biological',
+			}
+			// push this relationship onto the parentalRelationships record
+			this.props.parentalRelationships.push(momRel);
+			console.log("parentalRels ", this.props.parentalRelationships);
+			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
+			createPairBond = true;
+		}
+
+		// if there is not a parent_id in the parental relationship found, add the person who will serve as a placeholder in the map as the star's biological mother. If the user clicks on this person, the person will be created.
+		if (!momRel.parent_id) {
+			parent = {
+				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
+				_id: "ZMom" + child_id,
+				birthDate: null,
+				birthPlace: "",
+				deathDate: null,
+				deathPlace:"",
+				fName: child.fName + "'s Mother",
+				lName: "",
+				mName: "",
+				notes: null,
+				sexAtBirth: "F"
+			};
+			this.people.push(parent);
+			momRel.parent_id = "ZMom" + child_id;
+		}
+
+		// find biological dad relationship record
+		var dadRel = this.props.parentalRelationships.find(function(parentRel){
+			// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+			return /[Ff]ather/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === child_id;
+		});
+
+		// if there is not a dadRel, then create one for the child.
+		if (!dadRel) {
+			dadRel = {
+				_id: 'ZDad' + child_id,
+				child_id: child_id,
+				endDate: '',
+				parent_id: '',
+				relationshipType: 'Father',
+				startDate: child.birthDate,
+				startDateUser: child.birthDateUser,
+				subType: 'Biological',
+			}
+			// push this relationship onto the parentalRelationships record
+			this.props.parentalRelationships.push(dadRel);
+			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
+			createPairBond = true;
+		}
+
+		// if there is not a parent_id in the parental relationship found, add the person who will serve as a placeholder in the map as the star's biological father. If the user clicks on this person, the person will be created.
+		if (!dadRel.parent_id) {
+			parent = {
+				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
+				_id: "ZDad" + child_id,
+				birthDate: null,
+				birthPlace: "",
+				deathDate: null,
+				deathPlace:"",
+				fName: child.fName + "'s Father",
+				lName: "",
+				mName: "",
+				notes: null,
+				sexAtBirth: "M"
+			};
+			this.people.push(parent);
+			dadRel.parent_id = "ZDad" + child_id;
+		}
+
+		if (createPairBond) {
+			// If there we had to create a momRel or dadRel in this function, then we also will create a pairBond between mom and dad. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
+			// TODO: if there are pairBonds between adopted parents, then this function is not called. Is that a problem??? Maybe we shouldn't call it all, now that we can draw parents not in a pair bond - so that both mom and dad will show on the map without a relationship between them.
+
+			var pairBond = {
+				personOne_id : momRel.parent_id,
+				personTwo_id : dadRel.parent_id,
+				relationshipType : "???",
+				startDate : null
+			};
+
+			this.pairBonds.push(pairBond);
+		}
 	}
 
 	drawAllChildren (startY, childDistance): void {
@@ -305,8 +366,6 @@ export default class FamilyMap extends React.Component {
 		this.children.sort(birthDateCompare);
 
 		for (let child of this.children) {
-			// get mom relationship record
-
 			// find biological mother relationship
 			momRel = this.props.parentalRelationships.find(function(parentRel){
 				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
@@ -375,7 +434,7 @@ export default class FamilyMap extends React.Component {
 
 			} else {
 				// if not both a mom and or a dad, print error message.
-				// alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
+				alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
 			}
 		} // end of let child of this.children
 
@@ -392,7 +451,7 @@ export default class FamilyMap extends React.Component {
 	drawAllPairBonds (startX, startY, parentDistance): boolean {
 		let mom;
 		let dad;
-		let momRel, dadRel;
+		var personOne, personTwo;
 		let parent;
 		let nextMaleX = startX - Math.floor(parentDistance / 3 * 2);
 		let nextFemaleX = startX + Math.floor(parentDistance / 3 * 2);
@@ -404,29 +463,8 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
-
+		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
-
-			parent = this.getPersonById(pairBond.personOne_id);
-
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
-			}
-
-			parent = this.getPersonById(pairBond.personTwo_id);
-
-			if (parent.sexAtBirth === "M") {
-				dad = parent;
-			} else if ( parent.sexAtBirth === "F" ) {
-				mom = parent;
-			}
-
-			if ( !(mom && dad) ) {
-				alert("Pair bond record does not have a mom and dad (or maybe either mom or dad does not have Birth Gender set to M or F). Application does not yet support this");
-				return false;
-			}
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
 			if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
@@ -435,48 +473,30 @@ export default class FamilyMap extends React.Component {
 				YPos = startY;
 			}
 
-			// if dad is not yet drawn, then draw and add to alreadyDrawn
-			if ( dad && !this.alreadyDrawn.includes(dad) ) {
-				// The following two variables are stored in the array object, and don't go back to the database.
-				dad.mapXPos = nextMaleX;
-				dad.mapYPos = YPos;
-				dad.d3Circle = this.drawCircle(dad);
-				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-				if (dad.deathDate) {
-					if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
-						this.drawCircleHash(dad);
-					}
+			// find personOne and draw them if they haven't been drawn yet
+			personOne = null;
+			var personOne = this.getPersonById(pairBond.personOne_id);
+			if (personOne && !this.alreadyDrawn.includes(personOne)) {
+				if (personOne.sexAtBirth === "M") {
+					nextMaleX = this.drawDad(personOne, nextMaleX, YPos, parentDistance);
+				} else if (personOne.sexAtBirth === 'F' ) {
+					nextFemaleX = this.drawMom(personOne, nextFemaleX, YPos, parentDistance);
 				}
-				dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
-				dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
-				nextMaleX -= parentDistance;
-				this.alreadyDrawn.push(dad);
-			} else if ( !dad ) {
-				// throw error
 			}
 
-			// if mom is not yet drawn, then draw and add to alreadyDrawn
-			if ( mom && !this.alreadyDrawn.includes(mom) ) {
-				// The following two variables are stored in the array object, and don't go back to the database.
-				mom.mapXPos = nextFemaleX;
-				mom.mapYPos = YPos;
-				mom.d3Circle = this.drawCircle(mom);
-				// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
-				if (mom.deathDate) {
-					if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
-						this.drawCircleHash(mom);
-					}
+			// find personOne and draw them if they haven't been drawn yet
+			personTwo = null;
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
+			if (personTwo && !this.alreadyDrawn.includes(personTwo)) {
+				if (personTwo.sexAtBirth === "M") {
+					nextMaleX = this.drawDad(personTwo, nextMaleX, YPos, parentDistance);
+				} else if (personTwo.sexAtBirth === 'F' ) {
+					nextFemaleX = this.drawMom(personTwo, nextFemaleX, YPos, parentDistance);
 				}
-				mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
-				mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
-				nextFemaleX += parentDistance;
-				this.alreadyDrawn.push(mom);
-			} else if ( !mom ) {
-				// throw error
 			}
 
-			if (mom && dad) {
-				// draw a relationship line
+			// if this pairBond record has two people, draw a relationship line between them
+			if (personOne && personTwo) {
 				// first, check to see if a relationship with these two people has already been drawn (for example, they may have been living together before they got married). If so, we need the color of that line, and make this line and text about this relationship the same color.
 				// the checkForExistingRel function returns the color of the existing relationship if it is found
 				pairBond.color = checkForExistingRel(pairBond, this.pairBonds);
@@ -487,19 +507,19 @@ export default class FamilyMap extends React.Component {
 
 				// next, check to see if it is an adoptive relationship, because we'll draw the relationship line differently
 				if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
-					this.drawAdoptiveRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
-					this.drawRelText(mom, dad, pairBond);
+					this.drawAdoptiveRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
-						this.drawAdoptiveRelHash(mom, dad, pairBond, pairBond.color);
+						this.drawAdoptiveRelHash(personOne, personTwo, pairBond, pairBond.color);
 					}
 				} else {
 					// this is not adopted parents to the star
-					this.drawRelLine(mom, dad, pairBond.color, pairBond.relationshipType);
-					this.drawRelText(mom, dad, pairBond);
+					this.drawRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
-						this.drawRelHash(mom, dad, pairBond, pairBond.color);
+						this.drawRelHash(personOne, personTwo, pairBond, pairBond.color);
 					}
 				}
 
@@ -543,7 +563,7 @@ export default class FamilyMap extends React.Component {
 				(pB.personOne_id === pairBond.personTwo_id &&
 				pB.personTwo_id === pairBond.personOne_id);
 			});
-			if ( foundPairBonds ) {
+			if ( foundPairBonds.length ) {
 				// loop through each record found
 				for (let pBFound of foundPairBonds) {
 					// if there is a color already associated with it, the return that color
@@ -559,6 +579,89 @@ export default class FamilyMap extends React.Component {
 			}
 		} // end function checkForExistingRel
 	} // end function drawAllPairBonds
+
+		drawDad = (dad, nextMaleX, YPos, parentDistance) => {
+			// The following two variables are stored in the array object, and don't go back to the database.
+			dad.mapXPos = nextMaleX;
+			dad.mapYPos = YPos;
+			dad.d3Circle = this.drawCircle(dad);
+			// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			if (dad.deathDate) {
+				if (dad.deathDate.substr(0,10) <= this.dateFilterString) {
+					this.drawCircleHash(dad);
+				}
+			}
+			dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
+			dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			// nextMaleX -= parentDistance;
+			this.alreadyDrawn.push(dad);
+			return nextMaleX - parentDistance;
+		}
+
+		drawMom = (mom, nextFemaleX, YPos, parentDistance) => {
+			// The following two variables are stored in the array object, and don't go back to the database.
+			mom.mapXPos = nextFemaleX;
+			mom.mapYPos = YPos;
+			mom.d3Circle = this.drawCircle(mom);
+			// if there is a deathDate and it is less than the date the map is being drawn for, then draw the CircleHash
+			if (mom.deathDate) {
+				if (mom.deathDate.substr(0,10) <= this.dateFilterString) {
+					this.drawCircleHash(mom);
+				}
+			}
+			mom.d3Symbol = this.drawFemaleSymbol(nextFemaleX, YPos);
+			mom.d3Text = this.drawCircleText(nextFemaleX + 45, YPos - 25, mom);
+			// nextFemaleX += parentDistance;
+			this.alreadyDrawn.push(mom);
+			return nextFemaleX + parentDistance;
+		}
+
+	addParentsNotInPairBonds = (child_id) => {
+		// check to see what parents are not in a pairBond
+		for (let parent of this.parents) {
+			// if the parent is not found in any of the existing pairBonds, then add that parent to the pairBond array. Add them as personOne, set personTwo to null
+			if (!parentFound(parent, this.pairBonds)) {
+				// find the parental record where this parent is the parent and the child passed into the function is the child. We will use the startDate of this relationship to put into the pairBond record we are going to create
+				var parentalRel = this.props.parentalRelationships.find(
+					function(p) {
+						return p.parent_id === parent._id && p.child_id === child_id;
+					}
+				);
+
+				// if one of the single Parents is an adopted parent, then make sure that the first child drawn is below the parentalRel line
+				if (/[Aa]dopted/.test(parentalRel.subType)) {
+					this.firstChildYDistance = this.firstChildYWithAdoptions;
+				}
+
+				var newObject = {
+					// _id: 'Z' + '57fe7b9a47d7491b658a92a8',
+					// personOne_id: '57fe7b9a47d7491b658a92a8',
+					// startDate: '1995-01-01',
+					// startDateUser: 'Jan 1, 1995'
+					_id: 'Z' + parent._id,
+					personOne_id: parent._id,
+					startDate: parentalRel.startDate,
+					startDateUser: parentalRel.startDateUser,
+					subTypeToStar: parentalRel.subType
+				}
+				this.pairBonds.push(newObject);
+			}
+		}
+
+		function parentFound(parent, pairBonds) {
+			var result = pairBonds.find(
+				function(p) {
+					return p.personOne_id === parent._id ||
+					p.personTwo_id === parent._id;
+				}.bind(this)
+			);
+			if (result) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
 	getAllPairBonds(): boolean {
 		let pairBondTemp = [];
@@ -631,13 +734,13 @@ export default class FamilyMap extends React.Component {
 			} // end for pairbond
 		} // end for parentObj
 
+		// TODO: Maybe what we need to do here is to see if there is a pair bond between the bio mom and dad, and create that here?
+		/*
 		if (!this.pairBonds.length) {
-			let star = this.getPersonById(this.props.star_id);
-			// alert("There are no pair bonds among the parents of " + star.fName + " " + star.lName + ". Please fix and re-draw map. Fix by going to " + star.fName + " " + star.lName + "'s detail page, click on their parents to get to the parent's detail page, and make sure there is at least one pair bond among them.");
-			// return false;
-
 			// if there are no pair bonds found, then we need to create one between the star's mom and the star's dad, so at least that shows up on the map. The idea is that the user will be able to click on the parent that shows up and fill in the missing information.
+			// TODO: if there are pairBonds between adopted parents, then this function is not called. Is that a problem??? Maybe we shouldn't call it all, now that we can draw parents not in a pair bond - so that both mom and dad will show on the map without a relationship between them.
 
+			let star = this.getPersonById(this.props.star_id);
 			var momRel = this.parentRels.find(function(pr) {
 				return pr.child_id === star._id && /[Mm]other/.test(pr.relationshipType) && /[Bb]iological/.test(pr.subType)
 			});
@@ -655,6 +758,7 @@ export default class FamilyMap extends React.Component {
 
 			this.pairBonds.push(pairBond);
 		}
+		*/
 
 		// if we got here, everything was executed successfully, so return true so map drawing can continue.
 		return true;
@@ -675,39 +779,25 @@ export default class FamilyMap extends React.Component {
 			// for each parental relationship of each child
 			for (let parentRel of parentalRelTemp) {
 				// first, push parentRel onto array of relationships to track
-				// this.parentRels = this.addToArray(this.parentRels, parentRel);
 				if (!this.parentRels.includes(parentRel)) {
 						this.parentRels.push(parentRel);
 					}
 				// find the parent
 				let parent = this.getPersonById(parentRel.parent_id);
+
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					// alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					// return false;
-
-					// add a parent record with name of Star as fName for this child so that a parent still shows on the map. Also, Create a unique _id to this record and then update the parentRels object so that the parentalRel record between this parent and child exists. Last, push the parent onto the people array for this map.
-
-					var star = this.getPersonById(this.props.star_id);
-					parent = {
-						// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
-						_id: (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id,
-						birthDate: null,
-						birthPlace: "",
-						deathDate: null,
-						deathPlace:"",
-						fName: star.fName + "'s " + (/[Mm]other/.test(parentRel.relationshipType) ? "Mother" : "Father"),
-						lName: "",
-						mName: "",
-						notes: null,
-						parentalRel_id: parentRel._id,
-						sexAtBirth: (/[Mm]other/.test(parentRel.relationshipType) ? "F" : "M")
-					};
-					this.people.push(parent);
-					parentRel.parent_id = (/[Mm]other/.test(parentRel.relationshipType) ? "ZMom" : "ZDad") + child._id;
+					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+					return false;
+					// TODO: We can instead just remove this record from the parentalRel array.
+					// console.log('before splice ', this.parentRels);
+					// var i = this.parentRels.indexOf(parentRel);
+					// this.parentRels.splice(i, 1);
+					// console.log('after splice ', this.parentRels);
+					// alert("There was a parent record for child: " + child.fName + " " + child.lName + "that had a blank value. That parent is not appearing on this map.");
 				}
+
 				// put the parent into the parents array, if they don't yet exist
-				// this.parents = this.dataService.addToArray(this.parents, parent);
 				if (!this.parents.includes(parent)) {
 						this.parents.push(parent);
 					}
@@ -823,13 +913,16 @@ export default class FamilyMap extends React.Component {
 				alert('Star does not have a birthdate, map will not be drawn');
 				return;
 			} else {
-				this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
+				this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
-				dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+				dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 				starAge: 18
 				});
 			}
 		}
+		console.log("Date: ", this.dateFilterString, star.birthDate);
+
 	}
 
 	getPersonById = (_id) => {
@@ -875,10 +968,10 @@ export default class FamilyMap extends React.Component {
 	drawCircleText(cx, cy, person) {
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
-		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
+		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 		// only include death info if there is a deathDate
 		if (person.deathDate) {
-			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
+			var deathDate = (person.deathDateUser ? person.deathDateUser : (person.deathDate ? moment(person.deathDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
 			textData = [
 				// name
 				{"x": cx, "y": cy, "txt": person.fName + " " + person.lName},
@@ -960,14 +1053,13 @@ export default class FamilyMap extends React.Component {
 		let cx, cy;
 
 		// xPos is halfway between mom and dad, and then minus a few pixels for rough centering
-		cx = (mom.mapXPos - dad.mapXPos) / 2 + dad.mapXPos - 45;
+		cx = Math.abs(mom.mapXPos - dad.mapXPos) / 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos) - 45;
 
 		// if this pair bond shows up on the adopted line, the curve is different, so calculate the y position differently
 		if (pairBondRel.subTypeToStar === "Adopted") {
-			cy = (mom.mapYPos) - 30;
+			cy = (mom.mapYPos) - 50;
 		} else {
 			// yPos needs to account for the curve of the rel line
-			// cy = (mom.mapYPos - 40) / 2 - 5;
 			cy = (mom.mapYPos - 160);
 		}
 
@@ -987,8 +1079,8 @@ export default class FamilyMap extends React.Component {
 			);
 		}
 
-		// only include divorce info if there is a divorce
-		if ( pairBondRel.endDate ) {
+		// only show start date and end date if both of them exist
+		if ( pairBondRel.startDate && pairBondRel.endDate ) {
 			textData = [
 				// together info
 				{
@@ -1005,7 +1097,8 @@ export default class FamilyMap extends React.Component {
 					moment(pairBondRel.endDate).format("MM/DD/YYYY")
 				},
 			];
-		} else {
+		} else if ( pairBondRel.startDate ) {
+			// only show startDate if one exists.
 			textData = [
 				// together info
 				{
@@ -1148,34 +1241,45 @@ export default class FamilyMap extends React.Component {
 			.attr("fill", "black");
 	}
 
-	drawRelLine(mom, dad, color, relType) {
-		let lineStrArr = [];
-		let yControlPoint: number;
-		let line;
+	drawRelLine(p1, p2, color, relType) {
+		var lineStrArr = [];
+		var yControlPoint: number;
+		var line;
+		var personOne, personTwo;
+
+		// find out which person p1 or p2, is further to the left (has the lower mapXPos), that is the one to set as person1, so that the Bezier curve is drawn correctly. We set four point for the line, going from left to right.
+		if (p1.mapXPos < p2.mapXPos) {
+			personOne = p1;
+			personTwo = p2;
+		} else {
+			personOne = p2;
+			personTwo = p1;
+		}
 
 		lineStrArr.push("M");
-		lineStrArr.push(dad.mapXPos);
-		lineStrArr.push(dad.mapYPos - 40);
+		lineStrArr.push(personOne.mapXPos);
+		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
-		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line
-		yControlPoint = (mom.mapYPos - 60) / ((mom.mapXPos - dad.mapXPos) / 250);
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 2 + dad.mapXPos);
+		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
+		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
+		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+		} else {
+			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+		}
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 6 + dad.mapXPos);
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
 		// this is the ending point of the line
-		lineStrArr.push(mom.mapXPos);
-		lineStrArr.push(mom.mapYPos - 40);
+		lineStrArr.push(personTwo.mapXPos);
+		lineStrArr.push(personTwo.mapYPos - 40);
 
 		line = d3.select("svg")
 		.append("path")
-		.attr("id","relline" + mom._id + dad._id)
+		.attr("id","relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent");
-		// .attr("stroke", color)
-		// .attr("stroke-width", 2);
-
-
 
 		if ( /[Mm]arriage/.test(relType) ) {
 			// if it is a marriage, leave the line as a solid line
@@ -1185,52 +1289,101 @@ export default class FamilyMap extends React.Component {
 		} else if ( /\?/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			.attr("stroke", "transparent")
-			.attr("stroke-width", 1);
-
 			d3.select("svg")
 			.append("text")
 			.append("textPath")
-			.attr("xlink:href", "#relline" + mom._id + dad._id)
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
 			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ");
-		} else {
-			// get here if it is an informal relationship
+			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
+		} else if ( /Extra-Marital-Mated/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+		} else if ( /Extra-Marital/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("****************************************************************************************************************************************************************************************************************");
+		} else if ( /Mated/.test(relType) ) {
+			// get here if it is a mated relationship
 			line = line
 			.attr("stroke", color)
 			.attr("stroke-width", 2)
 			.style("stroke-dasharray", ("2,8"));
+		} else {
+			// get here Casual or Informal (need to move all Informals to Casual)
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 		}
 
 		return line;
 	}
 
-	drawAdoptiveRelLine(mom, dad, color, relType) {
-		let lineStrArr = [];
-		let line;
-		let yControlPoint: number;
+	drawAdoptiveRelLine(p1, p2, color, relType) {
+		var lineStrArr = [];
+		var line;
+		var yControlPoint: number;
+		var personOne, personTwo;
+
+		// find out which person p1 or p2, is further to the left (has the lower mapXPos), that is the one to set as person1, so that the Bezier curve is drawn correctly. We set four point for the line, going from left to right.
+		if (p1.mapXPos < p2.mapXPos) {
+			personOne = p1;
+			personTwo = p2;
+		} else {
+			personOne = p2;
+			personTwo = p1;
+		}
 
 		// yControlPoint is the control point of the Bezier curve that connects the adoptive parents. The higher it is on the map, the higher the arc of the curve.
-		// yControlPoint = 225;
-		// the bigger I make 200,000 - the lower the arc.
-		// yControlPoint = 190000 / (mom.mapXPos - dad.mapXPos);
-		yControlPoint = 625 / Math.log10((mom.mapXPos - dad.mapXPos) / 2);
+		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
+		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
+		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
+		} else {
+			// yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 1);
+
+		}
+		// yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
 		lineStrArr.push("M");
 		// This is the beginning of the line, at the top of dad
-		lineStrArr.push(dad.mapXPos + 0);
-		lineStrArr.push(dad.mapYPos - 40);
+		lineStrArr.push(personOne.mapXPos + 0);
+		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
 
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 2 + dad.mapXPos);
+		// var lower = (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
+		// var value = Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push(yControlPoint);
 
-		lineStrArr.push((mom.mapXPos - dad.mapXPos) / 8 * 6 + dad.mapXPos);
+		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
 		lineStrArr.push(yControlPoint);
 
 		// This is the end point of the line, at the top of mom
-		lineStrArr.push(mom.mapXPos - 0);
-		lineStrArr.push(mom.mapYPos - 40);
+		lineStrArr.push(personTwo.mapXPos - 0);
+		lineStrArr.push(personTwo.mapYPos - 40);
 
 		line = d3.select("svg")
 		.append("path")
@@ -1292,6 +1445,14 @@ export default class FamilyMap extends React.Component {
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("4,8"))
 				.attr("fill", "none");
+		} else if ( /Foster/.test(subType) ) {
+			return d3.select("svg")
+				.append("path")
+				.attr("d", lineFunction(lineData))
+				.attr("stroke", "blue")
+				.attr("stroke-width", 2)
+				.style("stroke-dasharray", ("2,8"))
+				.attr("fill", "none");
 		} else {
 			alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
 		}
@@ -1324,7 +1485,8 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// mom is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
+					// alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
 				}
 			}
 
@@ -1347,7 +1509,9 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// dad is not drawn, so tell the user there is something fishy, and continue
-					 alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
+					//	alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+
 				}
 			}
 		}
@@ -1359,8 +1523,8 @@ export default class FamilyMap extends React.Component {
 
 		// yPos needs to account for the curve of the rel line
 		// controlPoint is the controlPoint of the Bezier line that is drawn between the male and female of the relationship. I use it to calculate the y coordinate to draw the relationship hash. It was very experimental to figure out the equation that works
-		// const yControlPoint = (mom.mapYPos - 60) / (768 / dad.mapXPos);
-		const yControlPoint = (mom.mapYPos - 60) / ((mom.mapXPos - dad.mapXPos) / 250);
+		const yControlPoint = (mom.mapYPos - 60) / (Math.abs(mom.mapXPos - dad.mapXPos) / 250);
+
 		// dad.mapYPos - 40 is the Y position of where the relationship line begins and ends.
 		// What I do is take the control point and then push the hash mark down a little. Push it down by taking the amount of space between the control point and the beginning of the line and then take a fraction of that.
 		let cy = yControlPoint + ( (dad.mapYPos - 40) - yControlPoint ) / 4;

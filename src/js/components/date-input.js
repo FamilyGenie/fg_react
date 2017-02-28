@@ -45,7 +45,7 @@ export default class DateInput extends React.Component {
 		 this.setState({
 			 rawDate: evt.target.value
 		 });
-
+		 console.log('inside handleNewDate, ', evt.target.value, this.parseDate(evt.target.value));
 		 this.props.onNewDate(this.parseDate(evt.target.value), evt.target.value);
 	}
 

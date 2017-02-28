@@ -133,7 +133,7 @@ export default class ParentalRelLineItemEdit extends React.Component {
 			this.props.closeModal();
 		}
 	}
-	deleteRecord = () => {
+	deleteRecord = (evt) => {
 		this.props.deleteParentalRel(this.props.parentalRel._id, evt.value);
 
 		if (this.props.closeModal) {

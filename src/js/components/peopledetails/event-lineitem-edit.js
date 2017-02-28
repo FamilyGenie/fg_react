@@ -125,7 +125,7 @@ constructor(props) {
 
 		if (this.state.eventDateUserNew !== this.props.event.eventDateUser) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
+			this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
