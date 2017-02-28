@@ -3,7 +3,10 @@ export default function reducer(
 	state = {
 		pairBondRelTypes: [
 			{ value: 'Marriage', label: 'Marriage' },
-			{ value: 'Informal', label: 'Informal'}
+			{ value: 'Mated', label: 'Mated' },
+			{ value: 'Casual', label: 'Casual' },
+			{ value: 'Extra-Marital', label: 'Extra-Marital' },
+			{ value: 'Extra-Marital-Mated', label: 'Extra-Marital-Mated' },
 		],
 		fetching: false,
 		error: null,
