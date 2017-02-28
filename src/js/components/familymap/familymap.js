@@ -632,6 +632,11 @@ export default class FamilyMap extends React.Component {
 					}
 				);
 
+				// TODO: We can do a check to see if there is anyone who is in parents array and children array to provide more information. And that check should be done in the componentDidMount method, before this function is called
+				if (!parentalRel) {
+					alert("Error creating map. Possibly one of the children in the map are also listed as a parent of someone else who would be a child in the map. The map will draw, and the person who is drawn off to the side is someone who has a parent that is a child in this map. Fix that error and then come back.")
+					return false;
+				}
 				// if one of the single Parents is an adopted parent, then make sure that the first child drawn is below the parentalRel line
 				if (/[Aa]dopted/.test(parentalRel.subType)) {
 					this.firstChildYDistance = this.firstChildYWithAdoptions;
@@ -1332,6 +1337,39 @@ export default class FamilyMap extends React.Component {
 			.style("fill", color)
 			.attr("startOffset", "50%")
 			.text("****************************************************************************************************************************************************************************************************************");
+		} else if ( /Stranger/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+		} else if ( /Coersive/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+		} else if ( /Restitution/.test(relType) ) {
+			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
+			line = line
+			d3.select("svg")
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
 			line = line
