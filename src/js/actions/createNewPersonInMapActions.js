@@ -21,13 +21,17 @@ export function createNewPersonInMap(childFromMap_id, fName, sexAtBirth, parenta
         newPerson = response.data;
         dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
 
+        /*************
+          TODO: change these URL calls to just call the action (will also need to import it at the top). Something like:
+          import { createEvent } from '../actions/eventsActions';
+          dispatch(createEvent('person_id', _id));
+        **************/
         const birthBody = {
           object: {
             person_id: newPerson._id,
             eventType: 'Birth',
           }
         }
-
         // create a blank birth record for the newly created person because we don't trust people without a birthdate.
         dispatch({type: "CREATE_EVENT"});
         axios.post(config.api_url + '/api/v2/event/create', birthBody, getAxiosConfig())

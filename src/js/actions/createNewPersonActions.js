@@ -15,11 +15,12 @@ export function createNewPerson(person, birthEvent, parentRel1, parentRel2) {
       .then((response) => {
         newChild = response.data;
         dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
-
+        
+        // we got the birthEvent passed in, except we didn't have the person_id because the person had not yet been created. Now that the person is created, add that id to the birthEvent to be created
         birthEvent.person_id = newChild._id;
         body = {object: birthEvent};
 
-        // create a blank birth record for the newly created person because we don't trust people without a birthdate.
+        // create a birth record for the newly created person
         dispatch({type: "CREATE_EVENT"});
         axios.post(config.api_url + '/api/v2/event/create', body, getAxiosConfig())
           .then((response) => {

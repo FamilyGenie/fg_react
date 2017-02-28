@@ -2,6 +2,10 @@ import axios from 'axios';
 
 import { getAxiosConfig } from './actionFunctions';
 import config from '../config.js';
+import { deleteEvent } from './eventsActions';
+import { deletePairBondRel } from './pairBondRelsActions';
+import { deleteParentalRel } from './parentalRelsActions';
+
 
 export function fetchPeople() {
 
@@ -80,82 +84,17 @@ export function deletePerson(_id) {
 			}
 		};
 
-		/*************
-		TODO: can all these be changed to just call the action (will also need to import it at the top). Something like:
-		import { deleteEvent } from '../actions/eventsActions';
-		dispatch(deleteEvent('person_id', _id));
-		**************/
+		// first, delete any events associated with this person
 		dispatch({type: "DELETE_EVENT"});
-		axios.post(config.api_url + "/api/v2/event/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_EVENT_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_EVENT_REJECTED", payload: err})
-			})
+		dispatch(deleteEvent('person_id', _id));
 
 		// to delete the person from all pairbondRels, have to delete where they are PersonOne and PersonTwo
-		body = {
-			object: {
-				field: "personOne_id",
-				value: _id
-			}
-		};
-		dispatch({type: "DELETE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_PAIRBONDREL_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_PAIRBONDREL_REJECTED", payload: err})
-			})
-
-		body = {
-			object: {
-				field: "personTwo_id",
-				value: _id
-			}
-		};
-		dispatch({type: "DELETE_PAIRBONDREL"});
-		axios.post(config.api_url + "/api/v2/pairbondrel/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_PAIRBONDREL_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_PAIRBONDREL_REJECTED", payload: err})
-			})
+		dispatch(deletePairBondRel('personOne_id', _id));
+		dispatch(deletePairBondRel('personTwo_id', _id));
 
 		// next, delete all parental rels where this person is the parent
-		body = {
-			object: {
-				field: "parent_id",
-				value: _id
-			}
-		};
-		dispatch({type: "DELETE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_PARENTALREL_REJECTED", payload: err})
-			})
-
-		// now, delete all parentalrels where this person is the child
-		body = {
-			object: {
-				field: "child_id",
-				value: _id
-			}
-		};
-		dispatch({type: "DELETE_PARENTALREL"});
-		axios.post(config.api_url + "/api/v2/parentalrel/delete", body, getAxiosConfig())
-			.then((response) => {
-				dispatch({type: "DELETE_PARENTALREL_FULFILLED", payload: response.data})
-			})
-			.catch((err) => {
-				dispatch({type: "DELETE_PARENTALREL_REJECTED", payload: err})
-			})
+		dispatch(deleteParentalRel('parent_id', _id));
+		dispatch(deleteParentalRel('child_id', _id));
 
 		// last, delete the person
 		body = {
