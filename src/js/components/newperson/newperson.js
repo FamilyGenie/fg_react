@@ -33,12 +33,6 @@ You can look in the peoplesearch component for an example of a component that ca
             newObj["label"] = label;
             return newObj;
           }),
-      eventTypes:
-        store.eventTypes.eventTypes,
-      parentalRelTypes:
-          store.parentalRelTypes.parentalRelTypes,
-      parentalRelSubTypes:
-          store.parentalRelSubTypes.parentalRelSubTypes,
     };
   },
   (dispatch) => {
@@ -97,59 +91,15 @@ export default class NewPerson extends React.Component {
       parentStartDate2: parsedDate,
     });
   }
-  tempEventType = (evt) => {
-    this.setState({eventType: evt.value});
-    // console.log(this.state, "inside eventType");
-  }
   tempEventPlace = (evt) => {
     this.setState({eventPlace: evt.target.value});
   }
-  tempSubTypeChange1 = (evt) => {
-		this.setState({subType1: evt.value});
-    // console.log(this.state, "inside tempsubtypechange1");
-
-	}
  	tempParentChange1 = (evt) => {
 		this.setState({parent_id1: evt.value});
-    // console.log(this.state, "inside tempParentchange1");
-	}
-	tempRelTypeChange1 = (evt) => {
-		this.setState({relationshipType1: evt.value});
-    // console.log(this.state, "inside tempReltypechange1");
-	}
-  tempParentStartDate1 = (parsedDate, userDate) => {
-    this.setState({
-      parentStartDateUser1: userDate,
-      parentStartDate1: parsedDate
-    });
-  }
-  tempParentEndDate1 = (parsedDate, userDate) => {
-    this.setState({
-      parentEndDateUser1: userDate,
-      parentEndDate1: parsedDate
-    });
-  }
-
-  tempSubTypeChange2 = (evt) => {
-		this.setState({subType2: evt.value})
+    console.log(this.state, "inside tempParentchange1");
 	}
  	tempParentChange2 = (evt) => {
 		this.setState({parent_id2: evt.value});
-	}
-	tempRelTypeChange2 = (evt) => {
-		this.setState({relationshipType2: evt.value});
-	}
-  tempParentStartDate2 = (parsedDate, userDate) => {
-		this.setState({
-			parentStartDateUser2: userDate,
-			parentStartDate2: parsedDate
-		});
-	}
-	tempParentEndDate2 = (parsedDate, userDate) => {
-		this.setState({
-			parentEndDateUser2: userDate,
-			parentEndDate2: parsedDate
-		});
 	}
   tempFName = (evt) => {
     // console.log('in tempChange: ', evt.target.value);
@@ -299,18 +249,6 @@ export default class NewPerson extends React.Component {
             </div>
           </div>
           <div class="event-row">
-            <div class="PR-div">
-              <div class="PR-title">
-                Type
-              </div>
-              <div class="PR-drop-1">
-                <Select
-                  options={this.props.eventTypes}
-                  onChange={this.tempEventType}
-                  value={this.state.eventType}
-                />
-              </div>
-            </div>
             <div class="PR-div">
               <div class="PR-title">
                 Place
