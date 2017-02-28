@@ -3,10 +3,10 @@ import axios from 'axios';
 import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function newPerson() {
-
-  const body = { object: {} };
-  var newChild;
+export function createNewPerson(person, birthEvent, parentRel1, parentRel2) {
+	// create the body in the format that the API is expecting
+  	var body = { object: person };
+  	var newChild;
 
   // create a new blank person record for a child
   return (dispatch) => {
@@ -15,21 +15,14 @@ export function newPerson() {
       .then((response) => {
         newChild = response.data;
         dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
+        
+        // we got the birthEvent passed in, except we didn't have the person_id because the person had not yet been created. Now that the person is created, add that id to the birthEvent to be created
+        birthEvent.person_id = newChild._id;
+        body = {object: birthEvent};
 
-        /*************
-          TODO: change these URL calls to just call the action (will also need to import it at the top). Something like:
-          import { createEvent } from '../actions/eventsActions';
-          dispatch(createEvent('person_id', _id));
-        **************/
-        const birthBody = {
-          object: {
-            person_id: newChild._id,
-            eventType: 'Birth',
-          }
-        }
-        // create a blank birth record for the newly created person because we don't trust people without a birthdate.
+        // create a birth record for the newly created person
         dispatch({type: "CREATE_EVENT"});
-        axios.post(config.api_url + '/api/v2/event/create', birthBody, getAxiosConfig())
+        axios.post(config.api_url + '/api/v2/event/create', body, getAxiosConfig())
           .then((response) => {
             dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
           })
@@ -37,50 +30,39 @@ export function newPerson() {
             dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
           });
 
-        // the newly created person's id is passed to the createParentalRel action, as the child_id.
-        const fatherRelBody = {
-          object: {
-            child_id: newChild._id,
-            relationshipType: 'Father',
-            subType: 'Biological',
-          }
+        // create a parental rel record only if the user selected one
+        if (parentRel1.parent_id) {
+
+	        // the newly created person's id is passed to the createParentalRel action, as the child_id.
+	        parentRel1.child_id = newChild._id;
+	        body = {object: parentRel1};
+	        dispatch({type: "CREATE_PARENTALREL"});
+	        axios.post(config.api_url + '/api/v2/parentalrel/create', body, getAxiosConfig())
+	          .then((response) => {
+	            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+	          })
+	          .catch((err) => {
+	            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+	          })
         }
 
-        // the newly created person's id is passed to the createParentalRel action, as the child_id.
-        const motherRelBody = {
-          object: {
-            child_id: newChild._id,
-            relationshipType: 'Mother',
-            subType: 'Biological',
-          }
+        // create a parental rel record only if the user selected one
+        if (parentRel2.parent_id) {
+	        // the newly created person's id is passed to the createParentalRel action, as the child_id.
+	        parentRel2.child_id = newChild._id;
+	        body = {object: parentRel2};
+	        dispatch({type: "CREATE_PARENTALREL"});
+	        axios.post(config.api_url + '/api/v2/parentalrel/create', body, getAxiosConfig())
+	          .then((response) => {
+	            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+	          })
+	          .catch((err) => {
+	            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+	          })
         }
 
-        // create two parent record for mother and father because we don't trust people without parents
-        // When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are.
-        dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', fatherRelBody, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-          })
-
-        dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', motherRelBody, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-          })
-
-          var newPerson = {
-            id: newChild._id,
-            modalIsOpen: true,
-          };
-          // dispatching this will make the newPersonModal open, and will pass it the newly created person's id.
-          dispatch({type: "SET_NEWPERSON", payload: newPerson});
+        // close the modal here
+        dispatch({type: "CLOSE_NEWPERSON_MODAL"});
 
       })
       .catch((err) => {
