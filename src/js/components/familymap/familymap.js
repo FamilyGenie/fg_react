@@ -52,22 +52,30 @@ export default class FamilyMap extends React.Component {
 		};
 	}
 
-	// star_id = this.props.star_id;
+	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
+	// As people are found who need to show as parents on the map, they are added to this local array. The people come from the this.people local array, which is a copy of the this.props.people array from the store, with birth information mapped into it.
 	parents = [];
+	// As parental relationships are found that need to be included in the map, they are pushed onto this local array. The records come from this.props.parentalRelationships, which comes from the store. Sometimes parentRels are created and then pushed for the purposes of drawing the map.
 	parentRels = [];
+	// As we find people who are children that need to be included in the map, they are pushed onto this local array. The people come from the this.people local array, which is a copy of the this.props.people array from the store, with birth information mapped into it.
 	children = [];
+	// As pairBonds are found that need to be included in the map, they are pushed here. The records come from this.props.pairBondRelationships, which comes from the store.
 	pairBonds = [];
+	// This local array is used to push people onto once they are drawn on the map, so they don't get drawn twice. When drawing pairBonds, some people may be in more than one pairBond, and we still only want that person to show up once.
 	alreadyDrawn = [];
+	// This array is used to store the coordinates where some things are drawn, so when drawing other things, we don't draw over them.
 	drawnCoords = [];
 	// this is to store a copy of the people array from the store, so that we can manipulate it to accomodate for drawing the map when needed
 	people = [];
 	dateFilterString;
+	fullName;
+	// this are for storing starting points in drawing the map
 	firstChildYDistance = 0;
 	firstChildYWithAdoptions = 0;
 	textLineSpacing = 18;
 	textSize = '.9em';
-	fullName;
 
+	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
 	alertOptions = {
       offset: 15,
       position: 'middle',
@@ -76,6 +84,7 @@ export default class FamilyMap extends React.Component {
       transition: 'scale'
     };
 
+    // this function will be called when the user hits the button to subtract a year and then re-draw the map
 	subtractYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
 		var vStarAge = parseInt(this.state.starAge) - 1;
@@ -87,6 +96,7 @@ export default class FamilyMap extends React.Component {
 		this.componentDidMount();
 	}
 
+    // this function will be called when the user hits the button to add a year and then re-draw the map
 	addYear = () => {
 		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
 		var vStarAge = parseInt(this.state.starAge) + 1;
@@ -162,9 +172,11 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
+	// This is the main controlling function of the component. It calls all the others that are below the render function.
 	componentDidMount = () => {
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
+		// TODO: need to standardize on where to store these constants
 		const startX = 775;
 		const startY = 200;
 		const parentDistance = 220;
@@ -258,6 +270,14 @@ export default class FamilyMap extends React.Component {
 				/[Bb]iological/.test(parentRel.subType) &&
 				parentRel.child_id === child_id;
 		});
+		if (!momRel) {
+			momRel = this.parentRels.find(function(parentRel){
+				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+				return /[Mm]other/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === child_id;
+			});
+		}
 
 		// if there is not a momRel, then create one for the child.
 		if (!momRel) {
@@ -271,8 +291,8 @@ export default class FamilyMap extends React.Component {
 				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
-			// push this relationship onto the parentalRelationships record, so it will be added to the this.parentRels array the next time getAllParentsOfChildren is called.
-			this.props.parentalRelationships.push(momRel);
+			// push this relationship onto the local parentRels array, so it will be considered when drawing the map.
+			this.parentRels.push(momRel);
 
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
@@ -294,6 +314,7 @@ export default class FamilyMap extends React.Component {
 				sexAtBirth: "F"
 			};
 			this.people.push(parent);
+			this.parents.push(parent);
 			momRel.parent_id = "ZMom" + child_id;
 		}
 
@@ -304,6 +325,15 @@ export default class FamilyMap extends React.Component {
 				/[Bb]iological/.test(parentRel.subType) &&
 				parentRel.child_id === child_id;
 		});
+
+		if (!dadRel) {
+			dadRel = this.parentRels.find(function(parentRel){
+				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
+				return /[Ff]ather/.test(parentRel.relationshipType) &&
+				/[Bb]iological/.test(parentRel.subType) &&
+				parentRel.child_id === child_id;
+			});
+		}
 
 		// if there is not a dadRel, then create one for the child.
 		if (!dadRel) {
@@ -317,8 +347,8 @@ export default class FamilyMap extends React.Component {
 				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
-			// push this relationship onto the parentalRelationships record, so it will be added to the this.parentRels array the next time getAllParentsOfChildren is called.
-			this.props.parentalRelationships.push(dadRel);
+			// push this relationship onto the local parentRels array, so it will be considered when drawing the map.
+			this.parentRels.push(dadRel);
 
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
@@ -340,6 +370,7 @@ export default class FamilyMap extends React.Component {
 				sexAtBirth: "M"
 			};
 			this.people.push(parent);
+			this.parents.push(parent);
 			dadRel.parent_id = "ZDad" + child_id;
 		}
 
@@ -371,7 +402,9 @@ export default class FamilyMap extends React.Component {
 
 		for (let child of this.children) {
 			// find biological mother relationship
-			momRel = this.props.parentalRelationships.find(function(parentRel){
+			// momRel = this.props.parentalRelationships.find(function(parentRel){
+			momRel = this.parentRels.find(function(parentRel){
+
 				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
 				return /[Mm]other/.test(parentRel.relationshipType) &&
 					/[Bb]iological/.test(parentRel.subType) &&
@@ -379,7 +412,8 @@ export default class FamilyMap extends React.Component {
 			});
 
 			// find biological dad relationship record
-			dadRel = this.props.parentalRelationships.find(function(parentRel){
+			// dadRel = this.props.parentalRelationships.find(function(parentRel){
+			dadRel = this.parentRels.find(function(parentRel){
 				// the following line is to accomodate for the fact that the angular dropdown in parentalrelationship.component is making this value have a number in front of it.
 				return /[Ff]ather/.test(parentRel.relationshipType) &&
 					/[Bb]iological/.test(parentRel.subType) &&
@@ -780,6 +814,7 @@ export default class FamilyMap extends React.Component {
 		for (let child of this.children) {
 			// get all parental relationships. if there is no start date, then make value empty string, so that the test will return true. This way, if the user did not enter a startDate for the parental relationship, this relationship will still show up on the map.
 			parentalRelTemp = this.props.parentalRelationships.filter(
+			// parentalRelTemp = this.parentRels.filter(
 				function(parentalRel) {
 					return parentalRel.child_id === child._id &&
 					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : '') <= this.dateFilterString;
@@ -848,7 +883,7 @@ export default class FamilyMap extends React.Component {
 
 	clearMapData = () => {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
-		for (let person of this.props.people) {
+		for (let person of this.people) {
 			delete person["d3CircleHash1"];
 			delete person["d3CircleHash2"];
 			delete person["d3CircleHash3"];
