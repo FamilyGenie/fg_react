@@ -154,7 +154,7 @@ export default class FamilyMap extends React.Component {
 			      contentLabel="Modal"
 			      className="detail-modal"
 			    >
-			      <NewPerson calledFromMap={true} star={this.getPersonById(this.props.star_id)}/>
+			      <NewPerson calledFromMap={true} starFa={this.getPersonById(this.props.star_id)}/>
 			    </Modal>
 
 			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
@@ -284,7 +284,7 @@ export default class FamilyMap extends React.Component {
 				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
 				_id: "ZMom" + child_id,
 				birthDate: null,
-				birthPlace: "",
+				birthPlace: "Click to Add Person",
 				deathDate: null,
 				deathPlace:"",
 				fName: child.fName + "'s Mother",
@@ -330,7 +330,7 @@ export default class FamilyMap extends React.Component {
 				// add a Z as the first character of this ID, as that will never be assigned as a real ID in Mongo, because Mongo uses hex characters.
 				_id: "ZDad" + child_id,
 				birthDate: null,
-				birthPlace: "",
+				birthPlace: "Click to Add Person",
 				deathDate: null,
 				deathPlace:"",
 				fName: child.fName + "'s Father",
