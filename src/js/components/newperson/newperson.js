@@ -51,6 +51,8 @@ You can look in the peoplesearch component for an example of a component that ca
 export default class NewPerson extends React.Component {
   constructor(props) {
   	super(props);
+    console.log('in newPerson constructor: ', this.props);
+
   	this.state = {
       // set all initial values for the new person modal.
       personFName: '',
@@ -180,12 +182,11 @@ export default class NewPerson extends React.Component {
       endDate: this.state.parentEndDate2,
       endDateUser: this.state.parentEndDateUser2,
     }
-    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2);
+    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.star_id);
 
   }
 
   render = () => {
-    console.log('in new person render: ', this.state);
       return(
       <div>
         <div class="modalClose2">

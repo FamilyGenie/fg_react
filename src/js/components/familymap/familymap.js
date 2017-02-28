@@ -6,7 +6,9 @@ import moment from 'moment';
 import Modal from 'react-modal';
 
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
-import NewPerson from '../newperson';
+import { openNewPersonModal } from '../../actions/modalActions';
+
+import NewPerson from '../newperson/newperson';
 
 @connect(
 	(store, ownProps) => {
@@ -34,6 +36,9 @@ import NewPerson from '../newperson';
 			createNewPerson: (star_id, fName, sexAtBirth, parentalRel_id) => {
 				dispatch(createNewPersonInMap(star_id, fName, sexAtBirth, parentalRel_id));
 			},
+			openNewPersonModal: () => {
+				dispatch(openNewPersonModal());
+			}
 		}
 	}
 )
@@ -147,11 +152,11 @@ export default class FamilyMap extends React.Component {
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"
+			      className="detail-modal"
 			    >
-			      <NewPerson calledFromMap={true}/>
+			      <NewPerson calledFromMap={true} star_id={this.props.star_id}/>
 			    </Modal>
 
-			    // This is the container for the alerts we are using
 			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
 			</div>)
 		}
@@ -954,7 +959,6 @@ export default class FamilyMap extends React.Component {
 	personClick(person, star) {
 		return() => {
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
-			debugger;
 			if (person._id.substr(0,1) === "Z") {
 				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
 				var parentalRel = this.parentRels.find(function(parentRel) {
@@ -966,8 +970,8 @@ export default class FamilyMap extends React.Component {
 					// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
 					var parentalRel_id = '';
 				}
-
-				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
+				// this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
+				this.props.openNewPersonModal();
 			} else {
 				hashHistory.push('/peopledetails/' + person._id);
 			}
