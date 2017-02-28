@@ -114,6 +114,12 @@ h3 {
   cursor: pointer;
 }
 
+.dropdown-toggle {
+  background-color: #3B42AF;
+}
+/*.fa-user-circle-o:hover {
+  color: #640FF3;
+}*/
 /* this is to accomodate for the poor icon I took from the internet. when we get a vector image, we will either change this or remove it */
 .navbar-li-padding {
 	padding-top: 8px
@@ -130,8 +136,7 @@ h3 {
 
 /* this is for the fields when you click "addParent" and "Add PairBond" and you select the person */
 .dropdown {
-	background-color: #478652;
-  	color: #EEEEEE;
+	color: #EEEEEE;
 }
 
 .bold {

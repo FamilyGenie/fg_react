@@ -24,7 +24,10 @@ export default class Layout extends React.Component {
 	constructor (props) {
 		super(props);
 		// this variable will store whether the modal window is open or not
-		this.state = {historyBarShowing: false};
+		this.state = {
+			historyBarShowing: false,
+			isLoggedIn: false,
+		};
 	}
 	componentWillMount() {
 		this.props.dispatch(fetchPeople());
@@ -104,14 +107,26 @@ export default class Layout extends React.Component {
 		          <li>
 		            <a class="navbarright" onClick={this.goToPeopleStaged}>STAGED LIST</a>
 		          </li>
-		          <li>
+							{/*
+		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>
 		          </li>
-		          <li>
+		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logIn}>LOG IN</a>
-		          </li>
+		          </li>*/}
+							<li class="dropdown">
+			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
+								<span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+			            <li><a >Profile</a></li>
+			            <li><a >Account Settings</a></li>
+									<li><a onClick={this.logIn}>Log In</a></li>
+			            <li><a onClick={this.logOut}>Log Out</a></li>
+			          </ul>
+			        </li>
 							<li>
-								<i class="fa fa-question-circle-o fa-2x question" aria-hidden="true" onClick={this.toggleSideBar}></i>
+								<a class="navbarright">
+								<i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i></a>
 							</li>
 		        </ul>
 			    </div>
