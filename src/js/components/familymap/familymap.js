@@ -148,7 +148,7 @@ export default class FamilyMap extends React.Component {
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"
 			    >
-			      <NewPerson/>
+			      <NewPerson calledFromMap={true}/>
 			    </Modal>
 
 			    // This is the container for the alerts we are using
@@ -170,8 +170,6 @@ export default class FamilyMap extends React.Component {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
-		// this.checkForBioParents(this.props.star_id);
-
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
 		// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
@@ -190,7 +188,8 @@ export default class FamilyMap extends React.Component {
 				hashHistory.push('/');
 				return;
 			}
-			console.log("After getAllParents: ", this.parents);
+			console.log("After getAllParents, parents: ", this.parents);
+			console.log('After getAllParents, parentRels: ', this.parentRels);
 
 			// this function will get all the children of the parents in the parents array
 			this.getAllChildrenOfParents();
@@ -244,7 +243,6 @@ export default class FamilyMap extends React.Component {
 
 	// this function will check to see if the star has a biological mother relationship and a biological father relationship. If there is not one, it will create it. It will also create the person (who is the mom and/or dad), if they don't exist.
 	checkForBioParents = (child_id) => {
-		console.log('Pair Bonds: ', this.pairBonds);
 		// get the star, so we can use star's birthdate
 		var child = this.getPersonById(child_id);
 		var createPairBond = false;
@@ -268,9 +266,9 @@ export default class FamilyMap extends React.Component {
 				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
-			// push this relationship onto the parentalRelationships record
+			// push this relationship onto the parentalRelationships record, so it will be added to the this.parentRels array the next time getAllParentsOfChildren is called.
 			this.props.parentalRelationships.push(momRel);
-			console.log("parentalRels ", this.props.parentalRelationships);
+
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
 		}
@@ -314,8 +312,9 @@ export default class FamilyMap extends React.Component {
 				startDateUser: child.birthDateUser,
 				subType: 'Biological',
 			}
-			// push this relationship onto the parentalRelationships record
+			// push this relationship onto the parentalRelationships record, so it will be added to the this.parentRels array the next time getAllParentsOfChildren is called.
 			this.props.parentalRelationships.push(dadRel);
+
 			// set the boolean createPairBond to true, so that a pair bond record will be created between the mom and dad. We know one does not yet exist, because we are creating the mom relationship now
 			createPairBond = true;
 		}
@@ -954,10 +953,20 @@ export default class FamilyMap extends React.Component {
 	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
 	personClick(person, star) {
 		return() => {
-			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass thi fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
+			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
+			debugger;
 			if (person._id.substr(0,1) === "Z") {
 				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
-				var parentalRel_id = (person.parentalRel_id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+				var parentalRel = this.parentRels.find(function(parentRel) {
+					return parentRel.parent_id === person._id;
+				});
+				if (parentalRel) {
+					var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+				} else {
+					// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
+					var parentalRel_id = '';
+				}
+
 				this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
 			} else {
 				hashHistory.push('/peopledetails/' + person._id);

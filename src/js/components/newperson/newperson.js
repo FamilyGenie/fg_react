@@ -22,6 +22,7 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
+    console.log('in new person @connect: ', ownProps);
     return {
       ...ownProps,
       peopleArray:
