@@ -4,7 +4,8 @@ export default function reducer(
 		parentalRelSubTypes: [
 			{ value: 'Biological', label: 'Biological' },
 			{ value: 'Step', label: 'Step'},
-			{ value: 'Adopted', label: 'Adopted'}
+			{ value: 'Adopted', label: 'Adopted'},
+			{ value: 'Foster', label: 'Foster'},
 		],
 		fetched: true,
 		fetching: false,

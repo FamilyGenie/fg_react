@@ -1,12 +1,15 @@
 import axios from 'axios';
 
+import { createEvent } from './eventsActions';
+import { createParentalRel } from './parentalRelsActions';
+
 import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function newPerson() {
-
-  const body = { object: {} };
-  var newChild;
+export function createNewPerson(person, birthEvent, parentRel1, parentRel2, starFromMap) {
+	// create the body in the format that the API is expecting
+  	var body = { object: person };
+  	var newChild;
 
   // create a new blank person record for a child
   return (dispatch) => {
@@ -16,67 +19,32 @@ export function newPerson() {
         newChild = response.data;
         dispatch({type: "CREATE_PERSON_FULFILLED", payload: response.data})
 
-        const birthBody = {
-          object: {
-            person_id: newChild._id,
-            eventType: 'Birth',
-          }
-        }
-
-        // create a blank birth record for the newly created person because we don't trust people without a birthdate.
+        // create a birth record for the newly created person, passing in all the values from the modal - which gave us birthEvent, and using the newChild._id - for the person we just created.
         dispatch({type: "CREATE_EVENT"});
-        axios.post(config.api_url + '/api/v2/event/create', birthBody, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-          });
+        dispatch(createEvent(birthEvent.eventDateUser, birthEvent.eventDate, newChild._id, birthEvent.eventType, birthEvent.eventPlace));
 
-        // the newly created person's id is passed to the createParentalRel action, as the child_id.
-        const fatherRelBody = {
-          object: {
-            child_id: newChild._id,
-            relationshipType: 'Father',
-            subType: 'Biological',
-          }
+        // create a parental rel record only if the user selected one
+        if (parentRel1.parent_id) {
+	        // the newly created person id is passed to the createParentalRel action, as the child_id, and we create the parental rel record with the parent selected by the user in the modal.
+	        dispatch({type: "CREATE_PARENTALREL"});
+          dispatch(createParentalRel(newChild._id, parentRel1.parent_id, parentRel1.relationshipType, parentRel1.subType, parentRel1.startDateUser, parentRel1.startDate, parentRel1.endDateUser, parentRel1.endDate));
         }
 
-        // the newly created person's id is passed to the createParentalRel action, as the child_id.
-        const motherRelBody = {
-          object: {
-            child_id: newChild._id,
-            relationshipType: 'Mother',
-            subType: 'Biological',
-          }
+        // create a parental rel record only if the user selected one
+        if (parentRel2.parent_id) {
+          // the newly created person id is passed to the createParentalRel action, as the child_id, and we create the parental rel record with the parent selected by the user in the modal.
+          dispatch({type: "CREATE_PARENTALREL"});
+          dispatch(createParentalRel(newChild._id, parentRel2.parent_id, parentRel2.relationshipType, parentRel2.subType, parentRel2.startDateUser, parentRel2.startDate, parentRel2.endDateUser, parentRel2.endDate));
         }
 
-        // create two parent record for mother and father because we don't trust people without parents
-        // When you create a new person record, it automatically creates the parentalRel records because we know every person came from a sperm and an egg (the biological father and mother). But we need to let the customer select who the bio father and bio mother are.
-        dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', fatherRelBody, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-          })
+        // if the newPerson modal passes in starFromMap_id, that means that the newPerson modal was opened by the FamilyMap component, and we then need to make this newly created person the parent of the star of the map. because the only time the Map would call newPerson modal is if it is to create a biological parent for the star.
+        if (starFromMap) {
+          dispatch({type: "CREATE_PARENTALREL"});
+          dispatch(createParentalRel(starFromMap._id, newChild._id, (person.sexAtBirth === 'M' ? 'Father' : 'Mother'), 'Biological', birthEvent.eventDateUser, birthEvent.eventDate));
+        }
 
-        dispatch({type: "CREATE_PARENTALREL"});
-        axios.post(config.api_url + '/api/v2/parentalrel/create', motherRelBody, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
-          })
-          .catch((err) => {
-            dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-          })
-
-          var newPerson = {
-            id: newChild._id,
-            modalIsOpen: true,
-          };
-          // dispatching this will make the newPersonModal open, and will pass it the newly created person's id.
-          dispatch({type: "SET_NEWPERSON", payload: newPerson});
+        // close the modal here
+        dispatch({type: "CLOSE_NEWPERSON_MODAL"});
 
       })
       .catch((err) => {
