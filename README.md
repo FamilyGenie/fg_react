@@ -9,3 +9,15 @@ Make sure that the API server is running (instructions in repo)
 2. `npm run dev`
 
 Current default development url is `http://localhost:8080`
+
+On the Login page, you will need credentials which will be provided with the database dump file.
+When logging in currently there is a bug, but it has an easy work around.
+When entering the credentials you will need to follow these steps:
+
+* enter the username and password, making sure to blur out of both fields.
+* click login
+* go back to the login page
+* re-enter the credentials, again blur out of both fields
+* login again.
+
+The database data should automatically appear on the family list page
