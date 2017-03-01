@@ -41,7 +41,7 @@
   flex-direction: row;
 }
 #family {
-  height: 500px;
+  height: 600px;
   /*overflow: scroll;*/
   margin-right: auto;
   margin-left: auto;
@@ -63,7 +63,7 @@
 .mappedPeople {
   width: 100%;
   overflow: scroll;
-  height: 448px;
+  height: 548px;
 }
 .search-add {
   width: 15%;

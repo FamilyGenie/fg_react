@@ -22,6 +22,7 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
+    // console.log('in new person @connect: ', ownProps);
     return {
       ...ownProps,
       peopleArray:
@@ -40,8 +41,8 @@ You can look in the peoplesearch component for an example of a component that ca
       closeNewPersonModal: () => {
         dispatch(closeNewPersonModal());
       },
-      createNewPerson: (person, event, parentRel1, parentRel2) => {
-        dispatch(createNewPerson(person, event, parentRel1, parentRel2));
+      createNewPerson: (person, event, parentRel1, parentRel2, starFromMap) => {
+        dispatch(createNewPerson(person, event, parentRel1, parentRel2, starFromMap));
       },
     }
   }
@@ -50,7 +51,17 @@ You can look in the peoplesearch component for an example of a component that ca
 export default class NewPerson extends React.Component {
   constructor(props) {
   	super(props);
+    console.log('in newPerson constructor: ', this.props);
+
+    var header;
+    // if a star was passed in, the Maps called this function, so set the header appropriately
+    if (this.props.star) {
+      header = 'Create Parent of ' + this.props.star.fName;
+    } else {
+      header = 'New Person';
+    }
   	this.state = {
+      header: header,
       // set all initial values for the new person modal.
       personFName: '',
       personMName: '',
@@ -179,19 +190,18 @@ export default class NewPerson extends React.Component {
       endDate: this.state.parentEndDate2,
       endDateUser: this.state.parentEndDateUser2,
     }
-    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2);
+    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.star);
 
   }
 
   render = () => {
-    console.log('in new person render: ', this.state);
       return(
       <div>
         <div class="modalClose2">
           <i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
         </div>
         <div class="modalH">
-            New Person
+            {this.state.header}
         </div>
         <div class="buffer-modal">
         </div>
