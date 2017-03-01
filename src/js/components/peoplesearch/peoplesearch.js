@@ -6,14 +6,9 @@ import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
-<<<<<<< HEAD
-// import { newPerson } from '../../actions/createNewPersonActions';
-import { closeNewPersonModal } from '../../actions/modalActions';
-=======
 // this next line is for the new person modal
 import NewPerson from '../newperson/newperson';
 import { openNewPersonModal } from '../../actions/modalActions';
->>>>>>> fbc6bf12a755d983b88eee14894d1187059e1793
 
 
 @connect((store, ownProps) => {
