@@ -4,20 +4,29 @@
    format("opentype");
    font-weight: 700;
 }
-.main-history {
+.mainHistory {
   border-bottom: 1px solid silver;
   border-left: 1px solid silver;
   background-color: white;
   height: 100vh;
+  margin-top: 52px;
+  width: 300px;
+  transition: -webkit-transform 0.3s ease-out;
+  will-change: transform;
+  transform: translateX(0%);
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
 }
-.help-div {
+/*.helpDiv {
   width: 300px;
   height: 97vh;
   z-index: 1;
   position: fixed;
   right: 0;
   top: 0;
-}
+}*/
 .help-menu {
   height: 210px;
   border-bottom: 1px solid silver;
@@ -26,7 +35,7 @@
 .help-header {
   display: flex;
   flex-direction: row;
-  width: 300px;
+  width: 100%;
   height: 50px;
   background-color: #3B42AF;
   align-items: center;
@@ -78,13 +87,11 @@
   margin-left: auto;
   margin-right: auto;
 }
-#helpHide {
-  display: none;
-  z-index: 1;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 .custom-sidebar-class {
   margin-top: 52px;
+}
+.question {
+  color: white;
+  margin-top: auto;
+  margin-bottom: auto;
 }

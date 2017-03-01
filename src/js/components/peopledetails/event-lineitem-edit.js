@@ -125,7 +125,7 @@ constructor(props) {
 
 		if (this.state.eventDateUserNew !== this.props.event.eventDateUser) {
 			this.props.updateEvent(this.props.event._id, "eventDateUser", this.state.eventDateUserNew);
-      this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
+			this.props.updateEvent(this.props.event._id, "eventDate", this.state.eventDateNew);
 		}
 		if (this.state.eventTypeNew !== this.props.event.eventType) {
 			this.props.updateEvent(this.props.event._id, "eventType", this.state.eventTypeNew)
@@ -213,7 +213,7 @@ constructor(props) {
 						</div>
 						<div class="PR-sDate">
 							<textarea
-									class="event-context"
+									class="eventInput"
 									type="text"
 									onChange={this.tempFamilyContext}
 							>
@@ -227,9 +227,9 @@ constructor(props) {
 						<div class="eventTitle">
 						Local Context
 						</div>
-						<div class="event-context">
+						<div class="PR-sDate">
 							<textarea
-								class="event-input"
+								class="eventInput"
 								type="text"
 								onChange={this.tempLocalContext}
 							>
@@ -245,9 +245,9 @@ constructor(props) {
 						</div>
 						<div class="PR-sDate">
 							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempWorldContext}
+								class="eventInput"
+								type="text"
+								onChange={this.tempWorldContext}
 							>
 							{this.state.worldContextNew}
 							</textarea>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 import Modal from 'react-modal';
+import { hashHistory } from 'react-router';
 
 import PairBondRelLineItemEdit from './pairbondrel-lineitem-edit';
 import { setPairBondRel } from '../../actions/modalActions';
@@ -59,9 +60,12 @@ export default class PairBondRelLineItem extends React.Component {
 		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
+	goToPairBond = () => {
+		hashHistory.push('/peopledetails/' + this.props.pairBondPerson._id);
+	}
 
 	render = () => {
-
+		console.log(this.props);
 		const { pairBondRel, pairBondPerson, star } = this.props;
 		const { modalIsOpen } = this.state;
 
@@ -76,12 +80,12 @@ export default class PairBondRelLineItem extends React.Component {
 						<i class="fa fa-pencil-square-o button2"></i>
 					</div>
 					<div class="inner-name-div">
-						<div class="nameCol" onClick={this.openModal}>
+						<div class="nameCol" onClick={this.goToPairBond}>
 								<div class="relTypeWord">{pairBondPersonFName}</div>
 								<div class="relTypeWord">{pairBondPersonLName}</div>
 						</div>
 						<div class="relTypeCol">
-							<div class="relTypeWord ital">{pairBondRel.relationshipType}</div>
+							<div class="ital">{pairBondRel.relationshipType}</div>
 						</div>
 					</div>
 					{/* This modal is what opens when you click on one of the pairbond records that is displayed. The modalIsOpen variable is accessed via the state, by the openModal call (and set to false in the closeModal call). When set, the new state triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the pairBondRel record that should be opened in the modal in the Store, so it can be accessed */}
