@@ -6,8 +6,14 @@ import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
+<<<<<<< HEAD
 // import { newPerson } from '../../actions/createNewPersonActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
+=======
+// this next line is for the new person modal
+import NewPerson from '../newperson/newperson';
+import { openNewPersonModal } from '../../actions/modalActions';
+>>>>>>> fbc6bf12a755d983b88eee14894d1187059e1793
 
 
 @connect((store, ownProps) => {
@@ -21,9 +27,9 @@ import { closeNewPersonModal } from '../../actions/modalActions';
 },
   (dispatch) => {
     return {
-      createNewPerson: () => {
-        dispatch(newPerson());
-      },
+      openNewPersonModal: () => {
+        dispatch(openNewPersonModal());
+      }
     }
   }
 )
@@ -37,9 +43,9 @@ export default class PeopleSearch extends React.Component {
       transition: 'scale'
     };
 
-  // createNewPerson = () => {
-  //   this.props.createNewPerson();
-  // }
+  createNewPerson = () => {
+    this.props.openNewPersonModal();
+  }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
@@ -47,7 +53,6 @@ export default class PeopleSearch extends React.Component {
     const mappedPeople = people.map(person =>
         <PeopleSearchLineItem person={person} key={person._id}/>
     );
-    // const sidebarContent = <div><h1>Help</h1></div>;
 
         return (
       <div class="mainDiv">
