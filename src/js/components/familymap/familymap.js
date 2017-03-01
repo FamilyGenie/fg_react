@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import Legend from './legend';
 
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
-import NewPerson from '../newperson';
+// import NewPerson from '../newperson';
 
 @connect(
 	(store, ownProps) => {

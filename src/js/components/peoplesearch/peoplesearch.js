@@ -6,8 +6,7 @@ import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
-import NewPerson from '../newperson';
-import { newPerson } from '../../actions/createNewPersonActions';
+// import { newPerson } from '../../actions/createNewPersonActions';
 import { closeNewPersonModal } from '../../actions/modalActions';
 
 
@@ -38,9 +37,9 @@ export default class PeopleSearch extends React.Component {
       transition: 'scale'
     };
 
-  createNewPerson = () => {
-    this.props.createNewPerson();
-  }
+  // createNewPerson = () => {
+  //   this.props.createNewPerson();
+  // }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
@@ -80,7 +79,6 @@ export default class PeopleSearch extends React.Component {
         contentLabel="Modal"
         className="detail-modal"
       >
-        <NewPerson/>
       </Modal>
       <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
         <div id="below-family">
