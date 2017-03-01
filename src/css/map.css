@@ -12,14 +12,11 @@
   display: flex;
   flex-direction: row;
   border: 2px solid silver;
-  width: 240px;
+  width: 350px;
   border-radius: 5px;
   background-color: white;
   font-size: 20px;
   margin-bottom: 30px;
-}
-.legendDiv {
-
 }
 .mapArrow {
   display: flex;
@@ -103,7 +100,7 @@
 #legend {
   display: none;
   height: 760px;
-  width: 340px;
+  width: 350px;
   background-color: white;
   border: 2px solid silver;
   border-radius: 5px;
@@ -113,7 +110,7 @@
   display: flex;
   margin-bottom: 30px;
   justify-content: center;
-  width: 240px;
+  width: 350px;
   float: left;
 }
 .legendInfo {
@@ -126,5 +123,5 @@
 .legendBox {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
 }
