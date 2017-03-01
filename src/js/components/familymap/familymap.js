@@ -98,10 +98,12 @@ export default class FamilyMap extends React.Component {
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
 			$("#legend").css({"display": "flex"});
+			$("#mainMap").css({"min-height": "1100px"});
 			this.setState({legendShowing: true});
 		}
 		if (this.state.legendShowing === true) {
 			$("#legend").css({"display": "none"});
+			$("#mainMap").css({"min-height": "800px"});
 			this.setState({legendShowing: false});
 		}
 	}
@@ -133,9 +135,9 @@ export default class FamilyMap extends React.Component {
 			return (
 			<div class="mainDiv">
 				<div class="header-div">
-					<h1 class="family-header">{this.fullName}'s Family Map </h1>			
+					<h1 class="family-header">{this.fullName}s Family Map </h1>
 				</div>
-				<div class="mainMap">
+				<div class="mainMap" id="mainMap">
 					<div class="dateLegend">
 						<div class="dateToggle">
 							<div class="mapDate">

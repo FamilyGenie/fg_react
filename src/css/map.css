@@ -8,11 +8,6 @@
   margin-left: 30px;
   flex-direction: column;
 }
-.mainMap {
-  display: flex;
-  flex-direction: row;
-  min-height: 800px;
-}
 .dateToggle {
   display: flex;
   flex-direction: row;
@@ -90,13 +85,24 @@
 .legendType {
   text-align: center;
   font-family: Cabin;
-  height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
+  width: 50%;
+  text-align: left;
+}
+.underLine {
+  margin-top: 3px;
+}
+#mainMap {
+  display: flex;
+  flex-direction: row;
+  min-height: 800px;
 }
 #legend {
   display: none;
-  height: 900px;
+  height: 760px;
   width: 340px;
   background-color: white;
   border: 2px solid silver;

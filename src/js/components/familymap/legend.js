@@ -19,27 +19,27 @@ export default class Legend extends React.Component {
             <div class="legendBox">
               <div class="legendInfo">
                 <h4 class="legendType">Biological</h4>
-                <p class="legendType">___________</p>
+                <p class="legendType underLine">___________</p>
               </div>
               <div class="legendInfo">
                 <h4 class="legendType">Step</h4>
-                <p class="legendType">-- -- -- -- --</p>
+                <p class="legendType">-- -- -- -- -- --</p>
               </div>
               <div class="legendInfo">
                 <h4 class="legendType">Adopted</h4>
-                <p class="legendType">- - - - -</p>
+                <p class="legendType">- - - - - - - - -</p>
               </div>
               <div class="legendInfo">
                 <h4 class="legendType">Foster</h4>
-                <p class="legendType">. . . . . . .</p>
+                <p class="legendType">. . . . . . . . . . . . . .</p>
               </div>
               <div class="legendInfo">
                 <h4 class="legendType">Legal</h4>
-                <p class="legendType">""""""""""</p>
+                <p class="legendType">""""""""""""""""""</p>
               </div>
               <div class="legendInfo">
                 <h4 class="legendType">Attractive</h4>
-                <p class="legendType">^^^^^^^^^^^</p>
+                <p class="legendType">^^^^^^^^^^^^</p>
               </div>
             </div>
           </div>
@@ -49,35 +49,35 @@ export default class Legend extends React.Component {
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Marriage</h4>
-              <p class="legendType">___________</p>
+              <p class="legendType underLine">___________</p>
             </div>
             <div class="legendInfo">
-              <h4 class="legendType">Not Yet Designated</h4>
-              <p class="legendType">???????</p>
+              <h4 class="legendType">Undefined</h4>
+              <p class="legendType">??????????????</p>
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Mated</h4>
-              <p class="legendType">- - - - - -</p>
+              <p class="legendType">- - - - - - - - - -</p>
             </div>
             <div class="legendInfo">
-              <h4 class="legendType">Casual/Informal</h4>
-              <p class="legendType">-0-0-0-0-0-0-0-0-</p>
+              <h4 class="legendType">Casual</h4>
+              <p class="legendType">0-0-0-0-0-0</p>
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Stranger</h4>
-              <p class="legendType">oooooooooo</p>
+              <p class="legendType">ooooooooooo</p>
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Extra-Marital</h4>
-              <p class="legendType">*************</p>
+              <p class="legendType">***************</p>
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Coercive</h4>
-              <p class="legendType">->->->->->-></p>
+              <p class="legendType">->->->->->->->-</p>
             </div>
             <div class="legendInfo">
               <h4 class="legendType">Restitution</h4>
-              <p class="legendType">$$$$$$$$$$$$</p>
+              <p class="legendType">$$$$$$$$$$$</p>
             </div>
           </div>
         </div>
