@@ -254,6 +254,7 @@
   width: 43%;
   align-items: center;
   margin-left: auto;
+  justify-content: flex-end;
 }
 .relTypeWord {
   margin-right: 3px;
@@ -261,6 +262,8 @@
 }
 .ital {
   font-style: italic;
+  margin-left: auto;
+  margin-right: 20px;
 }
 .personCol {
   width: 25%;
@@ -362,7 +365,6 @@
   height: 50px;
   font-size: 20px;
   width: 250px;
-  text-align: center;
 }
 .event-context {
   height: 300px;
@@ -433,6 +435,7 @@
   float: right;
   background-color: white;
   color: #640FF3;
+  cursor: pointer;
 }
 .modal-header {
   display: flex;

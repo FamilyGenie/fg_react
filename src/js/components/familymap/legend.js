@@ -6,10 +6,8 @@ export default class Legend extends React.Component {
 
     return (
       <div class="legendDiv">
-        <div class="help-header">
-          <h3 class="history-title-1">Legend</h3>
-        </div>
-        <div class="buffer-div">
+        <div class="legendClose">
+          <i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.props.toggleLegend}></i>
         </div>
         <div class="legends">
           <div class="legendContent">

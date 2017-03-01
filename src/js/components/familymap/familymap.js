@@ -137,6 +137,9 @@ export default class FamilyMap extends React.Component {
 				<div class="header-div">
 					<h1 class="family-header">{this.fullName}s Family Map </h1>
 				</div>
+				<div id="legend">
+					<Legend toggleLegend={this.toggleLegend}/>
+				</div>
 				<div class="mainMap" id="mainMap">
 					<div class="dateLegend">
 						<div class="dateToggle">
@@ -154,6 +157,7 @@ export default class FamilyMap extends React.Component {
 										value={this.state.starAge}
 										onChange={this.onAgeChange}
 									/>
+									<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
 								</div>
 							</div>
 							<div class="mapArrow">
@@ -161,16 +165,11 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
 						</div>
-						<div class="legendToggle">
-							<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
-						</div>
-						<div id="legend">
-							<Legend/>
-						</div>
 					</div>
 					<svg class="svg-map">
 					</svg>
 				</div>
+
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"

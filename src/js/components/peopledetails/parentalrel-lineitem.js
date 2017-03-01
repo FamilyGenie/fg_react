@@ -74,8 +74,8 @@ export default class ParentalRelLineItem extends React.Component {
 								<div class="relTypeWord">{parentLName}</div>
 							</div>
 							<div class="relTypeCol">
-								<div class="relTypeWord ital">{parentalRel.subType}</div>
-								<div class="relTypeWord ital">{parentalRel.relationshipType}
+								<div class="ital">{parentalRel.subType}</div>
+								<div class="ital">{parentalRel.relationshipType}
 								</div>
 							</div>
 						</div>

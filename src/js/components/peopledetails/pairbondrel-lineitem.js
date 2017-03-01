@@ -85,7 +85,7 @@ export default class PairBondRelLineItem extends React.Component {
 								<div class="relTypeWord">{pairBondPersonLName}</div>
 						</div>
 						<div class="relTypeCol">
-							<div class="relTypeWord ital">{pairBondRel.relationshipType}</div>
+							<div class="ital">{pairBondRel.relationshipType}</div>
 						</div>
 					</div>
 					{/* This modal is what opens when you click on one of the pairbond records that is displayed. The modalIsOpen variable is accessed via the state, by the openModal call (and set to false in the closeModal call). When set, the new state triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the pairBondRel record that should be opened in the modal in the Store, so it can be accessed */}

@@ -95,14 +95,14 @@ export default class Layout extends React.Component {
 			    </div>
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
+							<li>
+		            <a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
+		          </li>
       				<li>
 						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
 					    </li>
 							<li>
 		            <a class="navbarright" onClick={this.goToImport}>IMPORT</a>
-		          </li>
-		          <li>
-		            <a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
 		          </li>
 		          <li>
 		            <a class="navbarright" onClick={this.goToPeopleStaged}>STAGED LIST</a>
