@@ -164,7 +164,7 @@ export default class FamilyMap extends React.Component {
 			      contentLabel="Modal"
 			      className="detail-modal"
 			    >
-			      <NewPerson calledFromMap={true} starFa={this.getPersonById(this.props.star_id)}/>
+			      <NewPerson calledFromMap={true} starFromMap={this.getPersonById(this.props.star_id)}/>
 			    </Modal>
 
 			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />

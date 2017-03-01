@@ -22,7 +22,7 @@ You can look in the peoplesearch component for an example of a component that ca
 
 @connect(
   (store, ownProps) => {
-    // console.log('in new person @connect: ', ownProps);
+    console.log('in new person @connect: ', ownProps);
     return {
       ...ownProps,
       peopleArray:
@@ -190,7 +190,7 @@ export default class NewPerson extends React.Component {
       endDate: this.state.parentEndDate2,
       endDateUser: this.state.parentEndDateUser2,
     }
-    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.star);
+    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.starFromMap);
 
   }
 
