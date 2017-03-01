@@ -16,4 +16,5 @@ export default function reducer(state={
       return {...state,fetching: false, stagedPairbondRels: action.payload}
     }
   }
+  return state
 }
