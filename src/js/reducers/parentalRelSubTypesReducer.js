@@ -6,7 +6,6 @@ export default function reducer(
 			{ value: 'Step', label: 'Step'},
 			{ value: 'Adopted', label: 'Adopted'},
 			{ value: 'Foster', label: 'Foster'},
-			{ value: 'Legal', label: 'Legal'},
 		],
 		fetched: true,
 		fetching: false,

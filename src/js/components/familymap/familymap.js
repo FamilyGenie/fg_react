@@ -1543,6 +1543,12 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
+		// line = d3.select("svg")
+		// .append("path")
+		// .attr("id","relline" + personTwo._id + personOne._id)
+		// .attr("d", lineStrArr.join(" "))
+		// .attr("fill", "transparent");
+
 		// I don't understand why, but the Angular dropdown is putting in either "0." or "0:" in front of the database value, so using a regex to check relationship type
 		if ( /[Bb]iological/.test(subType) ) {
 			return d3.select("svg")
@@ -1575,17 +1581,17 @@ export default class FamilyMap extends React.Component {
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("2,8"))
 				.attr("fill", "none");
-		} else if ( /Legal/.test(relType) ) {
+		} else if ( /Legal/.test(subType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			d3.select("svg")
+			// line = line
+			return d3.select("svg")
 			.append("text")
 			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.attr("d", lineFunction(lineData))
 			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
+			.style("fill", "blue")
 			.attr("startOffset", "50%")
-			.text("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
+			.text("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		} else {
 			alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
 		}
