@@ -45,6 +45,13 @@
   flex-direction: row;
   width: 350px;
 }
+.stagedChronDiv {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+  justify-content: center;
+  overflow: hidden;
+}
 .comparisonNameDiv {
   display: flex;
   flex-direction: row;
@@ -56,6 +63,15 @@
   margin-bottom: 0;
   font-size: 20px;
   align-items: center;
+  overflow: hidden;
+}
+.stagedChron {
+  margin-right: 5px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
 }
 .staged-container {
   width: 800px;
@@ -114,6 +130,8 @@
   width: 25%;
   height: 30px;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 .stagedElement {
   width: 25%;
@@ -121,7 +139,7 @@
 }
 .stagedHeaderReview {
   margin-left: auto;
-  margin-right: 4px;
+  width: 40px;
 }
 .staged-sex {
   width: 30px;
@@ -132,7 +150,8 @@
 }
 .check-duplicate {
   margin-left: auto;
-  margin-right: 8px;
+  margin-right: 5px;
+  width: 40px;
 }
 .comparisonDiv {
   display: flex;
@@ -158,4 +177,7 @@
   display: flex;
   flex-direction: column;
   width: 600px;
+}
+.pencil2 {
+  float: right;
 }

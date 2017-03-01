@@ -98,8 +98,8 @@
   margin-right: 5px;
 }
 .btn:hover {
-  background-color: #0000e6;
   color: white;
+  background-color: #3B42AF;
 }
 .button-group {
   display: flex;
@@ -254,12 +254,16 @@
   width: 43%;
   align-items: center;
   margin-left: auto;
+  justify-content: flex-end;
 }
 .relTypeWord {
   margin-right: 3px;
+  cursor: pointer;
 }
 .ital {
   font-style: italic;
+  margin-left: auto;
+  margin-right: 20px;
 }
 .personCol {
   width: 25%;
@@ -366,7 +370,6 @@
   height: 300px;
   width: 100%;
 }
-
 .PR-sub-div {
   display: flex;
   flex-direction: row;
@@ -432,6 +435,7 @@
   float: right;
   background-color: white;
   color: #640FF3;
+  cursor: pointer;
 }
 .modal-header {
   display: flex;
@@ -463,11 +467,12 @@
 .event-context {
   width: 90%;
 }
-.event-input {
+.eventInput {
   width: 100%;
   height: 300px;
   overflow: scroll;
   font-size: 20px;
+  border-radius: 5px;
 }
 .delete-modal {
   display: flex;

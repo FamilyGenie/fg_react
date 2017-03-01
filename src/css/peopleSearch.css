@@ -41,7 +41,7 @@
   flex-direction: row;
 }
 #family {
-  height: 500px;
+  height: 600px;
   /*overflow: scroll;*/
   margin-right: auto;
   margin-left: auto;
@@ -63,7 +63,7 @@
 .mappedPeople {
   width: 100%;
   overflow: scroll;
-  height: 448px;
+  height: 548px;
 }
 .search-add {
   width: 15%;
@@ -139,6 +139,7 @@
 
 .button2 {
   color: #640FF3;
+  cursor: pointer;
 }
 .fa-sitemap {
   margin-right: 10px;
@@ -154,6 +155,7 @@
   margin-left: auto;
   margin-bottom: auto;
   font-size: 28px;
+  cursor: pointer;
 }
 #create-person {
   color: white;

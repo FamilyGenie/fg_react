@@ -6,6 +6,8 @@ import { createPerson, deletePerson, updatePerson } from '../../actions/peopleAc
 
 @connect(
 	(store, ownProps) => {
+		// console.log('in @connect: ', ownProps);
+
 		// Since we are passing the person in from the parent object, just map the component's props to the props that have come in (for now). However, soon, we will add the parentrelationships, pairbondrelationships, and events into the props (maybe)
 		return ownProps;
 	},
@@ -38,11 +40,9 @@ export default class PeopleDetailsLineItem extends React.Component {
 		hashHistory.push('/familymap/' + this.props.person._id);
 	}
 
-
-
 	render = () => {
 		const { person, onBlur } = this.props;
-
+		console.log("in render", person);
 		// put in code to test if person._id === 0, and then say person cannot be found
 		if (person) {
 			return (
@@ -51,23 +51,23 @@ export default class PeopleDetailsLineItem extends React.Component {
 						<input
 							class="form-control detail-input"
 							type="text"
-							defaultValue={person.fName}
+							value={person.fName}
 							placeholder="Enter First Name"
-							onBlur={this.getOnBlur('fName')}
+							onChange={this.getOnBlur('fName')}
 						/>
 						<input
 							class="form-control detail-input"
 							type="text"
-							defaultValue={person.mName}
+							value={person.mName}
 							placeholder="Enter Middle Name"
-							onBlur={this.getOnBlur('mName')}
+							onChange={this.getOnBlur('mName')}
 						/>
 						<input
 							class="form-control detail-input"
 							type="text"
-							defaultValue={person.lName}
+							value={person.lName}
 							placeholder="Enter Last Name"
-							onBlur={this.getOnBlur('lName')}
+							onChange={this.getOnBlur('lName')}
 						/>
 					</div>
 					<div class="detail-names">
