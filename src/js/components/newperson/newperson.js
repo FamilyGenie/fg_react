@@ -55,8 +55,8 @@ export default class NewPerson extends React.Component {
 
     var header;
     // if a star was passed in, the Maps called this function, so set the header appropriately
-    if (this.props.star) {
-      header = 'Create Parent of ' + this.props.star.fName;
+    if (this.props.starFromMap) {
+      header = 'Create Parent of ' + this.props.starFromMap.fName;
     } else {
       header = 'New Person';
     }
