@@ -6,8 +6,7 @@ import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
 import { fetchParentalRels } from './parentalRelsActions';
 import { fetchStagedParentalRels } from './stagedParentalRelActions';
-// need to create pairbondrelsactions
-// import { fetchStagedPairBondRels } from './stagedPairBondRelsActions';
+import { fetchStagedPairBondRels } from './stagedPairBondRelsActions';
 
 import config from "../config.js";
 import { getAxiosConfig } from './actionFunctions';
@@ -49,7 +48,7 @@ export function importRelationships() {
         dispatch(fetchParentalRels());
         dispatch(fetchPairBondRels())
         dispatch(fetchStagedParentalRels());
-        // dispatch(fetchStagedPairBondRels());
+        dispatch(fetchStagedPairBondRels());
     })
     .catch((err) => {
       dispatch({type: "RUN_IMPORT_REJECTED", payload: err})

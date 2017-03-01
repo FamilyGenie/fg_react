@@ -14,6 +14,7 @@ import user from './userReducer'
 import stagedPeople from './stagedPeopleReducer'
 import importRecords from './importRecords'
 import stagedParentalRels from './stagedParentalRelsReducer'
+import stagedPairBondRels from './stagedPairbondRelsReducer'
 import stagedEvents from './stagedEventsReducer'
 import historyBarReducer from './historyBarReducer'
 
@@ -32,6 +33,7 @@ export default combineReducers({
   stagedPeople,
   importRecords,
   stagedParentalRels,
+  stagedPairBondRels,
   stagedEvents,
   historyBarReducer,
 })

@@ -8,9 +8,10 @@ import { fetchParentalRels } from '../actions/parentalRelsActions';
 import { fetchPeople } from "../actions/peopleActions";
 import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../actions/stagedEventActions';
+import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
+import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import HistoryBar from './historybar/index';
 import Sidebar from 'react-sidebar';
-// import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { logout } from '../actions/authActions';
 
 import PeopleSearch from './peoplesearch/peoplesearch';
@@ -29,7 +30,8 @@ export default class Layout extends React.Component {
 		this.props.dispatch(fetchParentalRels());
 		this.props.dispatch(fetchStagedPeople());
 		this.props.dispatch(fetchStagedEvents());
-		// this.props.dispatch(fetchStagedParentalRels());
+    this.props.dispatch(fetchStagedParentalRels());
+    this.props.dispatch(fetchStagedPairBondRels());
 	}
 
 	logIn = () => {
