@@ -61,9 +61,9 @@ export default class EventLineItem extends React.Component {
 							<div class="relTypeWord">{eventDateUser}</div>
 						</div>
 						<div class="relTypeCol">
-							<div class="relTypeWord ital">{event.eventType}
+							<div class="ital">{event.eventType}
 							</div>
-							<div class="relTypeWord ital">{event.eventPlace}</div>
+							<div class="ital">{event.eventPlace}</div>
 						</div>
 					</div>
 					{/* This modal is what opens when you click on one of the event records that is displayed. The modalIsOpen variable is accessed via the state, by the openModal call (and set to false in the closeModal call). When set, the new state triggers a re-rendering, and the isOpen property of the modal is then true, so it displays. We also store the event record that should be opened in the modal in the Store, so it can be accessed */}

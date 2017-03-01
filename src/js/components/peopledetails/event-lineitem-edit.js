@@ -213,7 +213,7 @@ constructor(props) {
 						</div>
 						<div class="PR-sDate">
 							<textarea
-									class="event-context"
+									class="eventInput"
 									type="text"
 									onChange={this.tempFamilyContext}
 							>
@@ -227,9 +227,9 @@ constructor(props) {
 						<div class="eventTitle">
 						Local Context
 						</div>
-						<div class="event-context">
+						<div class="PR-sDate">
 							<textarea
-								class="event-input"
+								class="eventInput"
 								type="text"
 								onChange={this.tempLocalContext}
 							>
@@ -245,9 +245,9 @@ constructor(props) {
 						</div>
 						<div class="PR-sDate">
 							<textarea
-									class="event-context"
-									type="text"
-									onChange={this.tempWorldContext}
+								class="eventInput"
+								type="text"
+								onChange={this.tempWorldContext}
 							>
 							{this.state.worldContextNew}
 							</textarea>

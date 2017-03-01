@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
 import moment from 'moment';
 import Modal from 'react-modal';
+import Legend from './legend';
 
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
 import { openNewPersonModal } from '../../actions/modalActions';
@@ -48,7 +49,8 @@ export default class FamilyMap extends React.Component {
 		this.state = {
 			// store this state value for display purposes
 			dateFilterString: "",
-			starAge: 18
+			starAge: 18,
+			legendShowing: false,
 		};
 	}
 
@@ -107,6 +109,18 @@ export default class FamilyMap extends React.Component {
 		});
 		this.componentDidMount();
 	}
+	toggleLegend = () => {
+		if(this.state.legendShowing === false) {
+			$("#legend").css({"display": "flex"});
+			$("#mainMap").css({"min-height": "1100px"});
+			this.setState({legendShowing: true});
+		}
+		if (this.state.legendShowing === true) {
+			$("#legend").css({"display": "none"});
+			$("#mainMap").css({"min-height": "800px"});
+			this.setState({legendShowing: false});
+		}
+	}
 
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
@@ -127,38 +141,44 @@ export default class FamilyMap extends React.Component {
 	render = () => {
 		const { people, newPersonModalIsOpen } = this.props;
 		if (people) {
-			return (<div>
-				<div class="main-map-header">
-					<div class="header-div">
-						<h1 class="family-header">{this.fullName} Family Map </h1>
-					</div>
-					<div class="mainDate">
-						<div class="mapDate">
-							<div class="mapDateContents">
-								<p>Date:</p>
-								<p class="mapDateText">{this.state.dateFilterString}</p>
-							</div>
-							<div class="starAge">
-								<p>Star's Age:</p>
-								<input
-									id="ageInput"
-									class="form-control ageInput"
-									type="text"
-									value={this.state.starAge}
-									onChange={this.onAgeChange}
-								/>
-							</div>
-						</div>
-						<div class="mapArrow">
-							<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
-							<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
-						</div>
-					</div>
+			return (
+			<div class="mainDiv">
+				<div class="header-div">
+					<h1 class="family-header">{this.fullName}s Family Map </h1>
 				</div>
-				<div class="map">
+				<div id="legend">
+					<Legend toggleLegend={this.toggleLegend}/>
+				</div>
+				<div class="mainMap" id="mainMap">
+					<div class="dateLegend">
+						<div class="dateToggle">
+							<div class="mapDate">
+								<div class="mapDateContents">
+									<p>Family Map As Of:</p>
+									<p class="mapDateText">{this.state.dateFilterString}</p>
+								</div>
+								<div class="starAge">
+									<p>Star's Age:</p>
+									<input
+										id="ageInput"
+										class="form-control ageInput"
+										type="text"
+										value={this.state.starAge}
+										onChange={this.onAgeChange}
+									/>
+									<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
+								</div>
+							</div>
+							<div class="mapArrow">
+								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
+								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
+							</div>
+						</div>
+					</div>
 					<svg class="svg-map">
 					</svg>
 				</div>
+
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"
