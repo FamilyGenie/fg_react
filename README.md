@@ -21,3 +21,5 @@ When entering the credentials you will need to follow these steps:
 * login again.
 
 The database data should automatically appear on the family list page
+
+Current default development url is `http://localhost:8080`

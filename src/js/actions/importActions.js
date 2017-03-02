@@ -4,6 +4,10 @@ import { fetchPeople } from "./peopleActions";
 import { fetchStagedPeople } from "./stagedPeopleActions";
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
+import { fetchParentalRels } from './parentalRelsActions';
+import { fetchPairBondRels } from './pairBondRelsActions';
+import { fetchStagedParentalRels } from './stagedParentalRelActions';
+import { fetchStagedPairBondRels } from './stagedPairBondRelActions';
 
 import config from "../config.js";
 import { getAxiosConfig } from './actionFunctions';
@@ -28,6 +32,37 @@ export function runImport() {
       .catch((err) => {
         dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
       })
+  }
+}
+
+export function importRelationships() {
+  const body = {};
+
+  return (dispatch) => { 
+  dispatch({type: "IMPORT_PARENTALRELATIONSHIPS"});
+  axios.post(config.api_url + '/api/v2/autoimportparentalrels', body, getAxiosConfig())
+    .then((response) => {
+      dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_FULFILLED", payload: response.data})
+      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels
+    })
+    .catch((err) => {
+      dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_REJECTED", payload: err})
+    })
+
+  axios.post(config.api_url + '/api/v2/autoimportpairbondrels', body, getAxiosConfig())
+    .then((response) => {
+      dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_FULFILLED", payload: response.data})
+        // after running import, refresh the store.
+        // TODO: recieve the data through the response.data and append that information to the store.
+        dispatch(fetchPeople());
+        dispatch(fetchParentalRels());
+        dispatch(fetchPairBondRels())
+        dispatch(fetchStagedParentalRels());
+        dispatch(fetchStagedPairBondRels());
+    })
+    .catch((err) => {
+      dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_REJECTED", payload: err})
+    })
   }
 }
 
