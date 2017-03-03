@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
-import { runImport } from '../../actions/importActions';
+import { runImport, importRelationships } from '../../actions/importActions';
 import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../../actions/stagedEventActions';
 import AlertContainer from 'react-alert';
@@ -43,6 +43,9 @@ const fgtoken = cookie.load('fg-access-token');
     return {
       runImport: () => {
         dispatch(runImport())
+      },
+      importRelationships: () => {
+        dispatch(importRelationships())
       },
       fetchStagedPeople: () => {
         dispatch(fetchStagedPeople())
@@ -95,7 +98,10 @@ export default class ImportDashboard extends React.Component {
     this.props.runImport();
     msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
   }
-  // <button onClick={this.goToUploadPage}> Upload Gedcom Files </button>
+  importRelationships = () => {
+    this.props.importRelationships();
+    msg.show('You have imported new relationships. You should now review them before continuing.', {type: 'success'})
+  }
 
   render = () => {
 
@@ -196,6 +202,32 @@ export default class ImportDashboard extends React.Component {
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
+              <h3 class="step-header">Import Relationships</h3>
+            </div>
+            <div class="step-action">
+              <div class="action-content">
+                {/*
+                <div class="action-row">
+                  <label> Ready to be Imported: </label>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
+                </div>
+                <div class="action-row">
+                  <label>  Already Imported: </label>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
+                </div>
+                */}
+                <button class="btn button3" onClick={this.importRelationships}> Run Import </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="import-row">
+          <div class="import-step">
+            <p>6</p>
+          </div>
+          <div class="import-step-content">
+            <div class="step-instruction">
               <h3 class="step-header">Review Parents</h3>
             </div>
             <div class="step-action">
@@ -217,7 +249,7 @@ export default class ImportDashboard extends React.Component {
         </div>
         <div class="import-row">
           <div class="import-step">
-            <p>6</p>
+            <p>7</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
