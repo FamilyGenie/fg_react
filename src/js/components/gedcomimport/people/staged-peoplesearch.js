@@ -6,7 +6,7 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 @connect(
   (store, ownProps) => {
     return {
-      user: store.user.user,
+      // we weren't using user anywhere in this so it was removed
       stagedPeople: store.stagedPeople.stagedPeople.filter(function(p) {
         return (!p.ignore)
       }),
