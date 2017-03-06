@@ -81,14 +81,14 @@ export default class PeopleSearch extends React.Component {
             <div class="bufferSearch"></div>
             <button class="btn btn-default btn-FL">Search</button>
           </div>
-          <div id="family">
-            <div id="addFamily">
+          <div class="staged-container">
+            <div class="staged-header-container">
               <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
               </i>
-              <div class="staged-header">
+              <div class="familyHeader">
                 <span onClick={() => this.sortEvents('person')}>Person</span>
               </div>
-              <div class="staged-header">
+              <div class="familyHeader">
                 {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
                 <span onClick={() => this.sortEvents('date')}> Date </span>
               </div>
@@ -97,9 +97,7 @@ export default class PeopleSearch extends React.Component {
                 <p>Review</p>
               </div>
             </div>
-            <div id="buffer-div">
-            </div>
-            <div class="mappedPeople">
+            <div class="staged-people-list">
           	{mappedPeople}
             </div>
           </div>

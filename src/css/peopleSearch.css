@@ -33,7 +33,6 @@
   flex-direction: row;
   margin-top: 50px;
 }
-
 #inner-search-titles {
   width: 68.5%;
   height: 40px;
@@ -41,12 +40,9 @@
   flex-direction: row;
 }
 #family {
-  height: 600px;
-  /*overflow: scroll;*/
   margin-right: auto;
   margin-left: auto;
   width: 800px;
-  border-radius: 5px;
   position: relative;
   background-color: white;
 }
@@ -63,7 +59,14 @@
 .mappedPeople {
   width: 100%;
   overflow: scroll;
-  height: 548px;
+  height: 600px;
+  /*overflow: scroll;*/
+  margin-right: auto;
+  margin-left: auto;
+  width: 800px;
+  border-radius: 5px;
+  position: relative;
+  background-color: white;
 }
 .search-add {
   width: 15%;
@@ -154,8 +157,8 @@
   cursor: pointer;
 }
 #create-person {
-  color: white;
-  margin-left: auto;
+  color: #640FF3;
+  margin-left: 0;
 }
 .fa-pencil-square-o {
   border-bottom: 0;
@@ -261,8 +264,15 @@
   margin-top: auto;
   margin-bottom: 20px;
 }
-
-
+.familyHeader {
+  width: 25%;
+  height: 30px;
+  text-align: left;
+  margin-right: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center
+}
 
 @media (max-width: 1300px) {
   #people-info {
