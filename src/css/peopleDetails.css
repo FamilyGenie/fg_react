@@ -361,11 +361,6 @@
   display: flex;
   justify-content: center;
 }
-.form-control {
-  height: 50px;
-  font-size: 20px;
-  width: 250px;
-}
 .event-context {
   height: 300px;
   width: 100%;
