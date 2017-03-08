@@ -443,8 +443,18 @@
   align-items: center;
   margin-top: 15px;
 }
+.modalFooterButton {
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  width: 70px;
+}
 .modal-delete {
-  margin-right: auto;
+  margin-right: 24px;
   margin-left: auto;
   font-size: 20px;
   text-align: center;
@@ -452,6 +462,7 @@
   justify-content: center;
   height: 40px;
   width: 70px;
+  background-color: #FA0008;
 }
 .event-context-div {
   width: 100%;
@@ -474,7 +485,7 @@
   justify-content: center;
   margin-top: 25px;
   margin-left: auto;
-  width: 200px;
+  width: 50%;
   margin-right: auto;
 }
 .event-delete-modal {
@@ -517,6 +528,24 @@
   font-family: CabinMI;
   width: 100%;
   /*text-shadow: -1px 0 #640FF3, 0 1px #640FF3, 1px 0 #640FF3, 0 -1px #640FF3;*/
+}
+.modalFooter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.eventModalFooter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.modalFooterBuffer {
+  width: 25%;
+  height: 100%;
+  margin-top: 25px;
 }
 
 /*End styling of parent details section*/
