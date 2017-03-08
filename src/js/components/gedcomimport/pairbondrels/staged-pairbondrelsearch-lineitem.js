@@ -56,12 +56,12 @@ export default class StagedPairBondRelSearchLineItem extends React.Component {
 
     return (<div>
       <div class='staged-parent'>
-        <p class="staged-name">{stagedPersonOne.fName}</p>
-				<p class="staged-name">{stagedPersonOne.lName}</p>
+        <p class="staged-name">{( stagedPersonOne ? stagedPersonOne.fName : '')}</p>
+				<p class="staged-name">{( stagedPersonOne ? stagedPersonOne.lName : '')}</p>
       </div>
       <div class='staged-child'>
-        <p class="staged-name">{stagedPersonTwo.fName}</p>
-				<p class="staged-name">{stagedPersonTwo.lName}</p>
+        <p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.fName : '')}</p>
+				<p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.lName : '')}</p>
       </div>
       <div class='staged-reltype'>
         <p class='staged-name'>{stagedPairBondRel.relationshipType}</p>
