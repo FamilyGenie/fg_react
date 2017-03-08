@@ -313,17 +313,19 @@ export default class NewPerson extends React.Component {
 					</div>
 				</div>
         </div>
+        <div class="bufferModal2">
+				</div>
         <div class="event-delete-modal">
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.savePerson}
 					>
 						Save
 					</button>
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.cancelButton}
 					>
 						Cancel
