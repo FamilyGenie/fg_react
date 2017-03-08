@@ -106,12 +106,15 @@ export default class Layout extends React.Component {
                   </li>
 			          </ul>
 			        </li>
+              <li>
+                <ul>
+                  <li>
                     <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
                   </li>
                   <li>
                     <a onClick={this.goToParentalRelStaged}>STAGED PARENTAL RELS</a>
                   </li>
-			          </ul>
+                </ul>
 			        </li>
 							<li>
 		            <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
