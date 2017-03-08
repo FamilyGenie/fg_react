@@ -122,6 +122,10 @@ export default class Layout extends React.Component {
 		          <li>
 		            <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>STAGED LIST</a>
 		          </li>
+              <li>
+								<a class="navbarright">
+								<i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i></a>
+							</li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>

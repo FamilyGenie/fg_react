@@ -56,10 +56,10 @@ export default class ChronologyLineItem extends React.Component {
             <p class="stagedChron">{event.personFName}&nbsp;{event.personLName}</p>
           </div>
           <div class="stagedChronDiv">
-            <p class="stagedChron">{(event.eventType ? event.eventType : "")}</p>
+            <p class="stagedChron2">{(event.eventType ? event.eventType : "")}</p>
           </div>
           <div class="stagedChronDiv">
-            <p class="stagedChron">{(event.eventPlace ? event.eventPlace : "")}</p>
+            <p class="stagedChron3">{(event.eventPlace ? event.eventPlace : "")}</p>
           </div>
           <div class="check-duplicate" onClick={this.openModal}>
 						<i class="fa fa-pencil-square-o button2 pencil2"></i>

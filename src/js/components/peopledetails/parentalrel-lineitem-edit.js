@@ -141,6 +141,7 @@ export default class ParentalRelLineItemEdit extends React.Component {
 		}
 	}
 
+
 	render = () => {
 
 		const { parentalRel, parent, peopleArray, parentalRelTypes, parentalRelSubTypes } = this.props;
@@ -222,22 +223,36 @@ export default class ParentalRelLineItemEdit extends React.Component {
 					</div>
 					<div class="buffer-modal">
 					</div>
-					<div class="delete-modal">
-						<button
-							type="button"
-							class="btn btn-default modal-delete"
-							onClick={this.saveRecord}
-						>
-							Save
-						</button>
-						<button
-							type="button"
-							class="btn btn-default modal-delete"
-							onClick={this.deleteRecord}
-						>
-							Delete
-						</button>
+					<div class="modalFooter">
+						<div class="modalFooterBuffer">
+						</div>
+						<div class="delete-modal">
+							<button
+								type="button"
+								class="btn btn-default modalFooterButton"
+								onClick={this.saveRecord}
+							>
+								Save
+							</button>
+							<button
+								type="button"
+								class="btn btn-default modalFooterButton"
+								onClick={this.props.closeModal}
+							>
+								Cancel
+							</button>
+						</div>
+						<div class="modalFooterBuffer">
+							<button
+								type="button"
+								class="btn btn-default modal-delete"
+								onClick={this.deleteRecord}
+							>
+								Delete
+							</button>
+						</div>
 					</div>
+
 				</div>)
 		} else {
 			return (<p>Loading Parental Info...</p>);

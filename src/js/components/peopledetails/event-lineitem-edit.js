@@ -256,21 +256,34 @@ constructor(props) {
 				</div>
 				<div class="buffer-modal">
 				</div>
-				<div class="event-delete-modal">
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.saveRecord}
-					>
-						Save
-					</button>
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.deleteRecord}
-					>
-						Delete
-					</button>
+				<div class="eventModalFooter">
+					<div class="modalFooterBuffer">
+					</div>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modalFooterButton"
+							onClick={this.saveRecord}
+						>
+							Save
+						</button>
+						<button
+							type="button"
+							class="btn btn-default modalFooterButton"
+							onClick={this.props.closeModal}
+						>
+							Cancel
+						</button>
+					</div>
+					<div class="modalFooterBuffer">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
+					</div>
 				</div>
 			</div>)
 		} else {
