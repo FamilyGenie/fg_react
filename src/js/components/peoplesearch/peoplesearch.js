@@ -49,6 +49,7 @@ export default class PeopleSearch extends React.Component {
         <PeopleSearchLineItem person={person} key={person._id}/>
     );
 
+
         return (
       <div class="mainDiv">
     		<div class="header-div">
