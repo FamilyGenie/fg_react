@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { updatePerson } from '../../actions/peopleActions';
-import { updateStagedPerson } from '../../actions/stagedPeopleActions';
-import EventLineItem from '../peopledetails/event-lineitem';
+import { updatePerson } from '../../../actions/peopleActions';
+import { updateStagedPerson } from '../../../actions/stagedPeopleActions';
+import EventLineItem from '../../peopledetails/event-lineitem';
 import MatchedPeopleLineItem from './matched-people-lineitem';
 
 @connect(

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 @connect(
   (store, ownProps) => {
-    console.log('in staged-parental-rel@connect with: ', store);
     return {
       stagedParent:
       store.stagedParentalRel.find(function(p) {
