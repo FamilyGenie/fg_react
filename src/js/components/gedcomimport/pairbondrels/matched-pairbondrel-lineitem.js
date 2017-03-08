@@ -5,7 +5,6 @@ import { updateStagedPairBondRel } from '../../../actions/stagedPairBondRelActio
 
 @connect(
   (store, ownProps) => {
-    console.log('in matchedpairbondlineitem with:', ownProps)
     return {
       stagedId: ownProps.stagedId,
       matchedPairBondRel: ownProps.matchedPairBondRel,
@@ -32,7 +31,6 @@ import { updateStagedPairBondRel } from '../../../actions/stagedPairBondRelActio
 export default class MatchedPairBondRelLineItem extends React.Component {
   
   useRecord = () => {
-    console.log(this.props.matchedPairBondRel._id,this.props.stagedId)
     this.props.updateStagedPairBondRel(this.props.stagedId, 'genie_id', this.props.stagedId);
     this.props.updateStagedPairBondRel(this.props.stagedId, 'ignore', true);
     this.props.closeModal();
@@ -41,7 +39,6 @@ export default class MatchedPairBondRelLineItem extends React.Component {
   render = () => {
 
     const { stagedId, matchedPairBondRel, matchedPersonOne, matchedPersonTwo } = this.props;
-    console.log('in matchedpairbondlineitem with: ', this.props)
 
     if (matchedPairBondRel) {
       return (<div>
