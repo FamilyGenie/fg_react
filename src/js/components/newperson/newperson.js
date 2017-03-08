@@ -209,7 +209,7 @@ export default class NewPerson extends React.Component {
     				<div class="personDetails">
     					<div class="pDetail">
     						<input
-    							class="form-control"
+    							class="form-control detail-input"
     							type="text"
     							placeholder="Enter First Name"
                   value={this.state.personFName}
