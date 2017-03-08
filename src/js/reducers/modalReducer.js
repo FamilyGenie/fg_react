@@ -5,6 +5,7 @@ export default function reducer(state={
     stagedPairBondRel: "",
 		event: "",
     newPerson: "",
+    stagedParentalRel: "",
 	},
 	action = ""
 ) {
@@ -12,12 +13,14 @@ export default function reducer(state={
 		case "SET_PARENTALREL": {
 			return {
 				...state,
-				parentalRel: action.payload}
+				parentalRel: action.payload
+      }
 		}
 		case "SET_PAIRBONDREL": {
 			return {
 				...state,
-				pairBondRel: action.payload}
+				pairBondRel: action.payload
+      }
 		}
     case "SET_STAGEDPAIRBONDREL": {
       return {
@@ -30,6 +33,12 @@ export default function reducer(state={
 				...state,
 				event: action.payload}
 		}
+    case "SET_STAGEDPARENTALREL": {
+      return {
+        ...state,
+        stagedParentalRel: action.payload
+      }
+    }
 		// this is called when the eventlineitemedit modal is closed, so that the event that was being edited is not accidentally opened when the modal is opened next
 		// I think this will be able to be deleted when the new person modal is complete. JJF 2/24/2017
 		case "RESET_MODAL_EVENT": {
@@ -37,24 +46,24 @@ export default function reducer(state={
 				...state,
 				event: ""}
 		}
-      case "OPEN_NEWPERSON_MODAL" : {
-        return {
-          ...state,
-          newPerson: {
-            ...state.newPerson,
-            modalIsOpen: true,
-          }
-        }
-      }
-      case "CLOSE_NEWPERSON_MODAL": {
-        return {
-          ...state,
-          newPerson: {
-            ...state.newPerson,
-            modalIsOpen: false,
-          }
+    case "OPEN_NEWPERSON_MODAL" : {
+      return {
+        ...state,
+        newPerson: {
+          ...state.newPerson,
+          modalIsOpen: true,
         }
       }
     }
-		return state
+    case "CLOSE_NEWPERSON_MODAL": {
+      return {
+        ...state,
+        newPerson: {
+          ...state.newPerson,
+          modalIsOpen: false,
+        }
+      }
+    }
+  }
+  return state
 }
