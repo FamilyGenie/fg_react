@@ -79,7 +79,6 @@ export default class PeopleSearch extends React.Component {
         contentLabel="Modal"
         className="detail-modal"
       >
-        <NewPerson/>
       </Modal>
       <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
         <div id="below-family">
