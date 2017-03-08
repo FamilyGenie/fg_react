@@ -51,7 +51,6 @@ export default class Layout extends React.Component {
     hashHistory.push(url);
   }
 
-
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
 			$("#allContent").css({"width": "80%"});
@@ -91,45 +90,34 @@ export default class Layout extends React.Component {
       				<li>
 						    <a class="navbarright" onClick={() => {this.redirect('/chronology/')}}> CHRONOLOGY </a>
 					    </li>
-               <li class="dropdown">
-
-			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> STAGED MENU
-								<span class="caret"></span></a>
+             <li class="dropdown">
+               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                IMPORT MENU
+                <span class="caret"></span>
+              </a>
 			          <ul class="dropdown-menu">
                   <li>
-                    <a onClick={this.goToImport}>IMPORT</a>
+                    <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
                   </li>
                   <li>
-                    <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>PEOPLE</a>
                   </li>
                   <li>
-                    <a onClick={this.goToPairBondRelStaged}>STAGED PAIRBOND RELS</a>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondsearch/')}}>PAIRBOND RELS</a>
+                  </li>
+                  <li>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>PARENTAL RELS</a>
                   </li>
 			          </ul>
 			        </li>
-                    <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
-                  </li>
-                  <li>
-                    <a onClick={this.goToParentalRelStaged}>STAGED PARENTAL RELS</a>
-                  </li>
-			          </ul>
-			        </li>
-		            <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
-		          </li>
-		          <li>
-		            <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>STAGED LIST</a>
-		          </li>
-              <li>
-								<a class="navbarright">
-								<i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i></a>
-							</li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>
 		          </li>
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logIn}>LOG IN</a>
-		          </li>*/}
+              </li>
+              */}
 							<li class="dropdown">
 			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
 								<span class="caret"></span></a>

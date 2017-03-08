@@ -17,7 +17,6 @@ import { openNewPersonModal } from '../../actions/modalActions';
     userFetched: store.user.fetched,
     people: store.people.people,
     modalIsOpen: store.modal.newPerson.modalIsOpen,
-    // dont think we need the store here.
   };
 },
   (dispatch) => {
@@ -48,7 +47,6 @@ export default class PeopleSearch extends React.Component {
     const mappedPeople = people.map(person =>
         <PeopleSearchLineItem person={person} key={person._id}/>
     );
-
 
         return (
       <div class="mainDiv">
@@ -121,6 +119,7 @@ export default class PeopleSearch extends React.Component {
         contentLabel="Modal"
         className="detail-modal"
       >
+        <NewPerson/>
       </Modal>
       <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
         <div id="below-family">
