@@ -55,49 +55,46 @@ export default class PeopleSearch extends React.Component {
           <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
-          <div class="familySearch">
-            <h3 class="searchH">Search</h3>
-            <div class="bufferSearch"></div>
-            <div class="searchContent">
-              <input
-  							class="form-control searchInput"
-  							type="text"
-  							value={""}
-  							placeholder="Enter First Name"
-  						/>
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Last Name"
-              />
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Date"
-              />
-            </div>
-            <div class="bufferSearch"></div>
-            <button class="btn btn-default btn-FL">Search</button>
-          </div>
+
           <div class="staged-container">
+            <div class="familySearch">
+              <h3 class="searchH">Search</h3>
+              <div class="bufferSearch"></div>
+              <div class="searchContent">
+                <input
+    							class="form-control searchInput"
+    							type="text"
+    							value={""}
+    							placeholder="Enter First Name"
+    						/>
+                <input
+                  class="form-control searchInput"
+                  type="text"
+                  value={""}
+                  placeholder="Enter Last Name"
+                />
+                <input
+                  class="form-control searchInput"
+                  type="text"
+                  value={""}
+                  placeholder="Enter Date"
+                />
+              </div>
+              <div class="bufferSearch"></div>
+              <button class="btn btn-default btn-FL">Search</button>
+            </div>
             <div class="staged-header-container">
               <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
               </i>
-              <div class="familyHeader">
+              <div class="familyHeader1">
                 <span onClick={() => this.sortEvents('person')}>Person</span>
               </div>
-              <div class="familyHeader">
+              <div class="familyHeader2">
                 {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
                 <span onClick={() => this.sortEvents('date')}> Date </span>
               </div>
-
-              <div class="stagedHeaderReview">
-                <p>Review</p>
-              </div>
             </div>
-            <div class="staged-people-list">
+            <div id="family">
           	{mappedPeople}
             </div>
           </div>

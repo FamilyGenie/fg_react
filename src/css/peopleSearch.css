@@ -32,6 +32,7 @@
   width: 100%;
   flex-direction: row;
   margin-top: 50px;
+  min-height: 1000px;
 }
 #inner-search-titles {
   width: 68.5%;
@@ -45,6 +46,9 @@
   width: 800px;
   position: relative;
   background-color: white;
+  border-radius: 5px;
+  overflow: scroll;
+  height: 600px;
 }
 #person-div {
   display: flex;
@@ -113,6 +117,7 @@
 .date-div {
   margin-left: auto;
   margin-right: 35px;
+  width: 135px;
 }
 .add {
   border-bottom: 0;
@@ -220,14 +225,13 @@
 /*End Stylng Add Person Modal*/
 
 .familySearch {
-  width: 200px;
-  height: 400px;
+  width: 800px;
+  height: 200px;
   border: 1px solid silver;
   background-color: white;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  margin-left: 30px;
 }
 .bufferSearch {
   height: 2px;
@@ -247,15 +251,18 @@
   width: 250px;
 }
 .searchInput {
-  width: 80% !important;
-  margin-top: 20px;
+  width: 200px !important;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .searchContent {
   display: flex;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  margin-bottom: 65px;
+  justify-content: center;
 }
 .btn-FL {
   width: 100px;
@@ -264,11 +271,20 @@
   margin-top: auto;
   margin-bottom: 20px;
 }
-.familyHeader {
+.familyHeader1 {
   width: 25%;
   height: 30px;
   text-align: left;
   margin-right: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center
+}
+.familyHeader2 {
+  width: 25%;
+  height: 30px;
+  text-align: left;
+  margin-right: 45px;
   cursor: pointer;
   display: flex;
   align-items: center
