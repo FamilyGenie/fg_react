@@ -11,21 +11,22 @@ import { setStagedPairBondRel } from '../../../actions/modalActions';
   (store, ownProps) => {
     return {
       stagedPairBondRel: ownProps.stagedPairBondRel,
+      // find the staged people so we can display the names for the user
       stagedPersonOne:
-      store.stagedPeople.stagedPeople.find((p) => {
-        return p.personId === ownProps.stagedPairBondRel.personOne_id;
-      }),
+        store.stagedPeople.stagedPeople.find((p) => {
+          return p.personId === ownProps.stagedPairBondRel.personOne_id;
+        }),
       stagedPersonTwo:
-      store.stagedPeople.stagedPeople.find((p) => {
-        return p.personId === ownProps.stagedPairBondRel.personTwo_id;
-      }),
+        store.stagedPeople.stagedPeople.find((p) => {
+          return p.personId === ownProps.stagedPairBondRel.personTwo_id;
+        }),
     }
   },
   (dispatch) => {
     return {
       setStagedPairBondRel: (stagedPairBondRel) => {
         dispatch(setStagedPairBondRel(stagedPairBondRel));
-      }
+      },
     }
   }
 )

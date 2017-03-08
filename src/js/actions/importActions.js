@@ -194,26 +194,26 @@ export function importPairBondRel(personOne_id, personTwo_id, relationshipType, 
           }
         };
 
-        dispatch({type: "UPDATE_STAGEDPAIRBONDREL"});
+        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
         axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel1, getAxiosConfig())
           .then((response) => {
-            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_FULFILLED", payload: response.data});
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
           })
           .catch((err) => {
-            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_REJECTED", payload: err});
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
           })
 
-        dispatch({type: "UPDATE_STAGEDPAIRBONDREL"});
+        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
         axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel2, getAxiosConfig())
           .then((response) => {
-            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_FULFILLED", payload: response.data});
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
           })
           .catch((err) => {
-            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_REJECTED", payload: err});
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
           })
       })
-        .catch((err) => {
-          dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
-        })
+    .catch((err) => {
+      dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
+    })
   }
 }

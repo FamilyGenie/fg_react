@@ -47,23 +47,23 @@ export default class StagedPairBondRelDetails extends React.Component {
 
     const { stagedPairBondRel, stagedPersonOne, stagedPersonTwo, matchedPairBondRels } = this.props;
 
-    // const mappedMatches = matchedPairBondRels.map((matchedPairBondRel) => {
-      // return ( <MatchedPairBondRelLineItem matchedPairBondRel={matchedPairBondRel} stagedId={stagedPairBondRel._id} key={matchedPairBondRel._id} /> )
-    // });
+    const mappedMatches = matchedPairBondRels.map((matchedPairBondRel) => {
+      return ( <MatchedPairBondRelLineItem matchedPairBondRel={matchedPairBondRel} stagedId={stagedPairBondRel._id} closeModal={this.props.closeModal} key={matchedPairBondRel._id} /> )
+    });
 
     return (<div>
       <div class="container">
         <div class="col-xs-12">
-          <h1> Parental Relationship Comparison </h1>
+          <h1> PairBond Relationship Comparison </h1>
           <button onClick={() => { this.closeModal() }}> Close Modal </button>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-4 title bold can-click">
-          Child
+          Person One
         </div>
         <div class="col-xs-4 title bold can-click">
-          Parent
+          Person Two
         </div>
         <div class="col-xs-4 title bold can-click">
           Relationship Type
@@ -80,7 +80,7 @@ export default class StagedPairBondRelDetails extends React.Component {
           <p>{(stagedPersonTwo.fName ? stagedPersonTwo.fName : '')} {(stagedPersonTwo.lName ? stagedPersonTwo.lName : '')}</p>
         </div>
         <div class='col-xs-3'>
-          <p>{stagedPairBondRel.subType} {stagedPairBondRel.relationshipType}</p>
+          <p>{stagedPairBondRel.relationshipType}</p>
         </div>
         <div class='col-xs-2'>
           <p>{( stagedPairBondRel.startDate ? stagedPairBondRel.startDate : '')}</p>
@@ -90,9 +90,7 @@ export default class StagedPairBondRelDetails extends React.Component {
         </div>
       </div>
       <div class="container col-xs-12">
-      {/*
         {mappedMatches}
-      */}
       </div>
     </div>)
   }
