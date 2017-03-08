@@ -14,7 +14,7 @@ import PeopleDetails from './components/peopledetails/peopledetails';
 import ParentalRelsLineItemEdit from './components/peopledetails/parentalrel-lineitem-edit';
 import StagedPeopleSearch from './components/gedcomimport/people/staged-peoplesearch';
 import StagedPeopleDetails from './components/gedcomimport/people/staged-peopledetails';
-import StagedParentalRels from './components/gedcomimport/parentalrels/staged-parentalreldetails';
+import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/staged-pairbondrelsearch';
 import StagedParentalRelSearch from './components/gedcomimport/parentalrels/staged-parentalrelsearch';
 import Chronology from './components/chronology/chronology';
 import HistoryBar from './components/historybar/index';
@@ -36,6 +36,8 @@ ReactDOM.render(<Provider store={store}>
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 
 			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
+                
+			<Route path="/stagedpairbondrelsearch" name="Staged PairBond Relationships" component={StagedPairBondRelSearch}></Route>
 
 			<Route path="/stagedparentalrelsearch/" name="Staged Parental Relationship Comparison" component={StagedParentalRelSearch}></Route>
 
