@@ -10,6 +10,8 @@ Make sure that the API server is running (instructions in repo)
 
 Current default development url is `http://localhost:8080`
 
+The location of the api server that you want to communicate with should be set in the file src/config.js. This file is in .gitignore, so you can have your own local copy without fear of it being overwritten by pulls.
+
 On the Login page, you will need credentials which will be provided with the database dump file.
 When logging in currently there is a bug, but it has an easy work around.
 When entering the credentials you will need to follow these steps:
