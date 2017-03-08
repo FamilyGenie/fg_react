@@ -1,0 +1,52 @@
+.chronHeaderText {
+  margin-right: auto;
+  cursor: pointer;
+}
+.chronHeader {
+  width: 25%;
+  height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#firstChronHeader {
+  margin-left: 11px;
+}
+.chronHeaderText2 {
+  margin-left: 2px;
+  margin-right: auto;
+  cursor: pointer;
+}
+.stagedChronDiv {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+  justify-content: center;
+  overflow: hidden;
+}
+.stagedChron {
+  margin-right: auto;
+  margin-left: 10px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+}
+.stagedChron2 {
+  margin-right: auto;
+  margin-left: 83px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+}
+.stagedChron3 {
+  margin-right: auto;
+  margin-left: 78px;
+  font-family: Cabin;
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+}

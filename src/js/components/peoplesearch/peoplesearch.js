@@ -79,7 +79,10 @@ export default class PeopleSearch extends React.Component {
               />
             </div>
             <div class="bufferSearch"></div>
-            <button class="btn btn-default btn-FL">Search</button>
+            <div class="searchButtons">
+              <button class="btn btn-default btn-FL">Search</button>
+              <button class="btn btn-default btn-FL">Cancel</button>
+            </div>
           </div>
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>

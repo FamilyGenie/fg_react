@@ -473,12 +473,18 @@
   display: flex;
   justify-content: center;
   margin-top: 25px;
+  margin-left: auto;
+  width: 200px;
+  margin-right: auto;
 }
 .event-delete-modal {
   display: flex;
   justify-content: center;
   margin-top: 25px;
   margin-bottom: 25px;
+  margin-left: auto;
+  width: 200px;
+  margin-right: auto;
 }
 .modal-header-1 {
   width: 10%;
