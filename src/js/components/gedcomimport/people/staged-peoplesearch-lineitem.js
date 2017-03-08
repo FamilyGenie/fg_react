@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import moment from 'moment';
 
-import DateInput from '../date-input';
+import DateInput from '../../date-input';
 
 @connect(
 	(store, ownProps) => {

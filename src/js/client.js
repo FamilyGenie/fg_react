@@ -12,9 +12,9 @@ import Login from './components/auth/login';
 import PeopleSearch from './components/peoplesearch/peoplesearch';
 import PeopleDetails from './components/peopledetails/peopledetails';
 import ParentalRelsLineItemEdit from './components/peopledetails/parentalrel-lineitem-edit';
-import StagedPeopleSearch from './components/gedcomimport/staged-peoplesearch';
-import StagedPeopleDetails from './components/gedcomimport/staged-peopledetails';
-import StagedParentalRels from './components/gedcomimport/staged-parentalrels';
+import StagedPeopleSearch from './components/gedcomimport/people/staged-peoplesearch';
+import StagedPeopleDetails from './components/gedcomimport/people/staged-peopledetails';
+import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/staged-pairbondrelsearch';
 import Chronology from './components/chronology/chronology';
 import HistoryBar from './components/historybar/index';
 
@@ -30,7 +30,7 @@ ReactDOM.render(<Provider store={store}>
 			<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
-			<Route path="/stagedparentalrels(/:_id)" name="Staged Parental Relationships" component={StagedParentalRels}></Route>
+			<Route path="/stagedpairbondrelsearch" name="Staged PairBond Relationships" component={StagedPairBondRelSearch}></Route>
 			<Route path='/auth/login' name='Login' component={Login}></Route>
       <Route path="/chronology" name="Chronology" component={Chronology}></Route>
       <Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>

@@ -160,3 +160,60 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 	}
 }
 
+export function importPairBondRel(personOne_id, personTwo_id, relationshipType, subType, startDate, endDate, _id) {
+
+  const body = {
+    object: {
+      personOne_id,
+      personTwo_id,
+      relationshipType,
+      subType,
+      startDate,
+      endDate,
+    }
+  };
+
+  return (dispatch) => {
+    dispatch({type: "CREATE_PAIRBONDREL"});
+    axios.post(config.api_url + '/api/v2/pairbondrel/create', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CREATE_PAIRBONDREL_FULFILLED", payload: response.data})
+
+        const updateRel1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        };
+        const updateRel2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true',
+          }
+        };
+
+        dispatch({type: "UPDATE_STAGEDPAIRBONDREL"});
+        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel1, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_REJECTED", payload: err});
+          })
+
+        dispatch({type: "UPDATE_STAGEDPAIRBONDREL"});
+        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel2, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGEDPAIRBONDREL_REJECTED", payload: err});
+          })
+      })
+        .catch((err) => {
+          dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
+        })
+  }
+}

@@ -16,3 +16,24 @@ export function fetchStagedPairBondRels() {
         })
   }
 }
+
+export function updateStagedPairBondRel(_id, field, value) {
+  const body = {
+    object: {
+      _id,
+      field,
+      value
+    }
+  };
+
+  return (dispatch) => {
+    dispatch({type: 'UPDATE_STAGEDPAIRBONDREL'});
+    axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: 'UPDATE_STAGEDPAIRBONDREL_FULFILLED', payload: response.data})
+      })
+      .catch((err) => {
+        dispatch({type: 'UPDATE_STAGEDPAIRBONDREL_REJECTED', payload: err})
+      })
+  }
+}

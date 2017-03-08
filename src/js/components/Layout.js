@@ -65,6 +65,11 @@ export default class Layout extends React.Component {
   goToChronology = () => {
     hashHistory.push('/chronology/');
   }
+
+  goToPairBondRelStaged = () => {
+    hashHistory.push('/stagedpairbondrelsearch/');
+  }
+
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
 			$("#allContent").css({"width": "80%"});
@@ -103,12 +108,21 @@ export default class Layout extends React.Component {
       				<li>
 						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
 					    </li>
-							<li>
-		            <a class="navbarright" onClick={this.goToImport}>IMPORT</a>
-		          </li>
-		          <li>
-		            <a class="navbarright" onClick={this.goToPeopleStaged}>STAGED LIST</a>
-		          </li>
+               <li class="dropdown">
+			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> STAGED MENU
+								<span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+                  <li>
+                    <a onClick={this.goToImport}>IMPORT</a>
+                  </li>
+                  <li>
+                    <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
+                  </li>
+                  <li>
+                    <a onClick={this.goToPairBondRelStaged}>STAGED PAIRBOND RELS</a>
+                  </li>
+			          </ul>
+			        </li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>

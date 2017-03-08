@@ -13,7 +13,7 @@ export default function reducer(state={
       return {...state, fetching: false, error: action.payload}
     }
     case "FETCH_STAGINGPAIRBONDRELS_FULFILLED": {
-      return {...state,fetching: false, stagedPairbondRels: action.payload}
+      return {...state,fetching: false, stagedPairBondRels: action.payload}
     }
   }
   return state
