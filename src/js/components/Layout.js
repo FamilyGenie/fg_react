@@ -8,9 +8,10 @@ import { fetchParentalRels } from '../actions/parentalRelsActions';
 import { fetchPeople } from "../actions/peopleActions";
 import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../actions/stagedEventActions';
+import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
+import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import HistoryBar from './historybar/index';
 import Sidebar from 'react-sidebar';
-// import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { logout } from '../actions/authActions';
 
 import PeopleSearch from './peoplesearch/peoplesearch';
@@ -36,33 +37,21 @@ export default class Layout extends React.Component {
 		this.props.dispatch(fetchParentalRels());
 		this.props.dispatch(fetchStagedPeople());
 		this.props.dispatch(fetchStagedEvents());
-		// this.props.dispatch(fetchStagedParentalRels());
+    this.props.dispatch(fetchStagedParentalRels());
+    this.props.dispatch(fetchStagedPairBondRels());
 	}
+  
+  // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
+  redirect = (url) => {
+    // only dispatch logout if we are trying to logout
+    if (url === '/auth/logout') {
+      this.props.dispatch(logout());
+    }
 
-	logIn = () => {
-  		hashHistory.push('/auth/login');
-	}
-
-	logOut = () => {
-		this.props.dispatch(logout());
-		hashHistory.push('/auth/login');
-	}
-
-	goToPeopleSearch = () => {
-		hashHistory.push('/');
-	}
-
-	goToPeopleStaged = () => {
-		hashHistory.push('/stagedpeoplesearch/');
-	}
-
-  goToImport = () => {
-    hashHistory.push('/importhome/');
+    hashHistory.push(url);
   }
 
-  goToChronology = () => {
-    hashHistory.push('/chronology/');
-  }
+
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
 			$("#allContent").css({"width": "80%"});
@@ -89,24 +78,51 @@ export default class Layout extends React.Component {
 			        <span class="icon-bar"></span>
 			        <span class="icon-bar"></span>
 			      </button>
-						<a class="navbar-brand" onClick={this.goToPeopleSearch}>
+            {/* for the redirect function to work, we need to call an anonymous function onClick to prevent the function from being called by default (causing a loop through the endpoints).*/}
+						<a class="navbar-brand" onClick={() => {this.redirect('/')}}>
 						Family Genie <sup>&trade;</sup>
 						</a>
 			    </div>
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
 							<li>
-		            <a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
+		            <a class="navbarright" onClick={() => {this.redirect('/')}}>FAMILY LIST</a>
 		          </li>
       				<li>
-						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
+						    <a class="navbarright" onClick={() => {this.redirect('/chronology/')}}> CHRONOLOGY </a>
 					    </li>
-							<li>
-		            <a class="navbarright" onClick={this.goToImport}>IMPORT</a>
+               <li class="dropdown">
+
+			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> STAGED MENU
+								<span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+                  <li>
+                    <a onClick={this.goToImport}>IMPORT</a>
+                  </li>
+                  <li>
+                    <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
+                  </li>
+                  <li>
+                    <a onClick={this.goToPairBondRelStaged}>STAGED PAIRBOND RELS</a>
+                  </li>
+			          </ul>
+			        </li>
+                    <a onClick={this.goToPeopleStaged}>STAGED PEOPLE</a>
+                  </li>
+                  <li>
+                    <a onClick={this.goToParentalRelStaged}>STAGED PARENTAL RELS</a>
+                  </li>
+			          </ul>
+			        </li>
+		            <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
 		          </li>
 		          <li>
-		            <a class="navbarright" onClick={this.goToPeopleStaged}>STAGED LIST</a>
+		            <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>STAGED LIST</a>
 		          </li>
+              <li>
+								<a class="navbarright">
+								<i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i></a>
+							</li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>
@@ -120,8 +136,8 @@ export default class Layout extends React.Component {
 			          <ul class="dropdown-menu">
 			            <li><a >Profile</a></li>
 			            <li><a >Account Settings</a></li>
-									<li><a onClick={this.logIn}>Log In</a></li>
-			            <li><a onClick={this.logOut}>Log Out</a></li>
+									<li><a onClick={() => {this.redirect('/auth/login')}}>Log In</a></li>
+			            <li><a onClick={() => {this.redirect('/auth/logout')}}>Log Out</a></li>
 			          </ul>
 			        </li>
 							<li>

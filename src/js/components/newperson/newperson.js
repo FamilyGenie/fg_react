@@ -55,8 +55,8 @@ export default class NewPerson extends React.Component {
 
     var header;
     // if a star was passed in, the Maps called this function, so set the header appropriately
-    if (this.props.star) {
-      header = 'Create Parent of ' + this.props.star.fName;
+    if (this.props.starFromMap) {
+      header = 'Create Parent of ' + this.props.starFromMap.fName;
     } else {
       header = 'New Person';
     }
@@ -209,7 +209,7 @@ export default class NewPerson extends React.Component {
     				<div class="personDetails">
     					<div class="pDetail">
     						<input
-    							class="form-control"
+    							class="form-control detail-input"
     							type="text"
     							placeholder="Enter First Name"
                   value={this.state.personFName}
@@ -313,17 +313,19 @@ export default class NewPerson extends React.Component {
 					</div>
 				</div>
         </div>
+        <div class="bufferModal2">
+				</div>
         <div class="event-delete-modal">
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.savePerson}
 					>
 						Save
 					</button>
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.cancelButton}
 					>
 						Cancel

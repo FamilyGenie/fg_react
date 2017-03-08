@@ -4,6 +4,10 @@ import { fetchPeople } from "./peopleActions";
 import { fetchStagedPeople } from "./stagedPeopleActions";
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
+import { fetchParentalRels } from './parentalRelsActions';
+import { fetchPairBondRels } from './pairBondRelsActions';
+import { fetchStagedParentalRels } from './stagedParentalRelActions';
+import { fetchStagedPairBondRels } from './stagedPairBondRelActions';
 
 import config from "../config.js";
 import { getAxiosConfig } from './actionFunctions';
@@ -28,6 +32,95 @@ export function runImport() {
       .catch((err) => {
         dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
       })
+  }
+}
+
+export function importRelationships() {
+  const body = {};
+
+  return (dispatch) => { 
+  dispatch({type: "IMPORT_PARENTALRELATIONSHIPS"});
+  axios.post(config.api_url + '/api/v2/autoimportparentalrels', body, getAxiosConfig())
+    .then((response) => {
+      dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_FULFILLED", payload: response.data})
+      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels
+    })
+    .catch((err) => {
+      dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_REJECTED", payload: err})
+    })
+
+  axios.post(config.api_url + '/api/v2/autoimportpairbondrels', body, getAxiosConfig())
+    .then((response) => {
+      dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_FULFILLED", payload: response.data})
+        // after running import, refresh the store.
+        // TODO: recieve the data through the response.data and append that information to the store.
+        dispatch(fetchPeople());
+        dispatch(fetchParentalRels());
+        dispatch(fetchPairBondRels())
+        dispatch(fetchStagedParentalRels());
+        dispatch(fetchStagedPairBondRels());
+    })
+    .catch((err) => {
+      dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_REJECTED", payload: err})
+    })
+  }
+}
+
+export function importParentalRel(child_id, parent_id, relationshipType, subType, startDate, endDate, _id) {
+
+  const body = {
+    object: {
+      child_id,
+      parent_id,
+      relationshipType,
+      subType,
+      startDate,
+      endDate,
+    }
+  };
+
+  return (dispatch) => {
+    dispatch({type: "CREATE_PARENTALREL"});
+    axios.post(config.api_url + '/api/v2/parentalrel/create', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+
+        const updateRel1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        };
+        const updateRel2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true',
+          }
+        };
+
+        dispatch({type: "UPDATE_STAGEDPARENTALREL"});
+        axios.post(config.api_url + '/api/v2/staging/parentalrel/update', updateRel1, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGEDPARENTALREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGEDPARENTALREL_REJECTED", payload: err});
+          })
+
+        dispatch({type: "UPDATE_STAGEDPARENTALREL"});
+        axios.post(config.api_url + '/api/v2/staging/parentalrel/update', updateRel2, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGEDPARENTALREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGEDPARENTALREL_REJECTED", payload: err});
+          })
+      })
+        .catch((err) => {
+          dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+        })
   }
 }
 
@@ -125,3 +218,60 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 	}
 }
 
+export function importPairBondRel(personOne_id, personTwo_id, relationshipType, subType, startDate, endDate, _id) {
+
+  const body = {
+    object: {
+      personOne_id,
+      personTwo_id,
+      relationshipType,
+      subType,
+      startDate,
+      endDate,
+    }
+  };
+
+  return (dispatch) => {
+    dispatch({type: "CREATE_PAIRBONDREL"});
+    axios.post(config.api_url + '/api/v2/pairbondrel/create', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CREATE_PAIRBONDREL_FULFILLED", payload: response.data})
+
+        const updateRel1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        };
+        const updateRel2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true',
+          }
+        };
+
+        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
+        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel1, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
+          })
+
+        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
+        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel2, getAxiosConfig())
+          .then((response) => {
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
+          })
+          .catch((err) => {
+            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
+          })
+      })
+    .catch((err) => {
+      dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
+    })
+  }
+}

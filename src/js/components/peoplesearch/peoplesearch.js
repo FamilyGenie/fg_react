@@ -17,7 +17,7 @@ import { openNewPersonModal } from '../../actions/modalActions';
     userFetched: store.user.fetched,
     people: store.people.people,
     modalIsOpen: store.modal.newPerson.modalIsOpen,
-    store,
+    // dont think we need the store here.
   };
 },
   (dispatch) => {
@@ -56,22 +56,63 @@ export default class PeopleSearch extends React.Component {
           <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
+          <div class="familySearch">
+            <h3 class="searchH">Search</h3>
+            <div class="bufferSearch"></div>
+            <div class="searchContent">
+              <input
+                class="form-control searchInput"
+                type="text"
+                value={""}
+                placeholder="Enter First Name"
+              />
+              <input
+                class="form-control searchInput"
+                type="text"
+                value={""}
+                placeholder="Enter Last Name"
+              />
+              <input
+                class="form-control searchInput"
+                type="text"
+                value={""}
+                placeholder="Enter Date"
+              />
+            </div>
+            <div class="bufferSearch"></div>
+            <div class="searchButtons">
+              <button class="btn btn-default btn-FL">Search</button>
+              <button class="btn btn-default btn-FL">Cancel</button>
+            </div>
+          </div>
           <div id="family">
-            <div id="add-family">
-              <div class="blank-person-header">
-  						</div>
-      				<p class="add">
-      					Add Family Members
-      				</p>
+            <div id="add-family" onClick={this.createNewPerson}>
+              <div class="search-add"></div>
+                <p class="add">Add Family Members</p>
               <div class="search-add">
-                <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true" onClick={this.createNewPerson}>
+                <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true">
                 </i>
               </div>
             </div>
             <div id="buffer-div">
             </div>
-            <div class="mappedPeople">
-          	{mappedPeople}
+            <div class="familySortDiv">
+              <div class="staged-header-container">
+                <div class="familyHeader1">
+                  <span onClick={() => this.sortEvents('person')} class="familySort">Person</span>
+                </div>
+                <div class="familyHeader2">
+                  {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
+                  <span onClick={() => this.sortEvents('date')} class="familySort"> Date </span>
+                </div>
+                <div class="familyHeader3">
+                  <p>Edit</p>
+                  <p class="familyHeadText">Map</p>
+                </div>
+              </div>
+              <div class="mappedPeople">
+          	   {mappedPeople}
+             </div>
             </div>
           </div>
         </div>
