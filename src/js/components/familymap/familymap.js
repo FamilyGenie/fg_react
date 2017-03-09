@@ -95,7 +95,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.componentDidMount();
+		this.drawMap();
 	}
 
     // this function will be called when the user hits the button to add a year and then re-draw the map
@@ -107,7 +107,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.componentDidMount();
+		this.drawMap();
 	}
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
@@ -135,7 +135,15 @@ export default class FamilyMap extends React.Component {
 			starAge: evt.target.value
 		});
 		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
-		this.componentDidMount();
+		this.drawMap();
+	}
+
+	componentDidMount = () => {
+		this.drawMap();
+	}
+
+	componentDidUpdate = () => {
+		this.drawMap();
 	}
 
 	render = () => {
@@ -193,7 +201,8 @@ export default class FamilyMap extends React.Component {
 	}
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
-	componentDidMount = () => {
+	drawMap = () => {
+
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
 		// TODO: need to standardize on where to store these constants
@@ -279,7 +288,7 @@ export default class FamilyMap extends React.Component {
 		this.bringAllChildrenToFront();
 
 		// Last, we need to see about resizing the drawing
-	} // end of ComponentDidMount
+	} // end of drawMap
 
 	checkAllChildrenForBioParents = () => {
 		for (let child of this.children) {
