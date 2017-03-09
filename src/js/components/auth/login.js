@@ -27,7 +27,9 @@ export default class Login extends React.Component {
 	}
 
 	// when creds are submitted, call the login action from authActions
-	submitCredentials = () => {
+	submitCredentials = (evt) => {
+		// this next line will prevent the default form behavior which is to call the submit event of the form, which refreshes the form and causes it to not log the user in
+		evt.preventDefault();
 		this.props.login(this.state.email, this.state.password);
 	}
 
@@ -48,6 +50,15 @@ export default class Login extends React.Component {
       time: 0,
       transition: 'scale'
     };
+
+    componentDidMount = () => {
+    	this.setState({
+    		email: document.getElementById('userName').value,
+    		password: document.getElementById('password').value
+    	});
+
+    	console.log('in login componentDidMount: ', document.getElementById('userName').value, document.getElementById('password').value);
+    }
 
 	render = () => {
 	    return (
@@ -73,7 +84,7 @@ export default class Login extends React.Component {
 								<input
 									type="password"
 									class="form-control form"
-									id="psw"
+									id="password"
 									placeholder="Enter password"
 									required
 									onChange={this.updatePassword.bind(this)}
