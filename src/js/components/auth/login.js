@@ -18,51 +18,25 @@ import AlertContainer from 'react-alert';
 	}
 )
 export default class Login extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			email: '',
-			password: ''
-		}
-	}
 
 	// when creds are submitted, call the login action from authActions
 	submitCredentials = (evt) => {
 		// this next line will prevent the default form behavior which is to call the submit event of the form, which refreshes the form and causes it to not log the user in
 		evt.preventDefault();
-		this.props.login(this.state.email, this.state.password);
-	}
-
-	// TODO: need to figure out how to make this so that you don't have to blur out of the fields in order for what the user has entered to be able to be passed to the login method. I don't know how do do this in React.
-	updateEmail = (evt) => {
-		this.setState({email: evt.target.value});
-	}
-
-	updatePassword = (evt) => {
-		this.setState({password: evt.target.value});
-
+		this.props.login(document.getElementById('userName').value, document.getElementById('password').value);
 	}
 
 	alertOptions = {
-      offset: 600,
-      position: 'middle',
-      theme: 'light',
-      time: 0,
-      transition: 'scale'
-    };
-
-    componentDidMount = () => {
-    	this.setState({
-    		email: document.getElementById('userName').value,
-    		password: document.getElementById('password').value
-    	});
-
-    	console.log('in login componentDidMount: ', document.getElementById('userName').value, document.getElementById('password').value);
-    }
+		offset: 600,
+		position: 'middle',
+		theme: 'light',
+		time: 0,
+		transition: 'scale'
+	};
 
 	render = () => {
-	    return (
-	    	<div class="mainDiv">
+		return (
+			<div class="mainDiv">
 					<div className="login-body">
 						<form className="authForm">
 							<div className="login-h3">
@@ -78,8 +52,6 @@ export default class Login extends React.Component {
 										id="userName"
 										placeholder="Enter email"
 										required
-										onChange={this.updateEmail.bind(this)}
-
 								/>
 								<input
 									type="password"
@@ -87,8 +59,6 @@ export default class Login extends React.Component {
 									id="password"
 									placeholder="Enter password"
 									required
-									onChange={this.updatePassword.bind(this)}
-
 								/>
 							</div>
 							<br/>
@@ -103,8 +73,8 @@ export default class Login extends React.Component {
 						</form>
 					</div>
 					{/* This is the container for the alerts we are using */}
-			    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
-		    </div>
+					<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
+			</div>
 		)
-    }
+	}
 }
