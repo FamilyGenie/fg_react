@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
 import moment from 'moment';
+import SearchInput, {createFilter} from 'react-search-input';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
 // this next line is for the new person modal
@@ -27,7 +28,9 @@ import { openNewPersonModal } from '../../actions/modalActions';
       return person
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
+    KEYS_TO_FILTERS:['fName', 'lName'],
   };
+
 },
   (dispatch) => {
     return {
@@ -42,7 +45,11 @@ export default class PeopleSearch extends React.Component {
     super(props);
     this.state = {
       reverse: false,
-      mappedPeople: this.props.people.map((person) => {
+      // mappedPeople: this.props.people.map((person) => {
+      //   return <PeopleSearchLineItem person={person} key={person._id}/>
+      // }),
+      searchTerm: "",
+      mappedPeople: this.props.people.filter(createFilter("", this.props.KEYS_TO_FILTERS)).map((person) => {
         return <PeopleSearchLineItem person={person} key={person._id}/>
       }),
     };
@@ -142,10 +149,25 @@ export default class PeopleSearch extends React.Component {
     this.setState({mappedPeople: mappedPeople});
     return mappedPeople;
   }
+  searchUpdate = (term) => {
+    const mappedPeople = this.props.people.filter(createFilter(term, this.props.KEYS_TO_FILTERS)).map((person) => {
+      return <PeopleSearchLineItem person={person} key={person._id}/>
+    });
+
+    this.setState({
+      searchTerm: term,
+      mappedPeople: mappedPeople,
+    });
+  }
+  // for cancel, call this.searchUpdate with null as an argument
+
 	render = () => {
     const { people, modalIsOpen } = this.props;
     const { reverse, mappedPeople } = this.state;
-    console.log("the peeps", people);
+    const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
+    console.log("the filtered people", filteredPeople);
+
+
     return (
       <div class="mainDiv">
     		<div class="header-div">
@@ -156,11 +178,12 @@ export default class PeopleSearch extends React.Component {
             <h3 class="searchH">Search</h3>
             <div class="bufferSearch"></div>
             <div class="searchContent">
-              <input
-                class="form-control searchInput"
+              <SearchInput
+                class="form-control searchInput search-input"
                 type="text"
                 value={""}
                 placeholder="Enter First Name"
+                onChange={this.searchUpdate}
               />
               <input
                 class="form-control searchInput"
@@ -177,7 +200,7 @@ export default class PeopleSearch extends React.Component {
             </div>
             <div class="bufferSearch"></div>
             <div class="searchButtons">
-              <button class="btn btn-default btn-FL">Search</button>
+              <button class="btn btn-default btn-FL" >Search</button>
               <button class="btn btn-default btn-FL">Cancel</button>
             </div>
           </div>
