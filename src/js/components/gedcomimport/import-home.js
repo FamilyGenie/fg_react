@@ -2,10 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
+import AlertContainer from 'react-alert';
+
 import { runImport, importRelationships } from '../../actions/importActions';
 import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../../actions/stagedEventActions';
-import AlertContainer from 'react-alert';
+import { clearStagedRecords } from '../../actions/importActions';
 
 import cookie from "react-cookie";
 
@@ -52,6 +54,9 @@ const fgtoken = cookie.load('fg-access-token');
       },
       fetchStagedEvents: () => {
         dispatch(fetchStagedEvents())
+      },
+      clearStagedRecords: () => {
+        dispatch(clearStagedRecords())
       }
     }
   }
@@ -101,6 +106,11 @@ export default class ImportDashboard extends React.Component {
   importRelationships = () => {
     this.props.importRelationships();
     msg.show('You have imported new relationships. You should now review them before continuing.', {type: 'success'})
+  }
+
+  clearDB = () => {
+    var clear = confirm('This will delete all staged records. \n Make sure you have reviewed all records before continuing. \n Press "Okay" to confirm.')
+    this.props.clearStagedRecords();
   }
 
   render = () => {
@@ -268,6 +278,32 @@ export default class ImportDashboard extends React.Component {
                 */}
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="import-row">
+          <div class="import-step">
+            <p>8</p>
+          </div>
+          <div class="import-step-content">
+            <div class="step-instruction">
+              <h3 class="step-header">Clear Imported Records</h3>
+            </div>
+            <div class="step-action">
+              <div class="action-content">
+                <button class="btn button3" onClick={this.clearDB}>Clear</button>
+                <div class="action-row">
+                  Make sure that you have completed your reviews before clearing the imported records.
+                {/*
+                  <label> Ready to be Imported: </label>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
+                </div>
+                <div class="action-row">
+                  <label>  Already Imported: </label>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
+                */}
+                </div>
               </div>
             </div>
           </div>
