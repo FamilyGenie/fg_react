@@ -109,8 +109,10 @@ export default class ImportDashboard extends React.Component {
   }
 
   clearDB = () => {
-    var clear = confirm('This will delete all staged records. \n Make sure you have reviewed all records before continuing. \n Press "Okay" to confirm.')
-    this.props.clearStagedRecords();
+    var clear = confirm('This will delete all staged records. \n Make sure you have reviewed all records before continuing. \n Press "OK" to confirm.');
+    if (clear) {
+      this.props.clearStagedRecords();
+    }
   }
 
   render = () => {
