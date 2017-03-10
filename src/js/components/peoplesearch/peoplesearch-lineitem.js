@@ -27,14 +27,15 @@ export default class PeopleSearchLineItem extends React.Component {
 		}
 	}
 
-   // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page. 
-  birthDate = () => {
-    try {
-      return this.props.event.eventDate.toString().substr(0,10);
-    } catch (TypeError) {
-      return "no birthDate"
-    }
-  }
+   // this function needs to be run here for the birthdate to populate properly. Cannot be done in the props or it will return undefined, and break the page.
+  // birthDate = () => {
+  //   try {
+  //     return this.props.event.eventDate.toString().substr(0,10);
+  //   } catch (TypeError) {
+  //     return "no birthDate";
+  //   }
+  // }
+
 	render = () => {
 
     const { person } = this.props;
@@ -55,7 +56,7 @@ export default class PeopleSearchLineItem extends React.Component {
           </div>
           <div class="date-div">
             <p class="person-text">
-              {this.birthDate()}
+              {person.eventDateUser}
             </p>
           </div>
         </div>

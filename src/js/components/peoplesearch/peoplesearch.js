@@ -4,6 +4,7 @@ import { hashHistory } from 'react-router';
 import Modal from 'react-modal';
 import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
+import moment from 'moment';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
 // this next line is for the new person modal
@@ -16,15 +17,14 @@ import { openNewPersonModal } from '../../actions/modalActions';
     user: store.user.user,
     userFetched: store.user.fetched,
     people: store.people.people.map((person) => {
-      console.log("in the props", person);
-      var event = store.events.events.find((e) => {
-        console.log(e);
-        return (person._id === e.person_id && e.eventType === "Birth");
+      var bDate = store.events.events.find((e) => {
+        return (person._id === e.person_id && e.eventType.toLowerCase() === "birth");
       })
-      if (event) {
-        person.birthDate === event.eventDate;
+      if (bDate) {
+        person.eventDate = bDate.eventDate;
+        person.eventDateUser = (bDate.eventDateUser ? bDate.eventDateUser: (bDate.eventDate ? bDate.eventDate.substr(0,10): ""));
       }
-      return person;
+      return person
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
   };
@@ -60,7 +60,6 @@ export default class PeopleSearch extends React.Component {
     this.props.openNewPersonModal();
   }
   sortPeople = (sortType) => {
-    console.log("at the top", this.props.people, sortType);
     this.setState({reverse: !this.state.reverse})
     sortType = sortType || '';
     var sortedPeople;
@@ -78,7 +77,7 @@ export default class PeopleSearch extends React.Component {
         })
       }
       else if (sortType === 'lName') {
-        sortedPeople = this.props.people.sort (function(a, b) {
+        sortedPeople = this.props.people.sort(function(a, b) {
           if (a.lName != undefined && b.lName != undefined) {
             if (b.lName != a.lName) {
               return b.lName.localeCompare(a.lName);
@@ -87,17 +86,17 @@ export default class PeopleSearch extends React.Component {
           else {
             return b.lName - a.lName;
           }
-        })
+        });
       }
       else if (sortType === 'date') {
-        sortedPeople = this.props.people.sort (function(a, b) {
-          if (a.birthDate && b.birthDate ) {
-            return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
+        sortedPeople = this.props.people.sort(function(a, b) {
+          if (a.eventDate && b.eventDate ) {
+            return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
           else {
             return b.eventDate - a.eventDate;
           }
-        })
+        });
       }
     }
     else {
@@ -127,8 +126,8 @@ export default class PeopleSearch extends React.Component {
       }
       else if (sortType === 'date') {
         sortedPeople = this.props.people.sort (function(a, b) {
-          if (b.birthDate && a.birthDate ) {
-            return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
+          if (b.eventDate && a.eventDate ) {
+            return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
           else {
             return a.eventDate - b.eventDate;
@@ -146,7 +145,7 @@ export default class PeopleSearch extends React.Component {
 	render = () => {
     const { people, modalIsOpen } = this.props;
     const { reverse, mappedPeople } = this.state;
-
+    console.log("the peeps", people);
     return (
       <div class="mainDiv">
     		<div class="header-div">
