@@ -14,7 +14,7 @@ import user from './userReducer'
 import stagedPeople from './stagedPeopleReducer'
 import importRecords from './importRecords'
 import stagedParentalRels from './stagedParentalRelsReducer'
-import stagedPairBondRels from './stagedPairbondRelsReducer'
+import stagedPairBondRels from './stagedPairBondRelsReducer'
 import stagedEvents from './stagedEventsReducer'
 import historyBarReducer from './historyBarReducer'
 

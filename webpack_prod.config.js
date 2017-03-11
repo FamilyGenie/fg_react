@@ -3,7 +3,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+// var HtmlWebpackPlugin = require('html-webpack-plugin');
 // var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // var StatsPlugin = require('stats-webpack-plugin');
 
@@ -26,11 +26,11 @@ module.exports = {
         // handles creating an index.html file and injecting assets. necessary because assets
         // change name because the hash part changes. We want hash name changes to bust cache
         // on client browsers.
-        new HtmlWebpackPlugin({
-            template: 'src/index.template.html',
-            inject: 'body',
-            filename: 'index.min.html'
-        }),
+        // new HtmlWebpackPlugin({
+        //     template: 'src/index.template.html',
+        //     inject: 'body',
+        //     filename: 'index.min.html'
+        // }),
         // extracts the css from the js files and puts them on a separate .css file. this is for
         // performance and is used in prod environments. Styles load faster on their own .css
         // file as they dont have to wait for the JS to load.
