@@ -1265,23 +1265,17 @@ export default class FamilyMap extends React.Component {
 	getRelTextPrefix(relType) {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "m: ";
-		} else if ( /[In]formal/.test(relType) ) {
-			return "i: ";
-		} else if ( /[Ll]iving [Tt]ogether/.test(relType) ) {
-			return "l: ";
+		} else {
+			return "s: ";
 		}
-		return "";
 	}
 
 	getRelTextEndPrefix(relType) {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "d: ";
-		} else if ( /[In]formal/.test(relType) ) {
-			return "e: ";
-		} else if ( /[Ll]iving [Tt]ogether/.test(relType) ) {
+		} else {
 			return "e: ";
 		}
-		return "";
 	}
 
 	drawFemaleSymbol(cx, cy) {
@@ -1425,7 +1419,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
+			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
 		} else if ( /Extra-Marital-Mated/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1436,7 +1430,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 		} else if ( /Extra-Marital/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1447,7 +1441,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("****************************************************************************************************************************************************************************************************************");
+			.text("********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************");
 		} else if ( /Stranger/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1458,7 +1452,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
 		} else if ( /Coersive/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1469,7 +1463,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
 		} else if ( /Restitution/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1480,7 +1474,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
 			line = line
@@ -1497,7 +1491,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
+			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 		}
 
 		return line;
@@ -1583,13 +1577,6 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		// line = d3.select("svg")
-		// .append("path")
-		// .attr("id","relline" + personTwo._id + personOne._id)
-		// .attr("d", lineStrArr.join(" "))
-		// .attr("fill", "transparent");
-
-		// I don't understand why, but the Angular dropdown is putting in either "0." or "0:" in front of the database value, so using a regex to check relationship type
 		if ( /[Bb]iological/.test(subType) ) {
 			return d3.select("svg")
 				.append("path")
