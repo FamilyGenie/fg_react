@@ -76,6 +76,9 @@ export default class FamilyMap extends React.Component {
 	firstChildYWithAdoptions = 0;
 	textLineSpacing = 18;
 	textSize = '.9em';
+	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
+	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
+	errorShown = false;
 
 	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
 	alertOptions = {
@@ -511,7 +514,11 @@ export default class FamilyMap extends React.Component {
 
 			} else {
 				// if not both a mom and or a dad, print error message.
-				alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
+				if (!this.errorShown) {
+					alert("There is a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
+					this.errorShown = true;
+
+				}
 			}
 		} // end of let child of this.children
 
@@ -700,8 +707,11 @@ export default class FamilyMap extends React.Component {
 				return child._id === parent._id;
 			})
 			if (found) {
-				alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
-				return false;
+				if (!errorShown) {
+					alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
+					this.errorShown = true;
+					return false;
+				}
 			}
 		}
 		// if made it through all parents and there are none who are also children, return true so rest of process will continue
@@ -733,10 +743,7 @@ export default class FamilyMap extends React.Component {
 				}
 
 				if (!parentalRel) {
-					// do nothing
-
-					// alert("Error creating map. Possibly one of the children in the map are also listed as a parent of someone else who would be a child in the map. The map will draw, and the person who is drawn off to the side is someone who has a parent that is a child in this map. Fix that error and then come back.")
-					// return false;
+					// do nothing, there is no relationship between this parent and the child passed into the addParentsNotInPairBondsEach function. This is fine, it just means that this parent is a parent of another child in the map, and not this specific child.
 				} else {
 					// we found a parentalRel, so now add a pairBond record so the parent will be drawn in the drawAllPairBonds function.
 					// if one of the single Parents is an adopted parent, then make sure that the first child drawn is below the parentalRel line
@@ -769,7 +776,7 @@ export default class FamilyMap extends React.Component {
 				return false;
 			}
 		}
-	}
+	} // end addParentsNotInPairBondsEach
 
 	getAllPairBonds(): boolean {
 		let pairBondTemp = [];
@@ -896,8 +903,11 @@ export default class FamilyMap extends React.Component {
 
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					return false;
+					if (!errorShown) {
+						alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+						this.errorShown = true;
+						return false;
+					}
 					// TODO: We can instead just remove this record from the parentalRel array.
 					// console.log('before splice ', this.parentRels);
 					// var i = this.parentRels.indexOf(parentRel);
@@ -1008,6 +1018,7 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
+
 		// this is the array that the rest of this component gets information from about the people to draw. So call a function that takes the people array from props and adds the birth and death info to each person. Note that the people array from props is a copy of the store.people.people array.
 		this.people = this.createLocalPeople(this.props.people, this.props.events);
 
@@ -1622,7 +1633,10 @@ export default class FamilyMap extends React.Component {
 			.attr("startOffset", "50%")
 			.text("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		} else {
-			alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
+			if (!this.errorShown) {
+				alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
+				this.errorShown = true;
+			}
 		}
 	}
 
@@ -1653,8 +1667,10 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// mom is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
-					// alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					if (!errorShown) {
+						alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
+						this.errorShown = true;
+					}
 				}
 			}
 
@@ -1677,9 +1693,10 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// dad is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
-					//	alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
-
+					if (!errorShown) {
+						alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
+						this.errorShown = true;
+					}
 				}
 			}
 		}
