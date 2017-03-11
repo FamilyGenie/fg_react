@@ -1045,7 +1045,6 @@ export default class FamilyMap extends React.Component {
 		var star = this.getPersonById(this.props.star_id);
 		let circle = d3.select("svg")
 			.append("svg:a")
-			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("circle")
 			.attr("cx", person.mapXPos)
 			.attr("cy", person.mapYPos)
@@ -1062,6 +1061,7 @@ export default class FamilyMap extends React.Component {
 
 	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
 	personClick(person, star) {
+		console.log('in person click with: ', person);
 		return() => {
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
@@ -1877,11 +1877,12 @@ export default class FamilyMap extends React.Component {
 
 		return d3.select("svg")
 			.append("svg:a")
-			.attr("xlink:href", "/#/peopledetails/" + person._id)
+			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("id", person._id)
 			.attr("class", "can-click")
+			.on("click", this.personClick(person))
 			.attr("stroke", "gray")
 			.attr("stroke-width", 3)
 			.attr("fill", "gray");
