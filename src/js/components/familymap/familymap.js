@@ -903,7 +903,7 @@ export default class FamilyMap extends React.Component {
 
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					if (!errorShown) {
+					if (!this.errorShown) {
 						alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
 						this.errorShown = true;
 						return false;
@@ -1072,7 +1072,7 @@ export default class FamilyMap extends React.Component {
 
 	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
 	personClick(person, star) {
-		console.log('in person click with: ', person);
+		// console.log('in person click with: ', person);
 		return() => {
 			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
@@ -1081,6 +1081,7 @@ export default class FamilyMap extends React.Component {
 					return parentRel.parent_id === person._id;
 				});
 				if (parentalRel) {
+					// this is checking to see if the user had created a parentalRel record, but did not assign a person to it. If the parentalRel Record starts with a Z, then it was created locally by this maps algorithm. If it does not start with a Z then the user created it and it exists in the store.
 					var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
 				} else {
 					// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
@@ -1561,6 +1562,19 @@ export default class FamilyMap extends React.Component {
 	drawParentalLine(parent, child, momOrDad, subType) {
 		let lineData = [];
 
+		// var tip = d3.tip()
+		// 	.attr('class', 'd3-tip')
+		// 	.offset([-10, 0])
+		// 	.html(function(d) {
+		// 	// return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+		// 	return "<strong>Frequency:</strong>";
+		// });
+
+		// Define the div for the tooltip
+		var div = d3.select("body").append("div")
+		    .attr("class", "tooltip")
+		    .style("opacity", 0);
+
 		if (momOrDad === "mom") {
 			lineData = [
 				{"x": parent.mapXPos, "y": parent.mapYPos + 40},
@@ -1577,33 +1591,43 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		if ( /[Bb]iological/.test(subType) ) {
-			return d3.select("svg")
+		var line = d3.select("svg")
 				.append("path")
 				.attr("d", lineFunction(lineData))
+				.on("mouseover", function(d) {
+		            div.transition()
+		                .duration(200)
+		                .style("opacity", .9);
+		            div.html({parent.fName} + ' and ' + {child.fName});
+		                .style("left", (d3.event.pageX) + "px")
+		                .style("top", (d3.event.pageY - 28) + "px");
+		            })
+		        .on("mouseout", function(d) {
+		            div.transition()
+		                .duration(500)
+		                .style("opacity", 0);
+		            }
+			);
+
+		if ( /[Bb]iological/.test(subType) ) {
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
-				.attr("fill", "none");
+				.attr("fill", "none")
 		} else if ( /[Ss]tep/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("12,8"))
 				.attr("fill", "none");
 		} else if ( /[Aa]dopted/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("4,8"))
 				.attr("fill", "none");
 		} else if ( /Foster/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("2,8"))
