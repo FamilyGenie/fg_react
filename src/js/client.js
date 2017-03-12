@@ -32,8 +32,8 @@ ReactDOM.render(<Provider store={store}>
 			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
 			<Route path="/stagedparentalrels(/:_id)" name="Staged Parental Relationships" component={StagedParentalRels}></Route>
 			<Route path='/auth/login' name='Login' component={Login}></Route>
-      <Route path="/chronology" name="Chronology" component={Chronology}></Route>
-      <Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
+      		<Route path="/chronology" name="Chronology" component={Chronology}></Route>
+      		<Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 		</Route>
 	</Router>
 </Provider>, app);
