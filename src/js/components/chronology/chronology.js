@@ -33,7 +33,6 @@ export default class Chronology extends React.Component {
   }
 
   sortEvents = (sortType) => {
-    this.setState({reverse : !this.state.reverse})
     sortType = sortType || '';
     var sortedEvents;
     if (this.state.reverse) {
@@ -140,7 +139,7 @@ export default class Chronology extends React.Component {
     var mappedEvents = sortedEvents.map(event =>
       <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
     );
-    this.setState({mappedEvents: mappedEvents});
+    this.setState({mappedEvents: mappedEvents, reverse : !this.state.reverse});
     return mappedEvents
   }
 

@@ -103,7 +103,7 @@ export default class Layout extends React.Component {
                     <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>PEOPLE</a>
                   </li>
                   <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondsearch/')}}>PAIRBOND RELS</a>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondrelsearch/')}}>PAIRBOND RELS</a>
                   </li>
                   <li>
                     <a class="navbarright" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>PARENTAL RELS</a>
