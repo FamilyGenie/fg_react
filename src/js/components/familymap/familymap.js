@@ -1573,6 +1573,7 @@ export default class FamilyMap extends React.Component {
 		// Define the div for the tooltip
 		var div = d3.select("body").append("div")
 		    .attr("class", "tooltip")
+		    .attr("fill", "white")
 		    .style("opacity", 0);
 
 		if (momOrDad === "mom") {
@@ -1597,8 +1598,9 @@ export default class FamilyMap extends React.Component {
 				.on("mouseover", function(d) {
 		            div.transition()
 		                .duration(200)
-		                .style("opacity", .9);
-		            div.html({parent.fName} + ' and ' + {child.fName});
+		                .style("opacity", 1);
+		            div.html("<span class='relToolTip'>" + parent.fName + " and " + child.fName +
+		            	"</span>")
 		                .style("left", (d3.event.pageX) + "px")
 		                .style("top", (d3.event.pageY - 28) + "px");
 		            })
