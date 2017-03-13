@@ -25,7 +25,6 @@ export default class Layout extends React.Component {
 	constructor (props) {
 		super(props);
 		// this variable will store whether the modal window is open or not
-		console.log('in layout constructor with: ', this.props);
 		this.state = {
 			historyBarShowing: false,
 			isLoggedIn: false,
