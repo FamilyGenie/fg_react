@@ -6,7 +6,6 @@ import moment from 'moment';
 import Modal from 'react-modal';
 import Legend from './legend';
 
-import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
 import { openNewPersonModal, setNewPersonModal } from '../../actions/modalActions';
 
 import NewPerson from '../newperson/newperson';
@@ -34,9 +33,6 @@ import NewPerson from '../newperson/newperson';
 	},
 	(dispatch) => {
 		return {
-			createNewPerson: (star_id, fName, sexAtBirth, parentalRel_id) => {
-				dispatch(createNewPersonInMap(star_id, fName, sexAtBirth, parentalRel_id));
-			},
 			openNewPersonModal: () => {
 				dispatch(openNewPersonModal());
 			},
@@ -198,7 +194,7 @@ export default class FamilyMap extends React.Component {
 			      contentLabel="Modal"
 			      className="detail-modal"
 			    >
-			      <NewPerson calledFromMap={true} starFromMap={this.getPersonById(this.props.star_id)}/>
+			      <NewPerson/>
 			    </Modal>
 
 			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
@@ -1056,7 +1052,6 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
-		var star = this.getPersonById(this.props.star_id);
 		let circle = d3.select("svg")
 			.append("svg:a")
 			.append("circle")
@@ -1065,7 +1060,7 @@ export default class FamilyMap extends React.Component {
 			.attr("r", 40)
 			.attr("id", person._id)
 			.attr("class", "can-click")
-			.on("click", this.personClick(person, star))
+			.on("click", this.personClick(person))
 			.style("stroke", "black")
 			.style("stroke-width", 3)
 			.style("fill", "white");
@@ -1073,31 +1068,29 @@ export default class FamilyMap extends React.Component {
 		return circle;
 	}
 
-	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
-	personClick(person, star) {
-		// console.log('in person click with: ', person);
+	// when a person on the map is clicked, check to see if that person has a Z to start their ID. If not, then go to their peopledetails page. If they do, then we know this person is a parent that is not yet created of a child in the map. We know this because that is the only way a person would get a Z. In this case, we set it up and call the openNewPersonModal, so the user can create this person
+	personClick(person) {
 		return() => {
-			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
-				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
+				// if the person_id starts with a Z, then we the maps component created that person locally. We then want to find out who the child was for this person, so when we create the person in the backend, we also set them as a parent to the child. Note also that if they have a Z (and were created locally), they will only be a parent to one child on the map.
 				var parentalRel = this.parentRels.find(function(parentRel) {
 					return parentRel.parent_id === person._id;
 				});
-				// if (parentalRel) {
-				// 	// this is checking to see if the user had created a parentalRel record, but did not assign a person to it. If the parentalRel Record starts with a Z, then it was created locally by this maps algorithm. If it does not start with a Z then the user created it and it exists in the store.
-				// 	var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
-				// } else {
-				// 	// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
-				// 	var parentalRel_id = '';
-				// }
 
+				// when we get the parental rel where this person is the parent, we can get the child_id. Then, we set the store.modal.newPerson.child to this child so that when the new person modal is opened, it creates a parent child relationship record between this parent and this child just found.
 				if (parentalRel) {
 					this.props.setNewPersonModal(this.getPersonById(parentalRel.child_id));
 				} else {
-					alert("Error creating a parent. Call support.");
+					// this should never happen, and having a message to the user come up, just in case.
+					if (!this.errorShown) {
+						alert("Error creating a parent. Call support.");
+						this.errorShown = true;
+					}
 				}
+				// Open the new person modal
 				this.props.openNewPersonModal();
 			} else {
+				// if this person does not have a Z, then they already exist in the backend, and just take the user to their details page.
 				hashHistory.push('/peopledetails/' + person._id);
 			}
 		}
