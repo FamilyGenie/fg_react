@@ -2,11 +2,12 @@ import axios from 'axios';
 
 import { createEvent } from './eventsActions';
 import { createParentalRel } from './parentalRelsActions';
+import { setNewPersonModal } from './modalActions';
 
 import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function createNewPerson(person, birthEvent, parentRel1, parentRel2, starFromMap) {
+export function createNewPerson(person, birthEvent, parentRel1, parentRel2, childFromMap) {
 	// create the body in the format that the API is expecting
   	var body = { object: person };
   	var newChild;
@@ -37,10 +38,12 @@ export function createNewPerson(person, birthEvent, parentRel1, parentRel2, star
           dispatch(createParentalRel(newChild._id, parentRel2.parent_id, parentRel2.relationshipType, parentRel2.subType, parentRel2.startDateUser, parentRel2.startDate, parentRel2.endDateUser, parentRel2.endDate));
         }
 
-        // if the newPerson modal passes in starFromMap_id, that means that the newPerson modal was opened by the FamilyMap component, and we then need to make this newly created person the parent of the star of the map. because the only time the Map would call newPerson modal is if it is to create a biological parent for the star.
-        if (starFromMap) {
+        // if the newPerson modal passes in childFromMap_id, that means that the newPerson modal was opened by the FamilyMap component, and we then need to make this newly created person the parent of the child of the map. because the only time the Map would call newPerson modal is if it is to create a biological parent for the child.
+        if (childFromMap) {
           dispatch({type: "CREATE_PARENTALREL"});
-          dispatch(createParentalRel(starFromMap._id, newChild._id, (person.sexAtBirth === 'M' ? 'Father' : 'Mother'), 'Biological', birthEvent.eventDateUser, birthEvent.eventDate));
+          dispatch(createParentalRel(childFromMap._id, newChild._id, (person.sexAtBirth === 'M' ? 'Father' : 'Mother'), 'Biological', birthEvent.eventDateUser, birthEvent.eventDate));
+          // also need to set the store.newPerson modal to not have a child Id stored in it, so the next time new person modal is open, it starts off blank
+          dispatch(setNewPersonModal(null));
         }
 
         // close the modal here

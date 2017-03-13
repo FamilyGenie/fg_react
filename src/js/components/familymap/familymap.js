@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import Legend from './legend';
 
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
-import { openNewPersonModal } from '../../actions/modalActions';
+import { openNewPersonModal, setNewPersonModal } from '../../actions/modalActions';
 
 import NewPerson from '../newperson/newperson';
 
@@ -39,6 +39,9 @@ import NewPerson from '../newperson/newperson';
 			},
 			openNewPersonModal: () => {
 				dispatch(openNewPersonModal());
+			},
+			setNewPersonModal: (child) => {
+				dispatch(setNewPersonModal(child));
 			}
 		}
 	}
@@ -1080,14 +1083,19 @@ export default class FamilyMap extends React.Component {
 				var parentalRel = this.parentRels.find(function(parentRel) {
 					return parentRel.parent_id === person._id;
 				});
+				// if (parentalRel) {
+				// 	// this is checking to see if the user had created a parentalRel record, but did not assign a person to it. If the parentalRel Record starts with a Z, then it was created locally by this maps algorithm. If it does not start with a Z then the user created it and it exists in the store.
+				// 	var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+				// } else {
+				// 	// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
+				// 	var parentalRel_id = '';
+				// }
+
 				if (parentalRel) {
-					// this is checking to see if the user had created a parentalRel record, but did not assign a person to it. If the parentalRel Record starts with a Z, then it was created locally by this maps algorithm. If it does not start with a Z then the user created it and it exists in the store.
-					var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+					this.props.setNewPersonModal(this.getPersonById(parentalRel.child_id));
 				} else {
-					// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
-					var parentalRel_id = '';
+					alert("Error creating a parent. Call support.");
 				}
-				// this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
 				this.props.openNewPersonModal();
 			} else {
 				hashHistory.push('/peopledetails/' + person._id);
@@ -1595,6 +1603,7 @@ export default class FamilyMap extends React.Component {
 		var line = d3.select("svg")
 				.append("path")
 				.attr("d", lineFunction(lineData))
+				// the on mouseover is to show the parent and child's name when you hover over the line. Base code for this was found here: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
 				.on("mouseover", function(d) {
 		            div.transition()
 		                .duration(200)
