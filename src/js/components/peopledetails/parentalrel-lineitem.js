@@ -43,6 +43,7 @@ export default class ParentalRelLineItem extends React.Component {
 		// this.props.closeModal();
 		this.setState({modalIsOpen: false});
 	}
+
 	goToParent = () => {
 		hashHistory.push('/peopledetails/' + this.props.parent._id);
 		// this.props.dispatch(fetchPeople());

@@ -2,10 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
+import AlertContainer from 'react-alert';
+
 import { runImport, importRelationships } from '../../actions/importActions';
 import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../../actions/stagedEventActions';
-import AlertContainer from 'react-alert';
+import { clearStagedRecords } from '../../actions/importActions';
 
 import cookie from "react-cookie";
 
@@ -18,22 +20,24 @@ const fgtoken = cookie.load('fg-access-token');
   (store, ownProps) => {
     return {
       stagedPeople: store.stagedPeople.stagedPeople,
-      peopleImported : store.stagedPeople.stagedPeople.filter(function(p) {
-        return (p.ignore === true);
-      }),
-      peopleRemaining: store.stagedPeople.stagedPeople.filter(function(p) {
-        return (!p.ignore);
-      }),
       stagedEvents: store.stagedEvents.stagedEvents,
-      eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
-        return (e.ignore === true);
-      }),
-      eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
-        return (!e.ignore);
-      }),
-      ownProps,
-      store,
+      stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
+      stagedPairBondRels: store.stagedPairBondRels.stagedPairBondRels,
       /*
+       * peopleImported : store.stagedPeople.stagedPeople.filter(function(p) {
+       *   return (p.ignore === true);
+       * }),
+       * peopleRemaining: store.stagedPeople.stagedPeople.filter(function(p) {
+       *   return (!p.ignore);
+       * }),
+       *
+       *
+       * eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
+       *   return (e.ignore ==t= true);
+       * }),
+       * eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
+       *   return (!e.ignore);
+       * }),
        * stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
        * stagedPairbondRels: store.stagedPairbondRels.stagedPairbondRels,
        */
@@ -52,6 +56,9 @@ const fgtoken = cookie.load('fg-access-token');
       },
       fetchStagedEvents: () => {
         dispatch(fetchStagedEvents())
+      },
+      clearStagedRecords: () => {
+        dispatch(clearStagedRecords())
       }
     }
   }
@@ -77,21 +84,43 @@ export default class ImportDashboard extends React.Component {
       xhrToSend.send(formData);
   }
 
+  checkIgnore = (stagedArray) => {
+    let notIgnored = stagedArray.find((stagedItem) => {
+      return stagedItem;
+    })
+    return (!!notIgnored);
+  }
+
   onDrop = (files) => {
-    var formData = new FormData();
-    var xhr = new XMLHttpRequest();
-    formData.append('gedcom', files[0]);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
-          // TODO reload the store after processes have completed
-        } else {
-          msg.show('File upload unsuccessful', { type: 'error' })
-        }
+    
+    const { stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels } = this.props;
+    const stagedArrays = [ stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels ];
+
+    let continue_ = true;
+    for ( let stagedArray in stagedArrays ) {
+      if (this.checkIgnore(stagedArrays[stagedArray])) {
+        alert('You must clear your imported records before uploading a new file. \n Nothing will be uploaded at this time.');
+        continue_ = false; 
+        break;
       }
     }
-    this.xhr_post(xhr, config.api_url + '/uploads', formData)
+
+    if (continue_) {
+      var formData = new FormData();
+      var xhr = new XMLHttpRequest();
+      formData.append('gedcom', files[0]);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+            // TODO reload the store after processes have completed
+          } else {
+            msg.show('File upload unsuccessful', { type: 'error' })
+          }
+        }
+      }
+      this.xhr_post(xhr, config.api_url + '/uploads', formData)
+    }
   }
 
   runImport = () => {
@@ -101,6 +130,13 @@ export default class ImportDashboard extends React.Component {
   importRelationships = () => {
     this.props.importRelationships();
     msg.show('You have imported new relationships. You should now review them before continuing.', {type: 'success'})
+  }
+
+  clearDB = () => {
+    var clear = confirm('This will delete all staged records. \n Make sure you have reviewed all records before continuing. \n Press "OK" to confirm.');
+    if (clear) {
+      this.props.clearStagedRecords();
+    }
   }
 
   render = () => {
@@ -127,6 +163,7 @@ export default class ImportDashboard extends React.Component {
                     <p>This currently only accepts files from Ancestry.com</p>
                   </div>
                 </Dropzone>
+                <button onClick={() => {this.checkIgnore(this.props.stagedPeople)}}>Click</button>
               </div>
             </div>
           </div>
@@ -268,6 +305,32 @@ export default class ImportDashboard extends React.Component {
                 */}
                 </div>
                 <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="import-row">
+          <div class="import-step">
+            <p>8</p>
+          </div>
+          <div class="import-step-content">
+            <div class="step-instruction">
+              <h3 class="step-header">Clear Imported Records</h3>
+            </div>
+            <div class="step-action">
+              <div class="action-content">
+                <button class="btn button3" onClick={this.clearDB}>Clear</button>
+                <div class="action-row">
+                  Make sure that you have completed your reviews before clearing the imported records.
+                {/*
+                  <label> Ready to be Imported: </label>
+                  <p class="actionItem">{this.props.eventsRemaining.length}</p>
+                </div>
+                <div class="action-row">
+                  <label>  Already Imported: </label>
+                  <p class="actionItem">{this.props.eventsImported.length}</p>
+                */}
+                </div>
               </div>
             </div>
           </div>

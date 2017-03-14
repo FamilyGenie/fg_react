@@ -82,6 +82,25 @@ export default function reducer(
         fetching: false
       };
     }
+    case "CLEAR_STAGEDRECORDS": {
+      return {
+        ...state,
+        fetching: true
+      };
+    }
+    case "CLEAR_STAGEDRECORDS_REJECTED": {
+      return {
+        ...state,
+        fetching: false,
+        error: action.payload
+      };
+    }
+    case "CLEAR_STAGEDRECORDS_FULFILLED": {
+      return {
+        ...state,
+        fetching: false,
+      }
+    }
   }
   return state;
 }
