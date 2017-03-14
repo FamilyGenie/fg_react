@@ -13,7 +13,7 @@ import { createPerson } from '../../actions/peopleActions';
 import { createPairBondRel } from '../../actions/pairBondRelsActions';
 import { createParentalRel } from '../../actions/parentalRelsActions';
 import { closeModal, openModal} from '../../actions/modalActions';
-// import HistoryBar from '../historybar/historybar';
+import { updateHelpMessage } from '../../actions/helpMessageActions';
 
 @connect(
 	(store, ownProps) => {
@@ -70,10 +70,17 @@ import { closeModal, openModal} from '../../actions/modalActions';
 			createPerson: () => {
 				dispatch(createPerson());
 			},
+			updateHelpMessage: (msg) => {
+				dispatch(updateHelpMessage(msg));
+			},
 		}
 	}
 )
 export default class PeopleDetails extends React.Component {
+constructor(props) {
+	super(props);
+	this.props.updateHelpMessage('This is the people details page');
+}
 
 	createPerson = () => {
 		this.props.createPerson();

@@ -20,22 +20,24 @@ const fgtoken = cookie.load('fg-access-token');
   (store, ownProps) => {
     return {
       stagedPeople: store.stagedPeople.stagedPeople,
-      peopleImported : store.stagedPeople.stagedPeople.filter(function(p) {
-        return (p.ignore === true);
-      }),
-      peopleRemaining: store.stagedPeople.stagedPeople.filter(function(p) {
-        return (!p.ignore);
-      }),
       stagedEvents: store.stagedEvents.stagedEvents,
-      eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
-        return (e.ignore === true);
-      }),
-      eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
-        return (!e.ignore);
-      }),
-      ownProps,
-      store,
+      stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
+      stagedPairBondRels: store.stagedPairBondRels.stagedPairBondRels,
       /*
+       * peopleImported : store.stagedPeople.stagedPeople.filter(function(p) {
+       *   return (p.ignore === true);
+       * }),
+       * peopleRemaining: store.stagedPeople.stagedPeople.filter(function(p) {
+       *   return (!p.ignore);
+       * }),
+       *
+       *
+       * eventsImported: store.stagedEvents.stagedEvents.filter(function(e) {
+       *   return (e.ignore ==t= true);
+       * }),
+       * eventsRemaining: store.stagedEvents.stagedEvents.filter(function(e) {
+       *   return (!e.ignore);
+       * }),
        * stagedParentalRels: store.stagedParentalRels.stagedParentalRels,
        * stagedPairbondRels: store.stagedPairbondRels.stagedPairbondRels,
        */
@@ -82,21 +84,43 @@ export default class ImportDashboard extends React.Component {
       xhrToSend.send(formData);
   }
 
+  checkIgnore = (stagedArray) => {
+    let notIgnored = stagedArray.find((stagedItem) => {
+      return stagedItem;
+    })
+    return (!!notIgnored);
+  }
+
   onDrop = (files) => {
-    var formData = new FormData();
-    var xhr = new XMLHttpRequest();
-    formData.append('gedcom', files[0]);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
-          // TODO reload the store after processes have completed
-        } else {
-          msg.show('File upload unsuccessful', { type: 'error' })
-        }
+    
+    const { stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels } = this.props;
+    const stagedArrays = [ stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels ];
+
+    let continue_ = true;
+    for ( let stagedArray in stagedArrays ) {
+      if (this.checkIgnore(stagedArrays[stagedArray])) {
+        alert('You must clear your imported records before uploading a new file. \n Nothing will be uploaded at this time.');
+        continue_ = false; 
+        break;
       }
     }
-    this.xhr_post(xhr, config.api_url + '/uploads', formData)
+
+    if (continue_) {
+      var formData = new FormData();
+      var xhr = new XMLHttpRequest();
+      formData.append('gedcom', files[0]);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+            // TODO reload the store after processes have completed
+          } else {
+            msg.show('File upload unsuccessful', { type: 'error' })
+          }
+        }
+      }
+      this.xhr_post(xhr, config.api_url + '/uploads', formData)
+    }
   }
 
   runImport = () => {
@@ -139,6 +163,7 @@ export default class ImportDashboard extends React.Component {
                     <p>This currently only accepts files from Ancestry.com</p>
                   </div>
                 </Dropzone>
+                <button onClick={() => {this.checkIgnore(this.props.stagedPeople)}}>Click</button>
               </div>
             </div>
           </div>

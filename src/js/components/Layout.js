@@ -145,6 +145,9 @@ export default class Layout extends React.Component {
             <div class="help-header">
               <h3 class="history-title-1">Help Menu</h3>
             </div>
+            <div>
+            	{this.props.helpMessage.helpMessage}
+            </div>
           </div>
           <div class="history-context">
             <h3 class="history-title-2">Your History</h3>

@@ -46,7 +46,6 @@ ReactDOM.render(<Provider store={store}>
       <Route path="/chronology" name="Chronology" component={Chronology}></Route>
 
       <Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
-
 		</Route>
 	</Router>
 </Provider>, app);
