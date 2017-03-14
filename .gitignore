@@ -4,3 +4,4 @@ data
 config.js
 .DS_Store
 npm-debug.log
+src/client.min.js

@@ -15,7 +15,7 @@ import parentalRelSubTypes from './parentalRelSubTypesReducer'
 import people from './peopleReducer'
 import stagedPeople from './stagedPeopleReducer'
 import stagedParentalRels from './stagedParentalRelsReducer'
-import stagedPairBondRels from './stagedPairbondRelsReducer'
+import stagedPairBondRels from './stagedPairBondRelsReducer'
 import stagedEvents from './stagedEventsReducer'
 import user from './userReducer'
 
