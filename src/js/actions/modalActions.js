@@ -46,6 +46,13 @@ export function openNewPersonModal() {
 	}
 }
 
+export function setNewPersonModal(child) {
+	// set the type to tell the newPersonModal to open, and pass the object to be edited in the modal window as the payload
+	return function(dispatch) {
+		dispatch({type: "SET_NEWPERSON_MODAL", payload: child});
+	}
+}
+
 export function closeNewPersonModal() {
   // the reducer will change the modalIsOpen variable to false, in order to close the modal.
   return function(dispatch) {

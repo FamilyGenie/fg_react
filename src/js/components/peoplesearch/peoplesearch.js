@@ -11,7 +11,7 @@ import PeopleSearchLineItem from './peoplesearch-lineitem';
 // this next line is for the new person modal
 import NewPerson from '../newperson/newperson';
 import { openNewPersonModal } from '../../actions/modalActions';
-
+import { updateHelpMessage } from '../../actions/helpMessageActions';
 
 @connect((store, ownProps) => {
   return {
@@ -36,13 +36,19 @@ import { openNewPersonModal } from '../../actions/modalActions';
     return {
       openNewPersonModal: () => {
         dispatch(openNewPersonModal());
-      }
+      },
+      updateHelpMessage: (msg) => {
+        dispatch(updateHelpMessage(msg));
+      },
     }
   }
 )
 export default class PeopleSearch extends React.Component {
   constructor (props) {
     super(props);
+    
+    this.props.updateHelpMessage('This is the family search page');
+
     this.state = {
       reverse: false,
       searchTerm: "",

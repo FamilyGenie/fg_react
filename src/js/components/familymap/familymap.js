@@ -5,8 +5,9 @@ import { hashHistory } from 'react-router'
 import moment from 'moment';
 import Modal from 'react-modal';
 import Legend from './legend';
-import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
-import { openNewPersonModal } from '../../actions/modalActions';
+
+import { openNewPersonModal, setNewPersonModal } from '../../actions/modalActions';
+
 import NewPerson from '../newperson/newperson';
 
 @connect(
@@ -32,11 +33,11 @@ import NewPerson from '../newperson/newperson';
 	},
 	(dispatch) => {
 		return {
-			createNewPerson: (star_id, fName, sexAtBirth, parentalRel_id) => {
-				dispatch(createNewPersonInMap(star_id, fName, sexAtBirth, parentalRel_id));
-			},
 			openNewPersonModal: () => {
 				dispatch(openNewPersonModal());
+			},
+			setNewPersonModal: (child) => {
+				dispatch(setNewPersonModal(child));
 			}
 		}
 	}
@@ -74,6 +75,9 @@ export default class FamilyMap extends React.Component {
 	firstChildYWithAdoptions = 0;
 	textLineSpacing = 18;
 	textSize = '.9em';
+	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
+	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
+	errorShown = false;
 
 	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
 	alertOptions = {
@@ -93,7 +97,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.componentDidMount();
+		this.drawMap();
 	}
 
     // this function will be called when the user hits the button to add a year and then re-draw the map
@@ -105,7 +109,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.componentDidMount();
+		this.drawMap();
 	}
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
@@ -133,7 +137,15 @@ export default class FamilyMap extends React.Component {
 			starAge: evt.target.value
 		});
 		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
-		this.componentDidMount();
+		this.drawMap();
+	}
+
+	componentDidMount = () => {
+		this.drawMap();
+	}
+
+	componentDidUpdate = () => {
+		this.drawMap();
 	}
 
 	render = () => {
@@ -182,7 +194,7 @@ export default class FamilyMap extends React.Component {
 			      contentLabel="Modal"
 			      className="detail-modal"
 			    >
-			      <NewPerson calledFromMap={true} starFromMap={this.getPersonById(this.props.star_id)}/>
+			      <NewPerson/>
 			    </Modal>
 
 			    <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
@@ -191,7 +203,8 @@ export default class FamilyMap extends React.Component {
 	}
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
-	componentDidMount = () => {
+	drawMap = () => {
+
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
 		// TODO: need to standardize on where to store these constants
@@ -277,7 +290,7 @@ export default class FamilyMap extends React.Component {
 		this.bringAllChildrenToFront();
 
 		// Last, we need to see about resizing the drawing
-	} // end of ComponentDidMount
+	} // end of drawMap
 
 	checkAllChildrenForBioParents = () => {
 		for (let child of this.children) {
@@ -500,7 +513,11 @@ export default class FamilyMap extends React.Component {
 
 			} else {
 				// if not both a mom and or a dad, print error message.
-				alert("Missing biological father and/or mother record for this child:" + child.fName + " " + child.lName + ". Every child must have that information to show on a map. Even if one or both biological parents are simply sperm or egg donors. This child will not show on the map.");
+				if (!this.errorShown) {
+					alert("There is a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
+					this.errorShown = true;
+
+				}
 			}
 		} // end of let child of this.children
 
@@ -658,7 +675,9 @@ export default class FamilyMap extends React.Component {
 				}
 			}
 			dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
-			dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			// dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			dad.d3Text = this.drawCircleText(nextMaleX - 45, YPos - 25, dad, 'right');
+
 			// nextMaleX -= parentDistance;
 			this.alreadyDrawn.push(dad);
 			return nextMaleX - parentDistance;
@@ -689,8 +708,11 @@ export default class FamilyMap extends React.Component {
 				return child._id === parent._id;
 			})
 			if (found) {
-				alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
-				return false;
+				if (!errorShown) {
+					alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
+					this.errorShown = true;
+					return false;
+				}
 			}
 		}
 		// if made it through all parents and there are none who are also children, return true so rest of process will continue
@@ -722,10 +744,7 @@ export default class FamilyMap extends React.Component {
 				}
 
 				if (!parentalRel) {
-					// do nothing
-
-					// alert("Error creating map. Possibly one of the children in the map are also listed as a parent of someone else who would be a child in the map. The map will draw, and the person who is drawn off to the side is someone who has a parent that is a child in this map. Fix that error and then come back.")
-					// return false;
+					// do nothing, there is no relationship between this parent and the child passed into the addParentsNotInPairBondsEach function. This is fine, it just means that this parent is a parent of another child in the map, and not this specific child.
 				} else {
 					// we found a parentalRel, so now add a pairBond record so the parent will be drawn in the drawAllPairBonds function.
 					// if one of the single Parents is an adopted parent, then make sure that the first child drawn is below the parentalRel line
@@ -758,7 +777,7 @@ export default class FamilyMap extends React.Component {
 				return false;
 			}
 		}
-	}
+	} // end addParentsNotInPairBondsEach
 
 	getAllPairBonds(): boolean {
 		let pairBondTemp = [];
@@ -885,8 +904,11 @@ export default class FamilyMap extends React.Component {
 
 				// if there is no parent, that means that the parentalRel record has a parent_id that does not exist (Perhaps that parent has been deleted and the parentalRel record was not). So, give an error message and exit.
 				if ( !parent ) {
-					alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
-					return false;
+					if (!this.errorShown) {
+						alert("The child " + child.fName + " " + child.lName + " has a parent record, but that parent has been removed. Go to this child's detail page and review the parental records. If there is an empty record, delete it. If there is not an empty record, please contact support.");
+						this.errorShown = true;
+						return false;
+					}
 					// TODO: We can instead just remove this record from the parentalRel array.
 					// console.log('before splice ', this.parentRels);
 					// var i = this.parentRels.indexOf(parentRel);
@@ -997,6 +1019,7 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds = [];
 		this.alreadyDrawn = [];
 		this.drawnCoords = [];
+
 		// this is the array that the rest of this component gets information from about the people to draw. So call a function that takes the people array from props and adds the birth and death info to each person. Note that the people array from props is a copy of the store.people.people array.
 		this.people = this.createLocalPeople(this.props.people, this.props.events);
 
@@ -1031,17 +1054,15 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
-		var star = this.getPersonById(this.props.star_id);
 		let circle = d3.select("svg")
 			.append("svg:a")
-			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("circle")
 			.attr("cx", person.mapXPos)
 			.attr("cy", person.mapYPos)
 			.attr("r", 40)
 			.attr("id", person._id)
 			.attr("class", "can-click")
-			.on("click", this.personClick(person, star))
+			.on("click", this.personClick(person))
 			.style("stroke", "black")
 			.style("stroke-width", 3)
 			.style("fill", "white");
@@ -1049,30 +1070,35 @@ export default class FamilyMap extends React.Component {
 		return circle;
 	}
 
-	// when a person on the map is clicked, check to see if that person exists in store.people.people. If yes, then go to their peopledetails page. If not, then we know this person is a parent of the star that is not yet created. We know this because that is the only way a person would show on a map who does not yet exist in store.people.people. In this case, we call the createNewPerson dispatch, which creates the person, a birthdate event for the person, a bio mom and bio dad relationship for the person, and a parentalRel relationship where the person clicked is the parent and the star is the child. We do this because that is the only way a person would show and opens up the new personModal for the customer to edit this original information for this person.
-	personClick(person, star) {
+	// when a person on the map is clicked, check to see if that person has a Z to start their ID. If not, then go to their peopledetails page. If they do, then we know this person is a parent that is not yet created of a child in the map. We know this because that is the only way a person would get a Z. In this case, we set it up and call the openNewPersonModal, so the user can create this person
+	personClick(person) {
 		return() => {
-			// to the dispatch, pass the id of the star, which will be set as a child of the person. Also pass the fName so it can be used to make the default name of the person, and the sexAtBirth of the person clicked, to use to set the parental relationship as the mother or father.
 			if (person._id.substr(0,1) === "Z") {
-				// if the person.parentalRel_id starts with a 'Z', then it was a parentalRel created locally, and we don't want to pass it into the createNewPerson dispatch. This is because if we pass a parentalRel_id into the dispatch, then it is going to look for that parentalRel_id in the backend database, and it won't find it (because it only exists locally)
+				// if the person_id starts with a Z, then we the maps component created that person locally. We then want to find out who the child was for this person, so when we create the person in the backend, we also set them as a parent to the child. Note also that if they have a Z (and were created locally), they will only be a parent to one child on the map.
 				var parentalRel = this.parentRels.find(function(parentRel) {
 					return parentRel.parent_id === person._id;
 				});
+
+				// when we get the parental rel where this person is the parent, we can get the child_id. Then, we set the store.modal.newPerson.child to this child so that when the new person modal is opened, it creates a parent child relationship record between this parent and this child just found.
 				if (parentalRel) {
-					var parentalRel_id = (parentalRel._id.substr(0,1) === 'Z' ? '' : person.parentalRel_id);
+					this.props.setNewPersonModal(this.getPersonById(parentalRel.child_id));
 				} else {
-					// no parentalRel record was found with this person as the parent, to set the parentalRel_id to ''. But we should never get here, because the checkForBioParents function will create a parentalRel record for every Bio parent locally, whether it exists in the database or not
-					var parentalRel_id = '';
+					// this should never happen, and having a message to the user come up, just in case.
+					if (!this.errorShown) {
+						alert("Error creating a parent. Call support.");
+						this.errorShown = true;
+					}
 				}
-				// this.props.createNewPerson(star._id, person.fName, person.sexAtBirth, parentalRel_id);
+				// Open the new person modal
 				this.props.openNewPersonModal();
 			} else {
+				// if this person does not have a Z, then they already exist in the backend, and just take the user to their details page.
 				hashHistory.push('/peopledetails/' + person._id);
 			}
 		}
 	}
 
-	drawCircleText(cx, cy, person) {
+	drawCircleText(cx, cy, person, justify) {
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
 		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
@@ -1102,7 +1128,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		 return d3.select("svg").selectAll("text" + person._id)
+		var vText = d3.select("svg").selectAll("text" + person._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1113,6 +1139,14 @@ export default class FamilyMap extends React.Component {
 			.attr("font-size", this.textSize)
 			.attr("fill", "black")
 			.attr("font-weight", "600");
+
+		// if the parameter 'right' is passed into the justify variable for the function, then right justify the text on the map
+		if (justify === 'right') {
+			vText.attr('text-anchor', 'end');
+		}
+
+		// draw the text
+		return vText;
 	}
 
 	drawMaleSymbol(cx, cy) {
@@ -1243,23 +1277,17 @@ export default class FamilyMap extends React.Component {
 	getRelTextPrefix(relType) {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "m: ";
-		} else if ( /[In]formal/.test(relType) ) {
-			return "i: ";
-		} else if ( /[Ll]iving [Tt]ogether/.test(relType) ) {
-			return "l: ";
+		} else {
+			return "s: ";
 		}
-		return "";
 	}
 
 	getRelTextEndPrefix(relType) {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "d: ";
-		} else if ( /[In]formal/.test(relType) ) {
-			return "e: ";
-		} else if ( /[Ll]iving [Tt]ogether/.test(relType) ) {
+		} else {
 			return "e: ";
 		}
-		return "";
 	}
 
 	drawFemaleSymbol(cx, cy) {
@@ -1403,7 +1431,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
+			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
 		} else if ( /Extra-Marital-Mated/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1414,7 +1442,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 		} else if ( /Extra-Marital/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1425,7 +1453,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("****************************************************************************************************************************************************************************************************************");
+			.text("********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************");
 		} else if ( /Stranger/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1436,7 +1464,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
 		} else if ( /Coersive/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1447,7 +1475,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
+			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
 		} else if ( /Restitution/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
@@ -1458,7 +1486,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
 			line = line
@@ -1475,7 +1503,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
+			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 		}
 
 		return line;
@@ -1545,6 +1573,20 @@ export default class FamilyMap extends React.Component {
 	drawParentalLine(parent, child, momOrDad, subType) {
 		let lineData = [];
 
+		// var tip = d3.tip()
+		// 	.attr('class', 'd3-tip')
+		// 	.offset([-10, 0])
+		// 	.html(function(d) {
+		// 	// return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+		// 	return "<strong>Frequency:</strong>";
+		// });
+
+		// Define the div for the tooltip
+		var div = d3.select("body").append("div")
+		    .attr("class", "tooltip")
+		    .attr("fill", "white")
+		    .style("opacity", 0);
+
 		if (momOrDad === "mom") {
 			lineData = [
 				{"x": parent.mapXPos, "y": parent.mapYPos + 40},
@@ -1561,40 +1603,45 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		// line = d3.select("svg")
-		// .append("path")
-		// .attr("id","relline" + personTwo._id + personOne._id)
-		// .attr("d", lineStrArr.join(" "))
-		// .attr("fill", "transparent");
-
-		// I don't understand why, but the Angular dropdown is putting in either "0." or "0:" in front of the database value, so using a regex to check relationship type
-		if ( /[Bb]iological/.test(subType) ) {
-			return d3.select("svg")
+		var line = d3.select("svg")
 				.append("path")
 				.attr("d", lineFunction(lineData))
+				// the on mouseover is to show the parent and child's name when you hover over the line. Base code for this was found here: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
+				.on("mouseover", function(d) {
+		            div.transition()
+		                .duration(200)
+		                .style("opacity", 1);
+		            div.html("<span class='relToolTip'>" + parent.fName + " and " + child.fName +
+		            	"</span>")
+		                .style("left", (d3.event.pageX) + "px")
+		                .style("top", (d3.event.pageY - 28) + "px");
+		            })
+		        .on("mouseout", function(d) {
+		            div.transition()
+		                .duration(500)
+		                .style("opacity", 0);
+		            }
+			);
+
+		if ( /[Bb]iological/.test(subType) ) {
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
-				.attr("fill", "none");
+				.attr("fill", "none")
 		} else if ( /[Ss]tep/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("12,8"))
 				.attr("fill", "none");
 		} else if ( /[Aa]dopted/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("4,8"))
 				.attr("fill", "none");
 		} else if ( /Foster/.test(subType) ) {
-			return d3.select("svg")
-				.append("path")
-				.attr("d", lineFunction(lineData))
+			return line
 				.attr("stroke", "blue")
 				.attr("stroke-width", 2)
 				.style("stroke-dasharray", ("2,8"))
@@ -1611,7 +1658,10 @@ export default class FamilyMap extends React.Component {
 			.attr("startOffset", "50%")
 			.text("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		} else {
-			alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
+			if (!this.errorShown) {
+				alert("Parental subtype does not have type of line defined to draw: " + subType + ". This is for the parental relationship between: " + parent.fName + " " + parent.lName + " and " + child.fName + " " + child.lName);
+				this.errorShown = true;
+			}
 		}
 	}
 
@@ -1642,8 +1692,10 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// mom is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
-					// alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". This might be caused by " + mom.fName + " " + mom.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + mom.fName + " " + mom.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
+					if (!errorShown) {
+						alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + mom.fName + " " + mom.lName + ". Most likely, "  + mom.fName + " " + mom.lName + " does not have a gender assigned to them.");
+						this.errorShown = true;
+					}
 				}
 			}
 
@@ -1666,9 +1718,10 @@ export default class FamilyMap extends React.Component {
 					}
 				} else {
 					// dad is not drawn, so tell the user there is something fishy, and continue
-					alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
-					//	alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". This might be caused by " + dad.fName + " " + dad.lName + " not being in a pair bond with another parent of " + child.fName + " " + child.lName + ". It may also be that the start date of the parental relationship is before the start date of a pair bond between the parent and another parent for the child. Perhaps there is an informal relationship between " + dad.fName + " " + dad.lName + " that did start before the parenal relationship with " + child.fName + " " + child.lName + ". If so, please create that informal relationship.");
-
+					if (!errorShown) {
+						alert("There may be a problem with the parental relationship between " + child.fName + " " + child.lName + " and " + dad.fName + " " + dad.lName + ". Most likely, "  + dad.fName + " " + dad.lName + " does not have a gender assigned to them.");
+						this.errorShown = true;
+					}
 				}
 			}
 		}
@@ -1866,11 +1919,12 @@ export default class FamilyMap extends React.Component {
 
 		return d3.select("svg")
 			.append("svg:a")
-			.attr("xlink:href", "/#/peopledetails/" + person._id)
+			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("id", person._id)
 			.attr("class", "can-click")
+			.on("click", this.personClick(person))
 			.attr("stroke", "gray")
 			.attr("stroke-width", 3)
 			.attr("fill", "gray");
