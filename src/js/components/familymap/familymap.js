@@ -5,10 +5,8 @@ import { hashHistory } from 'react-router'
 import moment from 'moment';
 import Modal from 'react-modal';
 import Legend from './legend';
-
 import { createNewPersonInMap } from '../../actions/createNewPersonInMapActions';
 import { openNewPersonModal } from '../../actions/modalActions';
-
 import NewPerson from '../newperson/newperson';
 
 @connect(
