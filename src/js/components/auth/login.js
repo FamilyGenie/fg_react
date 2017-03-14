@@ -50,50 +50,50 @@ export default class Login extends React.Component {
     };
 
 	render = () => {
-	    return (
-	    	<div class="mainDiv">
-					<div className="login-body">
-						<form className="authForm">
-							<div className="login-h3">
-								<p className="loginHeader">Log In</p>
-								{/*<a className="or-sign-up" onClick={this.signUpClick}>Or, Sign Up</a>*/}
-							</div>
-							<br/>
-							<div class="login-inputs">
-								<input
-										type="email"
-										name="email"
-										class="form-control form"
-										id="userName"
-										placeholder="Enter email"
-										required
-										onChange={this.updateEmail.bind(this)}
-
-								/>
-								<input
-									type="password"
+    return (
+    	<div class="mainDiv">
+				<div className="login-body">
+					<form className="authForm">
+						<div className="login-h3">
+							<p className="loginHeader">Log In</p>
+							{/*<a className="or-sign-up" onClick={this.signUpClick}>Or, Sign Up</a>*/}
+						</div>
+						<br/>
+						<div class="login-inputs">
+							<input
+									type="email"
+									name="email"
 									class="form-control form"
-									id="psw"
-									placeholder="Enter password"
+									id="userName"
+									placeholder="Enter email"
 									required
-									onChange={this.updatePassword.bind(this)}
+									onChange={this.updateEmail.bind(this)}
 
-								/>
-							</div>
-							<br/>
-							<div className="w-login-button">
-								<button onClick={this.submitCredentials.bind(this)} className="btn w-l-button btn-info">LOG IN
-								</button>
-							</div>
-							<div className="checkbox">
-								{/*<label className="rememberUser"><input type="checkbox" value=""/>Remember Me</label>*/}
-								<a className="forgot" href="">Forgot password?</a>
-							</div>
-						</form>
-					</div>
-					{/* This is the container for the alerts we are using */}
-			    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
-		    </div>
+							/>
+							<input
+								type="password"
+								class="form-control form"
+								id="psw"
+								placeholder="Enter password"
+								required
+								onChange={this.updatePassword.bind(this)}
+
+							/>
+						</div>
+						<br/>
+						<div className="w-login-button">
+							<button onClick={this.submitCredentials.bind(this)} className="btn w-l-button btn-info">LOG IN
+							</button>
+						</div>
+						<div className="checkbox">
+							{/*<label className="rememberUser"><input type="checkbox" value=""/>Remember Me</label>*/}
+							<a className="forgot" href="">Forgot password?</a>
+						</div>
+					</form>
+				</div>
+				{/* This is the container for the alerts we are using */}
+		    	<AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
+	    </div>
 		)
-    }
+  }
 }

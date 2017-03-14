@@ -28,7 +28,7 @@ import { openNewPersonModal } from '../../actions/modalActions';
       return person
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
-    KEYS_TO_FILTERS:['fName', 'lName'],
+    KEYS_TO_FILTERS:['fName', 'lName', 'eventDateUser', 'eventDate'],
   };
 
 },
@@ -159,13 +159,24 @@ export default class PeopleSearch extends React.Component {
       mappedPeople: mappedPeople,
     });
   }
-  // for cancel, call this.searchUpdate with null as an argument
+
+  // if we ever figure out how to clear the search input field, this is the function we would use to reset the family list
+
+  // clearSearch = () => {
+  //   this.setState({
+  //     searchTerm: "",
+  //     mappedPeople: this.props.people.filter(createFilter("", this.props.KEYS_TO_FILTERS)).map((person) => {
+  //       return <PeopleSearchLineItem person={person} key={person._id}/>
+  //     }),
+  //   });
+  //   this.refs.searchBox = "";
+  // }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
     const { reverse, mappedPeople } = this.state;
     const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
-    console.log("the filtered people", filteredPeople);
+    console.log("in render", this.state.searchTerm);
 
 
     return (
@@ -174,36 +185,6 @@ export default class PeopleSearch extends React.Component {
           <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
-          <div class="familySearch">
-            <h3 class="searchH">Search</h3>
-            <div class="bufferSearch"></div>
-            <div class="searchContent">
-              <SearchInput
-                class="form-control searchInput search-input"
-                type="text"
-                value={""}
-                placeholder="Enter First Name"
-                onChange={this.searchUpdate}
-              />
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Last Name"
-              />
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Date"
-              />
-            </div>
-            <div class="bufferSearch"></div>
-            <div class="searchButtons">
-              <button class="btn btn-default btn-FL" >Search</button>
-              <button class="btn btn-default btn-FL">Cancel</button>
-            </div>
-          </div>
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
               <div class="search-add"></div>
@@ -216,17 +197,28 @@ export default class PeopleSearch extends React.Component {
             <div id="buffer-div">
             </div>
             <div class="familySortDiv">
-              <div class="staged-header-container">
+              <div class="family-header-container">
                 <div class="familyHeader1">
+                  <span class="familySort">Sort:</span>
+                </div>
+                <div class="familyHeader2">
                   <span onClick={() => this.sortPeople('fName')} class="familySort">First Name</span>
                 </div>
-                <div class="familyHeader1">
+                <div class="familyHeader2">
                   <span onClick={() => this.sortPeople('lName')} class="familySort">Last Name</span>
                 </div>
                 <div class="familyHeader2">
                   {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
                   <span onClick={() => this.sortPeople('date')} class="familySort"> Date </span>
                 </div>
+                <SearchInput
+                  class=""
+                  type="text"
+                  value={this.state.seachTerm}
+                  ref="searchBox"
+                  placeholder=""
+                  onChange={this.searchUpdate}
+                />
                 <div class="familyHeader3">
                   <p>Edit</p>
                   <p class="familyHeadText">Map</p>

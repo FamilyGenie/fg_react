@@ -59,6 +59,15 @@
   height: 600px;
   margin-top: 20px;
 }
+.family-header-container {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  height: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: CabinMI;
+}
 #person-div {
   display: flex;
   flex-direction: row;
@@ -297,16 +306,16 @@
   margin-bottom: 20px;
 }
 .familyHeader1 {
-  width: 25%;
+  width: 30px;
   height: 30px;
   text-align: left;
-  margin-right: 321px;
   margin-left: 12px;
+  margin-right: 20px;
   display: flex;
   align-items: center
 }
 .familyHeader2 {
-  width: 172px;
+  width: 80px;
   height: 30px;
   text-align: left;
   display: flex;
@@ -316,6 +325,8 @@
   display: flex;
   flex-direction: row;
   width: 65px;
+  margin-left: auto;
+  align-items: center;
 }
 .familyHeadText {
   margin-left: 9px;
