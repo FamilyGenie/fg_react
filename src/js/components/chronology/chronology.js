@@ -155,17 +155,17 @@ export default class Chronology extends React.Component {
         </div>
         <div class="staged-container">
           <div class='staged-header-container'>
-            <div class="chronHeader" id="firstChronHeader">
+            <div class="chronHeader1" id="firstChronHeader">
               {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
               <span onClick={() => this.sortEvents('date')} class="chronHeaderText"> Date </span>
             </div>
-            <div class="chronHeader">
+            <div class="chronHeader2">
               <span onClick={() => this.sortEvents('person')} class="chronHeaderText2">Person</span>
             </div>
-            <div class="staged-header">
+            <div class="chronHeader3">
               <span onClick={() => this.sortEvents('type')} class="chronHeaderDate">Type</span>
             </div>
-            <div class="staged-header">
+            <div class="chronHeader4">
               <p><span onClick={() => this.sortEvents('place')} class="chronHeaderDate"> Place </span></p>
             </div>
             <div class="stagedHeaderReview">
