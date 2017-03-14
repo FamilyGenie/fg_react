@@ -675,7 +675,9 @@ export default class FamilyMap extends React.Component {
 				}
 			}
 			dad.d3Symbol = this.drawMaleSymbol(nextMaleX, YPos);
-			dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			// dad.d3Text = this.drawCircleText(nextMaleX - 170, YPos - 25, dad);
+			dad.d3Text = this.drawCircleText(nextMaleX - 45, YPos - 25, dad, 'right');
+
 			// nextMaleX -= parentDistance;
 			this.alreadyDrawn.push(dad);
 			return nextMaleX - parentDistance;
@@ -1096,7 +1098,7 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
-	drawCircleText(cx, cy, person) {
+	drawCircleText(cx, cy, person, justify) {
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
 		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
@@ -1126,7 +1128,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		 return d3.select("svg").selectAll("text" + person._id)
+		var vText = d3.select("svg").selectAll("text" + person._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1137,6 +1139,14 @@ export default class FamilyMap extends React.Component {
 			.attr("font-size", this.textSize)
 			.attr("fill", "black")
 			.attr("font-weight", "600");
+
+		// if the parameter 'right' is passed into the justify variable for the function, then right justify the text on the map
+		if (justify === 'right') {
+			vText.attr('text-anchor', 'end');
+		}
+
+		// draw the text
+		return vText;
 	}
 
 	drawMaleSymbol(cx, cy) {
