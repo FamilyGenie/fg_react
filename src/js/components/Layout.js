@@ -40,31 +40,17 @@ export default class Layout extends React.Component {
     this.props.dispatch(fetchStagedParentalRels());
     this.props.dispatch(fetchStagedPairBondRels());
 	}
+  
+  // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
+  redirect = (url) => {
+    // only dispatch logout if we are trying to logout
+    if (url === '/auth/logout') {
+      this.props.dispatch(logout());
+    }
 
-	logIn = () => {
-  		hashHistory.push('/auth/login');
-	}
-
-	logOut = () => {
-		this.props.dispatch(logout());
-		hashHistory.push('/auth/login');
-	}
-
-	goToPeopleSearch = () => {
-		hashHistory.push('/');
-	}
-
-	goToPeopleStaged = () => {
-		hashHistory.push('/stagedpeoplesearch/');
-	}
-
-  goToImport = () => {
-    hashHistory.push('/importhome/');
+    hashHistory.push(url);
   }
 
-  goToChronology = () => {
-    hashHistory.push('/chronology/');
-  }
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
 			$("#allContent").css({"width": "80%"});
@@ -91,39 +77,55 @@ export default class Layout extends React.Component {
 			        <span class="icon-bar"></span>
 			        <span class="icon-bar"></span>
 			      </button>
-						<a class="navbar-brand" onClick={this.goToPeopleSearch}>
+            {/* for the redirect function to work, we need to call an anonymous function onClick to prevent the function from being called by default (causing a loop through the endpoints).*/}
+						<a class="navbar-brand" onClick={() => {this.redirect('/')}}>
 						Family Genie <sup>&trade;</sup>
 						</a>
 			    </div>
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
 							<li>
-		            <a class="navbarright" onClick={this.goToPeopleSearch}>FAMILY LIST</a>
+		            <a class="navbarright" onClick={() => {this.redirect('/')}}>FAMILY LIST</a>
 		          </li>
       				<li>
-						    <a class="navbarright" onClick={this.goToChronology}> CHRONOLOGY </a>
+						    <a class="navbarright" onClick={() => {this.redirect('/chronology/')}}> CHRONOLOGY </a>
 					    </li>
-							<li>
-		            <a class="navbarright" onClick={this.goToImport}>IMPORT</a>
-		          </li>
-		          <li>
-		            <a class="navbarright" onClick={this.goToPeopleStaged}>STAGED LIST</a>
-		          </li>
+             <li class="dropdown">
+               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                IMPORT MENU
+                <span class="caret"></span>
+              </a>
+			          <ul class="dropdown-menu">
+                  <li>
+                    <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
+                  </li>
+                  <li>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>PEOPLE</a>
+                  </li>
+                  <li>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondrelsearch/')}}>PAIRBOND RELS</a>
+                  </li>
+                  <li>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>PARENTAL RELS</a>
+                  </li>
+			          </ul>
+			        </li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>
 		          </li>
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logIn}>LOG IN</a>
-		          </li>*/}
+              </li>
+              */}
 							<li class="dropdown">
 			          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
 								<span class="caret"></span></a>
 			          <ul class="dropdown-menu">
 			            <li><a >Profile</a></li>
 			            <li><a >Account Settings</a></li>
-									<li><a onClick={this.logIn}>Log In</a></li>
-			            <li><a onClick={this.logOut}>Log Out</a></li>
+									<li><a onClick={() => {this.redirect('/auth/login')}}>Log In</a></li>
+			            <li><a onClick={() => {this.redirect('/auth/logout')}}>Log Out</a></li>
 			          </ul>
 			        </li>
 							<li>
@@ -142,6 +144,9 @@ export default class Layout extends React.Component {
           <div class="help-menu">
             <div class="help-header">
               <h3 class="history-title-1">Help Menu</h3>
+            </div>
+            <div>
+            	{this.props.helpMessage.helpMessage}
             </div>
           </div>
           <div class="history-context">

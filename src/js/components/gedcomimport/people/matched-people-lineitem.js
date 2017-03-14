@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { updatePerson } from '../../actions/peopleActions';
+import { updatePerson } from '../../../actions/peopleActions';
 
 @connect(
   (store, ownProps) => {

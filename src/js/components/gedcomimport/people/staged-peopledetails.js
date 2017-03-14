@@ -6,7 +6,7 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
 
 @connect(
   (store, ownProps) => {
-    var stagedStar = store.stagedPeople.stagedPeople.find(function(p) {
+    const stagedStar = store.stagedPeople.stagedPeople.find(function(p) {
       return p._id === ownProps.params._id;
     });
     return {

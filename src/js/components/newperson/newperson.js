@@ -213,7 +213,7 @@ export default class NewPerson extends React.Component {
     				<div class="personDetails">
     					<div class="pDetail">
     						<input
-    							class="form-control"
+    							class="form-control detail-input"
     							type="text"
     							placeholder="Enter First Name"
                   value={this.state.personFName}
@@ -317,17 +317,19 @@ export default class NewPerson extends React.Component {
 					</div>
 				</div>
         </div>
+        <div class="bufferModal2">
+				</div>
         <div class="event-delete-modal">
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.savePerson}
 					>
 						Save
 					</button>
 					<button
 						type="button"
-						class="btn btn-default modal-delete"
+						class="btn btn-default modalFooterButton"
 						onClick={this.cancelButton}
 					>
 						Cancel

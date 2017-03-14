@@ -2,8 +2,8 @@ import React from 'react';
 import { hashHistory } from 'react-router'
 import { connect } from 'react-redux';
 
-import { importPerson } from '../../actions/importActions';
-import DateInput from '../date-input';
+import { importPerson } from '../../../actions/importActions';
+import DateInput from '../../date-input';
 
 @connect(
 	(store, ownProps) => {
