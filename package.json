@@ -45,7 +45,8 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --content-base src --inline --hot",
-    "test": "mocha test/.setup.js test/**/*-test.js"
+    "test": "mocha test/.setup.js test/**/*-test.js",
+    "prod": "node_modules/webpack/bin/webpack.js --production --config webpack_prod.config.js"
   },
   "author": "",
   "license": "ISC"
