@@ -66,6 +66,24 @@ export function importRelationships() {
   }
 }
 
+export function clearStagedRecords() {
+  return (dispatch) => {
+    dispatch({type: "CLEAR_STAGEDRECORDS"});
+    axios.post(config.api_url + '/api/v2/clearstagedrecords', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CLEAR_STAGEDRECORDS_FULFILLED", payload: response.data})
+        // TODO: do we need to fetch here, or should we just clear the store?
+        dispatch(fetchStagedParentalRels());
+        dispatch(fetchStagedPairBondRels());
+        dispatch(fetchStagedEvents());
+        dispatch(fetchStagedPeople());
+      })
+      .catch((err) => {
+        dispatch({type: "CLEAR_STAGEDRECORDS_REJECTED", payload: err})
+      })
+  }
+}
+
 export function importParentalRel(child_id, parent_id, relationshipType, subType, startDate, endDate, _id) {
 
   const body = {

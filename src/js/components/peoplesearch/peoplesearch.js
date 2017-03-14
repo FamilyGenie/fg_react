@@ -17,7 +17,6 @@ import { openNewPersonModal } from '../../actions/modalActions';
     userFetched: store.user.fetched,
     people: store.people.people,
     modalIsOpen: store.modal.newPerson.modalIsOpen,
-    // dont think we need the store here.
   };
 },
   (dispatch) => {
