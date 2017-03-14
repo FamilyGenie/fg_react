@@ -34,6 +34,8 @@ You can look in the peoplesearch component for an example of a component that ca
             newObj["label"] = label;
             return newObj;
           }),
+      // check to see if there is a child set inside modal.newPerson in the store. If there is, the map component set it, and we need to create a parent child relationship between the person who will be created in this modal (as the parent) and this person (as the child)
+      child: store.modal.newPerson.child,
     };
   },
   (dispatch) => {
@@ -41,8 +43,8 @@ You can look in the peoplesearch component for an example of a component that ca
       closeNewPersonModal: () => {
         dispatch(closeNewPersonModal());
       },
-      createNewPerson: (person, event, parentRel1, parentRel2, starFromMap) => {
-        dispatch(createNewPerson(person, event, parentRel1, parentRel2, starFromMap));
+      createNewPerson: (person, event, parentRel1, parentRel2, childFromMap) => {
+        dispatch(createNewPerson(person, event, parentRel1, parentRel2, childFromMap));
       },
     }
   }
@@ -54,9 +56,9 @@ export default class NewPerson extends React.Component {
     console.log('in newPerson constructor: ', this.props);
 
     var header;
-    // if a star was passed in, the Maps called this function, so set the header appropriately
-    if (this.props.starFromMap) {
-      header = 'Create Parent of ' + this.props.starFromMap.fName;
+    // if a child was passed in, the Maps called this function, so set the header appropriately
+    if (this.props.child) {
+      header = 'Create Parent of ' + this.props.child.fName;
     } else {
       header = 'New Person';
     }
@@ -190,7 +192,9 @@ export default class NewPerson extends React.Component {
       endDate: this.state.parentEndDate2,
       endDateUser: this.state.parentEndDateUser2,
     }
-    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.starFromMap);
+
+    // call the action to create this new person. Pass in the child from store.newPerson.child, because if it exists, the createNewPerson action will create a parent/child record for this person being created (as the parent) and this person being passed in (as the child)
+    this.props.createNewPerson(person, birthEvent, parentalRel1, parentalRel2, this.props.child);
 
   }
 
