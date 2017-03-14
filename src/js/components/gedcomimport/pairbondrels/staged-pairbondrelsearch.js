@@ -30,21 +30,27 @@ export default class StagedPairBondRelSearch extends React.Component {
         </div>
         <div class='staged-container'>
           <div class='staged-header-container'>
-          <div class="staged-person-one">
-            <p>Person One</p>
+            <div class="stagedPersonOne">
+              <p>Person One</p>
+            </div>
+            <div class="stagedPersonTwo">
+              <p>Person Two</p>
+            </div>
+            <div class="stagedHeaderType">
+              <p>Type</p>
+            </div>
+            <div class="staged-start-date">
+              <p>Start Date</p>
+            </div>
+            <div class="stagedPBHeaderReview">
+              <p>Review</p>
+            </div>
           </div>
-          <div class="staged-person-two">
-            <p>Person Two</p>
-          </div>
-          <div class="staged-start-date">
-            <p>Start Date</p>
-          </div>
-          <div class="staged-pairbond-list">
+          <div class="staged-people-list">
             {mappedStagedPairBondRels}
           </div>
         </div>
       </div>
-    </div>
-    )
+    );
   }
 }

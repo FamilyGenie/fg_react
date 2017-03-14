@@ -44,10 +44,15 @@
   margin-right: auto;
   margin-top: 30px;
 }
-.parents-relationships {
+.detailRow {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-bottom: 50px;
+}
+.chronology-children {
+  display: flex;
+  flex-direction: row;
 }
 .chronology-div {
   height: 400px;
@@ -142,7 +147,7 @@
   flex-direction: column;
   width: 500px;
   background-color: white;
-  height: 200px;
+  height: 350px;
   overflow: scroll;
   border-radius: 5px;
   margin-left: auto;
@@ -256,6 +261,13 @@
   margin-left: auto;
   justify-content: flex-end;
 }
+.relTypeCol2 {
+  display: flex;
+  width: 60%;
+  align-items: center;
+  margin-left: 50px;
+  justify-content: flex-end;
+}
 .relTypeWord {
   margin-right: 3px;
   cursor: pointer;
@@ -264,6 +276,18 @@
   font-style: italic;
   margin-left: auto;
   margin-right: 20px;
+}
+.ital2 {
+  font-style: italic;
+  margin-right: 20px;
+  height: 35px;
+}
+.ital3 {
+  font-style: italic;
+  margin-right: 10px;
+  overflow: hidden;
+  height: 35px;
+  text-align: right;
 }
 .personCol {
   width: 25%;

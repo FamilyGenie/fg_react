@@ -5,7 +5,7 @@ import StagedParentalRelSearchLineItem from './staged-parentalrelsearch-lineitem
 @connect(
   (store, ownProps) => {
     return {
-      stagedParentalRels: 
+      stagedParentalRels:
         store.stagedParentalRels.stagedParentalRels.filter((p) => {
           return (!p.ignore)
         }),
@@ -32,17 +32,23 @@ export default class StagedParentalRelSearch extends React.Component {
         </div>
         <div class="staged-container">
           <div class="staged-header-container">
-            <div class="staged-parent">
+            <div class="stagedParent">
               <p>Parent</p>
             </div>
-            <div class="staged-child">
+            <div class="stagedChild">
               <p>Child</p>
             </div>
-            <div class="staged-start-date">
+            <div class="stagedType">
+              <p>Type</p>
+            </div>
+            <div class="stagedStartDate">
               <p>Start Date</p>
             </div>
+            <div class="stagedPBHeaderReview">
+              <p>Review</p>
+            </div>
           </div>
-          <div class='staged-parentalrel-list'>
+          <div class='staged-people-list'>
             {mappedStagedParentalRels}
         </div>
       </div>

@@ -54,31 +54,32 @@ export default class StagedPairBondRelSearchLineItem extends React.Component {
     console.log('in stagedpairbondrelsearch-lineitem RENDER with: ', this.props)
     const { modalIsOpen } = this.state;
 
-    return (<div>
-      <div class='staged-parent'>
-        <p class="staged-name">{( stagedPersonOne ? stagedPersonOne.fName : '')}</p>
-				<p class="staged-name">{( stagedPersonOne ? stagedPersonOne.lName : '')}</p>
+    return (
+      <div class="staged-item">
+        <div class='stagedNameDiv2'>
+          <p class="staged-name">{( stagedPersonOne ? stagedPersonOne.fName : '')}</p>
+  				<p class="staged-name">{( stagedPersonOne ? stagedPersonOne.lName : '')}</p>
+        </div>
+        <div class='stagedNameDiv3'>
+          <p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.fName : '')}</p>
+  				<p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.lName : '')}</p>
+        </div>
+        <div class='stagedReltype'>
+          <p class='staged-name'>{stagedPairBondRel.relationshipType}</p>
+        </div>
+        <div class='stagedStartDate'>
+          <p class='staged-name'>{moment(stagedPairBondRel.startDate).format('MMM DD YYYY')}</p>
+        </div>
+  			<div class="check-duplicate">
+  				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={() => {this.reviewPairBondRel()}}></i>
+  			</div>
+        <Modal
+          isOpen={modalIsOpen}
+          contentLabel="Modal"
+        >
+          <StagedPairBondRelDetails closeModal={this.closeModal} stagedPairBondRel={stagedPairBondRel} stagedPersonOne={stagedPersonOne} stagedPersonTwo={stagedPersonTwo} />
+        </Modal>
       </div>
-      <div class='staged-child'>
-        <p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.fName : '')}</p>
-				<p class="staged-name">{( stagedPersonTwo ? stagedPersonTwo.lName : '')}</p>
-      </div>
-      <div class='staged-reltype'>
-        <p class='staged-name'>{stagedPairBondRel.relationshipType}</p>
-      </div>
-      <div class='staged-startdate'>
-        <p class='staged-name'>{moment(stagedPairBondRel.startDate).format('MMM DD YYYY')}</p>
-      </div>
-			<div class="check-duplicate">
-				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={() => {this.reviewPairBondRel()}}></i>
-			</div>
-      <Modal
-        isOpen={modalIsOpen}
-        contentLabel="Modal"
-      >
-        <StagedPairBondRelDetails closeModal={this.closeModal} stagedPairBondRel={stagedPairBondRel} stagedPersonOne={stagedPersonOne} stagedPersonTwo={stagedPersonTwo} />
-      </Modal>
-    </div>)
+    );
   }
-
 }

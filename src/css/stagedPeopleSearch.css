@@ -40,10 +40,29 @@
   margin-left: auto;
   margin-right: auto;
 }
+.stagedRelType {
+  width: 65px;
+}
 .staged-name-div {
   display: flex;
   flex-direction: row;
   width: 350px;
+}
+.stagedNameDiv2 {
+  display: flex;
+  flex-direction: row;
+  width: 260px;
+  overflow: hidden;
+}
+.stagedNameDiv3 {
+  display: flex;
+  flex-direction: row;
+  width: 240px;
+  overflow: hidden;
+}
+.stagedStartDate {
+  margin-right: auto;
+  margin-left: 10px;
 }
 .comparisonNameDiv {
   display: flex;
@@ -123,9 +142,36 @@
   width: 25%;
   text-align: center;
 }
+.stagedPersonOne {
+  width: 80px;
+  height: 30px;
+  margin-right: 181px;
+}
+.stagedPersonTwo {
+  width: 80px;
+  height: 30px;
+  margin-right: 160px;
+}
 .stagedHeaderReview {
   margin-left: auto;
   width: 40px;
+}
+.stagedHeaderType {
+  margin-right: 60px;
+}
+.stagedPBHeaderReview {
+  margin-left: auto;
+  width: 40px;
+  margin-right: 12px;
+}
+.stagedParent {
+  margin-right: 223px;
+}
+.stagedChild {
+  margin-right: 210px;
+}
+.stagedType {
+  margin-right: 38px;
 }
 .staged-sex {
   width: 30px;
