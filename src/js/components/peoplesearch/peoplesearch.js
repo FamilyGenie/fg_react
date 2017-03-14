@@ -45,9 +45,6 @@ export default class PeopleSearch extends React.Component {
     super(props);
     this.state = {
       reverse: false,
-      // mappedPeople: this.props.people.map((person) => {
-      //   return <PeopleSearchLineItem person={person} key={person._id}/>
-      // }),
       searchTerm: "",
       mappedPeople: this.props.people.filter(createFilter("", this.props.KEYS_TO_FILTERS)).map((person) => {
         return <PeopleSearchLineItem person={person} key={person._id}/>
