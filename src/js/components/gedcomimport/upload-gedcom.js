@@ -5,7 +5,7 @@ import cookie from "react-cookie";
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 
-import { runImport } from '../../actions/importActions';
+import { importPeopleAndEvents } from '../../actions/importActions';
 
 const fgtoken = cookie.load('fg-access-token');
 
@@ -18,8 +18,8 @@ const fgtoken = cookie.load('fg-access-token');
   },
   (dispatch) => {
     return {
-      runImport: () => {
-        dispatch(runImport())
+      importPeopleAndEvents: () => {
+        dispatch(importPeopleAndEvents())
       }
     }
   }
@@ -52,8 +52,8 @@ export default class GedcomImport extends React.Component {
       this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
     }
 
-    runImport = () => {
-      this.props.runImport();
+    importPeopleAndEvents = () => {
+      this.props.importPeopleAndEvents();
       alert('You have imported ' + this.props.store.stagedPeople.length + ' new documents')
       hashHistory.push('/importhome/')
     }
@@ -67,7 +67,7 @@ export default class GedcomImport extends React.Component {
               <p>This currently only accepts files from Ancestry.com</p>
             </div>
           </Dropzone>
-          <button onClick={this.runImport}> Run Import </button>
+          <button onClick={this.importPeopleAndEvents}> Run Import </button>
         </div>
       );
     }

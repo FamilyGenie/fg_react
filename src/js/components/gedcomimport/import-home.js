@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 import AlertContainer from 'react-alert';
 
-import { runImport, importRelationships } from '../../actions/importActions';
+import { importPeopleAndEvents, importRelationships } from '../../actions/importActions';
 import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../../actions/stagedEventActions';
 import { clearStagedRecords } from '../../actions/importActions';
@@ -43,8 +43,8 @@ const fgtoken = cookie.load('fg-access-token');
   },
   (dispatch) => {
     return {
-      runImport: () => {
-        dispatch(runImport())
+      importPeopleAndEvents: () => {
+        dispatch(importPeopleAndEvents())
       },
       importRelationships: () => {
         dispatch(importRelationships())
@@ -75,8 +75,15 @@ export default class ImportDashboard extends React.Component {
     hashHistory.push('/stagedpeoplesearch');
   }
 
+  checkIgnore = (stagedArray) => {
+    let notIgnored = stagedArray.find((stagedItem) => {
+      return stagedItem;
+    })
+    return (!!notIgnored);
+  }
+
   // this is specifically for the gedcom file upload process
-  xhr_post(xhrToSend, url, formData) {
+  xhr_post = (xhrToSend, url, formData) => {
       xhrToSend.open("POST", url, true);
       xhrToSend.setRequestHeader("x-access-token", fgtoken);
       xhrToSend.send(formData);
@@ -99,8 +106,8 @@ export default class ImportDashboard extends React.Component {
     this.xhr_post(xhr, config.api_url + '/uploads', formData)
   }
 
-  runImport = () => {
-    this.props.runImport();
+  importPeopleAndEvents = () => {
+    this.props.importPeopleAndEvents();
     msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
   }
   importRelationships = () => {
@@ -153,7 +160,7 @@ export default class ImportDashboard extends React.Component {
             </div>
             <div class="step-action">
               <div class="action-content">
-                <button class="btn button3" onClick={this.runImport}> Run Import </button>
+                <button class="btn button3" onClick={this.importPeopleAndEvents}> Run Import </button>
               </div>
             </div>
           </div>
