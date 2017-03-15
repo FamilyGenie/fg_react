@@ -139,3 +139,9 @@
   position: fixed;
   margin-top: 10px;
 }
+.relToolTip {
+  color: blue;
+  background-color: white;
+  border-radius: 4px;
+  padding: 2px;
+}

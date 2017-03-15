@@ -105,7 +105,7 @@ export default class Layout extends React.Component {
                     <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>PEOPLE</a>
                   </li>
                   <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondsearch/')}}>PAIRBOND RELS</a>
+                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondrelsearch/')}}>PAIRBOND RELS</a>
                   </li>
                   <li>
                     <a class="navbarright" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>PARENTAL RELS</a>
@@ -146,6 +146,9 @@ export default class Layout extends React.Component {
           <div class="help-menu">
             <div class="help-header">
               <h3 class="history-title-1">Help Menu</h3>
+            </div>
+            <div>
+            	{this.props.helpMessage.helpMessage}
             </div>
           </div>
           <div class="history-context">

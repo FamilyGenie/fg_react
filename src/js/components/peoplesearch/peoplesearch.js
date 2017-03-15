@@ -4,30 +4,59 @@ import { hashHistory } from 'react-router';
 import Modal from 'react-modal';
 import AlertContainer from 'react-alert';
 import { createPerson } from '../../actions/peopleActions';
+import moment from 'moment';
+import SearchInput, {createFilter} from 'react-search-input';
 
 import PeopleSearchLineItem from './peoplesearch-lineitem';
 // this next line is for the new person modal
 import NewPerson from '../newperson/newperson';
 import { openNewPersonModal } from '../../actions/modalActions';
-
+import { updateHelpMessage } from '../../actions/helpMessageActions';
 
 @connect((store, ownProps) => {
   return {
     user: store.user.user,
     userFetched: store.user.fetched,
-    people: store.people.people,
+    people: store.people.people.map((person) => {
+      var bDate = store.events.events.find((e) => {
+        return (person._id === e.person_id && e.eventType.toLowerCase() === "birth");
+      })
+      if (bDate) {
+        person.eventDate = bDate.eventDate;
+        person.eventDateUser = (bDate.eventDateUser ? bDate.eventDateUser: (bDate.eventDate ? bDate.eventDate.substr(0,10): ""));
+      }
+      return person
+    }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
+    KEYS_TO_FILTERS:['fName', 'lName', 'eventDateUser', 'eventDate'],
   };
+
 },
   (dispatch) => {
     return {
       openNewPersonModal: () => {
         dispatch(openNewPersonModal());
-      }
+      },
+      updateHelpMessage: (msg) => {
+        dispatch(updateHelpMessage(msg));
+      },
     }
   }
 )
 export default class PeopleSearch extends React.Component {
+  constructor (props) {
+    super(props);
+    
+    this.props.updateHelpMessage('This is the family search page');
+
+    this.state = {
+      reverse: false,
+      searchTerm: "",
+      mappedPeople: this.props.people.filter(createFilter("", this.props.KEYS_TO_FILTERS)).map((person) => {
+        return <PeopleSearchLineItem person={person} key={person._id}/>
+      }),
+    };
+  }
 
   alertOptions = {
       offset: 15,
@@ -40,49 +69,125 @@ export default class PeopleSearch extends React.Component {
   createNewPerson = () => {
     this.props.openNewPersonModal();
   }
+  sortPeople = (sortType) => {
+    this.setState({reverse: !this.state.reverse})
+    sortType = sortType || '';
+    var sortedPeople;
+    if (this.state.reverse) {
+      if (sortType === 'fName') {
+        sortedPeople = this.props.people.sort(function(a, b) {
+          if (a.fName != undefined && b.fName != undefined) {
+            if (b.fName != a.fName) {
+              return b.fName.localeCompare(a.fName);
+            }
+          }
+          else {
+            return b.fName - a.fName;
+          }
+        })
+      }
+      else if (sortType === 'lName') {
+        sortedPeople = this.props.people.sort(function(a, b) {
+          if (a.lName != undefined && b.lName != undefined) {
+            if (b.lName != a.lName) {
+              return b.lName.localeCompare(a.lName);
+            }
+          }
+          else {
+            return b.lName - a.lName;
+          }
+        });
+      }
+      else if (sortType === 'date') {
+        sortedPeople = this.props.people.sort(function(a, b) {
+          if (a.eventDate && b.eventDate ) {
+            return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
+          }
+          else {
+            return b.eventDate - a.eventDate;
+          }
+        });
+      }
+    }
+    else {
+      if (sortType === 'fName') {
+        sortedPeople = this.props.people.sort(function(a, b) {
+          if (b.fName != undefined && a.fName != undefined) {
+            if (a.fName != b.fName) {
+              return a.fName.localeCompare(b.fName);
+            }
+          }
+          else {
+            return a.fName - b.fName;
+          }
+        })
+      }
+      if (sortType === 'lName') {
+        sortedPeople = this.props.people.sort (function(a, b) {
+          if (b.lName != undefined && a.lName != undefined) {
+            if (a.lName != b.lName) {
+              return a.lName.localeCompare(b.lName);
+            }
+          }
+          else {
+            return a.lName - b.lName;
+          }
+        })
+      }
+      else if (sortType === 'date') {
+        sortedPeople = this.props.people.sort (function(a, b) {
+          if (b.eventDate && a.eventDate ) {
+            return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
+          }
+          else {
+            return a.eventDate - b.eventDate;
+          }
+        })
+      }
+    }
+
+    var mappedPeople = sortedPeople.map(person =>
+      <PeopleSearchLineItem person={person} key={person._id}/>
+    );
+    this.setState({mappedPeople: mappedPeople});
+    return mappedPeople;
+  }
+  searchUpdate = (term) => {
+    const mappedPeople = this.props.people.filter(createFilter(term, this.props.KEYS_TO_FILTERS)).map((person) => {
+      return <PeopleSearchLineItem person={person} key={person._id}/>
+    });
+
+    this.setState({
+      searchTerm: term,
+      mappedPeople: mappedPeople,
+    });
+  }
+
+  // if we ever figure out how to clear the search input field, this is the function we would use to reset the family list
+
+  // clearSearch = () => {
+  //   this.setState({
+  //     searchTerm: "",
+  //     mappedPeople: this.props.people.filter(createFilter("", this.props.KEYS_TO_FILTERS)).map((person) => {
+  //       return <PeopleSearchLineItem person={person} key={person._id}/>
+  //     }),
+  //   });
+  //   this.refs.searchBox = "";
+  // }
 
 	render = () => {
     const { people, modalIsOpen } = this.props;
+    const { reverse, mappedPeople } = this.state;
+    const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
+    console.log("in render", this.state.searchTerm);
 
-    const mappedPeople = people.map(person =>
-        <PeopleSearchLineItem person={person} key={person._id}/>
-    );
 
-        return (
+    return (
       <div class="mainDiv">
     		<div class="header-div">
           <h1 class="family-header">Family List</h1>
         </div>
         <div id="family-content">
-          <div class="familySearch">
-            <h3 class="searchH">Search</h3>
-            <div class="bufferSearch"></div>
-            <div class="searchContent">
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter First Name"
-              />
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Last Name"
-              />
-              <input
-                class="form-control searchInput"
-                type="text"
-                value={""}
-                placeholder="Enter Date"
-              />
-            </div>
-            <div class="bufferSearch"></div>
-            <div class="searchButtons">
-              <button class="btn btn-default btn-FL">Search</button>
-              <button class="btn btn-default btn-FL">Cancel</button>
-            </div>
-          </div>
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
               <div class="search-add"></div>
@@ -95,14 +200,28 @@ export default class PeopleSearch extends React.Component {
             <div id="buffer-div">
             </div>
             <div class="familySortDiv">
-              <div class="staged-header-container">
+              <div class="family-header-container">
                 <div class="familyHeader1">
-                  <span onClick={() => this.sortEvents('person')} class="familySort">Person</span>
+                  <span class="familySort">Sort:</span>
+                </div>
+                <div class="familyHeader2">
+                  <span onClick={() => this.sortPeople('fName')} class="familySort">First Name</span>
+                </div>
+                <div class="familyHeader2">
+                  <span onClick={() => this.sortPeople('lName')} class="familySort">Last Name</span>
                 </div>
                 <div class="familyHeader2">
                   {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
-                  <span onClick={() => this.sortEvents('date')} class="familySort"> Date </span>
+                  <span onClick={() => this.sortPeople('date')} class="familySort"> Date </span>
                 </div>
+                <SearchInput
+                  class=""
+                  type="text"
+                  value={this.state.seachTerm}
+                  ref="searchBox"
+                  placeholder=""
+                  onChange={this.searchUpdate}
+                />
                 <div class="familyHeader3">
                   <p>Edit</p>
                   <p class="familyHeadText">Map</p>
