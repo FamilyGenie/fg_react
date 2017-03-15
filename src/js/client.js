@@ -18,6 +18,7 @@ import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/stag
 import StagedParentalRelSearch from './components/gedcomimport/parentalrels/staged-parentalrelsearch';
 import Chronology from './components/chronology/chronology';
 import HistoryBar from './components/historybar/index';
+import ResetDatabase from './components/gedcomimport/reset-db';
 
 const app = document.getElementById('app');
 
@@ -46,6 +47,8 @@ ReactDOM.render(<Provider store={store}>
       <Route path="/chronology" name="Chronology" component={Chronology}></Route>
 
       <Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
+
+      <Route path='/resetdatabase' name='Reset Database' component={ResetDatabase}></Route>
 
 		</Route>
 	</Router>

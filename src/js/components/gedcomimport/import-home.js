@@ -10,11 +10,8 @@ import { fetchStagedEvents } from '../../actions/stagedEventActions';
 import { clearStagedRecords } from '../../actions/importActions';
 
 import cookie from "react-cookie";
-
 import config from '../../config.js';
 const fgtoken = cookie.load('fg-access-token');
-
-
 
 @connect(
   (store, ownProps) => {

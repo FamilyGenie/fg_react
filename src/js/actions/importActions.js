@@ -100,7 +100,7 @@ export function clearStagedRecords() {
 export function clearSavedRecords() {
   return (dispatch) => {
     dispatch({type: 'CLEAR_ALLRECORDS'});
-    axios.post(config.api_url + '/api/v2/resetuserdatabase', {}, getAxiosConfig())
+    axios.post(config.api_url + '/api/v2/clearsavedrecords', {}, getAxiosConfig())
       .then((response) => {
         dispatch({type: 'CLEAR_ALLRECORDS_FULFILLED', payload: response.data})
         dispatch(fetchPeople());
