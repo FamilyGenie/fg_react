@@ -217,9 +217,10 @@ export default class FamilyMap extends React.Component {
 		// TODO: need to standardize on where to store these constants
 		// const startX = 500;
 		const startY = 200;
+		const startStartX = 500;
 		const parentDistance = 220;
 		const childDistance = 120;
-		var startX = this.getStartXPos(parentDistance);
+		var startX = this.getStartXPos(parentDistance, startStartX);
 		console.log('startX is: ', startX);
 
 		this.initializeVariables();
@@ -301,8 +302,8 @@ export default class FamilyMap extends React.Component {
 		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
 		this.bringAllChildrenToFront();
 
-		if (this.getStartXPos(parentDistance) !== 500) {
-			console.log('startX changed, need to redraw map')
+		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 500. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
+		if (this.getStartXPos(parentDistance, startStartX) !== startStartX) {
 			this.drawMap();
 		}
 
@@ -310,25 +311,24 @@ export default class FamilyMap extends React.Component {
 		this.g.attr('transform', 'scale(.5)');
 	} // end of drawMap
 
-	getStartXPos = (parentDistance) => {
-		// 500 is the default starting position
-		var startXPos = 500;
+	getStartXPos = (parentDistance, startStartX) => {
 
-		var minXPos = 500;
+		var startX = startStartX;
+		// var minXPos = startStartX;
 		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, we can just return the default start
 		if (this.parents.length) {
 			// cycle through each parent and find the one with the smallest XPos
 			for (let person of this.parents) {
-				if (person.mapXPos < minXPos) {
-					minXPos = person.mapXPos;
+				if (person.mapXPos < startX) {
+					startX = person.mapXPos;
 				}
 			}
 			// if there was a parent with a negative XPos, then take that number and add the default startX to it (and some extra room for good measure) for where to start drawing the map
-			if (minXPos < 0) {
-				startXPos = startXPos + Math.abs(minXPos) + parentDistance;
+			if (startX < 0) {
+				startX = startStartX + Math.abs(startX) + parentDistance;
 			}
 		}
-		return startXPos;
+		return startX;
 	}
 
 	checkAllChildrenForBioParents = () => {
