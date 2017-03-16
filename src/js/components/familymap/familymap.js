@@ -154,7 +154,7 @@ export default class FamilyMap extends React.Component {
 			return (
 			<div class="mainDiv">
 				<div class="header-div">
-					<h1 class="family-header">{this.fullName}s Family Map </h1>
+					<h1 class="family-header">{this.fullName}'s Family Map </h1>
 				</div>
 				<div id="legend">
 					<Legend toggleLegend={this.toggleLegend}/>
@@ -185,7 +185,12 @@ export default class FamilyMap extends React.Component {
 							</div>
 						</div>
 					</div>
-					<svg class="svg-map">
+					<svg
+						width="1200"
+						height="1200"
+						viewBox="0 0 1200 1200"
+						preserveAspectRatio="xMaxYMax meet"
+					>
 					</svg>
 				</div>
 
@@ -204,11 +209,11 @@ export default class FamilyMap extends React.Component {
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
 	drawMap = () => {
-
+		debugger;
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
 		// TODO: need to standardize on where to store these constants
-		const startX = 775;
+		const startX = 500;
 		const startY = 200;
 		const parentDistance = 220;
 		const childDistance = 120;
@@ -285,11 +290,11 @@ export default class FamilyMap extends React.Component {
 		this.drawAllChildren (startY, childDistance);
 
 		this.drawNonBioParentLines();
-
 		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
 		this.bringAllChildrenToFront();
 
 		// Last, we need to see about resizing the drawing
+		// d3.select('svg').attr('transform', 'scale(.5)');
 	} // end of drawMap
 
 	checkAllChildrenForBioParents = () => {
@@ -708,7 +713,7 @@ export default class FamilyMap extends React.Component {
 				return child._id === parent._id;
 			})
 			if (found) {
-				if (!errorShown) {
+				if (!this.errorShown) {
 					alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
 					this.errorShown = true;
 					return false;
@@ -1486,7 +1491,7 @@ export default class FamilyMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			.text("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
 			line = line
