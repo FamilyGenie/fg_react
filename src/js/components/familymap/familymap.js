@@ -157,14 +157,11 @@ export default class FamilyMap extends React.Component {
 		if (people) {
 			return (
 			<div class="mainDiv">
-				<div class="header-div">
-					<h1 class="family-header">{this.fullName}'s Family Map </h1>
-				</div>
 				<div id="legend">
 					<Legend toggleLegend={this.toggleLegend}/>
 				</div>
 				<div class="mainMap" id="mainMap">
-					<div class="dateLegend">
+					<div class="mapHeader">
 						<div class="dateToggle">
 							<div class="mapDate">
 								<div class="mapDateContents">
@@ -187,6 +184,9 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
+						</div>
+						<div>
+							<h1 class="family-header">{this.fullName}'s Family Map </h1>
 						</div>
 					</div>
 					<svg

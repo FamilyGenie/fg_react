@@ -3,10 +3,11 @@
   width: 100%;
   height: 100%;
 }
-.dateLegend {
+.mapHeader {
   display: flex;
   margin-left: 30px;
-  flex-direction: column;
+  flex-direction: row;
+  padding-top: 60px;
   width: 100%;
 }
 .dateToggle {
@@ -156,4 +157,8 @@ html, body {
   background-color: white;
   border-radius: 4px;
   padding: 2px;
+}
+.family-header {
+  padding-left: 20px;
+  font-size: 2em;
 }
