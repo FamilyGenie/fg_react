@@ -79,6 +79,10 @@ export default class FamilyMap extends React.Component {
 	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
 	errorShown = false;
 
+	// global variables for svg / d3 map drawing
+	svg;
+	g;
+
 	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
 	alertOptions = {
       offset: 15,
@@ -188,8 +192,6 @@ export default class FamilyMap extends React.Component {
 					<svg
 						width="1200"
 						height="1200"
-						viewBox="0 0 1200 1200"
-						preserveAspectRatio="xMaxYMax meet"
 					>
 					</svg>
 				</div>
@@ -209,19 +211,25 @@ export default class FamilyMap extends React.Component {
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
 	drawMap = () => {
-		debugger;
+
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
 		// TODO: need to standardize on where to store these constants
-		const startX = 500;
+		// const startX = 500;
 		const startY = 200;
 		const parentDistance = 220;
 		const childDistance = 120;
+		var startX = this.getStartXPos(parentDistance);
+		console.log('startX is: ', startX);
 
 		this.initializeVariables();
 		// this.drawTicks();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
+
+		// for map drawing
+		this.svg = d3.select('svg');
+		this.g = this.svg.append('g');
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -293,9 +301,35 @@ export default class FamilyMap extends React.Component {
 		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
 		this.bringAllChildrenToFront();
 
+		if (this.getStartXPos(parentDistance) !== 500) {
+			console.log('startX changed, need to redraw map')
+			this.drawMap();
+		}
+
 		// Last, we need to see about resizing the drawing
-		// d3.select('svg').attr('transform', 'scale(.5)');
+		this.g.attr('transform', 'scale(.5)');
 	} // end of drawMap
+
+	getStartXPos = (parentDistance) => {
+		// 500 is the default starting position
+		var startXPos = 500;
+
+		var minXPos = 500;
+		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, we can just return the default start
+		if (this.parents.length) {
+			// cycle through each parent and find the one with the smallest XPos
+			for (let person of this.parents) {
+				if (person.mapXPos < minXPos) {
+					minXPos = person.mapXPos;
+				}
+			}
+			// if there was a parent with a negative XPos, then take that number and add the default startX to it (and some extra room for good measure) for where to start drawing the map
+			if (minXPos < 0) {
+				startXPos = startXPos + Math.abs(minXPos) + parentDistance;
+			}
+		}
+		return startXPos;
+	}
 
 	checkAllChildrenForBioParents = () => {
 		for (let child of this.children) {
@@ -1017,7 +1051,9 @@ export default class FamilyMap extends React.Component {
 	initializeVariables = () => {
 		// do we need to initialize the xPos and yPos of each person?
 		// remove d3 drawn objects
-		d3.select("svg").selectAll("*").remove();
+		if (this.g) {
+			this.g.selectAll("*").remove();
+		}
 		this.parents = [];
 		this.parentRels = [];
 		this.children = [];
@@ -1059,7 +1095,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
-		let circle = d3.select("svg")
+		let circle = this.g
 			.append("svg:a")
 			.append("circle")
 			.attr("cx", person.mapXPos)
@@ -1133,7 +1169,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		var vText = d3.select("svg").selectAll("text" + person._id)
+		var vText = this.g.selectAll("text" + person._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1165,7 +1201,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1184,7 +1220,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1266,7 +1302,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the pairBond ID so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		 return d3.select("svg").selectAll("text" + pairBondRel._id)
+		 return this.g.selectAll("text" + pairBondRel._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1306,7 +1342,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1324,7 +1360,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash1 = d3.select("svg")
+		person.d3CircleHash1 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1340,7 +1376,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash2 = d3.select("svg")
+		person.d3CircleHash2 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1357,7 +1393,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash3 = d3.select("svg")
+		person.d3CircleHash3 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1373,7 +1409,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash4 = d3.select("svg")
+		person.d3CircleHash4 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1415,7 +1451,7 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personTwo.mapXPos);
 		lineStrArr.push(personTwo.mapYPos - 40);
 
-		line = d3.select("svg")
+		line = this.g
 		.append("path")
 		.attr("id","relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
@@ -1429,7 +1465,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /\?/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1440,7 +1476,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Extra-Marital-Mated/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1451,7 +1487,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Extra-Marital/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1462,7 +1498,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Stranger/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1473,7 +1509,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Coersive/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1484,7 +1520,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Restitution/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1501,7 +1537,7 @@ export default class FamilyMap extends React.Component {
 		} else {
 			// get here Casual or Informal (need to move all Informals to Casual)
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1558,7 +1594,7 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personTwo.mapXPos - 0);
 		lineStrArr.push(personTwo.mapYPos - 40);
 
-		line = d3.select("svg")
+		line = this.g
 		.append("path")
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent")
@@ -1608,7 +1644,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		var line = d3.select("svg")
+		var line = this.g
 				.append("path")
 				.attr("d", lineFunction(lineData))
 				// the on mouseover is to show the parent and child's name when you hover over the line. Base code for this was found here: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
@@ -1654,7 +1690,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Legal/.test(subType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			// line = line
-			return d3.select("svg")
+			return this.g
 			.append("text")
 			.append("textPath")
 			.attr("d", lineFunction(lineData))
@@ -1751,7 +1787,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1767,7 +1803,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1797,7 +1833,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1813,7 +1849,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1842,7 +1878,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1858,7 +1894,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1887,7 +1923,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1903,7 +1939,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1922,7 +1958,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("svg:a")
 			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("path")
@@ -1969,7 +2005,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		let text = d3.select("svg").selectAll("text" + tickText)
+		let text = this.g.selectAll("text" + tickText)
 			.data(textData)
 			.enter()
 			.append("text");
