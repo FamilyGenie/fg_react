@@ -101,7 +101,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap();
+		this.drawMap(0);
 	}
 
     // this function will be called when the user hits the button to add a year and then re-draw the map
@@ -113,7 +113,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap();
+		this.drawMap(0);
 	}
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
@@ -141,15 +141,15 @@ export default class FamilyMap extends React.Component {
 			starAge: evt.target.value
 		});
 		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
-		this.drawMap();
+		this.drawMap(0);
 	}
-
+	// is this needed? Is componentDidUpdate enough?
 	componentDidMount = () => {
-		this.drawMap();
+		// this.drawMap(0);
 	}
 
 	componentDidUpdate = () => {
-		this.drawMap();
+		this.drawMap(500);
 	}
 
 	render = () => {
@@ -190,8 +190,8 @@ export default class FamilyMap extends React.Component {
 						</div>
 					</div>
 					<svg
-						width="1200"
-						height="1200"
+						width="1400"
+						height="1400"
 					>
 					</svg>
 				</div>
@@ -210,7 +210,7 @@ export default class FamilyMap extends React.Component {
 	}
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
-	drawMap = () => {
+	drawMap = (startX) => {
 
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
@@ -220,17 +220,17 @@ export default class FamilyMap extends React.Component {
 		const startStartX = 500;
 		const parentDistance = 220;
 		const childDistance = 120;
-		var startX = this.getStartXPos(parentDistance, startStartX);
-		console.log('startX is: ', startX);
 
 		this.initializeVariables();
-		// this.drawTicks();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
+
+		console.log('startX is: ', startX);
 
 		// for map drawing
 		this.svg = d3.select('svg');
 		this.g = this.svg.append('g');
+		this.drawTicks();
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -302,33 +302,67 @@ export default class FamilyMap extends React.Component {
 		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
 		this.bringAllChildrenToFront();
 
-		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 500. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
-		if (this.getStartXPos(parentDistance, startStartX) !== startStartX) {
-			this.drawMap();
+		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 0. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
+		// console.log('about to check for draw again: ', startX, this.getStartXPos(parentDistance, startX, startStartX));
+		if (startX === 500) {
+			this.drawMap(this.getStartXPos(parentDistance, startX, startStartX));
+		} else {
+			// Last, we need to see about resizing the drawing
+			this.scaleMap(startStartX);
 		}
-
-		// Last, we need to see about resizing the drawing
-		this.g.attr('transform', 'scale(.5)');
 	} // end of drawMap
 
-	getStartXPos = (parentDistance, startStartX) => {
+	scaleMap = (startStartX) => {
 
-		var startX = startStartX;
-		// var minXPos = startStartX;
-		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, we can just return the default start
+		var maxX = startStartX;
+		var minX = startStartX
+		for (let person of this.parents) {
+				console.log('person ', person.fName, person.mapXPos);
+				if (person.mapXPos > maxX) {
+					maxX = person.mapXPos;
+				}
+				if (person.mapXPos < minX) {
+					minX = person.mapXPos;
+				}
+		}
+		console.log('in scale map: ', minX, maxX);
+		if ( (maxX - minX) < 1000 ) {
+			// do nothing
+		} else {
+			this.g.attr('transform', 'scale(.5)');
+		}
+	}
+
+	getStartXPos = (parentDistance, startXFromMain, startStartX) => {
+		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, just return 0
 		if (this.parents.length) {
+			var startX = startStartX;
+			var minX = startStartX;
+			var maxX = startStartX;
 			// cycle through each parent and find the one with the smallest XPos
 			for (let person of this.parents) {
-				if (person.mapXPos < startX) {
-					startX = person.mapXPos;
+				if (person.sexAtBirth === 'F') {
+					startX -= parentDistance/2;
+				}
+				if (person.sexAtBirth === 'M') {
+					startX += parentDistance/2;
+				}
+				if (person.mapXPos < minX) {
+					minX = person.mapXPos;
+				}
+				if (person.mapXPos > maxX) {
+					maxX = person.mapXPos;
 				}
 			}
-			// if there was a parent with a negative XPos, then take that number and add the default startX to it (and some extra room for good measure) for where to start drawing the map
-			if (startX < 0) {
-				startX = startStartX + Math.abs(startX) + parentDistance;
+
+			if (minX < 0) {
+				return 500 + parentDistance + Math.abs(minX);
+			} else {
+				return startX + 1;
 			}
+		} else {
+			return 0;
 		}
-		return startX;
 	}
 
 	checkAllChildrenForBioParents = () => {
@@ -1095,6 +1129,9 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
+		if (person.fName === 'Thomas') {
+			console.log('draw thomas at: ', person.mapXPos);
+		}
 		let circle = this.g
 			.append("svg:a")
 			.append("circle")
