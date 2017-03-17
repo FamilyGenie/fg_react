@@ -25,26 +25,26 @@ const app = document.getElementById('app');
 ReactDOM.render(<Provider store={store}>
 
 	<Router history={hashHistory}>
-		<Route path="/" component={Layout}>
+		<Route path='/' component={Layout}>
 			<IndexRoute component={PeopleSearch}></IndexRoute>
 
 			<Route path='/peopledetails(/:star_id)' name='People Details' component={PeopleDetails}></Route>
 
-			<Route path="/familymap(/:star_id)" name='Family Map' component={FamilyMap}></Route>
+			<Route path='/familymap(/:star_id)' name='Family Map' component={FamilyMap}></Route>
 
 			<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
 
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 
-			<Route path="/stagedpeopledetails(/:_id)" name="Staged People Details" component={StagedPeopleDetails}></Route>
+			<Route path='/stagedpeopledetails(/:_id)' name='Staged People Details' component={StagedPeopleDetails}></Route>
                 
-			<Route path="/stagedpairbondrelsearch" name="Staged PairBond Relationships" component={StagedPairBondRelSearch}></Route>
+			<Route path='/stagedpairbondrelsearch' name='Staged PairBond Relationships' component={StagedPairBondRelSearch}></Route>
 
-			<Route path="/stagedparentalrelsearch/" name="Staged Parental Relationship Comparison" component={StagedParentalRelSearch}></Route>
+			<Route path='/stagedparentalrelsearch/' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>
 
 			<Route path='/auth/login' name='Login' component={Login}></Route>
 
-      <Route path="/chronology" name="Chronology" component={Chronology}></Route>
+      <Route path='/chronology' name='Chronology' component={Chronology}></Route>
 
       <Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 
