@@ -27,8 +27,8 @@ export default class Chronology extends React.Component {
       reverse: false,
       // initialize with unsorted events
       mappedEvents: this.props.events.map(event =>
-      <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
-    ),
+        <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
+      ),
     };
   }
 

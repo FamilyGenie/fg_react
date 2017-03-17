@@ -46,9 +46,11 @@ export default class Layout extends React.Component {
     // only dispatch logout if we are trying to logout
     if (url === '/auth/logout') {
       this.props.dispatch(logout());
+      hashHistory.push('/auth/login');
     }
-
-    hashHistory.push(url);
+    else {
+      hashHistory.push(url);
+    }
   }
 
 	toggleSideBar = () => {

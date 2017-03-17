@@ -1,7 +1,7 @@
-import axios from "axios";
-import { createEvent } from "./eventsActions";
-import { fetchPeople } from "./peopleActions";
-import { fetchStagedPeople } from "./stagedPeopleActions";
+import axios from 'axios';
+import { createEvent } from './eventsActions';
+import { fetchPeople } from './peopleActions';
+import { fetchStagedPeople } from './stagedPeopleActions';
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
 import { fetchParentalRels } from './parentalRelsActions';
@@ -9,19 +9,32 @@ import { fetchPairBondRels } from './pairBondRelsActions';
 import { fetchStagedParentalRels } from './stagedParentalRelActions';
 import { fetchStagedPairBondRels } from './stagedPairBondRelActions';
 
-import config from "../config.js";
+import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function runImport() {
+export function autoImport() {
+  return (dispatch) => {
+    dispatch({type: 'AUTOIMPORT'});
+    axios.post(config.api_url + '/api/v2/autoimportall', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: 'AUTOIMPORT_FULFILLED', payload: response.data})
+      })
+      .catch((err) => {
+        dispatch({type: 'AUTOIMPORT_REJECTED', payload: err})
+      })
+  }
+}
+
+export function importPeopleAndEvents() {
 
   // send an empty body object
   const body = {};
 
   return (dispatch) => {
-    dispatch({type: "RUN_IMPORT"});
-    axios.post(config.api_url + "/api/v2/autoimport", body, getAxiosConfig())
+    dispatch({type: "IMPORT_PEOPLEANDEVENTS"});
+    axios.post(config.api_url + "/api/v2/autoimportpeople", body, getAxiosConfig())
       .then((response) => {
-        dispatch({type: "RUN_IMPORT_FULFILLED", payload: response.data})
+        dispatch({type: "IMPORT_PEOPLEANDEVENTS_FULFILLED", payload: response.data})
         // after running import, refresh the store.
         // TODO: recieve the data through the response.data and append that information to the store.
         dispatch(fetchPeople());
@@ -30,7 +43,7 @@ export function runImport() {
         dispatch(fetchStagedEvents());
       })
       .catch((err) => {
-        dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
+        dispatch({type: "IMPORT_PEOPLEANDEVENTS_REJECTED", payload: err})
       })
   }
 }
@@ -38,7 +51,7 @@ export function runImport() {
 export function importRelationships() {
   const body = {};
 
-  return (dispatch) => { 
+  return (dispatch) => {
   dispatch({type: "IMPORT_PARENTALRELATIONSHIPS"});
   axios.post(config.api_url + '/api/v2/autoimportparentalrels', body, getAxiosConfig())
     .then((response) => {
@@ -80,6 +93,27 @@ export function clearStagedRecords() {
       })
       .catch((err) => {
         dispatch({type: "CLEAR_STAGEDRECORDS_REJECTED", payload: err})
+      })
+  }
+}
+
+export function clearSavedRecords() {
+  return (dispatch) => {
+    dispatch({type: 'CLEAR_ALLRECORDS'});
+    axios.post(config.api_url + '/api/v2/clearsavedrecords', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: 'CLEAR_ALLRECORDS_FULFILLED', payload: response.data})
+        dispatch(fetchPeople());
+        dispatch(fetchEvents());
+        dispatch(fetchParentalRels());
+        dispatch(fetchPairBondRels())
+        dispatch(fetchStagedParentalRels());
+        dispatch(fetchStagedPairBondRels());
+        dispatch(fetchStagedEvents());
+        dispatch(fetchStagedPeople());
+      })
+      .catch((err) => {
+        dispatch({type: 'CLEAR_ALLRECORDS_REJECTED', payload: err})
       })
   }
 }
