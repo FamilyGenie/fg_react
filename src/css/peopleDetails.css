@@ -67,7 +67,6 @@
   width: 100%;
   background-color: white;
   height: 400px;
-  overflow: scroll;
   border-radius: 5px;
   margin-left: auto;
   margin-right: auto;
@@ -86,6 +85,11 @@
   border-bottom: 1px solid silver;
   font-family: SSP-Light;
   font-size: 20px;
+}
+.mappings {
+  overflow: scroll;
+  width: 100%;
+  height: 100%;
 }
 
 /*Begin styling of person name section*/
@@ -148,13 +152,9 @@
   width: 500px;
   background-color: white;
   height: 350px;
-  overflow: scroll;
   border-radius: 5px;
   margin-left: auto;
   margin-right: auto;
-  /*border-bottom: 1px solid silver;
-  border-right: 1px solid silver;
-  border-left: 1px solid silver;*/
 }
 .input-box {
   background-color: #0000e6;
@@ -171,6 +171,7 @@
   color: white;
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 }
 .infoRow {
   display: flex;
@@ -241,7 +242,7 @@
   font-size: 30px;
 }
 .ReactModal__Overlay {
-  width: 720px;
+  width: 860px;
   margin-left: auto;
   margin-right: auto;
   background-color: white;
@@ -450,7 +451,6 @@
 }
 .fa-window-close-o {
   margin-left: auto;
-  margin-right: 5px;
   float: right;
   background-color: white;
   color: #640FF3;
@@ -535,7 +535,7 @@
   font-family: CabinMI;
 }
 .modalClose {
-  margin-left: 600px;
+  margin-left: 735px;
   width: 100px;
   margin-bottom: 40px;
   z-index: 1;
@@ -575,7 +575,7 @@
 /*End styling of parent details section*/
 
 /*End styling of connections section*/
-#media (max-width: 1280px) {
+/*#media (max-width: 1280px) {
   .PR-row-1 {
     width: 100%;
     align-items: center;
@@ -610,84 +610,16 @@
   .ReactModal__Overlay {
     width: 70%;
   }
-}
-@media (max-width: 1200px) {
-  /*.PR-row-1 {
-    width: 100%;
-    align-items: center;
+}*/
+@media (max-width: 1100px) {
+  .detailRow {
     flex-direction: column;
-  }
-  .PR-row-2 {
-    width: 100%;
-    flex-direction: column;
-  }
-  .PR-row-3 {
-    width: 100%;
-    align-items: center;
-    flex-direction: column;
-  }*/
-  /*.PR-sub-div {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }*/
-  /*.PR-div {
-    margin-bottom: 10px;
-  }
-  .modal-header-2 {
-    font-size: 17px;
-  }*/
-}
-@media(max-width: 1000px) {
-  .PR-modal-header {
-    font-size: 23px;
-  }
-  .ReactModal__Overlay {
-    width: 70%;
-  }
-}
-
-@media (max-width: 880px) {
-  .outerContainer {
-    flex-direction: column;
-    margin-bottom: 40px;
+    margin-bottom: 0;
   }
   .innerInfo {
-    width: 90%;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
   }
   .main-detail {
-    height: 100%;
-  }
-  /*.ReactModal__Overlay {
-    width: 70%;
-    position: relative;
-  }*/
-  .parents-relationships {
-    flex-direction: column;
-  }
-  .chronology-div {
-    width: 90%;
-  }
-  .detail-names {
-    display: flex;
-    flex-direction: column;
-  }
-  .detail-input {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-  }
-  .button-group {
-    margin-top: 10px;
-  }
-  /*.buffer-line {
-    width: 70%;
-  }*/
-  /*.PR-main {
-    height: 700px;
-  }*/
-  .PB-main {
-    height: 560px;
+    height: 2100px;
   }
 }

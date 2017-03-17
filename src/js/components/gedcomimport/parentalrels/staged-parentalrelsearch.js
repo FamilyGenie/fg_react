@@ -32,10 +32,10 @@ export default class StagedParentalRelSearch extends React.Component {
         </div>
         <div class="staged-container">
           <div class="staged-header-container">
-            <div class="stagedParent">
+            <div class="stagedParentHeader">
               <p>Parent</p>
             </div>
-            <div class="stagedChild">
+            <div class="stagedChildHeader">
               <p>Child</p>
             </div>
             <div class="stagedType">

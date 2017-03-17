@@ -18,6 +18,17 @@
   border-radius: 5px;
   margin-bottom: 10px;
 }
+.parentComparisonList {
+  background-color: white;
+  width: 100%;
+  height: 180px;
+  overflow: scroll;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 70px;
+}
 .staged-item {
   display: flex;
   flex-direction: row;
@@ -164,10 +175,10 @@
   width: 40px;
   margin-right: 12px;
 }
-.stagedParent {
+.stagedParentHeader {
   margin-right: 223px;
 }
-.stagedChild {
+.stagedChildHeader {
   margin-right: 210px;
 }
 .stagedType {
@@ -212,4 +223,74 @@
 }
 .pencil2 {
   float: right;
+}
+.stagedPR {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+}
+.stagedButton {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.button4 {
+  width: 50px !important;
+  background-color: #640FF3;
+  color: white;
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.stagedParentStartDate {
+  /*margin-left: 69px;*/
+}
+.stagedParentType {
+  /*margin-left: 52px;*/
+}
+.stagedChild {
+  width: 175px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+.stagedChildFName {
+  /*font-family: Cabin;*/
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+  height: 28px;
+  width: 80px;
+}
+.stagedChildLName {
+  /*font-family: Cabin;*/
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+  height: 28px;
+  width: 80px;
+}
+.modalH1 {
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 35px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-family: CabinMI;
+  margin-bottom: 30px;
+}
+.stagedTypeDate {
+  margin: 0;
+}
+.stagedModalClose {
+  margin-left: 640px;
+  margin-bottom: 50px;
+  margin-top: 0px;
+  top: 135px;
+  width: 100px;
+  z-index: 1;
+  position: fixed;
 }

@@ -66,6 +66,7 @@ export default class StagedParentalRelsSearchLineItem extends React.Component {
 		}
 	}
 
+
   render = () => {
     const { stagedParentalRel, stagedChild, stagedParent } = this.props;
     const { modalIsOpen } = this.state;

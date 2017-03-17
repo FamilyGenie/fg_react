@@ -54,49 +54,77 @@ export default class StagedParentalRelDetails extends React.Component {
     });
 
 
-    return (<div>
-      <div class="container">
-        <div class="col-xs-12">
-          <h1> Parental Relationship Comparison </h1>
-          <button onClick={() => { this.closeModal() }}> Close Modal </button>
+    return (
+      <div>
+        <div class="stagedModalClose">
+          <i class="fa fa-window-close-o fa-2x stagedClose" aria-hidden="true" onClick={this.closeModal}></i>
+        </div>
+        <h1 class="modalH1"> Parental Relationship Comparison </h1>
+        <div class="buffer-modal"></div>
+          <div class="stagedHeader1">
+            <h3 class="stagedH3"> Potential Import </h3>
+          </div>
+        <div class="staged-header-container">
+          <div class="comparisonNameDiv">
+            Child
+          </div>
+          <div class="comparisonNameDiv">
+            Parent
+          </div>
+          <div class="comparisonNameDiv">
+            Relationship Type
+          </div>
+          <div class="comparisonNameDiv">
+            Start Date
+          </div>
+        </div>
+        <div class="stagedPerson">
+          <div class='stagedChild'>
+            <p class='stagedChildFName'>{stagedChild.fName}</p>
+            <p class='stagedChildLName'>{stagedChild.lName}</p>
+          </div>
+          <div class='stagedChild'>
+            <p class='stagedChildFName'>{stagedParent.fName}</p>
+            <p class='stagedChildLName'>{stagedParent.lName}</p>
+          </div>
+          <div class='stagedChild'>
+            <p class="stagedTypeDate">{stagedParentalRel.subType} {stagedParentalRel.relationshipType}</p>
+          </div>
+          <div class='stagedParentStartDate'>
+            <p class="stagedTypeDate">
+              {stagedParentalRel.startDate.substr(0,10)}
+            </p>
+          </div>
+          <div class='stagedButton'>
+            <button onClick={() => { this.importParentalRel() }} class="btn button4">Add </button>
+          </div>
+        </div>
+        <div class="parentComparisonList">
+          <div class="stagedHeader1">
+            <h3 class="stagedH3"> Matches In Your System </h3>
+          </div>
+          <div class="staged-header-container">
+            <div class="comparisonNameDiv">
+              Child
+            </div>
+            <div class="comparisonNameDiv">
+              Parent
+            </div>
+            <div class="comparisonNameDiv">
+              Relationship Type
+            </div>
+            <div class="comparisonNameDiv">
+              Start Date
+            </div>
+          </div>
+          {mappedMatches}
+        </div>
+        <div class="buffer-modal">
+        </div>
+        <div class="delete-modal">
+          <button onClick={() => { this.closeModal() }} class="btn btn-default modalFooterButton">Close </button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-xs-4 title bold can-click">
-          Child
-        </div>
-        <div class="col-xs-4 title bold can-click">
-          Parent
-        </div>
-        <div class="col-xs-4 title bold can-click">
-          Relationship Type
-        </div>
-        <div class="col-xs-4 title bold can-click">
-          Start Date
-        </div>
-      </div>
-      <div class="container col-xs-12">
-        <div class='col-xs-3'>
-          <p>{stagedChild.fName} {stagedChild.lName}</p>
-        </div>
-        <div class='col-xs-3'>
-          <p>{stagedParent.fName} {stagedParent.lName}</p>
-        </div>
-        <div class='col-xs-3'>
-          <p>{stagedParentalRel.subType} {stagedParentalRel.relationshipType}</p>
-        </div>
-        <div class='col-xs-2'>
-          <p>{stagedParentalRel.startDate.substr(0,10)}</p>
-        </div>
-        <div class='col-xs-1'>
-          <button onClick={() => { this.importParentalRel() }}> Import Record </button>
-        </div>
-      </div>
-      <div class="container col-xs-12">
-        {mappedMatches}
-      </div>
-    </div>)
+    );
   }
 }
-
-

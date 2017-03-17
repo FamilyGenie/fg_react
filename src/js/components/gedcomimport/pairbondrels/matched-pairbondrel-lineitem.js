@@ -29,7 +29,7 @@ import { updateStagedPairBondRel } from '../../../actions/stagedPairBondRelActio
 )
 
 export default class MatchedPairBondRelLineItem extends React.Component {
-  
+
   useRecord = () => {
     this.props.updateStagedPairBondRel(this.props.stagedId, 'genie_id', this.props.stagedId);
     this.props.updateStagedPairBondRel(this.props.stagedId, 'ignore', true);
@@ -44,14 +44,14 @@ export default class MatchedPairBondRelLineItem extends React.Component {
       return (<div>
         <div class="infoRow">
           <div class="nameCol">
-            <p>{(matchedPersonOne.fName ? matchedPersonOne.fName : '' )}&nbsp; {(matchedPersonOne.lName ? matchedPersonOne.lName : '')}</p>
+            <p>{(matchedPersonOne ? matchedPersonOne.fName : '' )}&nbsp; {(matchedPersonOne ? matchedPersonOne.lName : '')}</p>
           </div>
           <div class="nameCol">
-            <p>{(matchedPersonTwo.fName ? matchedPersonTwo.fName : '')}&nbsp; {(matchedPersonTwo.lName ? matchedPersonTwo.lName : '')}</p>
-          </div>         
+            <p>{(matchedPersonTwo ? matchedPersonTwo.fName : '')}&nbsp; {(matchedPersonTwo ? matchedPersonTwo.lName : '')}</p>
+          </div>
           <div class="nameCol">
             <p>{matchedPairBondRel.subType}&nbsp; {matchedPairBondRel.relationshipType}</p>
-          </div>         
+          </div>
           <div class="relTypeCol">
             <button onClick={() => {this.useRecord()}}> Use This Record </button>
           </div>
