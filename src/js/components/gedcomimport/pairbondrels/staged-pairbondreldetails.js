@@ -33,7 +33,7 @@ import { importPairBondRel } from '../../../actions/importActions';
 )
 
 export default class StagedPairBondRelDetails extends React.Component {
-  
+
   closeModal = () => {
     this.props.closeModal();
   }
@@ -51,47 +51,82 @@ export default class StagedPairBondRelDetails extends React.Component {
       return ( <MatchedPairBondRelLineItem matchedPairBondRel={matchedPairBondRel} stagedId={stagedPairBondRel._id} closeModal={this.props.closeModal} key={matchedPairBondRel._id} /> )
     });
 
-    return (<div>
-      <div class="container">
-        <div class="col-xs-12">
-          <h1> PairBond Relationship Comparison </h1>
-          <button onClick={() => { this.closeModal() }}> Close Modal </button>
-        </div>
+    return (
+      <div>
+      <div class="stagedModalClose">
+        <i class="fa fa-window-close-o fa-2x stagedClose" aria-hidden="true" onClick={this.closeModal}></i>
       </div>
-      <div class="row">
-        <div class="col-xs-4 title bold can-click">
+      <h1 class="modalH1"> Parental Relationship Comparison </h1>
+      <div class="buffer-modal"></div>
+      <div class="stagedHeader1">
+        <h3 class="stagedH3"> Potential Import </h3>
+      </div>
+      <div class="staged-header-container">
+        <div class="comparisonNameDiv">
           Person One
         </div>
-        <div class="col-xs-4 title bold can-click">
+        <div class="comparisonNameDiv">
           Person Two
         </div>
-        <div class="col-xs-4 title bold can-click">
+        <div class="comparisonNameDiv">
           Relationship Type
         </div>
-        <div class="col-xs-4 title bold can-click">
+        <div class="comparisonNameDiv">
           Start Date
         </div>
       </div>
-      <div class="container col-xs-12">
-        <div class='col-xs-3'>
-          <p>{( stagedPersonOne.fName ? stagedPersonOne.fName : '')} {( stagedPersonOne.lName ? stagedPersonTwo.lName : '')}</p>
+      <div class="stagedPerson">
+        <div class='stagedChild'>
+          <p class='stagedChildFName'>{( stagedPersonOne.fName ? stagedPersonOne.fName : '')}
+          </p>
+          <p class="stagedChildLName">{( stagedPersonOne.lName ? stagedPersonTwo.lName : '')}</p>
         </div>
-        <div class='col-xs-3'>
-          <p>{(stagedPersonTwo.fName ? stagedPersonTwo.fName : '')} {(stagedPersonTwo.lName ? stagedPersonTwo.lName : '')}</p>
+        <div class='stagedChild'>
+          <p class="stagedChildFName">{(stagedPersonTwo.fName ? stagedPersonTwo.fName : '')}</p>
+          <p class="stagedChildLName">{(stagedPersonTwo.lName ? stagedPersonTwo.lName : '')}</p>
         </div>
-        <div class='col-xs-3'>
-          <p>{stagedPairBondRel.relationshipType}</p>
+        <div class='stagedChild'>
+          <p class="stagedTypeDate">
+            {stagedPairBondRel.relationshipType}
+          </p>
         </div>
-        <div class='col-xs-2'>
-          <p>{( stagedPairBondRel.startDate ? stagedPairBondRel.startDate : '')}</p>
+        <div class='stagedParentStartDate'>
+          <p class="stagedTypeDate">
+            {( stagedPairBondRel.startDate ? stagedPairBondRel.startDate : '')}
+          </p>
         </div>
-        <div class='col-xs-1'>
-          <button onClick={() => { this.importPairBondRel() }}> Import Record </button>
+        <div class='stagedButton'>
+          <button class="btn button4" onClick={() => { this.importPairBondRel() }}>Add</button>
         </div>
       </div>
-      <div class="container col-xs-12">
+      <div class="pairBondComparisonList">
+        <div class="stagedHeader1">
+          <h3 class="stagedH3"> Matches In Your System </h3>
+        </div>
+        <div class="staged-header-container">
+          <div class="comparisonNameDiv">
+            Person One
+          </div>
+          <div class="comparisonNameDiv">
+            Person Two
+          </div>
+          <div class="comparisonNameDiv">
+            Relationship Type
+          </div>
+          <div class="comparisonNameDiv">
+            Start Date
+          </div>
+        </div>
+        <div class="stagedMapped">
         {mappedMatches}
+        </div>
       </div>
-    </div>)
+      <div class="buffer-modal">
+      </div>
+      <div class="delete-modal">
+        <button onClick={() => { this.closeModal() }} class="btn btn-default modalFooterButton">Close </button>
+      </div>
+    </div>
+    )
   }
 }

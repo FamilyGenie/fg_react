@@ -29,6 +29,17 @@
   margin-bottom: 10px;
   margin-top: 70px;
 }
+.pairBondComparisonList {
+  background-color: white;
+  width: 100%;
+  max-height: 300px;
+  /*overflow: scroll;*/
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
 .staged-item {
   display: flex;
   flex-direction: row;
@@ -242,7 +253,11 @@
   margin-right: auto;
 }
 .stagedParentStartDate {
-  /*margin-left: 69px;*/
+  width: 100px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  height: 28px;
 }
 .stagedParentType {
   /*margin-left: 52px;*/
@@ -284,6 +299,7 @@
 }
 .stagedTypeDate {
   margin: 0;
+  overflow: hidden;
 }
 .stagedModalClose {
   margin-left: 640px;
@@ -293,4 +309,8 @@
   width: 100px;
   z-index: 1;
   position: fixed;
+}
+.stagedMapped {
+  /*overflow: scroll;
+  width: 200px;*/
 }

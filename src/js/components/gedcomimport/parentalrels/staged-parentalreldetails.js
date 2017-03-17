@@ -61,9 +61,9 @@ export default class StagedParentalRelDetails extends React.Component {
         </div>
         <h1 class="modalH1"> Parental Relationship Comparison </h1>
         <div class="buffer-modal"></div>
-          <div class="stagedHeader1">
-            <h3 class="stagedH3"> Potential Import </h3>
-          </div>
+        <div class="stagedHeader1">
+          <h3 class="stagedH3"> Potential Import </h3>
+        </div>
         <div class="staged-header-container">
           <div class="comparisonNameDiv">
             Child
@@ -96,7 +96,7 @@ export default class StagedParentalRelDetails extends React.Component {
             </p>
           </div>
           <div class='stagedButton'>
-            <button onClick={() => { this.importParentalRel() }} class="btn button4">Add </button>
+            <button onClick={() => { this.importParentalRel() }} class="btn button4">Add</button>
           </div>
         </div>
         <div class="parentComparisonList">

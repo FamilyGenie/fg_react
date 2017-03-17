@@ -53,8 +53,8 @@ export default class MatchedParentalRelLineItem extends React.Component {
           </div>
           <div class="stagedChild">
             <p class="stagedChildFName">
-              {matchedParentalRel.subType}&nbsp;
-            </p> 
+              {matchedParentalRel.subType}
+            </p>
             <p class="stagedChildLName">
               {matchedParentalRel.relationshipType}
             </p>
