@@ -75,6 +75,8 @@ export default class FamilyMap extends React.Component {
 	firstChildYWithAdoptions = 0;
 	textLineSpacing = 18;
 	textSize = '.9em';
+	// this is to mark the beginning of where we look to draw the maps
+	mapStartX = 500;
 	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
 	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
 	errorShown = false;
@@ -101,7 +103,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap(0);
+		this.drawMap(this.mapStartX);
 	}
 
     // this function will be called when the user hits the button to add a year and then re-draw the map
@@ -113,7 +115,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap(0);
+		this.drawMap(this.mapStartX);
 	}
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
@@ -141,15 +143,15 @@ export default class FamilyMap extends React.Component {
 			starAge: evt.target.value
 		});
 		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
-		this.drawMap(0);
+		this.drawMap(this.mapStartX);
 	}
 	// is this needed? Is componentDidUpdate enough?
 	componentDidMount = () => {
-		// this.drawMap(0);
+		// this.drawMap(this.mapStartX);
 	}
 
 	componentDidUpdate = () => {
-		this.drawMap(500);
+		this.drawMap(this.mapStartX);
 	}
 
 	render = () => {
@@ -217,7 +219,6 @@ export default class FamilyMap extends React.Component {
 		// TODO: need to standardize on where to store these constants
 		// const startX = 500;
 		const startY = 200;
-		const startStartX = 500;
 		const parentDistance = 220;
 		const childDistance = 120;
 
@@ -304,18 +305,18 @@ export default class FamilyMap extends React.Component {
 
 		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 0. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
 		// console.log('about to check for draw again: ', startX, this.getStartXPos(parentDistance, startX, startStartX));
-		if (startX === 500) {
-			this.drawMap(this.getStartXPos(parentDistance, startX, startStartX));
+		if (startX === this.mapStartX) {
+			this.drawMap(this.getStartXPos(parentDistance, startX));
 		} else {
 			// Last, we need to see about resizing the drawing
-			this.scaleMap(startStartX);
+			this.scaleMap();
 		}
 	} // end of drawMap
 
-	scaleMap = (startStartX) => {
+	scaleMap = () => {
 
-		var maxX = startStartX;
-		var minX = startStartX
+		var maxX = this.mapStartX;
+		var minX = this.mapStartX
 		for (let person of this.parents) {
 				console.log('person ', person.fName, person.mapXPos);
 				if (person.mapXPos > maxX) {
@@ -333,12 +334,12 @@ export default class FamilyMap extends React.Component {
 		}
 	}
 
-	getStartXPos = (parentDistance, startXFromMain, startStartX) => {
+	getStartXPos = (parentDistance, startXFromMain) => {
 		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, just return 0
 		if (this.parents.length) {
-			var startX = startStartX;
-			var minX = startStartX;
-			var maxX = startStartX;
+			var startX = this.mapStartX;
+			var minX = this.mapStartX;
+			var maxX = this.mapStartX;
 			// cycle through each parent and find the one with the smallest XPos
 			for (let person of this.parents) {
 				if (person.sexAtBirth === 'F') {
@@ -356,7 +357,7 @@ export default class FamilyMap extends React.Component {
 			}
 
 			if (minX < 0) {
-				return 500 + parentDistance + Math.abs(minX);
+				return this.mapStartX + parentDistance + Math.abs(minX);
 			} else {
 				return startX + 1;
 			}
