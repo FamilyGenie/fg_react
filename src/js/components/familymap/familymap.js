@@ -231,7 +231,7 @@ export default class FamilyMap extends React.Component {
 		// for map drawing
 		this.svg = d3.select('svg');
 		this.g = this.svg.append('g');
-		this.drawTicks();
+		// this.drawTicks();
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -251,16 +251,12 @@ export default class FamilyMap extends React.Component {
 				hashHistory.push('/');
 				return;
 			}
-			console.log("After getAllParents, parents: ", this.parents);
-			console.log('After getAllParents, parentRels: ', this.parentRels);
 
 			// this function will get all the children of the parents in the parents array
 			this.getAllChildrenOfParents();
 
 			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
 			this.checkAllChildrenForBioParents();
-
-			console.log("After getAllChildren:", this.children);
 
 			// TODO: Is this a suitable test?
 			if ( this.children.length + this.parents.length + this.parentRels.length === lastCount) {
@@ -269,6 +265,9 @@ export default class FamilyMap extends React.Component {
 			lastCount = this.children.length + this.parents.length + this.parentRels.length;
 		}
 
+		console.log('After loop, parents: ', this.parents);
+		console.log('After loop, parentRels: ', this.parentRels);
+		console.log('After loop, children: ', this.children);
 		// check to see if there are any people who are in the children array and the parents array. If so, the function returns false, so exit out and redirect to peoplesearch page
 		if ( !this.checkForChildrenWhoAreParents() ) {
 			// there already was an error shown, so just exit
@@ -283,6 +282,10 @@ export default class FamilyMap extends React.Component {
 			return;
 		}
 		console.log("all pair bonds:", this.pairBonds);
+
+		// this function will take all the people in pairBonds and add them to the this.parents array. This is needed for properly calculation this positioning and scale of the maps.
+		this.addPairBondsToParents();
+		console.log("all parents after adding pairbonds: ", this.parents);
 
 		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
 		this.addParentsNotInPairBonds();
@@ -326,11 +329,12 @@ export default class FamilyMap extends React.Component {
 					minX = person.mapXPos;
 				}
 		}
-		console.log('in scale map: ', minX, maxX);
-		if ( (maxX - minX) < 1000 ) {
+		if ( (maxX - minX) < 1200 ) {
 			// do nothing
 		} else {
-			this.g.attr('transform', 'scale(.5)');
+			var scaleFactor = 1200/(maxX - minX);
+			console.log('in scale map: ', minX, maxX, scaleFactor);
+			this.g.attr('transform', 'scale(' + scaleFactor + ')');
 		}
 	}
 
@@ -359,10 +363,24 @@ export default class FamilyMap extends React.Component {
 			if (minX < 0) {
 				return this.mapStartX + parentDistance + Math.abs(minX);
 			} else {
-				return startX + 1;
+				return startX + 50;
 			}
 		} else {
 			return 0;
+		}
+	}
+
+	addPairBondsToParents = () => {
+		for (let pairBond of this.pairBonds) {
+			var personOne = this.getPersonById(pairBond.personOne_id);
+			if (!this.parents.includes(personOne)) {
+					this.parents.push(personOne);
+				}
+
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
+			if (!this.parents.includes(personTwo)) {
+					this.parents.push(personTwo);
+				}
 		}
 	}
 
