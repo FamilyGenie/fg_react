@@ -373,14 +373,18 @@ export default class FamilyMap extends React.Component {
 	addPairBondsToParents = () => {
 		for (let pairBond of this.pairBonds) {
 			var personOne = this.getPersonById(pairBond.personOne_id);
-			if (!this.parents.includes(personOne)) {
-					this.parents.push(personOne);
+			if (personOne) {
+				if (!this.parents.includes(personOne)) {
+						this.parents.push(personOne);
 				}
+			}
 
-			var personTwo = this.getPersonById(pairBond.personTwo_id);
-			if (!this.parents.includes(personTwo)) {
-					this.parents.push(personTwo);
+			if (personTwo) {
+				var personTwo = this.getPersonById(pairBond.personTwo_id);
+				if (!this.parents.includes(personTwo)) {
+						this.parents.push(personTwo);
 				}
+			}
 		}
 	}
 
@@ -659,7 +663,7 @@ export default class FamilyMap extends React.Component {
 				}
 			}
 
-			// find personOne and draw them if they haven't been drawn yet
+			// find personTwo and draw them if they haven't been drawn yet
 			personTwo = null;
 			var personTwo = this.getPersonById(pairBond.personTwo_id);
 			if (personTwo && !this.alreadyDrawn.includes(personTwo)) {
@@ -882,8 +886,8 @@ export default class FamilyMap extends React.Component {
 				function(pairBond) {
 					return (pairBond.personOne_id === parentObj._id ||
 						pairBond.personTwo_id === parentObj._id) &&
-						// if there is a startDate, then return the substr of it. If not, put in null, and then this test condition will evaluate true (null less than a string will evaluate to true), which is what we want. If the user did not put in a pairBond start date, then do show that relationship on the map
-						(pairBond.startDate ? pairBond.startDate.substr(0,10) : null) <= this.dateFilterString;
+						// if there is a startDate, then return the substr of it. If not, put in empty string, and then this test condition will evaluate true ('' less than a string will evaluate to true), which is what we want. If the user did not put in a pairBond start date, then do show that relationship on the map.
+						(pairBond.startDate ? pairBond.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -1025,11 +1029,12 @@ export default class FamilyMap extends React.Component {
 
 		// for each parent of star
 		for (let parent of this.parents) {
-			// find every parental relationship (including those that do not have the star as child)
+			// find every parental relationship (including those that do not have the star as child).
+			// Note: if there is no startdate for the parental relationship, then set that value to '', so this parent still shows on the map (because empty string < string evaluates to true)
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.parent_id === parent._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -1037,8 +1042,8 @@ export default class FamilyMap extends React.Component {
 			for (let parentRel of parentalRelTemp) {
 				// find the child
 				let child = this.getPersonById(parentRel.child_id);
-				// if child was born on or before the dateFilter
-				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.dateFilterString) {
+				// if there is no child birthdate, then we do want them to show up on the map, so if no birthdate, then set to '' so that it shows as true, and then child will show on the map.
+				if ((child.birthDate ? child.birthDate.substr(0,10) : '') <= this.dateFilterString) {
 					// if child does not yet exist in children array, push onto it
 					// this.children = addToArray(this.children, child);
 					if (!this.children.includes(child)) {
