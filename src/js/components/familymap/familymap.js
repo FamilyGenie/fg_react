@@ -379,8 +379,8 @@ export default class FamilyMap extends React.Component {
 				}
 			}
 
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
 			if (personTwo) {
-				var personTwo = this.getPersonById(pairBond.personTwo_id);
 				if (!this.parents.includes(personTwo)) {
 						this.parents.push(personTwo);
 				}
