@@ -96,7 +96,7 @@ export default class ImportDashboard extends React.Component {
   }
 
   onDrop = (files) => {
-    
+
     const { stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels } = this.props;
     const stagedArrays = [ stagedPeople, stagedEvents, stagedParentalRels, stagedPairBondRels ];
 
@@ -104,7 +104,7 @@ export default class ImportDashboard extends React.Component {
     for ( let stagedArray in stagedArrays ) {
       if (this.checkIgnore(stagedArrays[stagedArray])) {
         alert('You must clear your imported records before uploading a new file. \n Nothing will be uploaded at this time.');
-        continue_ = false; 
+        continue_ = false;
         break;
       }
     }

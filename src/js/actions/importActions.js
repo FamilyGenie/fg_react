@@ -25,7 +25,7 @@ export function autoImport() {
   }
 }
 
-export function importPeopleAndEvents() {
+export function importPeopleAndEvents(importRelsAlso) {
 
   // send an empty body object
   const body = {};
@@ -35,12 +35,19 @@ export function importPeopleAndEvents() {
     axios.post(config.api_url + "/api/v2/autoimportpeople", body, getAxiosConfig())
       .then((response) => {
         dispatch({type: "IMPORT_PEOPLEANDEVENTS_FULFILLED", payload: response.data})
-        // after running import, refresh the store.
-        // TODO: recieve the data through the response.data and append that information to the store.
-        dispatch(fetchPeople());
-        dispatch(fetchEvents());
-        dispatch(fetchStagedPeople());
-        dispatch(fetchStagedEvents());
+
+        // if we need to import the Relationships also, call that here. The fetches to refresh the store will be done at the end of importRelationships, so only do that fetch if not also importing the relationships
+        debugger;
+        if (importRelsAlso) {
+          dispatch(importRelationships());
+        } else {
+          // after running import, refresh the store.
+          // TODO: recieve the data through the response.data and append that information to the store.
+          dispatch(fetchPeople());
+          dispatch(fetchEvents());
+          dispatch(fetchStagedPeople());
+          dispatch(fetchStagedEvents());
+        }
       })
       .catch((err) => {
         dispatch({type: "IMPORT_PEOPLEANDEVENTS_REJECTED", payload: err})

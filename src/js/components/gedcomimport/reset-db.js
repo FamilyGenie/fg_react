@@ -26,8 +26,7 @@ const fgtoken = cookie.load('fg-access-token');
         dispatch(clearStagedRecords());
       },
       importAllRecords: () => {
-        dispatch(importPeopleAndEvents());
-        dispatch(importRelationships());
+        dispatch(importPeopleAndEvents(true));
       }
     }
   }
@@ -88,7 +87,7 @@ export default class ResetDatabase extends React.Component {
   }
 
   render = () => {
-    
+
     return (
     <div class="mainImport">
       <div class="header-div">
