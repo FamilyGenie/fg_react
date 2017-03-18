@@ -37,7 +37,6 @@ export function importPeopleAndEvents(importRelsAlso) {
         dispatch({type: "IMPORT_PEOPLEANDEVENTS_FULFILLED", payload: response.data})
 
         // if we need to import the Relationships also, call that here. The fetches to refresh the store will be done at the end of importRelationships, so only do that fetch if not also importing the relationships
-        debugger;
         if (importRelsAlso) {
           dispatch(importRelationships());
         } else {
