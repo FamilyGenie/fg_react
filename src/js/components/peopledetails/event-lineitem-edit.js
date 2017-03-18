@@ -49,6 +49,7 @@ export default class EventLineItemEdit extends React.Component {
 constructor(props) {
 	super(props);
 
+
 	// this.state.relType stores the value for the relationshipType dropdown. Per the online forums, this is how you tell react-select what value to display (https://github.com/JedWatson/react-select/issues/796)
 	this.state = {
 		// while in transition to using startDates and startDateUsers (and endDates and endDateUsers), if the User entered field does not yet exist, populate it with the startDate or endDate field. Eventually all records will have the 'User' fields and this code can be changed by removing the condition and just setting the field to the value from this.props.pairBondRel
@@ -156,6 +157,7 @@ constructor(props) {
 	}
 
 	render = () => {
+
 		const { event, eventTypes} = this.props;
 		const { eventDateUser, eventType } = this.state;
 
@@ -256,21 +258,34 @@ constructor(props) {
 				</div>
 				<div class="buffer-modal">
 				</div>
-				<div class="event-delete-modal">
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.saveRecord}
-					>
-						Save
-					</button>
-					<button
-						type="button"
-						class="btn btn-default modal-delete"
-						onClick={this.deleteRecord}
-					>
-						Delete
-					</button>
+				<div class="eventModalFooter">
+					<div class="modalFooterBuffer">
+					</div>
+					<div class="delete-modal">
+						<button
+							type="button"
+							class="btn btn-default modalFooterButton"
+							onClick={this.saveRecord}
+						>
+							Save
+						</button>
+						<button
+							type="button"
+							class="btn btn-default modalFooterButton"
+							onClick={this.props.closeModal}
+						>
+							Cancel
+						</button>
+					</div>
+					<div class="modalFooterBuffer">
+						<button
+							type="button"
+							class="btn btn-default modal-delete"
+							onClick={this.deleteRecord}
+						>
+							Delete
+						</button>
+					</div>
 				</div>
 			</div>)
 		} else {
