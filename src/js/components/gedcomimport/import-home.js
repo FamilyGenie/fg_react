@@ -128,7 +128,6 @@ export default class ImportDashboard extends React.Component {
   }
 
   importPeopleAndEvents = () => {
-    debugger;
     this.props.importPeopleAndEvents();
     msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
   }

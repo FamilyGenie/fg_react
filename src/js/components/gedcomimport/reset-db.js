@@ -27,7 +27,6 @@ const fgtoken = cookie.load('fg-access-token');
       },
       importAllRecords: () => {
         dispatch(importPeopleAndEvents(true));
-        // dispatch(importRelationships());
       }
     }
   }
