@@ -633,7 +633,7 @@ export default class FamilyMap extends React.Component {
 				if (child._id === this.props.star_id) {
 					child.d3Star = this.drawStar(xPos, nextChildY, child);
 				}
-				child.d3TextBox = this.drawTextBox(xPos, nextChildY);
+				child.d3TextBox = this.drawTextBox(xPos, nextChildY, child);
 				child.d3Text = this.drawCircleText(xPos + 50, nextChildY - 25, child);
 
 				nextChildY += childDistance;
@@ -1300,14 +1300,23 @@ export default class FamilyMap extends React.Component {
 			.attr("fill", "none");
 	}
 
-	drawTextBox(cx, cy) {
-		let lineData = [
-			{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
-			{"x": cx + 175, "y": cy + 20}, {"x": cx + 45, "y": cy + 20},
-			{"x": cx + 45, "y": cy - 45}
-		];
+	drawTextBox(cx, cy, child) {
+		if (child.deathDate) {
+			// create lineData that is bigger because there is a deathDate showing
+			var lineData = [
+				{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
+				{"x": cx + 175, "y": cy + 50}, {"x": cx + 45, "y": cy + 50},
+				{"x": cx + 45, "y": cy - 45}
+			];
+		} else {
+			var lineData = [
+				{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
+				{"x": cx + 175, "y": cy + 20}, {"x": cx + 45, "y": cy + 20},
+				{"x": cx + 45, "y": cy - 45}
+			];
+		}
 
-		let lineFunction = d3.line()
+		var lineFunction = d3.line()
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
