@@ -641,7 +641,7 @@ export default class FamilyMap extends React.Component {
 			} else {
 				// if not both a mom and or a dad, print error message.
 				if (!this.errorShown) {
-					alert("There is a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
+					alert("There is a problem. Possibly " + child.fName + " " + child.lName + " does not have a birthDate set. \n\nAlternatively, there may be a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
 					this.errorShown = true;
 
 				}
@@ -1111,6 +1111,11 @@ export default class FamilyMap extends React.Component {
 	createLocalPeople = (people, events) => {
 		var localPeople = people.map(function(person) {
 
+			// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
+			// So, if you do a search on the entire database and no person record has a birthDate or deathDate as a field in any document, then we can remove these next two lines of code.
+			person.birthDate = '';
+			person.deathDate = '';
+
 			 var birth = events.find(function(e) {
 					return person._id === e.person_id && e.eventType === "Birth";
 			 });
@@ -1160,8 +1165,9 @@ export default class FamilyMap extends React.Component {
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		if (!this.dateFilterString) {
 			if (!star.birthDate) {
-				alert('Star does not have a birthdate, map will not be drawn');
-				return;
+				// I think we don't need this alert or this return, because the map now draws children on the map, even if there isn't a birthdate
+				// alert('Star does not have a birthdate, map will not be drawn');
+				// return;
 			} else {
 				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
 				this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
