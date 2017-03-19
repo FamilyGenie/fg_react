@@ -80,6 +80,7 @@ export default class FamilyMap extends React.Component {
 	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
 	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
 	errorShown = false;
+	currentScale;
 
 	// global variables for svg / d3 map drawing
 	svg;
@@ -132,7 +133,6 @@ export default class FamilyMap extends React.Component {
 
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
-		console.log("onAgeChange", evt.target.value);
 		var star = this.getPersonById(this.props.star_id);
 		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
 
@@ -142,7 +142,6 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
-		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
 		this.drawMap(this.mapStartX);
 	}
 	// is this needed? Is componentDidUpdate enough?
@@ -186,6 +185,11 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
+							<p>Map Zoom</p>
+							<div class="mapArrow">
+								<i class="fa fa-plus buttonSize button2" onClick={this.zoomIn}></i>
+								<i class="fa fa-minus buttonSize button2" onClick={this.zoomOut}></i>
+							</div>
 						</div>
 						<div>
 							<h1 class="family-header">{this.fullName}'s Family Map </h1>
@@ -225,8 +229,6 @@ export default class FamilyMap extends React.Component {
 		this.initializeVariables();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
-
-		console.log('startX is: ', startX);
 
 		// for map drawing
 		this.svg = d3.select('svg');
@@ -319,23 +321,52 @@ export default class FamilyMap extends React.Component {
 	scaleMap = () => {
 
 		var maxX = this.mapStartX;
-		var minX = this.mapStartX
+		var minX = this.mapStartX;
 		for (let person of this.parents) {
-				console.log('person ', person.fName, person.mapXPos);
-				if (person.mapXPos > maxX) {
-					maxX = person.mapXPos;
-				}
-				if (person.mapXPos < minX) {
-					minX = person.mapXPos;
-				}
+			if (person.mapXPos > maxX) {
+				maxX = person.mapXPos;
+			}
+			if (person.mapXPos < minX) {
+				minX = person.mapXPos;
+			}
 		}
 		if ( (maxX - minX) < 1200 ) {
-			// do nothing
+			// do nothing (horizontal can handle up to 1200)
+			var scaleX = 1;
 		} else {
-			var scaleFactor = 1200/(maxX - minX);
-			console.log('in scale map: ', minX, maxX, scaleFactor);
-			this.g.attr('transform', 'scale(' + scaleFactor + ')');
+			var scaleX = 1200/(maxX - minX);
 		}
+		var maxY = 0;
+		for (let child of this.children) {
+			if (child.mapYPos > maxY) {
+				maxY = child.mapYPos;
+			}
+		}
+		if (maxY < 1200) {
+			// do nothing (vertical can handle up to 1200)
+			var scaleY = 1;
+		} else {
+			var scaleY = 1200/maxY;
+		}
+
+		// figure out if scaling it neccessary for x or y direction, if so use whichever one makes the map the smallest (so it fits both directions)
+		if (scaleX !== 1 || scaleY !== 1) {
+			this.currentScale = (scaleX < scaleY ? scaleX : scaleY);
+		} else {
+			this.currentScale = 1;
+		}
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+
+	}
+
+	zoomIn = () => {
+		this.currentScale = this.currentScale * 1.2;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+	}
+
+	zoomOut = () => {
+		this.currentScale = this.currentScale * .8;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
 	}
 
 	getStartXPos = (parentDistance, startXFromMain) => {
@@ -642,7 +673,6 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
-		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
