@@ -1304,15 +1304,15 @@ export default class FamilyMap extends React.Component {
 		if (child.deathDate) {
 			// create lineData that is bigger because there is a deathDate showing
 			var lineData = [
-				{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
 				{"x": cx + 175, "y": cy + 50}, {"x": cx + 45, "y": cy + 50},
-				{"x": cx + 45, "y": cy - 45}
+				{"x": cx + 45, "y": cy - 40}
 			];
 		} else {
 			var lineData = [
-				{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
-				{"x": cx + 175, "y": cy + 20}, {"x": cx + 45, "y": cy + 20},
-				{"x": cx + 45, "y": cy - 45}
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
+				{"x": cx + 175, "y": cy + 15}, {"x": cx + 45, "y": cy + 15},
+				{"x": cx + 45, "y": cy - 40}
 			];
 		}
 
