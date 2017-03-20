@@ -146,8 +146,10 @@ export default class FamilyMap extends React.Component {
 		this.drawMap(this.mapStartX);
 	}
 
-	componentDidUpdate = () => {
-		this.drawMap(this.mapStartX);
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevProps !== this.props) {
+			this.drawMap(this.mapStartX);
+		}
 		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
