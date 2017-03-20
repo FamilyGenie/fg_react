@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
@@ -79,7 +80,6 @@ export default class PeopleDetails extends React.Component {
 constructor(props) {
 	super(props);
 	this.props.updateHelpMessage('This is the people details page');
-	console.log('here are the children: ', this.props.children);
 }
 
 	createPerson = () => {
@@ -200,7 +200,8 @@ constructor(props) {
 		</div>
 		);
 	}
-	componentDidMount() {
-		this._div.scrollTop = 0;
+
+	componentDidUpdate() {
+		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 }
