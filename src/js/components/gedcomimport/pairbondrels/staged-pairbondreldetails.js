@@ -118,7 +118,7 @@ export default class StagedPairBondRelDetails extends React.Component {
           </div>
         </div>
         <div class="stagedMapped">
-        {mappedMatches}
+          {mappedMatches}
         </div>
       </div>
       <div class="buffer-modal">
