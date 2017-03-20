@@ -248,8 +248,13 @@ export default class PeopleSearch extends React.Component {
     );
   }
 
-  // this will make the window scroll to the top when you open this page
-  componentDidUpdate = () => {
+  componentDidUpdate = (prevProps, prevState) => {
+    // this will make the window scroll to the top when you open this page
     ReactDOM.findDOMNode(this).scrollIntoView();
+
+    // when the props change is when we have data to show, so execute the sort at this time.
+    if (prevProps !== this.props) {
+      this.sortPeople('date');
+    }
   }
 }
