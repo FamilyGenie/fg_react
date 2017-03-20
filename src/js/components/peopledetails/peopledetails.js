@@ -18,6 +18,7 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 @connect(
 	(store, ownProps) => {
 
+		// this finds the children of the person whose page we are looking at. First it filters the parentalRel records to find all the places this person is the parent. Then it maps the children to the people collection to get their names and person ids
     	var children = store.parentalRels.parentalRels.filter((parentRel) => {
     		return (parentRel.parent_id === ownProps.params.star_id);
     	}).map((parentRel) => {
