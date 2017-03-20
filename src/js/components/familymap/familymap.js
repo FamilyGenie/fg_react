@@ -80,6 +80,7 @@ export default class FamilyMap extends React.Component {
 	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
 	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
 	errorShown = false;
+	currentScale;
 
 	// global variables for svg / d3 map drawing
 	svg;
@@ -132,7 +133,6 @@ export default class FamilyMap extends React.Component {
 
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
-		console.log("onAgeChange", evt.target.value);
 		var star = this.getPersonById(this.props.star_id);
 		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
 
@@ -142,7 +142,6 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
-		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
 		this.drawMap(this.mapStartX);
 	}
 	// is this needed? Is componentDidUpdate enough?
@@ -186,6 +185,11 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
+							<p>Map Zoom</p>
+							<div class="mapArrow">
+								<i class="fa fa-plus buttonSize button2" onClick={this.zoomIn}></i>
+								<i class="fa fa-minus buttonSize button2" onClick={this.zoomOut}></i>
+							</div>
 						</div>
 						<div>
 							<h1 class="family-header">{this.fullName}'s Family Map </h1>
@@ -225,8 +229,6 @@ export default class FamilyMap extends React.Component {
 		this.initializeVariables();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
-
-		console.log('startX is: ', startX);
 
 		// for map drawing
 		this.svg = d3.select('svg');
@@ -319,23 +321,52 @@ export default class FamilyMap extends React.Component {
 	scaleMap = () => {
 
 		var maxX = this.mapStartX;
-		var minX = this.mapStartX
+		var minX = this.mapStartX;
 		for (let person of this.parents) {
-				console.log('person ', person.fName, person.mapXPos);
-				if (person.mapXPos > maxX) {
-					maxX = person.mapXPos;
-				}
-				if (person.mapXPos < minX) {
-					minX = person.mapXPos;
-				}
+			if (person.mapXPos > maxX) {
+				maxX = person.mapXPos;
+			}
+			if (person.mapXPos < minX) {
+				minX = person.mapXPos;
+			}
 		}
 		if ( (maxX - minX) < 1200 ) {
-			// do nothing
+			// do nothing (horizontal can handle up to 1200)
+			var scaleX = 1;
 		} else {
-			var scaleFactor = 1200/(maxX - minX);
-			console.log('in scale map: ', minX, maxX, scaleFactor);
-			this.g.attr('transform', 'scale(' + scaleFactor + ')');
+			var scaleX = 1200/(maxX - minX);
 		}
+		var maxY = 0;
+		for (let child of this.children) {
+			if (child.mapYPos > maxY) {
+				maxY = child.mapYPos;
+			}
+		}
+		if (maxY < 1200) {
+			// do nothing (vertical can handle up to 1200)
+			var scaleY = 1;
+		} else {
+			var scaleY = 1200/maxY;
+		}
+
+		// figure out if scaling it neccessary for x or y direction, if so use whichever one makes the map the smallest (so it fits both directions)
+		if (scaleX !== 1 || scaleY !== 1) {
+			this.currentScale = (scaleX < scaleY ? scaleX : scaleY);
+		} else {
+			this.currentScale = 1;
+		}
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+
+	}
+
+	zoomIn = () => {
+		this.currentScale = this.currentScale * 1.2;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+	}
+
+	zoomOut = () => {
+		this.currentScale = this.currentScale * .8;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
 	}
 
 	getStartXPos = (parentDistance, startXFromMain) => {
@@ -602,7 +633,7 @@ export default class FamilyMap extends React.Component {
 				if (child._id === this.props.star_id) {
 					child.d3Star = this.drawStar(xPos, nextChildY, child);
 				}
-				child.d3TextBox = this.drawTextBox(xPos, nextChildY);
+				child.d3TextBox = this.drawTextBox(xPos, nextChildY, child);
 				child.d3Text = this.drawCircleText(xPos + 50, nextChildY - 25, child);
 
 				nextChildY += childDistance;
@@ -610,7 +641,7 @@ export default class FamilyMap extends React.Component {
 			} else {
 				// if not both a mom and or a dad, print error message.
 				if (!this.errorShown) {
-					alert("There is a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
+					alert("There is a problem. Possibly " + child.fName + " " + child.lName + " does not have a birthDate set. \n\nAlternatively, there may be a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
 					this.errorShown = true;
 
 				}
@@ -642,7 +673,6 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
-		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
@@ -1081,6 +1111,11 @@ export default class FamilyMap extends React.Component {
 	createLocalPeople = (people, events) => {
 		var localPeople = people.map(function(person) {
 
+			// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
+			// So, if you do a search on the entire database and no person record has a birthDate or deathDate as a field in any document, then we can remove these next two lines of code.
+			person.birthDate = '';
+			person.deathDate = '';
+
 			 var birth = events.find(function(e) {
 					return person._id === e.person_id && e.eventType === "Birth";
 			 });
@@ -1130,8 +1165,9 @@ export default class FamilyMap extends React.Component {
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		if (!this.dateFilterString) {
 			if (!star.birthDate) {
-				alert('Star does not have a birthdate, map will not be drawn');
-				return;
+				// I think we don't need this alert or this return, because the map now draws children on the map, even if there isn't a birthdate
+				// alert('Star does not have a birthdate, map will not be drawn');
+				// return;
 			} else {
 				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
 				this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
@@ -1270,14 +1306,23 @@ export default class FamilyMap extends React.Component {
 			.attr("fill", "none");
 	}
 
-	drawTextBox(cx, cy) {
-		let lineData = [
-			{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
-			{"x": cx + 175, "y": cy + 20}, {"x": cx + 45, "y": cy + 20},
-			{"x": cx + 45, "y": cy - 45}
-		];
+	drawTextBox(cx, cy, child) {
+		if (child.deathDate) {
+			// create lineData that is bigger because there is a deathDate showing
+			var lineData = [
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
+				{"x": cx + 175, "y": cy + 50}, {"x": cx + 45, "y": cy + 50},
+				{"x": cx + 45, "y": cy - 40}
+			];
+		} else {
+			var lineData = [
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
+				{"x": cx + 175, "y": cy + 15}, {"x": cx + 45, "y": cy + 15},
+				{"x": cx + 45, "y": cy - 40}
+			];
+		}
 
-		let lineFunction = d3.line()
+		var lineFunction = d3.line()
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
