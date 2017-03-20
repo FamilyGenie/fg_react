@@ -9,9 +9,8 @@ import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../../actions/stagedEventActions';
 import { clearStagedRecords } from '../../actions/importActions';
 
-import cookie from "react-cookie";
 import config from '../../config.js';
-const fgtoken = cookie.load('fg-access-token');
+import { getAxiosConfig } from '../../actions/actionFunctions';
 
 @connect(
   (store, ownProps) => {
@@ -84,7 +83,7 @@ export default class ImportDashboard extends React.Component {
   // this is specifically for the gedcom file upload process
   xhr_post = (xhrToSend, url, formData) => {
       xhrToSend.open("POST", url, true);
-      xhrToSend.setRequestHeader("x-access-token", fgtoken);
+      xhrToSend.setRequestHeader('x-access-token', getAxiosConfig().headers['x-access-token']);
       xhrToSend.send(formData);
   }
 
