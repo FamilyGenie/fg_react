@@ -264,14 +264,15 @@
 }
 .relTypeCol2 {
   display: flex;
-  width: 60%;
+  width: 50%;
   align-items: center;
-  margin-left: 50px;
-  justify-content: flex-end;
+  margin-left: auto;
 }
 .relTypeWord {
   margin-right: 3px;
   cursor: pointer;
+  overflow: hidden;
+  height: 35px;
 }
 .ital {
   font-style: italic;
@@ -289,6 +290,7 @@
   overflow: hidden;
   height: 35px;
   text-align: right;
+  padding-right: 10px;
 }
 .personCol {
   width: 25%;

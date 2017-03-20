@@ -13,6 +13,9 @@ import StagedParentalRelSearchLineItem from './staged-parentalrelsearch-lineitem
 })
 
 export default class StagedParentalRelSearch extends React.Component {
+  componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
 
   render = () => {
 
@@ -28,7 +31,7 @@ export default class StagedParentalRelSearch extends React.Component {
     return (
       <div class='mainDiv'>
         <div class="header-div">
-          <h1 class="family-header"></h1>
+          <h1 class="family-header"> Duplicate Parent Review </h1>
         </div>
         <div class="staged-container">
           <div class="staged-header-container">

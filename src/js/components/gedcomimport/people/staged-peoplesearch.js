@@ -13,6 +13,10 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 })
 
 export default class StagedPeopleSearch extends React.Component {
+  componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
+
   render = () => {
     const { stagedPeople } = this.props;
 
@@ -23,7 +27,7 @@ export default class StagedPeopleSearch extends React.Component {
     return (
     <div class="mainDiv">
       <div class="header-div">
-        <h1 class="family-header"> Duplicate Review </h1>
+        <h1 class="family-header"> Duplicate People Review </h1>
       </div>
       <div class="staged-container">
         <div class='staged-header-container'>

@@ -162,6 +162,9 @@ export default class PeopleSearch extends React.Component {
       mappedPeople: mappedPeople,
     });
   }
+  componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
 
   // if we ever figure out how to clear the search input field, this is the function we would use to reset the family list
 

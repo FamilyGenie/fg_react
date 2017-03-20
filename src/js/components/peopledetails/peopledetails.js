@@ -98,6 +98,10 @@ constructor(props) {
 		this.props.createEvent(this.props.star._id);
 	}
 
+	componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
+
 	render = () => {
 
 		const { star, events, pairBondRels, parentalRels, allDataIn, children, modalIsOpen } = this.props;

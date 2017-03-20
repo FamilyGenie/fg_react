@@ -142,6 +142,9 @@ export default class Chronology extends React.Component {
     this.setState({mappedEvents: mappedEvents, reverse : !this.state.reverse});
     return mappedEvents
   }
+  componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
 
   render = () => {
     const { events, people } = this.props;
