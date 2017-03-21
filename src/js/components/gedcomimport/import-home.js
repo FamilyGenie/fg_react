@@ -141,6 +141,9 @@ export default class ImportDashboard extends React.Component {
       this.props.clearStagedRecords();
     }
   }
+  componentDidMount = () => {
+    $(window).scrollTop(0);
+  }
 
   render = () => {
 
@@ -166,7 +169,6 @@ export default class ImportDashboard extends React.Component {
                     <p>This currently only accepts files from Ancestry.com</p>
                   </div>
                 </Dropzone>
-                <button onClick={() => {this.checkIgnore(this.props.stagedPeople)}}>Click</button>
               </div>
             </div>
           </div>

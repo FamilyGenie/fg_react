@@ -18,6 +18,28 @@
   border-radius: 5px;
   margin-bottom: 10px;
 }
+.parentComparisonList {
+  background-color: white;
+  width: 100%;
+  height: 180px;
+  overflow: scroll;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  margin-top: 70px;
+}
+.pairBondComparisonList {
+  background-color: white;
+  width: 100%;
+  max-height: 400px;
+  /*overflow: scroll;*/
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  margin-top: 10px;
+}
 .staged-item {
   display: flex;
   flex-direction: row;
@@ -40,10 +62,29 @@
   margin-left: auto;
   margin-right: auto;
 }
+.stagedRelType {
+  width: 65px;
+}
 .staged-name-div {
   display: flex;
   flex-direction: row;
   width: 350px;
+}
+.stagedNameDiv2 {
+  display: flex;
+  flex-direction: row;
+  width: 260px;
+  overflow: hidden;
+}
+.stagedNameDiv3 {
+  display: flex;
+  flex-direction: row;
+  width: 240px;
+  overflow: hidden;
+}
+.stagedStartDate {
+  margin-right: auto;
+  margin-left: 10px;
 }
 .comparisonNameDiv {
   display: flex;
@@ -123,9 +164,36 @@
   width: 25%;
   text-align: center;
 }
+.stagedPersonOne {
+  width: 80px;
+  height: 30px;
+  margin-right: 181px;
+}
+.stagedPersonTwo {
+  width: 80px;
+  height: 30px;
+  margin-right: 160px;
+}
 .stagedHeaderReview {
   margin-left: auto;
   width: 40px;
+}
+.stagedHeaderType {
+  margin-right: 60px;
+}
+.stagedPBHeaderReview {
+  margin-left: auto;
+  width: 40px;
+  margin-right: 12px;
+}
+.stagedParentHeader {
+  margin-right: 223px;
+}
+.stagedChildHeader {
+  margin-right: 210px;
+}
+.stagedType {
+  margin-right: 38px;
 }
 .staged-sex {
   width: 30px;
@@ -166,4 +234,84 @@
 }
 .pencil2 {
   float: right;
+}
+.stagedPR {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+}
+.stagedButton {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.button4 {
+  width: 50px !important;
+  background-color: #640FF3;
+  color: white;
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.stagedParentStartDate {
+  width: 100px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  height: 28px;
+}
+.stagedParentType {
+  /*margin-left: 52px;*/
+}
+.stagedChild {
+  width: 175px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+.stagedChildFName {
+  /*font-family: Cabin;*/
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+  height: 28px;
+  width: 80px;
+}
+.stagedChildLName {
+  /*font-family: Cabin;*/
+  margin-bottom: 0;
+  font-size: 20px;
+  align-items: center;
+  overflow: hidden;
+  height: 28px;
+  width: 80px;
+}
+.modalH1 {
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 35px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-family: CabinMI;
+  margin-bottom: 30px;
+}
+.stagedTypeDate {
+  margin: 0;
+  overflow: hidden;
+}
+.stagedModalClose {
+  margin-left: 640px;
+  margin-bottom: 50px;
+  margin-top: 0px;
+  top: 135px;
+  width: 100px;
+  z-index: 1;
+  position: fixed;
+}
+.stagedMapped {
+  overflow: scroll;
+  width: 100%;
+  max-height: 300px;
 }

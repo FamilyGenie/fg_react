@@ -11,7 +11,6 @@ import { fetchStagedEvents } from '../actions/stagedEventActions';
 import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import { logout } from '../actions/authActions';
-
 import PeopleSearch from './peoplesearch/peoplesearch';
 
 @connect(

@@ -29,7 +29,7 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
       return person
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
-    KEYS_TO_FILTERS:['fName', 'lName', 'eventDateUser', 'eventDate'],
+    KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
   };
 
 },
@@ -191,12 +191,9 @@ export default class PeopleSearch extends React.Component {
         <div id="family-content">
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
-              <div class="search-add"></div>
                 <p class="add">Add Family Members</p>
-              <div class="search-add">
                 <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true">
                 </i>
-              </div>
             </div>
             <div id="buffer-div">
             </div>
@@ -216,7 +213,7 @@ export default class PeopleSearch extends React.Component {
                   <span onClick={() => this.sortPeople('date')} class="familySort"> Date </span>
                 </div>
                 <SearchInput
-                  class=""
+                  class="searchPeople"
                   type="text"
                   value={this.state.seachTerm}
                   ref="searchBox"

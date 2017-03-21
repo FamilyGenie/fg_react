@@ -21,16 +21,18 @@ export default class StagedParentalRelLineItem extends React.Component {
 
 
     if (parentalRel) {
-      return(<div>
-        <div class="infoRow">
-          <div class="nameCol">
-            {(stagedParent ? stagedParent.fName : 'Click to Edit')} {(stagedParent ? stagedParent.lName : ' ')}
-          </div>
-          <div class="relTypeCol">
-            {parentalRel.subType} {parentalRel.relationshipType}
+      return
+        (<div>
+          <div class="infoRow">
+            <div class="nameCol">
+              {(stagedParent ? stagedParent.fName : 'Click to Edit')} {(stagedParent ? stagedParent.lName : ' ')}
+            </div>
+            <div class="relTypeCol">
+              {parentalRel.subType} {parentalRel.relationshipType}
+            </div>
           </div>
         </div>
-      </div>)
+      );
     } else {
       return (<p>Loading Parental Relationships...</p>);
     }

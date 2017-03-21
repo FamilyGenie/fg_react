@@ -12,7 +12,7 @@ import { setStagedParentalRel } from '../../../actions/modalActions';
   (store, ownProps) => {
     return {
       stagedParentalRel: ownProps.stagedParentalRel,
-      stagedChild: 
+      stagedChild:
         store.stagedPeople.stagedPeople.find((p) => {
           return p.personId === ownProps.stagedParentalRel.child_id;
         }),
@@ -66,35 +66,38 @@ export default class StagedParentalRelsSearchLineItem extends React.Component {
 		}
 	}
 
+
   render = () => {
     const { stagedParentalRel, stagedChild, stagedParent } = this.props;
     const { modalIsOpen } = this.state;
 
 
-    return(<div>
-      <div class='staged-parent'>
-        <p class="staged-name">{stagedParent.fName}</p>
-				<p class="staged-name">{stagedParent.lName}</p>
+    return(
+      <div class="staged-item">
+        <div class='stagedNameDiv2'>
+          <p class="staged-name">{stagedParent.fName}</p>
+  				<p class="staged-name">{stagedParent.lName}</p>
+        </div>
+        <div class='stagedNameDiv3'>
+          <p class="staged-name">{stagedChild.fName}</p>
+  				<p class="staged-name">{stagedChild.lName}</p>
+        </div>
+        <div class='stagedRelType'>
+          <p class='staged-name'>{stagedParentalRel.relationshipType}</p>
+        </div>
+        <div class='stagedStartDate'>
+          <p class='staged-name'>{moment(stagedParentalRel.startDate).format('MMM DD YYYY')}</p>
+        </div>
+  			<div class="check-duplicate">
+  				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={() => {this.reviewParentalRel()}}></i>
+  			</div>
+        <Modal
+          isOpen={modalIsOpen}
+          contentLabel="Modal"
+        >
+          <StagedParentalRelDetails closeModal={this.closeModal} stagedParentalRel={stagedParentalRel} stagedChild={stagedChild} stagedParent={stagedParent} />
+        </Modal>
       </div>
-      <div class='staged-child'>
-        <p class="staged-name">{stagedChild.fName}</p>
-				<p class="staged-name">{stagedChild.lName}</p>
-      </div>
-      <div class='staged-reltype'>
-        <p class='staged-name'>{stagedParentalRel.relationshipType}</p>
-      </div>
-      <div class='staged-startdate'>
-        <p class='staged-name'>{moment(stagedParentalRel.startDate).format('MMM DD YYYY')}</p>
-      </div>
-			<div class="check-duplicate">
-				<i class="fa fa-users fa-2x button2" aria-hidden="true" onClick={() => {this.reviewParentalRel()}}></i>
-			</div>
-      <Modal
-        isOpen={modalIsOpen}
-        contentLabel="Modal"
-      >
-        <StagedParentalRelDetails closeModal={this.closeModal} stagedParentalRel={stagedParentalRel} stagedChild={stagedChild} stagedParent={stagedParent} />
-      </Modal>
-    </div>)
+    );
   }
 }

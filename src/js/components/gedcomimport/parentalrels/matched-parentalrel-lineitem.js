@@ -40,22 +40,30 @@ export default class MatchedParentalRelLineItem extends React.Component {
     const { stagedId, matchedParentalRel, matchedChild, matchedParent } = this.props;
 
     if (matchedParentalRel) {
-      return (<div>
-        <div class="infoRow">
-          <div class="nameCol">
-            <p>{matchedChild.fName}&nbsp; {matchedChild.lName}</p>
+      return (
+        <div class="stagedPerson">
+          <div class="stagedChild">
+            <p class="stagedChildFName">{matchedChild.fName}&nbsp; </p>
+            <p class="stagedChildLName">{matchedChild.lName}</p>
           </div>
-          <div class="nameCol">
-            <p>{matchedParent.fName}&nbsp; {matchedParent.lName}</p>
-          </div>         
-          <div class="nameCol">
-            <p>{matchedParentalRel.subType}&nbsp; {matchedParentalRel.relationshipType}</p>
-          </div>         
-          <div class="relTypeCol">
-            <button onClick={() => {this.useRecord()}}> Use This Record </button>
+          <div class="stagedChild">
+            <p class="stagedChildFName">{matchedParent.fName}&nbsp;
+            </p>
+            <p class="stagedChildLName">{matchedParent.lName}</p>
+          </div>
+          <div class="stagedChild">
+            <p class="stagedChildFName">
+              {matchedParentalRel.subType}
+            </p>
+            <p class="stagedChildLName">
+              {matchedParentalRel.relationshipType}
+            </p>
+          </div>
+          <div class="stagedButton">
+            <button class="btn button4" onClick={() => {this.useRecord()}}>Use</button>
           </div>
         </div>
-      </div>);
+      );
     }
   }
 }

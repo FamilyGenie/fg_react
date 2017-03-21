@@ -129,9 +129,9 @@ constructor(props) {
 			<div class="buffer-line">
 			</div>
 			<div class="outerContainer">
-				<div class="parents-relationships">
+				<div class="detailRow">
 					<div class="innerInfo">
-						<div class="titleRow">
+						<div class="titleRow" onClick={this.createParentalRel}>
 							<div class="blank-person-header">
 							</div>
 							<p class="detail-title">Parents</p>
@@ -142,60 +142,54 @@ constructor(props) {
 						</div>
 						<div class="buffer-div">
 						</div>
-						<div>
+						<div class="mappings">
 							{mappedParentalRels}
 						</div>
 				</div>
 				<div class="innerInfo">
-					<div class="titleRow">
+					<div class="titleRow" onClick={this.createPairBondRel}>
 						<div class="blank-person-header">
 						</div>
 						<p class="detail-title">Pair Bonds</p>
 						<div class="buttonSize">
-							<i class="fa-plus-square fa plus" onClick={this.createPairBondRel}></i>
+							<i class="fa-plus-square fa plus" ></i>
 						</div>
 					</div>
 					<div class="buffer-div">
 					</div>
-					<div>
+					<div class="mappings">
 						{mappedPairBondRels}
 					</div>
 				</div>
 				</div>
-				<div class="chronology-div">
-					<div class="inner-chronology">
-						<div class="titleRow">
+				<div class="detailRow">
+					<div class="innerInfo">
+							<div class="titleRow">
+
+								<p class="detail-title">Children</p>
+							</div>
+							<div class="mappings">
+								{mappedChildren}
+							</div>
+					</div>
+					<div class="innerInfo">
+						<div class="titleRow" onClick={this.createEvent}>
 							<div class="blank-person-header">
 							</div>
 							<p class="detail-title">Chronology</p>
 							<div class="buttonSize">
 								<i class="fa-plus-square fa plus"
-								onClick={this.createEvent}>
+								>
 								</i>
 							</div>
 						</div>
 						<div class="buffer-div">
 						</div>
-						<div>
+						<div class="mappings">
 							{mappedEvents}
 						</div>
 					</div>
 				</div>
-				<div class="chronology-div">
-					<div class="inner-chronology">
-						<div class="titleRow">
-							<div class="blank-person-header">
-							</div>
-							<p class="detail-title">Children</p>
-						</div>
-						<div class="buffer-div">
-						</div>
-						<div>
-							{mappedChildren}
-						</div>
-					</div>
-				</div>
-
 			</div>
 		</div>
 		);

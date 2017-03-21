@@ -2,11 +2,18 @@
   margin-right: auto;
   cursor: pointer;
 }
-.chronHeader {
-  width: 25%;
+.chronHeader1 {
+  width: 150px;
   height: 30px;
   margin-left: auto;
-  margin-right: auto;
+}
+.chronHeader2 {
+  width: 240px;
+  height: 30px;
+}
+.chronHeader3 {
+  width: 106px;
+  height: 30px;
 }
 #firstChronHeader {
   margin-left: 11px;
@@ -19,9 +26,38 @@
 .stagedChronDiv {
   display: flex;
   flex-direction: row;
-  width: 25%;
+  width: 180px;
   justify-content: center;
   overflow: hidden;
+}
+.stagedChronDate {
+  display: flex;
+  flex-direction: row;
+  width: 150px;
+  justify-content: center;
+  overflow: hidden;
+}
+.stagedChronType {
+  margin-right: 50px;
+  width: 60px;
+}
+.stagedChronPerson {
+  display: flex;
+  flex-direction: row;
+  width: 230px;
+  justify-content: center;
+  overflow: hidden;
+  margin-right: 20px;
+}
+.stagedChronPlace {
+  display: flex;
+  flex-direction: row;
+  width: 190px;
+  justify-content: flex-start;
+  overflow: hidden !important;
+  margin-right: 20px;
+  height: 28px;
+  align-items: center;
 }
 .stagedChron {
   margin-right: auto;
@@ -34,7 +70,7 @@
 }
 .stagedChron2 {
   margin-right: auto;
-  margin-left: 83px;
+  /*margin-left: 83px;*/
   font-family: Cabin;
   margin-bottom: 0;
   font-size: 20px;
@@ -43,10 +79,10 @@
 }
 .stagedChron3 {
   margin-right: auto;
-  margin-left: 78px;
   font-family: Cabin;
   margin-bottom: 0;
   font-size: 20px;
   align-items: center;
   overflow: hidden;
+  height: 28px;
 }

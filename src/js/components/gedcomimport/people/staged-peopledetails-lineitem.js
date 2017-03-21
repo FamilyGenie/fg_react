@@ -46,8 +46,8 @@ export default class StagedPeopleDetailsLineItem extends React.Component {
 
 		<div class="stagedPerson">
 			<div class="comparisonNameDiv">
-				<p class="staged-name">{this.props.person.fName}</p>
-				<p class="staged-name">{this.props.person.lName}</p>
+				<p class="staged-name">{this.props.person ? this.props.person.fName : ''}</p>
+				<p class="staged-name">{this.props.person ? this.props.person.lName : ''}</p>
 			</div>
       <div class="staged-sex">
 				<p class="staged-name">{this.props.person.sexAtBirth}</p>
