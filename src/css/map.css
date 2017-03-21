@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: row;
   border: 2px solid silver;
-  width: 450px;
+  width: 390px;
   border-radius: 5px;
   background-color: white;
   font-size: 20px;
@@ -23,10 +23,35 @@
 .mapArrow {
   display: flex;
   flex-direction: column;
-  margin-left: auto;
-  margin-right: 10px;
+  margin-right: 0;
+  margin-left: 10px;
+  padding-right: 10px;
   justify-content: center;
   font-size: 28px;
+  border-right: 1px solid silver;
+}
+.buttonSize2 {
+  font-size: 1.em;
+  width: 15%;
+  display: flex;
+}
+.buttonSize3 {
+  font-size: 1.5em;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+}
+.zoom {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.zoomHead {
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 .mapDate {
   display: flex;
@@ -42,12 +67,24 @@
 .mapDateText {
   margin-left: 5px;
 }
-.starAge {
+.starAgeLegend {
   font-family: CabinMI;
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 10px;
+}
+.btn-Legend {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 70px;
+}
+.starAge {
+  width: 90px;
+}
+.starAge2 {
+  width: 90px;
+  display: none;
 }
 .svg-map {
   /* min-height: 1000px; */
@@ -161,4 +198,25 @@ html, body {
 .family-header {
   padding-left: 20px;
   font-size: 2em;
+}
+@media print {
+  .btn-Legend {
+    display: none;
+  }
+  .mapArrow {
+    display: none;
+  }
+  .zoom {
+    display: none;
+  }
+  .dateToggle {
+    width: 280px;
+    border: none;
+  }
+  #ageInput {
+    display: none;
+  }
+  .starAge2 {
+    display: flex;
+  }
 }
