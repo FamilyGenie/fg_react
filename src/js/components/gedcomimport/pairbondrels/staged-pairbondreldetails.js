@@ -56,7 +56,7 @@ export default class StagedPairBondRelDetails extends React.Component {
       <div class="stagedModalClose">
         <i class="fa fa-window-close-o fa-2x stagedClose" aria-hidden="true" onClick={this.closeModal}></i>
       </div>
-      <h1 class="modalH1"> Parental Relationship Comparison </h1>
+      <h1 class="modalH1"> Pair Bond Comparison </h1>
       <div class="buffer-modal"></div>
       <div class="stagedHeader1">
         <h3 class="stagedH3"> Potential Import </h3>

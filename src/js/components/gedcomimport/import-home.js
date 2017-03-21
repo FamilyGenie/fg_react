@@ -166,7 +166,6 @@ export default class ImportDashboard extends React.Component {
                     <p>This currently only accepts files from Ancestry.com</p>
                   </div>
                 </Dropzone>
-                <button onClick={() => {this.checkIgnore(this.props.stagedPeople)}}>Click</button>
               </div>
             </div>
           </div>

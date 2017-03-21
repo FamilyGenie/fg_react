@@ -10,10 +10,7 @@ import { fetchStagedPeople } from '../actions/stagedPeopleActions';
 import { fetchStagedEvents } from '../actions/stagedEventActions';
 import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
-import HistoryBar from './historybar/index';
-import Sidebar from 'react-sidebar';
 import { logout } from '../actions/authActions';
-
 import PeopleSearch from './peoplesearch/peoplesearch';
 
 @connect(
@@ -40,7 +37,7 @@ export default class Layout extends React.Component {
     this.props.dispatch(fetchStagedParentalRels());
     this.props.dispatch(fetchStagedPairBondRels());
 	}
-  
+
   // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
   redirect = (url) => {
     // only dispatch logout if we are trying to logout
