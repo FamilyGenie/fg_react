@@ -81,7 +81,10 @@ export default class ResetDatabase extends React.Component {
   }
 
   clearAllRecords = () => {
-    this.props.clearAllRecords();
+    let clear = confirm('WARNING: This will delete ALL records that you have saved.\nThere is no going back from this.\nAre you sure you want to continue?');
+    if (clear) {
+      this.props.clearAllRecords();
+    }
   }
 
   importAllRecords = () => {

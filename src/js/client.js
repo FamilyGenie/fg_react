@@ -39,7 +39,7 @@ ReactDOM.render(<Provider store={store}>
 
 			<Route path='/stagedpairbondrelsearch' name='Staged PairBond Relationships' component={StagedPairBondRelSearch}></Route>
 
-			<Route path='/stagedparentalrelsearch/' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>
+			<Route path='/stagedparentalrelsearch' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>
 
 			<Route path='/auth/login' name='Login' component={Login}></Route>
 

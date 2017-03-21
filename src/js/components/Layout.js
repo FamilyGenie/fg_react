@@ -90,25 +90,10 @@ export default class Layout extends React.Component {
 						    <a class="navbarright" onClick={() => {this.redirect('/chronology/')}}> CHRONOLOGY </a>
 					    </li>
              <li class="dropdown">
-               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+               <a onClick={() => {this.redirect('/importhome/')}}>
                 IMPORT MENU
-                <span class="caret"></span>
-              </a>
-			          <ul class="dropdown-menu">
-                  <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/importhome/')}}>IMPORT</a>
-                  </li>
-                  <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>PEOPLE</a>
-                  </li>
-                  <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/stagedpairbondrelsearch/')}}>PAIRBOND RELS</a>
-                  </li>
-                  <li>
-                    <a class="navbarright" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>PARENTAL RELS</a>
-                  </li>
-			          </ul>
-			        </li>
+               </a>
+             </li>
 							{/*
 		          <li class="navAuth">
 		            <a class="navbarright" onClick={this.logOut}>LOG OUT</a>
