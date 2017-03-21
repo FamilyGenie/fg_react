@@ -13,9 +13,6 @@ import StagedPeopleSearchLineItem from './staged-peoplesearch-lineitem';
 })
 
 export default class StagedPeopleSearch extends React.Component {
-  componentDidMount = () => {
-    $(window).scrollTop(0);
-  }
 
   render = () => {
     const { stagedPeople } = this.props;
