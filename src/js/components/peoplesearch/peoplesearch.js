@@ -179,7 +179,6 @@ export default class PeopleSearch extends React.Component {
 	render = () => {
     const { people, modalIsOpen } = this.props;
     const { reverse, mappedPeople } = this.state;
-    const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
 
     // TODO: I believe this is creating a warning in the browser about not altering the state in the render function. Where else can this go?
     const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
