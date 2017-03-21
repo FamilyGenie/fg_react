@@ -179,7 +179,6 @@ export default class PeopleSearch extends React.Component {
     const { people, modalIsOpen } = this.props;
     const { reverse, mappedPeople } = this.state;
     const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
-    console.log("in render", this.state.searchTerm);
 
 
     return (

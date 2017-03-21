@@ -21,23 +21,26 @@ export default class DateInput extends React.Component {
 	}
 
 	parseDate = (date) => {
-		    const dateFormat = [
-			      'M/D/YYYY', 'MM/DD/YYYY', 'MMM/D/YYYY', 'MMM/DD/YYYY', 'MMMM/D/YYYY',
-						'MMMM/DD/YYYY', 'D/M/YYYY', 'D/MM/YYYY', 'DD/MM/YYYY', 'DD/MMM/YYYY',
-		        'D/MMM/YYYY', 'D/MMMM/YYYY', 'DD/MMMM/YYYY', 'DD/MMMM/YYYY',
-						'D, M YYYY', 'D MM, YYYY', 'D M, YYYY', 'D MM, YYYY', 'D, MMM YYYY',
-						'D MMMM, YYYY', 'D MMM, YYYY', 'D MMMM, YYYY', 'M D, YYYY',
-						'MM D, YYYY', 'MMM D, YYYY', 'MMMM D, YYYY', 'M DD, YYYY',
-						'MM DD, YYYY', 'MMM DD, YYYY', 'MMMM DD, YYYY',
-						'YYYY, M D', 'YYYY, M DD', 'YYYY, MM DD', 'YYYY, MMM DD', 'YYYY M D',
-						'YYYY MM D', 'YYYY MMM D', 'YYYY MMMM D', ' YYYY M DD', 'YYYY MM DD',
-						'YYYY MMM DD', 'YYYY MMMM DD', 'MMM YYYY', 'MMMM YYYY', 'M, YYYY',
-		        'MM, YYYY', 'MMM, YYYY', 'MMMM, YYYY', 'D M', 'D MM', 'D MMM',
-						'D MMMM', 'DD M', 'DD MM', 'DD MMM', 'DD MMMM', 'YYYY'
-		    ];
-				return moment(date, dateFormat).format('YYYY-MM-DD').toString();
+    if (date === '') {
+      return 'No Date Entered'
+    }
+    const dateFormat = [
+        'M/D/YYYY', 'MM/DD/YYYY', 'MMM/D/YYYY', 'MMM/DD/YYYY', 'MMMM/D/YYYY',
+        'MMMM/DD/YYYY', 'D/M/YYYY', 'D/MM/YYYY', 'DD/MM/YYYY', 'DD/MMM/YYYY',
+        'D/MMM/YYYY', 'D/MMMM/YYYY', 'DD/MMMM/YYYY', 'DD/MMMM/YYYY',
+        'D, M YYYY', 'D MM, YYYY', 'D M, YYYY', 'D MM, YYYY', 'D, MMM YYYY',
+        'D MMMM, YYYY', 'D MMM, YYYY', 'D MMMM, YYYY', 'M D, YYYY',
+        'MM D, YYYY', 'MMM D, YYYY', 'MMMM D, YYYY', 'M DD, YYYY',
+        'MM DD, YYYY', 'MMM DD, YYYY', 'MMMM DD, YYYY',
+        'YYYY, M D', 'YYYY, M DD', 'YYYY, MM DD', 'YYYY, MMM DD', 'YYYY M D',
+        'YYYY MM D', 'YYYY MMM D', 'YYYY MMMM D', ' YYYY M DD', 'YYYY MM DD',
+        'YYYY MMM DD', 'YYYY MMMM DD', 'MMM YYYY', 'MMMM YYYY', 'M, YYYY',
+        'MM, YYYY', 'MMM, YYYY', 'MMMM, YYYY', 'YYYY', 'D M', 'D MM', 'D MMM',
+        'D MMMM', 'DD M', 'DD MM', 'DD MMM', 'DD MMMM'
+    ];
 
-			}
+    return moment(date, dateFormat).format('YYYY-MM-DD').toString();
+  }
 
 	handleNewDate = (evt) => {
 		// have to return a function, because we don't know what evt.target.value is when the this page is rendered (and this function is called)

@@ -70,8 +70,16 @@ export default class ImportDashboard extends React.Component {
       transition: 'scale'
     };
 
-  goToStagedPeopleSearch = () => {
-    hashHistory.push('/stagedpeoplesearch');
+  // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
+  redirect = (url) => {
+    // only dispatch logout if we are trying to logout
+    if (url === '/auth/logout') {
+      this.props.dispatch(logout());
+      hashHistory.push('/auth/login');
+    }
+    else {
+      hashHistory.push(url);
+    }
   }
 
   checkIgnore = (stagedArray) => {
@@ -207,11 +215,12 @@ export default class ImportDashboard extends React.Component {
                   <p class="actionItem">{this.props.peopleImported.length}</p>
                 </div>
                 */}
-                <button class="btn button3" onClick={this.goToStagedPeopleSearch}>Review</button>
+                <button class="btn button3" onClick={() => {this.redirect('/stagedpeoplesearch/')}}>Review</button>
               </div>
             </div>
           </div>
         </div>
+        {/*
         <div class="import-row">
           <div class="import-step">
             <p>4</p>
@@ -222,6 +231,7 @@ export default class ImportDashboard extends React.Component {
             </div>
             <div class="step-action">
               <div class="action-content">
+
                 {/*
                 <div class="action-row">
                   <label> Ready to be Imported: </label>
@@ -231,15 +241,17 @@ export default class ImportDashboard extends React.Component {
                   <label>  Already Imported: </label>
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
-                */}
-                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+                {/* // nested comment would not work here.
+                
+                <button class="btn button3" onClick={() => {this.redirect('/stagedeventsearch/')}}>Review</button>
               </div>
             </div>
           </div>
         </div>
+        */}
         <div class="import-row">
           <div class="import-step">
-            <p>5</p>
+            <p>4</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
@@ -265,7 +277,7 @@ export default class ImportDashboard extends React.Component {
 
         <div class="import-row">
           <div class="import-step">
-            <p>6</p>
+            <p>5</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
@@ -283,14 +295,14 @@ export default class ImportDashboard extends React.Component {
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 */}
                 </div>
-                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+                <button class="btn button3" onClick={() => {this.redirect('/stagedparentalrelsearch/')}}>Review</button>
               </div>
             </div>
           </div>
         </div>
         <div class="import-row">
           <div class="import-step">
-            <p>7</p>
+            <p>6</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
@@ -308,14 +320,14 @@ export default class ImportDashboard extends React.Component {
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 */}
                 </div>
-                <button class="btn button3" onClick={this.goToStagedEventSearch}>Review</button>
+                <button class="btn button3" onClick={() => {this.redirect('/stagedpairbondrelsearch/')}}>Review</button>
               </div>
             </div>
           </div>
         </div>
         <div class="import-row">
           <div class="import-step">
-            <p>8</p>
+            <p>7</p>
           </div>
           <div class="import-step-content">
             <div class="step-instruction">
