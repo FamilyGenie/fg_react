@@ -7,7 +7,7 @@ import StagedParentalRelSearchLineItem from './staged-parentalrelsearch-lineitem
     return {
       stagedParentalRels:
         store.stagedParentalRels.stagedParentalRels.filter((p) => {
-          return (!p.ignore)
+          return (p.ignore === false);
         }),
     };
 })

@@ -8,7 +8,7 @@ import StagedPairBondRelSearchLineItem from './staged-pairbondrelsearch-lineitem
     return {
       stagedPairBondRels:
         store.stagedPairBondRels.stagedPairBondRels.filter((p) => {
-          return (!p.ignore)
+          return (p.ignore === false);
         }),
     };
 })

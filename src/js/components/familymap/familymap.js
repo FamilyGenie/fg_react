@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import AlertContainer from 'react-alert';
 import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
@@ -75,9 +76,16 @@ export default class FamilyMap extends React.Component {
 	firstChildYWithAdoptions = 0;
 	textLineSpacing = 18;
 	textSize = '.9em';
+	// this is to mark the beginning of where we look to draw the maps
+	mapStartX = 500;
 	// set this variable and every error should check to see if it is false, and display the error if this is still false. Once an error is shown, it should set this variable to true, so that no other errors are found. This way, we don't confuse the end user with multiple error messages.
 	// TODO: Need to add to all error messages to see if an error has already been shown, so we don't show multiple errors to the end user, which may confuse them.
 	errorShown = false;
+	currentScale;
+
+	// global variables for svg / d3 map drawing
+	svg;
+	g;
 
 	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
 	alertOptions = {
@@ -97,7 +105,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap();
+		this.drawMap(this.mapStartX);
 	}
 
     // this function will be called when the user hits the button to add a year and then re-draw the map
@@ -109,7 +117,7 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
 			starAge: vStarAge
 		});
-		this.drawMap();
+		this.drawMap(this.mapStartX);
 	}
 	toggleLegend = () => {
 		if(this.state.legendShowing === false) {
@@ -126,7 +134,6 @@ export default class FamilyMap extends React.Component {
 
 	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
 	onAgeChange = (evt) => {
-		console.log("onAgeChange", evt.target.value);
 		var star = this.getPersonById(this.props.star_id);
 		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
 
@@ -136,16 +143,14 @@ export default class FamilyMap extends React.Component {
 			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
 			starAge: evt.target.value
 		});
-		console.log('change date: ', this.dateFilterString, this.state.dateFilterString);
-		this.drawMap();
+		this.drawMap(this.mapStartX);
 	}
 
-	componentDidMount = () => {
-		this.drawMap();
-	}
-
-	componentDidUpdate = () => {
-		this.drawMap();
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevProps !== this.props) {
+			this.drawMap(this.mapStartX);
+		}
+		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	render = () => {
@@ -153,14 +158,11 @@ export default class FamilyMap extends React.Component {
 		if (people) {
 			return (
 			<div class="mainDiv">
-				<div class="header-div">
-					<h1 class="family-header">{this.fullName}s Family Map </h1>
-				</div>
 				<div id="legend">
 					<Legend toggleLegend={this.toggleLegend}/>
 				</div>
 				<div class="mainMap" id="mainMap">
-					<div class="dateLegend">
+					<div class="mapHeader">
 						<div class="dateToggle">
 							<div class="mapDate">
 								<div class="mapDateContents">
@@ -183,9 +185,20 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
 								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
+							<p>Map Zoom</p>
+							<div class="mapArrow">
+								<i class="fa fa-plus buttonSize button2" onClick={this.zoomIn}></i>
+								<i class="fa fa-minus buttonSize button2" onClick={this.zoomOut}></i>
+							</div>
+						</div>
+						<div>
+							<h1 class="family-header">{this.fullName}'s Family Map </h1>
 						</div>
 					</div>
-					<svg class="svg-map">
+					<svg
+						width="1400"
+						height="1400"
+					>
 					</svg>
 				</div>
 
@@ -203,20 +216,24 @@ export default class FamilyMap extends React.Component {
 	}
 
 	// This is the main controlling function of the component. It calls all the others that are below the render function.
-	drawMap = () => {
+	drawMap = (startX) => {
 
 		// there are some constants at the top of the component class definition as well.
 		// these constants determine where to start drawing the map
 		// TODO: need to standardize on where to store these constants
-		const startX = 775;
+		// const startX = 500;
 		const startY = 200;
 		const parentDistance = 220;
 		const childDistance = 120;
 
 		this.initializeVariables();
-		// this.drawTicks();
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
+
+		// for map drawing
+		this.svg = d3.select('svg');
+		this.g = this.svg.append('g');
+		// this.drawTicks();
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -236,16 +253,12 @@ export default class FamilyMap extends React.Component {
 				hashHistory.push('/');
 				return;
 			}
-			console.log("After getAllParents, parents: ", this.parents);
-			console.log('After getAllParents, parentRels: ', this.parentRels);
 
 			// this function will get all the children of the parents in the parents array
 			this.getAllChildrenOfParents();
 
 			// this function will add bio parent psuedo records for every child that is in the children array that doesn't have a bio parent record added.
 			this.checkAllChildrenForBioParents();
-
-			console.log("After getAllChildren:", this.children);
 
 			// TODO: Is this a suitable test?
 			if ( this.children.length + this.parents.length + this.parentRels.length === lastCount) {
@@ -254,6 +267,9 @@ export default class FamilyMap extends React.Component {
 			lastCount = this.children.length + this.parents.length + this.parentRels.length;
 		}
 
+		console.log('After loop, parents: ', this.parents);
+		console.log('After loop, parentRels: ', this.parentRels);
+		console.log('After loop, children: ', this.children);
 		// check to see if there are any people who are in the children array and the parents array. If so, the function returns false, so exit out and redirect to peoplesearch page
 		if ( !this.checkForChildrenWhoAreParents() ) {
 			// there already was an error shown, so just exit
@@ -268,6 +284,10 @@ export default class FamilyMap extends React.Component {
 			return;
 		}
 		console.log("all pair bonds:", this.pairBonds);
+
+		// this function will take all the people in pairBonds and add them to the this.parents array. This is needed for properly calculation this positioning and scale of the maps.
+		this.addPairBondsToParents();
+		console.log("all parents after adding pairbonds: ", this.parents);
 
 		// this function will add single parents to the local this.pairBonds array. It adds them as personOne, and sets personTwo as null. This way, the drawAllPairBonds array will draw these single parents.
 		this.addParentsNotInPairBonds();
@@ -285,12 +305,119 @@ export default class FamilyMap extends React.Component {
 		this.drawAllChildren (startY, childDistance);
 
 		this.drawNonBioParentLines();
-
 		// the parental lines may be drawn over the children, so now draw them again so they come to the front.
 		this.bringAllChildrenToFront();
 
-		// Last, we need to see about resizing the drawing
+		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 0. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
+		// console.log('about to check for draw again: ', startX, this.getStartXPos(parentDistance, startX, startStartX));
+		if (startX === this.mapStartX) {
+			this.drawMap(this.getStartXPos(parentDistance, startX));
+		} else {
+			// Last, we need to see about resizing the drawing
+			this.scaleMap();
+		}
 	} // end of drawMap
+
+	scaleMap = () => {
+
+		var maxX = this.mapStartX;
+		var minX = this.mapStartX;
+		for (let person of this.parents) {
+			if (person.mapXPos > maxX) {
+				maxX = person.mapXPos;
+			}
+			if (person.mapXPos < minX) {
+				minX = person.mapXPos;
+			}
+		}
+		if ( (maxX - minX) < 1200 ) {
+			// do nothing (horizontal can handle up to 1200)
+			var scaleX = 1;
+		} else {
+			var scaleX = 1200/(maxX - minX);
+		}
+		var maxY = 0;
+		for (let child of this.children) {
+			if (child.mapYPos > maxY) {
+				maxY = child.mapYPos;
+			}
+		}
+		if (maxY < 1200) {
+			// do nothing (vertical can handle up to 1200)
+			var scaleY = 1;
+		} else {
+			var scaleY = 1200/maxY;
+		}
+
+		// figure out if scaling it neccessary for x or y direction, if so use whichever one makes the map the smallest (so it fits both directions)
+		if (scaleX !== 1 || scaleY !== 1) {
+			this.currentScale = (scaleX < scaleY ? scaleX : scaleY);
+		} else {
+			this.currentScale = 1;
+		}
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+
+	}
+
+	zoomIn = () => {
+		this.currentScale = this.currentScale * 1.2;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+	}
+
+	zoomOut = () => {
+		this.currentScale = this.currentScale * .8;
+		this.g.attr('transform', 'scale(' + this.currentScale + ')');
+	}
+
+	getStartXPos = (parentDistance, startXFromMain) => {
+		// if the parents array does not have people in it, then this is the first time through the draw maps function, so don't need to calculate the starting point, just return 0
+		if (this.parents.length) {
+			var startX = this.mapStartX;
+			var minX = this.mapStartX;
+			var maxX = this.mapStartX;
+			// cycle through each parent and find the one with the smallest XPos
+			for (let person of this.parents) {
+				if (person.sexAtBirth === 'F') {
+					startX -= parentDistance/2;
+				}
+				if (person.sexAtBirth === 'M') {
+					startX += parentDistance/2;
+				}
+				if (person.mapXPos < minX) {
+					minX = person.mapXPos;
+				}
+				if (person.mapXPos > maxX) {
+					maxX = person.mapXPos;
+				}
+			}
+
+			if (minX < 0) {
+				return this.mapStartX + parentDistance + Math.abs(minX);
+			} else {
+				return startX + 50;
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	addPairBondsToParents = () => {
+		for (let pairBond of this.pairBonds) {
+			var personOne = this.getPersonById(pairBond.personOne_id);
+			if (personOne) {
+				if (!this.parents.includes(personOne)) {
+						this.parents.push(personOne);
+				}
+			}
+
+			var personTwo = this.getPersonById(pairBond.personTwo_id);
+			if (personTwo) {
+				if (!this.parents.includes(personTwo)) {
+						this.parents.push(personTwo);
+				}
+			}
+		}
+	}
 
 	checkAllChildrenForBioParents = () => {
 		for (let child of this.children) {
@@ -506,7 +633,7 @@ export default class FamilyMap extends React.Component {
 				if (child._id === this.props.star_id) {
 					child.d3Star = this.drawStar(xPos, nextChildY, child);
 				}
-				child.d3TextBox = this.drawTextBox(xPos, nextChildY);
+				child.d3TextBox = this.drawTextBox(xPos, nextChildY, child);
 				child.d3Text = this.drawCircleText(xPos + 50, nextChildY - 25, child);
 
 				nextChildY += childDistance;
@@ -514,7 +641,7 @@ export default class FamilyMap extends React.Component {
 			} else {
 				// if not both a mom and or a dad, print error message.
 				if (!this.errorShown) {
-					alert("There is a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
+					alert("There is a problem. Possibly " + child.fName + " " + child.lName + " does not have a birthDate set. \n\nAlternatively, there may be a problem with the relationship between " + child.fName + " " + child.lName + " and one of their biological parents. Likely the start date of the relationship is set to after the date that this map is being drawn for, which is: " + this.dateFilterString + ". Go to the details page for " + child.fName + " " + child.lName + " and look at the relationship details with their biological parents.");
 					this.errorShown = true;
 
 				}
@@ -546,7 +673,6 @@ export default class FamilyMap extends React.Component {
 		this.pairBonds.sort(startDateCompare);
 		// next, put the pair bonds where both parents are adopted at the end of the array, so they are drawn last, outside the other pair bonds
 		this.pairBonds.sort(subTypeCompare);
-		console.log('PairBonds after sort: ', this.pairBonds);
 		for (let pairBond of this.pairBonds) {
 
 			// if this is a pair bond that has been determined to go on the horizontal line with the adoptive parents, then set the YPos to be further down the page
@@ -567,7 +693,7 @@ export default class FamilyMap extends React.Component {
 				}
 			}
 
-			// find personOne and draw them if they haven't been drawn yet
+			// find personTwo and draw them if they haven't been drawn yet
 			personTwo = null;
 			var personTwo = this.getPersonById(pairBond.personTwo_id);
 			if (personTwo && !this.alreadyDrawn.includes(personTwo)) {
@@ -708,7 +834,7 @@ export default class FamilyMap extends React.Component {
 				return child._id === parent._id;
 			})
 			if (found) {
-				if (!errorShown) {
+				if (!this.errorShown) {
 					alert('The person ' + parent.fName + ' ' + parent.lName + ' is a parent and a also a child of a parent in this map. This situation is not yet supported in map drawing. If this is an error, please correct it and redraw the map.');
 					this.errorShown = true;
 					return false;
@@ -790,8 +916,8 @@ export default class FamilyMap extends React.Component {
 				function(pairBond) {
 					return (pairBond.personOne_id === parentObj._id ||
 						pairBond.personTwo_id === parentObj._id) &&
-						// if there is a startDate, then return the substr of it. If not, put in null, and then this test condition will evaluate true (null less than a string will evaluate to true), which is what we want. If the user did not put in a pairBond start date, then do show that relationship on the map
-						(pairBond.startDate ? pairBond.startDate.substr(0,10) : null) <= this.dateFilterString;
+						// if there is a startDate, then return the substr of it. If not, put in empty string, and then this test condition will evaluate true ('' less than a string will evaluate to true), which is what we want. If the user did not put in a pairBond start date, then do show that relationship on the map.
+						(pairBond.startDate ? pairBond.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -933,11 +1059,12 @@ export default class FamilyMap extends React.Component {
 
 		// for each parent of star
 		for (let parent of this.parents) {
-			// find every parental relationship (including those that do not have the star as child)
+			// find every parental relationship (including those that do not have the star as child).
+			// Note: if there is no startdate for the parental relationship, then set that value to '', so this parent still shows on the map (because empty string < string evaluates to true)
 			parentalRelTemp = this.props.parentalRelationships.filter(
 				function(parentalRel) {
 					return parentalRel.parent_id === parent._id &&
-					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : null) <= this.dateFilterString;
+					(parentalRel.startDate ? parentalRel.startDate.substr(0,10) : '') <= this.dateFilterString;
 				}.bind(this)
 			);
 
@@ -945,8 +1072,8 @@ export default class FamilyMap extends React.Component {
 			for (let parentRel of parentalRelTemp) {
 				// find the child
 				let child = this.getPersonById(parentRel.child_id);
-				// if child was born on or before the dateFilter
-				if ((child.birthDate ? child.birthDate.substr(0,10) : null) <= this.dateFilterString) {
+				// if there is no child birthdate, then we do want them to show up on the map, so if no birthdate, then set to '' so that it shows as true, and then child will show on the map.
+				if ((child.birthDate ? child.birthDate.substr(0,10) : '') <= this.dateFilterString) {
 					// if child does not yet exist in children array, push onto it
 					// this.children = addToArray(this.children, child);
 					if (!this.children.includes(child)) {
@@ -984,6 +1111,11 @@ export default class FamilyMap extends React.Component {
 	createLocalPeople = (people, events) => {
 		var localPeople = people.map(function(person) {
 
+			// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
+			// So, if you do a search on the entire database and no person record has a birthDate or deathDate as a field in any document, then we can remove these next two lines of code.
+			person.birthDate = '';
+			person.deathDate = '';
+
 			 var birth = events.find(function(e) {
 					return person._id === e.person_id && e.eventType === "Birth";
 			 });
@@ -1012,7 +1144,9 @@ export default class FamilyMap extends React.Component {
 	initializeVariables = () => {
 		// do we need to initialize the xPos and yPos of each person?
 		// remove d3 drawn objects
-		d3.select("svg").selectAll("*").remove();
+		if (this.g) {
+			this.g.selectAll("*").remove();
+		}
 		this.parents = [];
 		this.parentRels = [];
 		this.children = [];
@@ -1031,8 +1165,9 @@ export default class FamilyMap extends React.Component {
 		// if dateFilter not yet set, set it to Star's 18th birthday
 		if (!this.dateFilterString) {
 			if (!star.birthDate) {
-				alert('Star does not have a birthdate, map will not be drawn');
-				return;
+				// I think we don't need this alert or this return, because the map now draws children on the map, even if there isn't a birthdate
+				// alert('Star does not have a birthdate, map will not be drawn');
+				// return;
 			} else {
 				// this.dateFilterString = moment(star.birthDate.toString().replace(/-/g, '\/').replace(/T.+/, '')).add(18,'y').format('YYYY-MM-DD');
 				this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
@@ -1054,7 +1189,10 @@ export default class FamilyMap extends React.Component {
 	}
 
 	drawCircle(person) {
-		let circle = d3.select("svg")
+		if (person.fName === 'Thomas') {
+			console.log('draw thomas at: ', person.mapXPos);
+		}
+		let circle = this.g
 			.append("svg:a")
 			.append("circle")
 			.attr("cx", person.mapXPos)
@@ -1128,7 +1266,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		var vText = d3.select("svg").selectAll("text" + person._id)
+		var vText = this.g.selectAll("text" + person._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1160,7 +1298,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1168,18 +1306,27 @@ export default class FamilyMap extends React.Component {
 			.attr("fill", "none");
 	}
 
-	drawTextBox(cx, cy) {
-		let lineData = [
-			{"x": cx + 45, "y": cy - 45}, {"x": cx + 175, "y": cy - 45},
-			{"x": cx + 175, "y": cy + 20}, {"x": cx + 45, "y": cy + 20},
-			{"x": cx + 45, "y": cy - 45}
-		];
+	drawTextBox(cx, cy, child) {
+		if (child.deathDate) {
+			// create lineData that is bigger because there is a deathDate showing
+			var lineData = [
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
+				{"x": cx + 175, "y": cy + 50}, {"x": cx + 45, "y": cy + 50},
+				{"x": cx + 45, "y": cy - 40}
+			];
+		} else {
+			var lineData = [
+				{"x": cx + 45, "y": cy - 40}, {"x": cx + 175, "y": cy - 40},
+				{"x": cx + 175, "y": cy + 15}, {"x": cx + 45, "y": cy + 15},
+				{"x": cx + 45, "y": cy - 40}
+			];
+		}
 
-		let lineFunction = d3.line()
+		var lineFunction = d3.line()
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1261,7 +1408,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the pairBond ID so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		 return d3.select("svg").selectAll("text" + pairBondRel._id)
+		 return this.g.selectAll("text" + pairBondRel._id)
 			.data(textData)
 			.enter()
 			.append("text")
@@ -1301,7 +1448,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1319,7 +1466,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash1 = d3.select("svg")
+		person.d3CircleHash1 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1335,7 +1482,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash2 = d3.select("svg")
+		person.d3CircleHash2 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1352,7 +1499,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash3 = d3.select("svg")
+		person.d3CircleHash3 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1368,7 +1515,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		person.d3CircleHash4 = d3.select("svg")
+		person.d3CircleHash4 = this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
@@ -1410,7 +1557,7 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personTwo.mapXPos);
 		lineStrArr.push(personTwo.mapYPos - 40);
 
-		line = d3.select("svg")
+		line = this.g
 		.append("path")
 		.attr("id","relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
@@ -1424,7 +1571,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /\?/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1435,7 +1582,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Extra-Marital-Mated/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1446,7 +1593,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Extra-Marital/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1457,7 +1604,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Stranger/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1468,7 +1615,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Coersive/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1479,14 +1626,14 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Restitution/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			.text("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
 			line = line
@@ -1496,7 +1643,7 @@ export default class FamilyMap extends React.Component {
 		} else {
 			// get here Casual or Informal (need to move all Informals to Casual)
 			line = line
-			d3.select("svg")
+			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
@@ -1553,7 +1700,7 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personTwo.mapXPos - 0);
 		lineStrArr.push(personTwo.mapYPos - 40);
 
-		line = d3.select("svg")
+		line = this.g
 		.append("path")
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent")
@@ -1603,7 +1750,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		var line = d3.select("svg")
+		var line = this.g
 				.append("path")
 				.attr("d", lineFunction(lineData))
 				// the on mouseover is to show the parent and child's name when you hover over the line. Base code for this was found here: http://bl.ocks.org/d3noob/a22c42db65eb00d4e369
@@ -1649,7 +1796,7 @@ export default class FamilyMap extends React.Component {
 		} else if ( /Legal/.test(subType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
 			// line = line
-			return d3.select("svg")
+			return this.g
 			.append("text")
 			.append("textPath")
 			.attr("d", lineFunction(lineData))
@@ -1746,7 +1893,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1762,7 +1909,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1792,7 +1939,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1808,7 +1955,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1837,7 +1984,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1853,7 +2000,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1882,7 +2029,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1898,7 +2045,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		d3.select("svg")
+		this.g
 			.append("path")
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", color)
@@ -1917,7 +2064,7 @@ export default class FamilyMap extends React.Component {
 							.x(function(d) {return d.x; })
 							.y(function(d) {return d.y; });
 
-		return d3.select("svg")
+		return this.g
 			.append("svg:a")
 			// .attr("xlink:href", "/#/peopledetails/" + person._id)
 			.append("path")
@@ -1964,7 +2111,7 @@ export default class FamilyMap extends React.Component {
 
 		// append the person_id so that the text we are appending is unique and
 		// doesn't prevent any other text to be written
-		let text = d3.select("svg").selectAll("text" + tickText)
+		let text = this.g.selectAll("text" + tickText)
 			.data(textData)
 			.enter()
 			.append("text");

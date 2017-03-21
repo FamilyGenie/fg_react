@@ -13,11 +13,11 @@ module.exports = {
   // plugins: debug ? [] : [
   plugins: [
 
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': '"production"'
-      }
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     'NODE_ENV': '"production"'
+    //   }
+    // }),
     // new webpack.optimize.UglifyJsPlugin({
     //   mangle: false,
     //   sourcemap: true,
@@ -28,14 +28,14 @@ module.exports = {
     //     drop_console: true,
     //   }
     // }),
-    new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-                warnings: false,
-                screw_ie8: true
-            }
-        }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.UglifyJsPlugin({
+    //         compressor: {
+    //             warnings: false,
+    //             screw_ie8: true
+    //         }
+    //     }),
+    // new webpack.optimize.DedupePlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
   ],
   module: {
     loaders: [

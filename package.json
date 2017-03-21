@@ -46,7 +46,7 @@
     "redux-test-utils": "^0.1.1"
   },
   "scripts": {
-    "dev": "webpack-dev-server --content-base src --inline --hot",
+    "dev": "webpack-dev-server --content-base src --inline --hot --config webpack.config.js",
     "test": "mocha test/.setup.js test/**/*-test.js",
     "prod": "node_modules/webpack/bin/webpack.js --production --config webpack_prod.config.js"
   },

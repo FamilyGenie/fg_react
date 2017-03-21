@@ -63,20 +63,20 @@ export default function reducer(
         fetching: false,
       }
     }
-    case "RUN_IMPORT" : {
+    case "IMPORT_PEOPLEANDEVENTS" : {
       return {
         ...state,
         fetching: true
       };
     }
-    case "RUN_IMPORT_REJECTED": {
+    case "IMPORT_PEOPLEANDEVENTS_REJECTED": {
       return {
         ...state, 
         fetching: false,
         error: action.payload
       };
     }
-    case "RUN_IMPORT_FULFILLED": {
+    case "IMPORT_PEOPLEANDEVENTS_FULFILLED": {
       return {
         ...state,
         fetching: false
@@ -101,6 +101,45 @@ export default function reducer(
         fetching: false,
       }
     }
+    case "CLEAR_ALLRECORDS": {
+      return {
+        ...state,
+        fetching: true
+      };
+    }
+    case "CLEAR_ALLRECORDS_REJECTED": {
+      return {
+        ...state,
+        fetching: false,
+        error: action.payload
+      };
+    }
+    case "CLEAR_ALLRECORDS_FULFILLED": {
+      return {
+        ...state,
+        fetching: false,
+      }
+    }
+    case "AUTOIMPORT": {
+      return {
+        ...state,
+        fetching: true
+      };
+    }
+    case "AUTOIMPORT_REJECTED": {
+      return {
+        ...state,
+        fetching: false,
+        error: action.payload
+      };
+    }
+    case "AUTOIMPORT_FULFILLED": {
+      return {
+        ...state,
+        fetching: false,
+      }
+    }
+
   }
   return state;
 }
