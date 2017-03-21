@@ -42,7 +42,6 @@ export default class PeopleDetailsLineItem extends React.Component {
 
 	render = () => {
 		const { person, onBlur } = this.props;
-		console.log("in render", person);
 		// put in code to test if person._id === 0, and then say person cannot be found
 		if (person) {
 			return (

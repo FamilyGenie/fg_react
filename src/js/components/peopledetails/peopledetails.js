@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
@@ -18,6 +19,7 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 @connect(
 	(store, ownProps) => {
 
+		// this finds the children of the person whose page we are looking at. First it filters the parentalRel records to find all the places this person is the parent. Then it maps the children to the people collection to get their names and person ids
     	var children = store.parentalRels.parentalRels.filter((parentRel) => {
     		return (parentRel.parent_id === ownProps.params.star_id);
     	}).map((parentRel) => {
@@ -78,7 +80,6 @@ export default class PeopleDetails extends React.Component {
 constructor(props) {
 	super(props);
 	this.props.updateHelpMessage('This is the people details page');
-	console.log('here are the children: ', this.props.children);
 }
 
 	createPerson = () => {
@@ -199,7 +200,8 @@ constructor(props) {
 		</div>
 		);
 	}
-	componentDidMount() {
-		this._div.scrollTop = 0;
+
+	componentDidUpdate() {
+		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import AlertContainer from 'react-alert';
 import { connect } from "react-redux"
 import { hashHistory } from 'react-router'
@@ -144,13 +145,12 @@ export default class FamilyMap extends React.Component {
 		});
 		this.drawMap(this.mapStartX);
 	}
-	// is this needed? Is componentDidUpdate enough?
-	componentDidMount = () => {
-		// this.drawMap(this.mapStartX);
-	}
 
-	componentDidUpdate = () => {
-		this.drawMap(this.mapStartX);
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevProps !== this.props) {
+			this.drawMap(this.mapStartX);
+		}
+		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	render = () => {
