@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import Modal from 'react-modal';
@@ -46,7 +47,7 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 export default class PeopleSearch extends React.Component {
   constructor (props) {
     super(props);
-    
+
     this.props.updateHelpMessage('This is the family search page');
 
     this.state = {
@@ -180,6 +181,8 @@ export default class PeopleSearch extends React.Component {
     const { reverse, mappedPeople } = this.state;
     const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
 
+    // TODO: I believe this is creating a warning in the browser about not altering the state in the render function. Where else can this go?
+    const filteredPeople = people.filter(createFilter(this.state.searchTerm, this.props.KEYS_TO_FILTERS));
 
     return (
       <div class="mainDiv">
@@ -242,6 +245,17 @@ export default class PeopleSearch extends React.Component {
       <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
         <div id="below-family">
         </div>
-      </div>);
+      </div>
+    );
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // this will make the window scroll to the top when you open this page
+    ReactDOM.findDOMNode(this).scrollIntoView();
+
+    // when the props change is when we have data to show, so execute the sort at this time.
+    if (prevProps !== this.props) {
+      this.sortPeople('date');
     }
+  }
 }

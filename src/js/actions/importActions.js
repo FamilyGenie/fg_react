@@ -25,7 +25,7 @@ export function autoImport() {
   }
 }
 
-export function importPeopleAndEvents() {
+export function importPeopleAndEvents(importRelsAlso) {
 
   // send an empty body object
   const body = {};
@@ -35,12 +35,17 @@ export function importPeopleAndEvents() {
     axios.post(config.api_url + "/api/v2/autoimportpeople", body, getAxiosConfig())
       .then((response) => {
         dispatch({type: "IMPORT_PEOPLEANDEVENTS_FULFILLED", payload: response.data})
+
         // after running import, refresh the store.
         // TODO: recieve the data through the response.data and append that information to the store.
         dispatch(fetchPeople());
         dispatch(fetchEvents());
         dispatch(fetchStagedPeople());
         dispatch(fetchStagedEvents());
+        // if we need to import the Relationships also, call that here. The fetches to refresh the store will be done at the end of importRelationships, so only do that fetch if not also importing the relationships
+        if (importRelsAlso) {
+          dispatch(importRelationships());
+        }
       })
       .catch((err) => {
         dispatch({type: "IMPORT_PEOPLEANDEVENTS_REJECTED", payload: err})
@@ -56,7 +61,13 @@ export function importRelationships() {
   axios.post(config.api_url + '/api/v2/autoimportparentalrels', body, getAxiosConfig())
     .then((response) => {
       dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_FULFILLED", payload: response.data})
-      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels
+      // after running import, refresh the store with data that was updated.
+      // TODO: recieve the data through the response.data and append that information to the store.
+      // why refreshing People here? Is the people collection updated when running this import?
+      dispatch(fetchPeople());
+      dispatch(fetchStagedParentalRels());
+      dispatch(fetchParentalRels());
+      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels. Problem with this approach is you don't know which one will complete first - import parents or pairbonds. So putting the relevant fetches inside the .then of the import call
     })
     .catch((err) => {
       dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_REJECTED", payload: err})
@@ -65,12 +76,11 @@ export function importRelationships() {
   axios.post(config.api_url + '/api/v2/autoimportpairbondrels', body, getAxiosConfig())
     .then((response) => {
       dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_FULFILLED", payload: response.data})
-        // after running import, refresh the store.
+        // after running import, refresh the store with data that was updated
         // TODO: recieve the data through the response.data and append that information to the store.
+        // why refreshing People here? Is the people collection updated when running this import?
         dispatch(fetchPeople());
-        dispatch(fetchParentalRels());
         dispatch(fetchPairBondRels())
-        dispatch(fetchStagedParentalRels());
         dispatch(fetchStagedPairBondRels());
     })
     .catch((err) => {

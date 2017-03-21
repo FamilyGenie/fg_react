@@ -7,8 +7,10 @@ import AlertContainer from 'react-alert';
 import {  clearSavedRecords, clearStagedRecords, importPeopleAndEvents, importRelationships } from '../../actions/importActions';
 
 import config from '../../config.js';
-import cookie from "react-cookie";
-const fgtoken = cookie.load('fg-access-token');
+import { getAxiosConfig } from '../../actions/actionFunctions';
+
+// import cookie from "react-cookie";
+// const fgtoken = cookie.load('fg-access-token');
 
 @connect(
   (store, ownProps) => {
@@ -26,8 +28,7 @@ const fgtoken = cookie.load('fg-access-token');
         dispatch(clearStagedRecords());
       },
       importAllRecords: () => {
-        dispatch(importPeopleAndEvents());
-        dispatch(importRelationships());
+        dispatch(importPeopleAndEvents(true));
       }
     }
   }
@@ -46,7 +47,7 @@ export default class ResetDatabase extends React.Component {
   // this is specifically for the gedcom file upload process
   xhr_post = (xhrToSend, url, formData) => {
       xhrToSend.open("POST", url, true);
-      xhrToSend.setRequestHeader("x-access-token", fgtoken);
+      xhrToSend.setRequestHeader("x-access-token", getAxiosConfig().headers['x-access-token']);
       xhrToSend.send(formData);
   }
 
@@ -94,7 +95,7 @@ export default class ResetDatabase extends React.Component {
   }
 
   render = () => {
-    
+
     return (
     <div class="mainImport">
       <div class="header-div">

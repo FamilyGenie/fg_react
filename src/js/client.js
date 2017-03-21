@@ -17,7 +17,6 @@ import StagedPeopleDetails from './components/gedcomimport/people/staged-peopled
 import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/staged-pairbondrelsearch';
 import StagedParentalRelSearch from './components/gedcomimport/parentalrels/staged-parentalrelsearch';
 import Chronology from './components/chronology/chronology';
-import HistoryBar from './components/historybar/index';
 import ResetDatabase from './components/gedcomimport/reset-db';
 
 const app = document.getElementById('app');
@@ -37,7 +36,7 @@ ReactDOM.render(<Provider store={store}>
 			<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
 
 			<Route path='/stagedpeopledetails(/:_id)' name='Staged People Details' component={StagedPeopleDetails}></Route>
-                
+
 			<Route path='/stagedpairbondrelsearch' name='Staged PairBond Relationships' component={StagedPairBondRelSearch}></Route>
 
 			<Route path='/stagedparentalrelsearch' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>

@@ -65,7 +65,6 @@ export default class PairBondRelLineItem extends React.Component {
 	}
 
 	render = () => {
-		console.log(this.props);
 		const { pairBondRel, pairBondPerson, star } = this.props;
 		const { modalIsOpen } = this.state;
 
