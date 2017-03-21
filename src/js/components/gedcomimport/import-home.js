@@ -71,14 +71,7 @@ export default class ImportDashboard extends React.Component {
 
   // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
   redirect = (url) => {
-    // only dispatch logout if we are trying to logout
-    if (url === '/auth/logout') {
-      this.props.dispatch(logout());
-      hashHistory.push('/auth/login');
-    }
-    else {
-      hashHistory.push(url);
-    }
+    hashHistory.push(url);
   }
 
   checkIgnore = (stagedArray) => {
