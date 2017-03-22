@@ -21,7 +21,7 @@ export default class DateInput extends React.Component {
 	}
 
 	parseDate = (date) => {
-    if (date === '') {
+    if (!date) {
       return 'No Date Entered'
     }
     const dateFormat = [
