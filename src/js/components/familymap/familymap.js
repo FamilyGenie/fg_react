@@ -169,8 +169,8 @@ export default class FamilyMap extends React.Component {
 									<p>Family Map As Of:</p>
 									<p class="mapDateText">{this.state.dateFilterString}</p>
 								</div>
-								<div class="starAge">
-									<p>Star's Age:</p>
+								<div class="starAgeLegend">
+									<p class="starAge">Star's Age:</p>
 									<input
 										id="ageInput"
 										class="form-control ageInput"
@@ -178,22 +178,21 @@ export default class FamilyMap extends React.Component {
 										value={this.state.starAge}
 										onChange={this.onAgeChange}
 									/>
-									<button type="button" class="btn btn-default btn-PD" onClick={this.toggleLegend}>Legend</button>
+								<p class="starAge2">{this.state.starAge}</p>
+								<button type="button" class="btn btn-default btn-Legend" onClick={this.toggleLegend}>Legend</button>
 								</div>
 							</div>
 							<div class="mapArrow">
-								<i class="fa fa-arrow-circle-up buttonSize button2" onClick={this.addYear}></i>
-								<i class="fa fa-arrow-circle-down buttonSize button2" onClick={this.subtractYear.bind(this)}></i>
+								<i class="fa fa-arrow-circle-up buttonSize2 button2" onClick={this.addYear}></i>
+								<i class="fa fa-arrow-circle-down buttonSize2 button2" onClick={this.subtractYear.bind(this)}></i>
 							</div>
-							<p>Map Zoom</p>
-							<div class="mapArrow">
-								<i class="fa fa-plus buttonSize button2" onClick={this.zoomIn}></i>
-								<i class="fa fa-minus buttonSize button2" onClick={this.zoomOut}></i>
+							<div class="zoom">
+								<p class="zoomHead">Zoom</p>
+								<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
+								<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
 							</div>
 						</div>
-						<div>
-							<h1 class="family-header">{this.fullName}'s Family Map </h1>
-						</div>
+						<h1 class="map-header">{this.fullName}'s Family Map </h1>
 					</div>
 					<svg
 						width="1400"

@@ -22,9 +22,9 @@ import ParentalRelLineItemEdit from '../peopledetails/parentalrel-lineitem-edit'
 )
 
 export default class ImportPersonDetails extends React.Component {
-  
+
   render = () => {
-    const { person, events, parents } = this.pros;
+    const { person, events, parents } = this.props;
 
     const mappedEvents = events.map(event =>
     <EventLineItem event={event} key={event._id}/>
@@ -36,7 +36,7 @@ export default class ImportPersonDetails extends React.Component {
 
     if (person) {
       return(<div>
-        
+
         <PeopleDetailsLineItem person={person} key={person._id}/>
 
         <div class="container">
@@ -58,6 +58,3 @@ export default class ImportPersonDetails extends React.Component {
     }
   }
 }
-
-
-
