@@ -107,7 +107,7 @@ export default class Layout extends React.Component {
 								<span class="caret"></span></a>
 			          <ul class="dropdown-menu">
 			            <li><a >Profile</a></li>
-			            <li><a >Account Settings</a></li>
+			            <li><a onClick={() => {this.redirect('/resetdatabase')}}>Account Settings</a></li>
 									<li><a onClick={() => {this.redirect('/auth/login')}}>Log In</a></li>
 			            <li><a onClick={() => {this.redirect('/auth/logout')}}>Log Out</a></li>
 			          </ul>

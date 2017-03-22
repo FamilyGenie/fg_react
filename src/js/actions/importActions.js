@@ -1,5 +1,10 @@
 import axios from 'axios';
 import { createEvent } from './eventsActions';
+import { createParentalRel } from './parentalRelsActions';
+
+import { updateParentalRel } from './parentalRelsActions';
+import { updateStagedPerson } from './stagedPeopleActions';
+
 import { fetchPeople } from './peopleActions';
 import { fetchStagedPeople } from './stagedPeopleActions';
 import { fetchEvents } from './eventsActions';
@@ -142,6 +147,7 @@ export function importParentalRel(child_id, parent_id, relationshipType, subType
   };
 
   return (dispatch) => {
+    // need to call create_parentalrel dispatch to have access to the newly created information
     dispatch({type: "CREATE_PARENTALREL"});
     axios.post(config.api_url + '/api/v2/parentalrel/create', body, getAxiosConfig())
       .then((response) => {
@@ -162,27 +168,12 @@ export function importParentalRel(child_id, parent_id, relationshipType, subType
           }
         };
 
-        dispatch({type: "UPDATE_STAGEDPARENTALREL"});
-        axios.post(config.api_url + '/api/v2/staging/parentalrel/update', updateRel1, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGEDPARENTALREL_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGEDPARENTALREL_REJECTED", payload: err});
-          })
-
-        dispatch({type: "UPDATE_STAGEDPARENTALREL"});
-        axios.post(config.api_url + '/api/v2/staging/parentalrel/update', updateRel2, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGEDPARENTALREL_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGEDPARENTALREL_REJECTED", payload: err});
-          })
+        updateParentalRel(updateRel1)
+        updateParentalRel(updateRel2)
       })
-        .catch((err) => {
-          dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
-        })
+      .catch((err) => {
+        dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+      })
   }
 }
 
@@ -198,6 +189,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 		}
 	};
 	return (dispatch) => {
+    // need to call this dispatch here to have access to the newly created information
 		dispatch({type: "CREATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/create", body, getAxiosConfig())
 			.then((response) => {
@@ -211,14 +203,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 						eventPlace: birthPlace,
 					}
 				}
-				dispatch({type: "CREATE_EVENT"});
-				axios.post(config.api_url + "/api/v2/event/create", bodyBirth, getAxiosConfig())
-					.then((response) => {
-						dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
-					})
-					.catch((err) => {
-						dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-					})
+        createEvent(bodyBirth)
 
 				// do post for event create for deathDate, but only if there is a death
 				if (deathDate) {
@@ -230,15 +215,9 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 							eventPlace: deathPlace,
 						}
 					}
-					dispatch({type: "CREATE_EVENT"});
-					axios.post(config.api_url + "/api/v2/event/create", bodyDeath, getAxiosConfig())
-						.then((response) => {
-							dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
-						})
-						.catch((err) => {
-							dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-						})
-					}
+        }
+
+        createEvent(bodyDeath)
 
         const bodyUpdate1 = {
           object : {
@@ -254,25 +233,9 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
             value: 'true'
           }
         }
-
-        dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate1, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
-          })
-
-        dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate2, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
-          })
-
+        
+        updateStagedPerson(bodyUpdate1)
+        updateStagedPerson(bodyUpdate2)
 			})
 			.catch((err) => {
 				dispatch({type: "CREATE_PERSON_REJECTED", payload: err})
@@ -294,6 +257,7 @@ export function importPairBondRel(personOne_id, personTwo_id, relationshipType, 
   };
 
   return (dispatch) => {
+    // need to call this dispatch here to have access to the newly created information
     dispatch({type: "CREATE_PAIRBONDREL"});
     axios.post(config.api_url + '/api/v2/pairbondrel/create', body, getAxiosConfig())
       .then((response) => {
@@ -314,26 +278,11 @@ export function importPairBondRel(personOne_id, personTwo_id, relationshipType, 
           }
         };
 
-        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
-        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel1, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
-          })
-
-        dispatch({type: "UPDATE_STAGINGPAIRBONDREL"});
-        axios.post(config.api_url + '/api/v2/staging/pairbondrel/update', updateRel2, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPAIRBONDREL_REJECTED", payload: err});
-          })
+        updateStagedPerson(updateRel1)
+        updateStagedPerson(updateRel2)
       })
-    .catch((err) => {
-      dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
-    })
+      .catch((err) => {
+        dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
+      })
   }
 }

@@ -39,7 +39,6 @@ export default class StagedParentalRelsSearchLineItem extends React.Component {
 
 
   reviewParentalRel = () => {
-    console.log(this.props.stagedParentalRel)
     this.props.setStagedParentalRel(this.props.stagedParentalRel);
     this.setState({modalIsOpen: true});
   }
@@ -95,7 +94,7 @@ export default class StagedParentalRelsSearchLineItem extends React.Component {
           isOpen={modalIsOpen}
           contentLabel="Modal"
         >
-          <StagedParentalRelDetails closeModal={this.closeModal} stagedParentalRel={stagedParentalRel} stagedChild={stagedChild} stagedParent={stagedParent} />
+          <StagedParentalRelDetails closeModal={() => {this.closeModal}} stagedParentalRel={stagedParentalRel} stagedChild={stagedChild} stagedParent={stagedParent} />
         </Modal>
       </div>
     );

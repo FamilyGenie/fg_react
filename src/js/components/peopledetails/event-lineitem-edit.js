@@ -158,8 +158,9 @@ constructor(props) {
 
 	render = () => {
 
-		const { event, eventTypes} = this.props;
-		const { eventDateUser, eventType } = this.state;
+		const { event, eventTypes } = this.props;
+		const { eventDateUser, eventDateUserNew, eventType } = this.state;
+
 
 		// only render if we have data to show
 		if (event) {
@@ -174,7 +175,7 @@ constructor(props) {
 							<div class="PR-drop-1">
 								<DateInput
 									onNewDate={this.tempEventDate}
-									initialValue={this.state.eventDateUserNew}
+									initialValue={eventDateUserNew}
 									field="eventDate"
 								/>
 							</div>
