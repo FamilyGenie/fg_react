@@ -223,4 +223,16 @@ html, body {
   .starAge2 {
     display: flex;
   }
+  .map-header {
+    font-size: 1.5em;
+  }
+  .dateToggle {
+    width: 150px;
+  }
+  .starAgeLegend {
+    font-size: .6em;
+  }
+  .mapDateContents {
+    font-size: .6em;
+  }
 }
