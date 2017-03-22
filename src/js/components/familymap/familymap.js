@@ -192,9 +192,7 @@ export default class FamilyMap extends React.Component {
 								<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
 							</div>
 						</div>
-						<div>
-							<h1 class="family-header">{this.fullName}'s Family Map </h1>
-						</div>
+						<h1 class="map-header">{this.fullName}'s Family Map </h1>
 					</div>
 					<svg
 						width="1400"

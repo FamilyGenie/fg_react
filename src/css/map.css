@@ -18,7 +18,6 @@
   border-radius: 5px;
   background-color: white;
   font-size: 20px;
-  margin-bottom: 30px;
 }
 .mapArrow {
   display: flex;
@@ -180,6 +179,11 @@ html, body {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+.map-header {
+  font-size: 2em;
+  margin-left: 20px;
+  height: 60px;
 }
 .legendClose {
   margin-left: 235px;
