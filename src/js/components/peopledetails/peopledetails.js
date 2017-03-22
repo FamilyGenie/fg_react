@@ -136,7 +136,7 @@ constructor(props) {
 							</div>
 							<p class="detail-title">Parents</p>
 							<div class="buttonSize">
-								<i class="fa-plus-square fa plus" onClick={this.createParentalRel}>
+								<i class="fa-plus-square fa plus">
 								</i>
 							</div>
 						</div>
