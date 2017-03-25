@@ -26,6 +26,7 @@ export function login(username, password, showMsg) {
 			.then((response) => {
 				// if the login is successful, then save the cookie for the app, and call the dispatch to retrieve all the data.
 				cookie.save('fg-access-token', response.data.token);
+				cookie.save('user-name', response.data.userName);
 				dispatch(fetchPeople());
 				dispatch(fetchEvents());
 				dispatch(fetchPairBondRels());
@@ -55,6 +56,7 @@ export function login(username, password, showMsg) {
 export function logout() {
 	return (dispatch) => {
 		cookie.remove('fg-access-token');
+		cookie.remove('user-name');
 		dispatch({type: 'CLEAR_PEOPLE'});
 		dispatch({type: 'CLEAR_EVENTS'});
 		dispatch({type: 'CLEAR_PARENTALRELS'});
@@ -63,5 +65,15 @@ export function logout() {
 		dispatch({type: 'CLEAR_STAGEDEVENTS'});
 
 		dispatch({type: 'LOGOUT_SUCCESSFUL'});
+	}
+}
+
+// this function is called by Layout, if the cookie exists for this user, then we don't need to login to the API server, but we do want to set the username in the store for future reference by other components
+export function setUserName(userName) {
+	var pl = {
+		userName: userName
+	};
+	return (dispatch) => {
+		dispatch({type: 'LOGIN_SUCCESSFUL', payload: pl});
 	}
 }
