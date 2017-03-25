@@ -16,8 +16,10 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 
 @connect((store, ownProps) => {
   return {
-    user: store.user.user,
-    userFetched: store.user.fetched,
+    // these next two lines are left over from the template I started this code with
+    // user: store.user.user,
+    // userFetched: store.user.fetched,
+    // userName: store.auth.userName,
     people: store.people.people.map((person) => {
       var bDate = store.events.events.find((e) => {
         return (person._id === e.person_id && e.eventType.toLowerCase() === "birth");

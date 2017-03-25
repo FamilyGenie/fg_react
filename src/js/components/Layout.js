@@ -12,30 +12,42 @@ import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
 import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import { logout } from '../actions/authActions';
 import PeopleSearch from './peoplesearch/peoplesearch';
+import { getAxiosConfig } from '../actions/actionFunctions';
+import { setUserName } from '../actions/authActions';
 
 @connect(
 	(store, ownProps) => {
 		return store;
-	}
+	}//,
+	// (dispatch) => {
+	// 	setUserName: (un) => {
+	// 		dispatch(setUserName(un));
+	// 	}
+	// }
 )
 export default class Layout extends React.Component {
 	constructor (props) {
 		super(props);
+		const userName = getAxiosConfig().headers['user-name'];
+		if (userName) {
+			this.props.dispatch(setUserName(userName));
+			this.props.dispatch(fetchPeople());
+			this.props.dispatch(fetchEvents());
+			this.props.dispatch(fetchPairBondRels());
+			this.props.dispatch(fetchParentalRels());
+			this.props.dispatch(fetchStagedPeople());
+			this.props.dispatch(fetchStagedEvents());
+		    this.props.dispatch(fetchStagedParentalRels());
+		    this.props.dispatch(fetchStagedPairBondRels());
+		} else {
+			this.redirect('/auth/login');
+		}
+
 		// this variable will store whether the modal window is open or not
 		this.state = {
 			historyBarShowing: false,
 			isLoggedIn: false,
 		};
-	}
-	componentWillMount() {
-		this.props.dispatch(fetchPeople());
-		this.props.dispatch(fetchEvents());
-		this.props.dispatch(fetchPairBondRels());
-		this.props.dispatch(fetchParentalRels());
-		this.props.dispatch(fetchStagedPeople());
-		this.props.dispatch(fetchStagedEvents());
-    this.props.dispatch(fetchStagedParentalRels());
-    this.props.dispatch(fetchStagedPairBondRels());
 	}
 
   // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`

@@ -17,7 +17,7 @@ import stagedPeople from './stagedPeopleReducer'
 import stagedParentalRels from './stagedParentalRelsReducer'
 import stagedPairBondRels from './stagedPairBondRelsReducer'
 import stagedEvents from './stagedEventsReducer'
-import user from './userReducer'
+// import user from './userReducer'
 
 export default combineReducers({
   auth,
@@ -37,5 +37,5 @@ export default combineReducers({
   stagedParentalRels,
   stagedPairBondRels,
   stagedEvents,
-  user,
+  // user,
 })
