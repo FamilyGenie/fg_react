@@ -48,8 +48,6 @@ export default class PeopleSearch extends React.Component {
   constructor (props) {
     super(props);
 
-    this.props.updateHelpMessage('This is the family search page');
-
     this.state = {
       reverse: false,
       searchTerm: "",
@@ -250,5 +248,9 @@ export default class PeopleSearch extends React.Component {
     if (prevProps !== this.props) {
       this.sortPeople('date');
     }
+  }
+
+  componentDidMount = () => {
+    this.props.updateHelpMessage('This is the family search page');
   }
 }
