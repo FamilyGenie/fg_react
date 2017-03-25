@@ -1,47 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-
-import { fetchEvents } from '../actions/eventsActions';
-import { fetchPairBondRels } from '../actions/pairBondRelsActions';
-import { fetchParentalRels } from '../actions/parentalRelsActions';
-import { fetchPeople } from "../actions/peopleActions";
-import { fetchStagedPeople } from '../actions/stagedPeopleActions';
-import { fetchStagedEvents } from '../actions/stagedEventActions';
-import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
-import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import { logout } from '../actions/authActions';
 import PeopleSearch from './peoplesearch/peoplesearch';
-import { getAxiosConfig } from '../actions/actionFunctions';
-import { setUserName } from '../actions/authActions';
 
 @connect(
 	(store, ownProps) => {
 		return store;
-	}//,
-	// (dispatch) => {
-	// 	setUserName: (un) => {
-	// 		dispatch(setUserName(un));
-	// 	}
-	// }
+	}
 )
 export default class Layout extends React.Component {
 	constructor (props) {
 		super(props);
-		const userName = getAxiosConfig().headers['user-name'];
-		if (userName) {
-			this.props.dispatch(setUserName(userName));
-			this.props.dispatch(fetchPeople());
-			this.props.dispatch(fetchEvents());
-			this.props.dispatch(fetchPairBondRels());
-			this.props.dispatch(fetchParentalRels());
-			this.props.dispatch(fetchStagedPeople());
-			this.props.dispatch(fetchStagedEvents());
-		    this.props.dispatch(fetchStagedParentalRels());
-		    this.props.dispatch(fetchStagedPairBondRels());
-		} else {
-			this.redirect('/auth/login');
-		}
 
 		// this variable will store whether the modal window is open or not
 		this.state = {
