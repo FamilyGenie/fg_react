@@ -1330,7 +1330,8 @@ export default class FamilyMap extends React.Component {
 			.attr("d", lineFunction(lineData))
 			.attr("stroke", "black")
 			.attr("stroke-width", 0)
-			.attr("fill", "#E9EBEE");
+			.attr("fill", "#E9EBEE")
+			.attr("class", "textBox");
 	}
 
 	drawRelText(mom, dad, pairBondRel) {
