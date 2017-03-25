@@ -219,12 +219,14 @@ html, body {
   }
   #ageInput {
     display: none;
+    height: 0;
   }
   .starAge2 {
     display: flex;
   }
   .map-header {
     font-size: 1.5em;
+    padding-left: 20px;
   }
   .dateToggle {
     width: 150px;
@@ -234,5 +236,11 @@ html, body {
   }
   .mapDateContents {
     font-size: .6em;
+  }
+  .mapDateHeader, .mapDateText {
+    padding-top: 12px;
+  }
+  .textBox {
+    fill: #FFFFFF;
   }
 }
