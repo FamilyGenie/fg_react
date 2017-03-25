@@ -24,8 +24,7 @@ import { getAxiosConfig } from '../../actions/actionFunctions';
   (dispatch) => {
     return {
       clearAllRecords: () => {
-        dispatch(clearSavedRecords());
-        dispatch(clearStagedRecords());
+        dispatch(clearStagedRecords(true));
       },
       importAllRecords: () => {
         dispatch(importPeopleAndEvents(true));

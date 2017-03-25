@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { hashHistory } from 'react-router';
 import { createEvent } from './eventsActions';
 import { createParentalRel } from './parentalRelsActions';
 
@@ -69,9 +70,11 @@ export function importRelationships() {
       // after running import, refresh the store with data that was updated.
       // TODO: recieve the data through the response.data and append that information to the store.
       // why refreshing People here? Is the people collection updated when running this import?
-      dispatch(fetchPeople());
       dispatch(fetchStagedParentalRels());
+      dispatch(fetchStagedPairBondRels());
       dispatch(fetchParentalRels());
+      dispatch(fetchPairBondRels());
+      hashHistory.push('/');
       // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels. Problem with this approach is you don't know which one will complete first - import parents or pairbonds. So putting the relevant fetches inside the .then of the import call
     })
     .catch((err) => {
@@ -94,17 +97,22 @@ export function importRelationships() {
   }
 }
 
-export function clearStagedRecords() {
+export function clearStagedRecords(clearSavedAlso) {
   return (dispatch) => {
     dispatch({type: "CLEAR_STAGEDRECORDS"});
     axios.post(config.api_url + '/api/v2/clearstagedrecords', {}, getAxiosConfig())
       .then((response) => {
         dispatch({type: "CLEAR_STAGEDRECORDS_FULFILLED", payload: response.data})
         // TODO: do we need to fetch here, or should we just clear the store?
-        dispatch(fetchStagedParentalRels());
-        dispatch(fetchStagedPairBondRels());
-        dispatch(fetchStagedEvents());
-        dispatch(fetchStagedPeople());
+        if (clearSavedAlso) {
+          dispatch(clearSavedRecords());
+        } else {
+          dispatch(fetchStagedParentalRels());
+          dispatch(fetchStagedPairBondRels());
+          dispatch(fetchStagedEvents());
+          dispatch(fetchStagedPeople());
+          alert('Records have been cleared')
+        }
       })
       .catch((err) => {
         dispatch({type: "CLEAR_STAGEDRECORDS_REJECTED", payload: err})
@@ -126,6 +134,7 @@ export function clearSavedRecords() {
         dispatch(fetchStagedPairBondRels());
         dispatch(fetchStagedEvents());
         dispatch(fetchStagedPeople());
+        alert('Records have been cleared')
       })
       .catch((err) => {
         dispatch({type: 'CLEAR_ALLRECORDS_REJECTED', payload: err})

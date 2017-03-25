@@ -166,7 +166,7 @@ export default class FamilyMap extends React.Component {
 						<div class="dateToggle">
 							<div class="mapDate">
 								<div class="mapDateContents">
-									<p>Family Map As Of:</p>
+									<p class="mapDateHeader">Family Map As Of:</p>
 									<p class="mapDateText">{this.state.dateFilterString}</p>
 								</div>
 								<div class="starAgeLegend">

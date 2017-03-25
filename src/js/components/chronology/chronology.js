@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
@@ -185,5 +186,15 @@ export default class Chronology extends React.Component {
       return (<p>Loading...</p>)
     }
 
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // this will make the window scroll to the top when you open this page
+    ReactDOM.findDOMNode(this).scrollIntoView();
+
+    // when the props change is when we have data to show, so execute the sort at this time.
+    if (prevProps !== this.props) {
+      this.sortEvents('date');
+    }
   }
 }
