@@ -359,12 +359,12 @@ export default class FamilyMap extends React.Component {
 	}
 
 	zoomIn = () => {
-		this.currentScale = this.currentScale * 1.2;
+		this.currentScale = this.currentScale * 1.1;
 		this.g.attr('transform', 'scale(' + this.currentScale + ')');
 	}
 
 	zoomOut = () => {
-		this.currentScale = this.currentScale * .8;
+		this.currentScale = this.currentScale * .9;
 		this.g.attr('transform', 'scale(' + this.currentScale + ')');
 	}
 
