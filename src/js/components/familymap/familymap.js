@@ -1699,19 +1699,6 @@ export default class FamilyMap extends React.Component {
 		lineStrArr.push(personTwo.mapXPos - 0);
 		lineStrArr.push(personTwo.mapYPos - 40);
 
-		// line = this.g
-		// .append("path")
-		// .attr("d", lineStrArr.join(" "))
-		// .attr("fill", "transparent")
-		// .attr("stroke", color)
-		// .attr("stroke-width", 2);
-
-		// if ( /[Mm]arriage/.test(relType) ) {
-		// 	// leave the line as is
-		// } else {
-		// 	line = line.style("stroke-dasharray", ("4,8"));
-		// }
-
 		line = this.g
 			.append("path")
 			.attr("id","relline" + personTwo._id + personOne._id)
