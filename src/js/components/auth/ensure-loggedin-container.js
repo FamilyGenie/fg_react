@@ -1,3 +1,6 @@
+// code for this component used this as a template:
+// https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1#.puirjnfpq
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
@@ -23,6 +26,7 @@ export default class EnsureLoggedInContainer extends React.Component {
     super(props);
 
     this.state = {
+      // if the cookie exists, the user is logged in. The rest of the component will check userName for truthy or falsy to determine if user is logged in or not.
       userName: getAxiosConfig().headers['user-name'],
       currentURL: ''
     }
@@ -30,6 +34,7 @@ export default class EnsureLoggedInContainer extends React.Component {
 
   componentDidMount() {
     // const { dispatch, currentURL } = this.props
+
     if (!this.state.userName) {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)
