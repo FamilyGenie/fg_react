@@ -1375,14 +1375,14 @@ export default class FamilyMap extends React.Component {
 					"x": cx,
 					"y": cy,
 					"txt": this.getRelTextPrefix(pairBondRel.relationshipType) +
-					moment(pairBondRel.startDate).format("MM/DD/YYYY")
+					(pairBondRel.startDateUser ? pairBondRel.startDateUser : moment(pairBondRel.startDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : "")
 				},
 				// apart info
 				{
 					"x": cx + 3,
 					"y": cy + this.textLineSpacing,
 					"txt": this.getRelTextEndPrefix(pairBondRel.relationshipType) +
-					moment(pairBondRel.endDate).format("MM/DD/YYYY")
+					(pairBondRel.endDateUser ? pairBondRel.endDateUser : moment(pairBondRel.endDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : "")
 				},
 			];
 		} else if ( pairBondRel.startDate ) {
@@ -1393,7 +1393,7 @@ export default class FamilyMap extends React.Component {
 					"x": cx,
 					"y": cy,
 					"txt": this.getRelTextPrefix(pairBondRel.relationshipType) +
-					moment(pairBondRel.startDate).format("MM/DD/YYYY")
+					(pairBondRel.startDateUser ? pairBondRel.startDateUser : moment(pairBondRel.startDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : "")
 				}
 			];
 		}
