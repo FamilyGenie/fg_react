@@ -93,65 +93,6 @@ export default class SingleMap extends React.Component {
 	svg;
 	g;
 
-	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
-	// alertOptions = {
- //      offset: 15,
- //      position: 'middle',
- //      theme: 'light',
- //      time: 0,
- //      transition: 'scale'
- //    };
-
-    // this function will be called when the user hits the button to subtract a year and then re-draw the map
-	// subtractYear = () => {
-	// 	this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
-	// 	var vStarAge = parseInt(this.state.starAge) - 1;
-	// 	// also set the state variable
-	// 	this.setState({
-	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
-	// 		starAge: vStarAge
-	// 	});
-	// 	this.drawMap(this.mapStartX);
-	// }
-
- //    // this function will be called when the user hits the button to add a year and then re-draw the map
-	// addYear = () => {
-	// 	this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
-	// 	var vStarAge = parseInt(this.state.starAge) + 1;
-	// 	// also set the state variable
-	// 	this.setState({
-	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
-	// 		starAge: vStarAge
-	// 	});
-	// 	this.drawMap(this.mapStartX);
-	// }
-	// toggleLegend = () => {
-	// 	if(this.state.legendShowing === false) {
-	// 		$("#legend").css({"display": "flex"});
-	// 		$("#mainMap").css({"min-height": "1100px"});
-	// 		this.setState({legendShowing: true});
-	// 	}
-	// 	if (this.state.legendShowing === true) {
-	// 		$("#legend").css({"display": "none"});
-	// 		$("#mainMap").css({"min-height": "800px"});
-	// 		this.setState({legendShowing: false});
-	// 	}
-	// }
-
-	// // this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
-	// onAgeChange = (evt) => {
-	// 	var star = this.getPersonById(this.props.star_id);
-	// 	this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
-
-	// 	// this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
-	// 	this.setState({
-	// 		// dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-	// 		dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
-	// 		starAge: evt.target.value
-	// 	});
-	// 	this.drawMap(this.mapStartX);
-	// }
-
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
 			console.log('in singleMap componentDidUpdate with props: ', this.props.zoom, prevProps.zoom);

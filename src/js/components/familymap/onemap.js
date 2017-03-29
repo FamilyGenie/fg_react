@@ -8,10 +8,11 @@ import Legend from './legend';
 
 @connect(
 	(store, ownProps) => {
+		console.log('in onemap @connect with: ', ownProps.params);
 		return {
 			star_id:
-				// ownProps.params.star_id,
-				'57d38829ddcdc72d349f927a',
+				ownProps.params.star_id,
+				// '57d38829ddcdc72d349f927a',
 			people:
 				store.people.people.map(function(person) {
 					// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
@@ -56,7 +57,7 @@ import Legend from './legend';
 export default class OneMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log('in onemap with props: ', this.props);
+		console.log('in onemap constructor with props: ', this.props);
 		this.state = {
 			// store this state value for display purposes
 			vDate: '',
@@ -69,7 +70,7 @@ export default class OneMap extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
-			const star = this.getPersonById('57d38829ddcdc72d349f927a');
+			const star = this.getPersonById(this.props.star_id);
 			if (star) {
 				var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
@@ -157,7 +158,7 @@ export default class OneMap extends React.Component {
 		console.log('in onemap render with state: ', this.state);
 
 		return(
-			<div class="mainDiv2">
+			<div class="mainDiv">
 				<div id="legend">
 					<Legend toggleLegend={this.toggleLegend}/>
 				</div>

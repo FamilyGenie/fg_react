@@ -51,7 +51,7 @@ ReactDOM.render(<Provider store={store}>
 
 	      		<Route path='/chronology' name='Chronology' component={Chronology}></Route>
 
-	      		<Route path='/onemap' name='OneMap' component={OneMap}></Route>
+	      		<Route path='/onemap(/:star_id)' name='OneMap' component={OneMap}></Route>
 
 	      		<Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 
