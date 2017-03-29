@@ -1,7 +1,13 @@
-import axios from "axios";
-import { createEvent } from "./eventsActions";
-import { fetchPeople } from "./peopleActions";
-import { fetchStagedPeople } from "./stagedPeopleActions";
+import axios from 'axios';
+import { hashHistory } from 'react-router';
+import { createEvent } from './eventsActions';
+import { createParentalRel } from './parentalRelsActions';
+
+import { updateParentalRel } from './parentalRelsActions';
+import { updateStagedPerson } from './stagedPeopleActions';
+
+import { fetchPeople } from './peopleActions';
+import { fetchStagedPeople } from './stagedPeopleActions';
 import { fetchEvents } from './eventsActions';
 import { fetchStagedEvents } from './stagedEventActions';
 import { fetchParentalRels } from './parentalRelsActions';
@@ -9,28 +15,46 @@ import { fetchPairBondRels } from './pairBondRelsActions';
 import { fetchStagedParentalRels } from './stagedParentalRelActions';
 import { fetchStagedPairBondRels } from './stagedPairBondRelActions';
 
-import config from "../config.js";
+import config from '../config.js';
 import { getAxiosConfig } from './actionFunctions';
 
-export function runImport() {
+export function autoImport() {
+  return (dispatch) => {
+    dispatch({type: 'AUTOIMPORT'});
+    axios.post(config.api_url + '/api/v2/autoimportall', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: 'AUTOIMPORT_FULFILLED', payload: response.data})
+      })
+      .catch((err) => {
+        dispatch({type: 'AUTOIMPORT_REJECTED', payload: err})
+      })
+  }
+}
+
+export function importPeopleAndEvents(importRelsAlso) {
 
   // send an empty body object
   const body = {};
 
   return (dispatch) => {
-    dispatch({type: "RUN_IMPORT"});
-    axios.post(config.api_url + "/api/v2/autoimport", body, getAxiosConfig())
+    dispatch({type: "IMPORT_PEOPLEANDEVENTS"});
+    axios.post(config.api_url + "/api/v2/autoimportpeople", body, getAxiosConfig())
       .then((response) => {
-        dispatch({type: "RUN_IMPORT_FULFILLED", payload: response.data})
+        dispatch({type: "IMPORT_PEOPLEANDEVENTS_FULFILLED", payload: response.data})
+
         // after running import, refresh the store.
         // TODO: recieve the data through the response.data and append that information to the store.
         dispatch(fetchPeople());
         dispatch(fetchEvents());
         dispatch(fetchStagedPeople());
         dispatch(fetchStagedEvents());
+        // if we need to import the Relationships also, call that here. The fetches to refresh the store will be done at the end of importRelationships, so only do that fetch if not also importing the relationships
+        if (importRelsAlso) {
+          dispatch(importRelationships());
+        }
       })
       .catch((err) => {
-        dispatch({type: "RUN_IMPORT_REJECTED", payload: err})
+        dispatch({type: "IMPORT_PEOPLEANDEVENTS_REJECTED", payload: err})
       })
   }
 }
@@ -38,12 +62,20 @@ export function runImport() {
 export function importRelationships() {
   const body = {};
 
-  return (dispatch) => { 
+  return (dispatch) => {
   dispatch({type: "IMPORT_PARENTALRELATIONSHIPS"});
   axios.post(config.api_url + '/api/v2/autoimportparentalrels', body, getAxiosConfig())
     .then((response) => {
       dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_FULFILLED", payload: response.data})
-      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels
+      // after running import, refresh the store with data that was updated.
+      // TODO: recieve the data through the response.data and append that information to the store.
+      // why refreshing People here? Is the people collection updated when running this import?
+      dispatch(fetchStagedParentalRels());
+      dispatch(fetchStagedPairBondRels());
+      dispatch(fetchParentalRels());
+      dispatch(fetchPairBondRels());
+      hashHistory.push('/');
+      // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels. Problem with this approach is you don't know which one will complete first - import parents or pairbonds. So putting the relevant fetches inside the .then of the import call
     })
     .catch((err) => {
       dispatch({type: "IMPORT_PARENTALRELATIONSHIPS_REJECTED", payload: err})
@@ -52,17 +84,105 @@ export function importRelationships() {
   axios.post(config.api_url + '/api/v2/autoimportpairbondrels', body, getAxiosConfig())
     .then((response) => {
       dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_FULFILLED", payload: response.data})
-        // after running import, refresh the store.
+        // after running import, refresh the store with data that was updated
         // TODO: recieve the data through the response.data and append that information to the store.
+        // why refreshing People here? Is the people collection updated when running this import?
         dispatch(fetchPeople());
-        dispatch(fetchParentalRels());
         dispatch(fetchPairBondRels())
-        dispatch(fetchStagedParentalRels());
         dispatch(fetchStagedPairBondRels());
     })
     .catch((err) => {
       dispatch({type: "IMPORT_PAIRBONDRELATIONSHIPS_REJECTED", payload: err})
     })
+  }
+}
+
+export function clearStagedRecords(clearSavedAlso) {
+  return (dispatch) => {
+    dispatch({type: "CLEAR_STAGEDRECORDS"});
+    axios.post(config.api_url + '/api/v2/clearstagedrecords', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CLEAR_STAGEDRECORDS_FULFILLED", payload: response.data})
+        // TODO: do we need to fetch here, or should we just clear the store?
+        if (clearSavedAlso) {
+          dispatch(clearSavedRecords());
+        } else {
+          dispatch(fetchStagedParentalRels());
+          dispatch(fetchStagedPairBondRels());
+          dispatch(fetchStagedEvents());
+          dispatch(fetchStagedPeople());
+          alert('Records have been cleared')
+        }
+      })
+      .catch((err) => {
+        dispatch({type: "CLEAR_STAGEDRECORDS_REJECTED", payload: err})
+      })
+  }
+}
+
+export function clearSavedRecords() {
+  return (dispatch) => {
+    dispatch({type: 'CLEAR_ALLRECORDS'});
+    axios.post(config.api_url + '/api/v2/clearsavedrecords', {}, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: 'CLEAR_ALLRECORDS_FULFILLED', payload: response.data})
+        dispatch(fetchPeople());
+        dispatch(fetchEvents());
+        dispatch(fetchParentalRels());
+        dispatch(fetchPairBondRels())
+        dispatch(fetchStagedParentalRels());
+        dispatch(fetchStagedPairBondRels());
+        dispatch(fetchStagedEvents());
+        dispatch(fetchStagedPeople());
+        alert('Records have been cleared')
+      })
+      .catch((err) => {
+        dispatch({type: 'CLEAR_ALLRECORDS_REJECTED', payload: err})
+      })
+  }
+}
+
+export function importParentalRel(child_id, parent_id, relationshipType, subType, startDate, endDate, _id) {
+
+  const body = {
+    object: {
+      child_id,
+      parent_id,
+      relationshipType,
+      subType,
+      startDate,
+      endDate,
+    }
+  };
+
+  return (dispatch) => {
+    // need to call create_parentalrel dispatch to have access to the newly created information
+    dispatch({type: "CREATE_PARENTALREL"});
+    axios.post(config.api_url + '/api/v2/parentalrel/create', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CREATE_PARENTALREL_FULFILLED", payload: response.data})
+
+        const updateRel1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        };
+        const updateRel2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true',
+          }
+        };
+
+        updateParentalRel(updateRel1)
+        updateParentalRel(updateRel2)
+      })
+      .catch((err) => {
+        dispatch({type: "CREATE_PARENTALREL_REJECTED", payload: err})
+      })
   }
 }
 
@@ -78,6 +198,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 		}
 	};
 	return (dispatch) => {
+    // need to call this dispatch here to have access to the newly created information
 		dispatch({type: "CREATE_PERSON"});
 		axios.post(config.api_url + "/api/v2/person/create", body, getAxiosConfig())
 			.then((response) => {
@@ -91,14 +212,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 						eventPlace: birthPlace,
 					}
 				}
-				dispatch({type: "CREATE_EVENT"});
-				axios.post(config.api_url + "/api/v2/event/create", bodyBirth, getAxiosConfig())
-					.then((response) => {
-						dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
-					})
-					.catch((err) => {
-						dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-					})
+        createEvent(bodyBirth)
 
 				// do post for event create for deathDate, but only if there is a death
 				if (deathDate) {
@@ -110,15 +224,9 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 							eventPlace: deathPlace,
 						}
 					}
-					dispatch({type: "CREATE_EVENT"});
-					axios.post(config.api_url + "/api/v2/event/create", bodyDeath, getAxiosConfig())
-						.then((response) => {
-							dispatch({type: "CREATE_EVENT_FULFILLED", payload: response.data})
-						})
-						.catch((err) => {
-							dispatch({type: "CREATE_EVENT_REJECTED", payload: err})
-						})
-					}
+        }
+
+        createEvent(bodyDeath)
 
         const bodyUpdate1 = {
           object : {
@@ -134,25 +242,9 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
             value: 'true'
           }
         }
-
-        dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate1, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
-          })
-
-        dispatch({type: "UPDATE_STAGINGPERSON"});
-        axios.post(config.api_url + '/api/v2/staging/person/update', bodyUpdate2, getAxiosConfig())
-          .then((response) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_FULFILLED", payload: response.data});
-          })
-          .catch((err) => {
-            dispatch({type: "UPDATE_STAGINGPERSON_REJECTED", payload: err});
-          })
-
+        
+        updateStagedPerson(bodyUpdate1)
+        updateStagedPerson(bodyUpdate2)
 			})
 			.catch((err) => {
 				dispatch({type: "CREATE_PERSON_REJECTED", payload: err})
@@ -160,3 +252,46 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
 	}
 }
 
+export function importPairBondRel(personOne_id, personTwo_id, relationshipType, subType, startDate, endDate, _id) {
+
+  const body = {
+    object: {
+      personOne_id,
+      personTwo_id,
+      relationshipType,
+      subType,
+      startDate,
+      endDate,
+    }
+  };
+
+  return (dispatch) => {
+    // need to call this dispatch here to have access to the newly created information
+    dispatch({type: "CREATE_PAIRBONDREL"});
+    axios.post(config.api_url + '/api/v2/pairbondrel/create', body, getAxiosConfig())
+      .then((response) => {
+        dispatch({type: "CREATE_PAIRBONDREL_FULFILLED", payload: response.data})
+
+        const updateRel1 = {
+          object : {
+            _id: _id,
+            field: 'genie_id',
+            value: response.data._id
+          }
+        };
+        const updateRel2 = {
+          object : {
+            _id: _id,
+            field: 'ignore',
+            value: 'true',
+          }
+        };
+
+        updateStagedPerson(updateRel1)
+        updateStagedPerson(updateRel2)
+      })
+      .catch((err) => {
+        dispatch({type: "CREATE_PAIRBONDREL_REJECTED", payload: err})
+      })
+  }
+}

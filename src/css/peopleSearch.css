@@ -30,10 +30,20 @@
 #family-content {
   display: flex;
   width: 100%;
-  flex-direction: row;
-  margin-top: 50px;
+  flex-direction: column;
+  margin-top: 10px;
+  min-height: 800px;
+  align-items: center;
 }
-
+#add-family {
+  width: 100%;
+  background-color: #3B42AF;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  cursor: pointer;
+  justify-content: center;
+}
 #inner-search-titles {
   width: 68.5%;
   height: 40px;
@@ -41,14 +51,29 @@
   flex-direction: row;
 }
 #family {
-  height: 600px;
-  /*overflow: scroll;*/
   margin-right: auto;
   margin-left: auto;
   width: 800px;
-  border-radius: 5px;
   position: relative;
   background-color: white;
+  border-radius: 5px;
+  height: 600px;
+  margin-top: 20px;
+}
+.family-header-container {
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+  height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: CabinMI;
+  align-items: center;
+}
+.searchPeople {
+  width: 190px;
+  height: 40px;
+  margin-left: 15px;
 }
 #person-div {
   display: flex;
@@ -63,13 +88,13 @@
 .mappedPeople {
   width: 100%;
   overflow: scroll;
-  height: 548px;
-}
-.search-add {
-  width: 15%;
+  height: 600px;
+  margin-right: auto;
   margin-left: auto;
-  display: flex;
-  align-items: center;
+  width: 800px;
+  border-radius: 5px;
+  position: relative;
+  background-color: white;
 }
 .search-name-title {
   width: 100%;
@@ -79,14 +104,12 @@
   margin-right: 30px;
   text-align: center;
 }
-
 .custom-input {
   display: flex;
   margin-left: 10px;
   margin-right: 10px;
   align-items: center;
 }
-
 #people-info {
   width: 40%;
   margin-right: auto;
@@ -102,17 +125,17 @@
   font-family: 'Cabin', sans-serif;
   font-size: 23px;
 }
-
-#add-family {
+#addFamily {
   width: 100%;
-  background-color: #3B42AF;
   display: flex;
   flex-direction: row;
   text-align: center;
+  background-color: #3B42AF;
 }
 .date-div {
   margin-left: auto;
   margin-right: 35px;
+  width: 135px;
 }
 .add {
   border-bottom: 0;
@@ -120,12 +143,9 @@
   font-size: 30px;
   padding: 0;
   color: #E9EBEE;
-  margin-right: auto;
-  margin-left: auto;
   margin-bottom: auto;
   margin-top: auto;
   font-family: cabin;
-  width: 70%;
 }
 #buffer-div {
   width: 100%;
@@ -136,7 +156,6 @@
   margin-bottom: 2px;
   color: #640FF3;
 }
-
 .button2 {
   color: #640FF3;
   cursor: pointer;
@@ -150,6 +169,14 @@
 .plus {
   margin-right: 15px;
 }
+.familySortDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.familySort {
+  cursor: pointer;
+}
 .fa-plus-square {
   margin-top: auto;
   margin-left: auto;
@@ -159,7 +186,7 @@
 }
 #create-person {
   color: white;
-  margin-left: auto;
+  margin-left: 15px;
 
 }
 .fa-pencil-square-o {
@@ -221,8 +248,88 @@
 
 /*End Stylng Add Person Modal*/
 
-
-
+.familySearch {
+  width: 800px;
+  height: 200px;
+  border: 1px solid silver;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+}
+.bufferSearch {
+  height: 2px;
+  background-color: silver;
+  width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.searchH {
+  font-family: Cabin;
+  text-align: center;
+  margin-top: 10px;
+}
+.form-control {
+  height: 50px;
+  font-size: 20px;
+  width: 250px;
+}
+.searchInput {
+  width: 200px !important;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.searchContent {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.searchButtons {
+  display: flex;
+  flex-direction: row;
+  margin-top: auto;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
+.btn-FL {
+  width: 100px;
+  margin-left: 5px;
+  margin-right: 5px !important;
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+.familyHeader1 {
+  width: 30px;
+  height: 30px;
+  text-align: left;
+  margin-left: 12px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center
+}
+.familyHeader2 {
+  width: 80px;
+  height: 30px;
+  text-align: left;
+  display: flex;
+  align-items: center
+}
+.familyHeader3 {
+  display: flex;
+  flex-direction: row;
+  width: 65px;
+  margin-left: auto;
+  align-items: center;
+}
+.familyHeadText {
+  margin-left: 9px;
+}
 
 @media (max-width: 1300px) {
   #people-info {
@@ -246,53 +353,5 @@
   }
 }
 @media (max-width: 1080px) {
-  .add {
-    margin-left: 120px;
-  }
-}
-@media (max-width: 1000px) {
-  .add {
-    margin-left: auto;
-  }
-}
-@media (max-width: 800px) {
 
-  #people-info {
-    width: 95%;
-    margin-bottom: 60px;
-  }
-  #family {
-    width: 95%;
-  }
-  .date-div {
-    margin-left: auto;
-  }
-  .details-button {
-    margin-left: auto;
-  }
-  #name-date {
-    flex-direction: row;
-  }
-  #person-div {
-    height: 60px;
-  }
-  #family-content {
-    flex-direction: column;
-  }
-}
-@media (max-width: 600px) {
-  #name-date {
-    flex-direction: column;
-  }
-  .date-div {
-    margin-left: 20px;
-  }
-  .family-header {
-    font-size: 30px;
-  }
-}
-@media (max-width: 400px) {
-  .add {
-    font-size: 25px;
-  }
 }

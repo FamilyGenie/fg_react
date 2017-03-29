@@ -6,7 +6,7 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
 
 @connect(
   (store, ownProps) => {
-    var stagedStar = store.stagedPeople.stagedPeople.find(function(p) {
+    const stagedStar = store.stagedPeople.stagedPeople.find(function(p) {
       return p._id === ownProps.params._id;
     });
     return {
@@ -15,7 +15,12 @@ import StagedPeopleDetailsLineItem from './staged-peopledetails-lineitem';
       // get all people existing in the FG DB that match our stagedStar
       starMatches:
         store.people.people.filter(function(m) {
-          return (((m.fName === stagedStar.fName && m.lName === stagedStar.lName) && m.sexAtBirth === stagedStar.sexAtBirth) || m.birthDate === stagedStar.birthDate)
+          let fName, mName;
+          if (stagedStar.fName.indexOf(' ') >= 0) {
+            fName = stagedStar.fName.split(' ')[0];
+            mName = stagedStar.fName.split(' ')[1];
+          }
+          return ((((m.fName === fName || m.mName === mName) && m.lName === stagedStar.lName) && m.sexAtBirth === stagedStar.sexAtBirth) || m.birthDate === stagedStar.birthDate)
         })
     };
   },

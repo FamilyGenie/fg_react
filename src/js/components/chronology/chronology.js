@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
@@ -27,13 +28,12 @@ export default class Chronology extends React.Component {
       reverse: false,
       // initialize with unsorted events
       mappedEvents: this.props.events.map(event =>
-      <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
-    ),
+        <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
+      ),
     };
   }
 
   sortEvents = (sortType) => {
-    this.setState({reverse : !this.state.reverse})
     sortType = sortType || '';
     var sortedEvents;
     if (this.state.reverse) {
@@ -140,8 +140,11 @@ export default class Chronology extends React.Component {
     var mappedEvents = sortedEvents.map(event =>
       <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
     );
-    this.setState({mappedEvents: mappedEvents});
+    this.setState({mappedEvents: mappedEvents, reverse : !this.state.reverse});
     return mappedEvents
+  }
+  componentDidMount = () => {
+    $(window).scrollTop(0);
   }
 
   render = () => {
@@ -156,18 +159,18 @@ export default class Chronology extends React.Component {
         </div>
         <div class="staged-container">
           <div class='staged-header-container'>
-            <div class="staged-header">
+            <div class="chronHeader1" id="firstChronHeader">
               {/*using the arrow function in the onClick allows for passing in parameters, in the case of reverseSort, it prevents it from being called during the render method.*/}
-              <span onClick={() => this.sortEvents('date')}> Date </span>
+              <span onClick={() => this.sortEvents('date')} class="chronHeaderText"> Date </span>
             </div>
-            <div class="staged-header">
-              <span onClick={() => this.sortEvents('person')}>Person</span>
+            <div class="chronHeader2">
+              <span onClick={() => this.sortEvents('person')} class="chronHeaderText2">Person</span>
             </div>
-            <div class="staged-header">
-              <span onClick={() => this.sortEvents('type')}>Type</span>
+            <div class="chronHeader3">
+              <span onClick={() => this.sortEvents('type')} class="chronHeaderDate">Type</span>
             </div>
-            <div class="staged-header">
-              <p><span onClick={() => this.sortEvents('place')}> Place </span></p>
+            <div class="chronHeader4">
+              <p><span onClick={() => this.sortEvents('place')} class="chronHeaderDate"> Place </span></p>
             </div>
             <div class="stagedHeaderReview">
               <p>Review</p>
@@ -183,5 +186,15 @@ export default class Chronology extends React.Component {
       return (<p>Loading...</p>)
     }
 
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    // this will make the window scroll to the top when you open this page
+    ReactDOM.findDOMNode(this).scrollIntoView();
+
+    // when the props change is when we have data to show, so execute the sort at this time.
+    if (prevProps !== this.props) {
+      this.sortEvents('date');
+    }
   }
 }
