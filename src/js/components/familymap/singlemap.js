@@ -48,13 +48,13 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log('in singlemap constructor with props: ', this.props);
-		this.state = {
-			// store this state value for display purposes
-			dateFilterString: "",
-			starAge: 18,
-			legendShowing: false,
-		};
+		// console.log('in singlemap constructor with props: ', this.props);
+		// this.state = {
+		// 	// store this state value for display purposes
+		// 	dateFilterString: "",
+		// 	starAge: 18,
+		// 	legendShowing: false,
+		// };
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
@@ -100,54 +100,54 @@ export default class SingleMap extends React.Component {
     };
 
     // this function will be called when the user hits the button to subtract a year and then re-draw the map
-	subtractYear = () => {
-		this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
-		var vStarAge = parseInt(this.state.starAge) - 1;
-		// also set the state variable
-		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: vStarAge
-		});
-		this.drawMap(this.mapStartX);
-	}
+	// subtractYear = () => {
+	// 	this.dateFilterString = moment(this.dateFilterString).subtract(1,'year').format('YYYY-MM-DD');
+	// 	var vStarAge = parseInt(this.state.starAge) - 1;
+	// 	// also set the state variable
+	// 	this.setState({
+	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
+	// 		starAge: vStarAge
+	// 	});
+	// 	this.drawMap(this.mapStartX);
+	// }
 
-    // this function will be called when the user hits the button to add a year and then re-draw the map
-	addYear = () => {
-		this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
-		var vStarAge = parseInt(this.state.starAge) + 1;
-		// also set the state variable
-		this.setState({
-			dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
-			starAge: vStarAge
-		});
-		this.drawMap(this.mapStartX);
-	}
-	toggleLegend = () => {
-		if(this.state.legendShowing === false) {
-			$("#legend").css({"display": "flex"});
-			$("#mainMap").css({"min-height": "1100px"});
-			this.setState({legendShowing: true});
-		}
-		if (this.state.legendShowing === true) {
-			$("#legend").css({"display": "none"});
-			$("#mainMap").css({"min-height": "800px"});
-			this.setState({legendShowing: false});
-		}
-	}
+ //    // this function will be called when the user hits the button to add a year and then re-draw the map
+	// addYear = () => {
+	// 	this.dateFilterString = moment(this.dateFilterString).add(1,'year').format('YYYY-MM-DD');
+	// 	var vStarAge = parseInt(this.state.starAge) + 1;
+	// 	// also set the state variable
+	// 	this.setState({
+	// 		dateFilterString: moment(this.dateFilterString.toString().replace(/T.+/, '')).format('MM/DD/YYYY'),
+	// 		starAge: vStarAge
+	// 	});
+	// 	this.drawMap(this.mapStartX);
+	// }
+	// toggleLegend = () => {
+	// 	if(this.state.legendShowing === false) {
+	// 		$("#legend").css({"display": "flex"});
+	// 		$("#mainMap").css({"min-height": "1100px"});
+	// 		this.setState({legendShowing: true});
+	// 	}
+	// 	if (this.state.legendShowing === true) {
+	// 		$("#legend").css({"display": "none"});
+	// 		$("#mainMap").css({"min-height": "800px"});
+	// 		this.setState({legendShowing: false});
+	// 	}
+	// }
 
-	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
-	onAgeChange = (evt) => {
-		var star = this.getPersonById(this.props.star_id);
-		this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
+	// // this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
+	// onAgeChange = (evt) => {
+	// 	var star = this.getPersonById(this.props.star_id);
+	// 	this.dateFilterString = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
 
-		// this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
-		this.setState({
-			// dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
-			dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
-			starAge: evt.target.value
-		});
-		this.drawMap(this.mapStartX);
-	}
+	// 	// this.dateFilterString = moment(this.getPersonById(this.props.star_id).birthDate).add(evt.target.value,'year').format('YYYY-MM-DD');
+	// 	this.setState({
+	// 		// dateFilterString: moment(this.dateFilterString.toString().replace(/-/g, '\/').replace(/T.+/, '')).format('MM/DD/YYYY'),
+	// 		dateFilterString: moment(this.dateFilterString.toString()).format('MM/DD/YYYY'),
+	// 		starAge: evt.target.value
+	// 	});
+	// 	this.drawMap(this.mapStartX);
+	// }
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
@@ -167,38 +167,6 @@ export default class SingleMap extends React.Component {
 					<Legend toggleLegend={this.toggleLegend}/>
 				</div>
 				<div class="mainMap" id="mainMap">
-					<div class="mapHeader">
-						<div class="dateToggle">
-							<div class="mapDate">
-								<div class="mapDateContents">
-									<p class="mapDateHeader">Family Map As Of:</p>
-									<p class="mapDateText">{this.state.dateFilterString}</p>
-								</div>
-								<div class="starAgeLegend">
-									<p class="starAge">Star's Age:</p>
-									<input
-										id="ageInput"
-										class="form-control ageInput"
-										type="text"
-										value={this.state.starAge}
-										onChange={this.onAgeChange}
-									/>
-								<p class="starAge2">{this.state.starAge}</p>
-								<button type="button" class="btn btn-default btn-Legend" onClick={this.toggleLegend}>Legend</button>
-								</div>
-							</div>
-							<div class="mapArrow">
-								<i class="fa fa-arrow-circle-up buttonSize2 button2" onClick={this.addYear}></i>
-								<i class="fa fa-arrow-circle-down buttonSize2 button2" onClick={this.subtractYear.bind(this)}></i>
-							</div>
-							<div class="zoom">
-								<p class="zoomHead">Zoom</p>
-								<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
-								<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
-							</div>
-						</div>
-						<h1 class="map-header">{this.fullName}'s Family Map </h1>
-					</div>
 					<svg
 						width="1400"
 						height="1400"
@@ -562,7 +530,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawAllChildren (startY, childDistance): void {
+	drawAllChildren = (startY, childDistance) => {
 		// note that we are assuming that each kid will have one and only one biological mother and one and only one biological father. Need to eventually accomodate for this not being true (like don't have some bio parent info)
 		let nextChildY = startY + childDistance + this.firstChildYDistance;
 		let mom, momRel, dad, dadRel;
@@ -663,7 +631,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawAllPairBonds (startX, startY, parentDistance): boolean {
+	drawAllPairBonds = (startX, startY, parentDistance) => {
 		let mom;
 		let dad;
 		var personOne, personTwo;
@@ -910,7 +878,7 @@ export default class SingleMap extends React.Component {
 		}
 	} // end addParentsNotInPairBondsEach
 
-	getAllPairBonds(): boolean {
+	getAllPairBonds= () => {
 		let pairBondTemp = [];
 		let oneRel, twoRel;
 
@@ -1198,7 +1166,7 @@ export default class SingleMap extends React.Component {
 		});
 	}
 
-	drawCircle(person) {
+	drawCircle = (person) => {
 		if (person.fName === 'Thomas') {
 			console.log('draw thomas at: ', person.mapXPos);
 		}
@@ -1219,7 +1187,7 @@ export default class SingleMap extends React.Component {
 	}
 
 	// when a person on the map is clicked, check to see if that person has a Z to start their ID. If not, then go to their peopledetails page. If they do, then we know this person is a parent that is not yet created of a child in the map. We know this because that is the only way a person would get a Z. In this case, we set it up and call the openNewPersonModal, so the user can create this person
-	personClick(person) {
+	personClick = (person) => {
 		return() => {
 			if (person._id.substr(0,1) === "Z") {
 				// if the person_id starts with a Z, then we the maps component created that person locally. We then want to find out who the child was for this person, so when we create the person in the backend, we also set them as a parent to the child. Note also that if they have a Z (and were created locally), they will only be a parent to one child on the map.
@@ -1246,7 +1214,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawCircleText(cx, cy, person, justify) {
+	drawCircleText = (cx, cy, person, justify) => {
 		var textData = [];
 		// if there is a user entered birthDate, use that, else check to see if there is a value in the eventDate field, if so format that. If there is no value in the eventDate field, then use the empty string
 		var birthDate = (person.birthDateUser ? person.birthDateUser : (person.birthDate ? moment(person.birthDate.toString().replace(/T.+/, '')).format('MM/DD/YYYY') : ""));
@@ -1297,7 +1265,7 @@ export default class SingleMap extends React.Component {
 		return vText;
 	}
 
-	drawMaleSymbol(cx, cy) {
+	drawMaleSymbol = (cx, cy) => {
 		let lineData = [
 			{"x": cx + 28, "y": cy - 28}, {"x": cx + 40, "y": cy - 40},
 			{"x": cx + 30, "y": cy - 40}, {"x": cx + 40, "y": cy - 40},
@@ -1316,7 +1284,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "none");
 	}
 
-	drawTextBox(cx, cy, child) {
+	drawTextBox = (cx, cy, child) => {
 		if (child.deathDate) {
 			// create lineData that is bigger because there is a deathDate showing
 			var lineData = [
@@ -1345,7 +1313,7 @@ export default class SingleMap extends React.Component {
 			.attr("class", "textBox");
 	}
 
-	drawRelText(mom, dad, pairBondRel) {
+	drawRelText = (mom, dad, pairBondRel) => {
 		let prefix;
 		let endPrefix;
 		let textData = [];
@@ -1432,7 +1400,7 @@ export default class SingleMap extends React.Component {
 			.attr("font-weight", "600");
 	}
 
-	getRelTextPrefix(relType) {
+	getRelTextPrefix = (relType) => {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "m: ";
 		} else {
@@ -1440,7 +1408,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	getRelTextEndPrefix(relType) {
+	getRelTextEndPrefix = (relType) => {
 		if ( /[Mm]arriage/.test(relType) ) {
 			return "d: ";
 		} else {
@@ -1448,7 +1416,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawFemaleSymbol(cx, cy) {
+	drawFemaleSymbol = (cx, cy) => {
 		let lineData = [
 			{"x": cx, "y": cy + 40}, {"x": cx, "y": cy + 50},
 			{"x": cx - 8, "y": cy + 50}, {"x": cx + 8, "y": cy + 50},
@@ -1467,7 +1435,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "none");
 	}
 
-	drawCircleHash (person) {
+	drawCircleHash = (person) => {
 		let lineData = [
 			{"x": person.mapXPos + 25, "y": person.mapYPos - 33},
 			{"x": person.mapXPos - 33, "y": person.mapYPos + 25},
@@ -1534,7 +1502,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "black");
 	}
 
-	drawRelLine(p1, p2, color, relType) {
+	drawRelLine = (p1, p2, color, relType) => {
 		var lineStrArr = [];
 		var yControlPoint: number;
 		var line;
@@ -1667,7 +1635,7 @@ export default class SingleMap extends React.Component {
 		return line;
 	}
 
-	drawAdoptiveRelLine(p1, p2, color, relType) {
+	drawAdoptiveRelLine = (p1, p2, color, relType) => {
 		var lineStrArr = [];
 		var line;
 		var yControlPoint: number;
@@ -1811,7 +1779,7 @@ export default class SingleMap extends React.Component {
 		return line;
 	}
 
-	drawParentalLine(parent, child, momOrDad, subType) {
+	drawParentalLine = (parent, child, momOrDad, subType) => {
 		let lineData = [];
 
 		// var tip = d3.tip()
@@ -1906,7 +1874,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawNonBioParentLines(): void {
+	drawNonBioParentLines = () => {
 		let momRels = [];
 		let dadRels = [];
 		let mom, dad, momRel, dadRel;
@@ -1968,7 +1936,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawRelHash (mom, dad, pairBondRel, color) {
+	drawRelHash = (mom, dad, pairBondRel, color) => {
 		// xPos is halfway between mom and dad, and then minus a few pixels for rough centering
 		let cx = (mom.mapXPos - dad.mapXPos) / 2 + dad.mapXPos;
 
@@ -2010,7 +1978,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", color);
 	}
 
-	drawAdoptiveRelHash (mom, dad, pairBondRel, color) {
+	drawAdoptiveRelHash = (mom, dad, pairBondRel, color) => {
 		// xPos is halfway between mom and dad, and then minus a few pixels for rough centering
 		const cx = (mom.mapXPos - dad.mapXPos) / 2 + dad.mapXPos;
 
@@ -2057,7 +2025,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", color);
 	}
 
-	drawParentLeftHash (child, parent, color) {
+	drawParentLeftHash = (child, parent, color) => {
 		let cx, cy: number;
 
 		// check to see if the child is to the right or left of the parent, and then accomodate for the fact that the relationship line ends on the child away from the child's mapXPos by a length equal to the radius of the circle.
@@ -2102,7 +2070,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", color);
 	}
 
-	drawParentRightHash (child, parent, color) {
+	drawParentRightHash = (child, parent, color) => {
 		let cx, cy: number;
 
 		// check to see if the child is to the right or left of the parent, and then accomodate for the fact that the relationship line ends on the child away from the child's mapXPos by a length equal to the radius of the circle.
@@ -2147,7 +2115,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", color);
 	}
 
-	drawStar (cx, cy, person) {
+	drawStar = (cx, cy, person) => {
 		let lineData = [
 			{"x": cx - 35, "y": cy - 15}, {"x": cx + 33, "y": cy - 13},
 			{"x": cx - 25, "y": cy + 25}, {"x": cx, "y": cy - 35},
@@ -2171,7 +2139,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "gray");
 	}
 
-	bringAllChildrenToFront (): void {
+	bringAllChildrenToFront = () => {
 
 		// this is needed to move d3 elements to the front of the drawing. Found here: http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
 		d3.selection.prototype.moveToFront = function() {
@@ -2196,7 +2164,7 @@ export default class SingleMap extends React.Component {
 		}
 	}
 
-	drawTick (cx, cy, tickText) {
+	drawTick = (cx, cy, tickText) => {
 		var textData;
 		textData = [
 			// text
@@ -2219,7 +2187,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "black");
 	}
 
-	drawTicks() {
+	drawTicks = () => {
 		this.drawTick(100, 20, "100");
 		this.drawTick(200, 20, "200");
 		this.drawTick(300, 20, "300");

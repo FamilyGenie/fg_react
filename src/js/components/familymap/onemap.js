@@ -125,6 +125,19 @@ export default class OneMap extends React.Component {
 		// this.drawMap(this.mapStartX);
 	}
 
+	toggleLegend = () => {
+		if(this.state.legendShowing === false) {
+			$("#legend").css({"display": "flex"});
+			$("#mainMap").css({"min-height": "1100px"});
+			this.setState({legendShowing: true});
+		}
+		if (this.state.legendShowing === true) {
+			$("#legend").css({"display": "none"});
+			$("#mainMap").css({"min-height": "800px"});
+			this.setState({legendShowing: false});
+		}
+	}
+
 	render = () => {
 		console.log('in onemap render with state: ', this.state);
 
