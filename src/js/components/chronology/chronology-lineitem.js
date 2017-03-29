@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import moment from 'moment';
 
 import EventLineItemEdit from '../peopledetails/event-lineitem-edit';
-import { setModalEvent } from '../../actions/modalActions';
+import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
 
 @connect(
   (store, ownProps) => {
@@ -17,6 +17,9 @@ import { setModalEvent } from '../../actions/modalActions';
       setEvent: (event) => {
         dispatch(setModalEvent(event));
       },
+			resetEvent: () => {
+				dispatch(resetModalEvent());
+			},
     }
   }
 )
@@ -35,6 +38,8 @@ export default class ChronologyLineItem extends React.Component {
   }
 
   closeModal = () => {
+		// first call the action that will set the store.modal.event to empty string, so that the event currently set for the EventLineItemEdit is not accidentally opened the next time this modal is opened.
+		this.props.resetEvent();
     this.setState({modalIsOpen: false});
   }
 
@@ -69,14 +74,15 @@ export default class ChronologyLineItem extends React.Component {
           isOpen={modalIsOpen}
           contentLabel="Modal"
         >
-          <div class="row">
-            <div class="col-xs-12">
-              Event Edit
-            </div>
+          <div class="modalClose">
+            <i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
           </div>
-          <EventLineItemEdit event={event} star={event.person_id}/>
+          <div class="modalH">
+              Event Edit
+          </div>
+          <div class="buffer-modal"></div>
+          <EventLineItemEdit event={event} star={event.person_id} closeModal={this.closeModal}/>
           <div><p></p></div>
-          <button onClick={this.closeModal}>Close</button>
         </Modal>
 
       </div>)
