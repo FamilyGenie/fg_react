@@ -19,6 +19,7 @@ import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/stag
 import StagedParentalRelSearch from './components/gedcomimport/parentalrels/staged-parentalrelsearch';
 import Chronology from './components/chronology/chronology';
 import ResetDatabase from './components/gedcomimport/reset-db';
+import OneMap from './components/familymap/onemap';
 
 const app = document.getElementById('app');
 
@@ -49,6 +50,8 @@ ReactDOM.render(<Provider store={store}>
 				<Route path='/stagedparentalrelsearch' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>
 
 	      		<Route path='/chronology' name='Chronology' component={Chronology}></Route>
+
+	      		<Route path='/onemap' name='OneMap' component={OneMap}></Route>
 
 	      		<Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 
