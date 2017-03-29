@@ -5,7 +5,6 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import store from './store';
 
 import EnsureLoggedInContainer from './components/auth/ensure-loggedin-container';
-import FamilyMap from './components/familymap/familymap';
 import GedcomImport from './components/gedcomimport/upload-gedcom';
 import ImportDashboard from './components/gedcomimport/import-home';
 import Layout from './components/Layout'

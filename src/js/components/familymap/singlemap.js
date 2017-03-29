@@ -19,6 +19,8 @@ import NewPerson from '../newperson/newperson';
 				ownProps.vDate,
 			zoom:
 				ownProps.zoom,
+			scale:
+				ownProps.scale,
 			people:
 				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
@@ -234,6 +236,12 @@ export default class SingleMap extends React.Component {
 	} // end of drawMap
 
 	scaleMap = () => {
+
+		// if a scale factor came in via props, that overrides anything else
+		if (this.props.scale) {
+			this.g.attr('transform', 'scale(' + this.props.scale + ')');
+			return;
+		}
 
 		var maxX = this.mapStartX;
 		var minX = this.mapStartX;
