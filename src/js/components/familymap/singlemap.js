@@ -12,7 +12,7 @@ import NewPerson from '../newperson/newperson';
 
 @connect(
 	(store, ownProps) => {
-		console.log('in singlemap @connect with store: ', store);
+		console.log('in singlemap @connect with props: ', ownProps);
 		return {
 			star_id:
 				ownProps.star_id,
@@ -225,7 +225,7 @@ export default class SingleMap extends React.Component {
 		const childDistance = 120;
 
 		// call to initializeVariables. If this returns fales, it means the star could not be found in props.people, which means data has not yet been loaded, so don't continue with drawing the map. Another render will be triggered when the data is there to draw the map.
-		if (! this.initializeVariables() ) {
+		if (!this.initializeVariables() ) {
 			return;
 		}
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
