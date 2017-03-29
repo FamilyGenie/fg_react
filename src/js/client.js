@@ -37,8 +37,6 @@ ReactDOM.render(<Provider store={store}>
 
 				<Route path='/peopledetails(/:star_id)' name='People Details' component={PeopleDetails}></Route>
 
-				<Route path='/familymap(/:star_id)' name='Family Map' component={FamilyMap}></Route>
-
 				<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
 
 				<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>

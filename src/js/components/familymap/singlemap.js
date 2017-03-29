@@ -12,7 +12,6 @@ import NewPerson from '../newperson/newperson';
 
 @connect(
 	(store, ownProps) => {
-		console.log('in singlemap @connect with props: ', ownProps);
 		return {
 			star_id:
 				ownProps.star_id,
@@ -50,14 +49,6 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log('in singlemap constructor');
-		// console.log('in singlemap constructor with props: ', this.props);
-		// this.state = {
-		// 	// store this state value for display purposes
-		// 	dateFilterString: "",
-		// 	starAge: 18,
-		// 	legendShowing: false,
-		// };
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
@@ -1569,7 +1560,7 @@ export default class SingleMap extends React.Component {
 			line = line
 			.attr("stroke", color)
 			.attr("stroke-width", 2)
-			.style("stroke-dasharray", ("2,8"));
+			.style("stroke-dasharray", ("8,6"));
 		} else {
 			// get here Casual or Informal (need to move all Informals to Casual)
 			line = line
@@ -1712,7 +1703,7 @@ export default class SingleMap extends React.Component {
 			line = line
 			.attr("stroke", color)
 			.attr("stroke-width", 2)
-			.style("stroke-dasharray", ("2,8"));
+			.style("stroke-dasharray", ("8,6"));
 		} else {
 			// get here Casual or Informal (need to move all Informals to Casual)
 			line = line
