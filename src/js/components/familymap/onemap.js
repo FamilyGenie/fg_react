@@ -62,7 +62,8 @@ export default class OneMap extends React.Component {
 			vDate: '',
 			starAge: 18,
 			legendShowing: false,
-			star_id: ''
+			star_id: '',
+			zoom: 100,
 		};
 	}
 
@@ -138,6 +139,20 @@ export default class OneMap extends React.Component {
 		}
 	}
 
+	zoomOut = () => {
+		var zoom = this.state.zoom - 1;
+		this.setState({
+			zoom: zoom
+		});
+	}
+
+	zoomIn = () => {
+		var zoom = this.state.zoom + 1;
+		this.setState({
+			zoom: zoom
+		});
+	}
+
 	render = () => {
 		console.log('in onemap render with state: ', this.state);
 
@@ -180,7 +195,7 @@ export default class OneMap extends React.Component {
 						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 					</div>
 				</div>
-				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate}/>
+				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate} zoom={this.state.zoom}/>
 			</div>
 		)
 	}

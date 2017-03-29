@@ -18,6 +18,8 @@ import NewPerson from '../newperson/newperson';
 				ownProps.star_id,
 			vDate:
 				ownProps.vDate,
+			zoom:
+				ownProps.zoom,
 			people:
 				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
@@ -48,6 +50,7 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log('in singlemap constructor');
 		// console.log('in singlemap constructor with props: ', this.props);
 		// this.state = {
 		// 	// store this state value for display purposes
@@ -91,13 +94,13 @@ export default class SingleMap extends React.Component {
 	g;
 
 	// this is for the alert box we are using. A lot of alerts still use the standard javascript alert box, and need to be migrated over.
-	alertOptions = {
-      offset: 15,
-      position: 'middle',
-      theme: 'light',
-      time: 0,
-      transition: 'scale'
-    };
+	// alertOptions = {
+ //      offset: 15,
+ //      position: 'middle',
+ //      theme: 'light',
+ //      time: 0,
+ //      transition: 'scale'
+ //    };
 
     // this function will be called when the user hits the button to subtract a year and then re-draw the map
 	// subtractYear = () => {
@@ -151,9 +154,16 @@ export default class SingleMap extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
-			console.log('in singleMap componentDidUpdate with props: ', this.props);
+			console.log('in singleMap componentDidUpdate with props: ', this.props.zoom, prevProps.zoom);
 			this.dateFilterString = this.props.vDate;
-			this.drawMap(this.mapStartX);
+			if (this.props.zoom > prevProps.zoom) {
+				this.zoomIn();
+			} else if (this.props.zoom < prevProps.zoom) {
+				this.zoomOut();
+			} else {
+				// zoom didn't change, so draw map
+				this.drawMap(this.mapStartX);
+			}
 		}
 		// ReactDOM.findDOMNode(this).scrollIntoView();
 	}
