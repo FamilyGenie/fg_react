@@ -10,7 +10,8 @@ import Legend from './legend';
 	(store, ownProps) => {
 		return {
 			star_id:
-				ownProps.params.star_id,
+				// ownProps.params.star_id,
+				'57d38829ddcdc72d349f927a',
 			people:
 				store.people.people.map(function(person) {
 					// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
@@ -67,7 +68,7 @@ export default class OneMap extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
-			const star = this.getPersonById('57d427c1d9a9db9e36353c91');
+			const star = this.getPersonById('57d38829ddcdc72d349f927a');
 			if (star) {
 				var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
@@ -78,6 +79,7 @@ export default class OneMap extends React.Component {
 				});
 			}
 		}
+		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	getPersonById = (_id) => {
@@ -111,6 +113,18 @@ export default class OneMap extends React.Component {
 		// this.drawMap(this.mapStartX);
 	}
 
+	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
+	onAgeChange = (evt) => {
+		var star = this.getPersonById(this.props.star_id);
+		var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
+
+		this.setState({
+			vDate: vDate,
+			starAge: evt.target.value
+		});
+		// this.drawMap(this.mapStartX);
+	}
+
 	render = () => {
 		console.log('in onemap render with state: ', this.state);
 
@@ -119,7 +133,7 @@ export default class OneMap extends React.Component {
 				<div id="legend">
 					<Legend toggleLegend={this.toggleLegend}/>
 				</div>
-				<div class="mainMap" id="mainMap">
+				<div class="mainMap" id="mainMapHead">
 					<div class="mapHeader">
 						<div class="dateToggle">
 							<div class="mapDate">
@@ -153,7 +167,7 @@ export default class OneMap extends React.Component {
 						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 					</div>
 				</div>
-				<SingleMap star_id={this.state.star_id} date={this.state.date}/>
+				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate}/>
 			</div>
 		)
 	}
