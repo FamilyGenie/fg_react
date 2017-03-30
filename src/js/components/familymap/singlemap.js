@@ -51,6 +51,7 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log('in singlemap constructor: ', this.props);
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
@@ -100,6 +101,10 @@ export default class SingleMap extends React.Component {
 			}
 		}
 		// ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	componentDidMount = () => {
+		this.drawMap(this.mapStartX);
 	}
 
 	render = () => {
