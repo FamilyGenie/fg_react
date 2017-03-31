@@ -11,7 +11,6 @@ import Legend from './legend';
 		return {
 			star_id:
 				ownProps.params.star_id,
-				// '57d38829ddcdc72d349f927a',
 			people:
 				store.people.people.map(function(person) {
 					// set the values from the actual person record to null, so they are not used in maps. We really shouldn't have this problem after March 17, 2017, because this is for backward compatiblity. Going forward, all new users should only have these events from the events table.
@@ -42,16 +41,6 @@ import Legend from './legend';
 				}),
 		};
 	},
-	(dispatch) => {
-		return {
-			openNewPersonModal: () => {
-				dispatch(openNewPersonModal());
-			},
-			setNewPersonModal: (child) => {
-				dispatch(setNewPersonModal(child));
-			}
-		}
-	}
 )
 export default class MegaMap extends React.Component {
 	constructor(props) {
@@ -68,6 +57,7 @@ export default class MegaMap extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
+		console.log('in mega componentDidUpdate');
 		if (prevProps !== this.props) {
 			const star = this.getPersonById(this.props.star_id);
 			if (star) {
@@ -105,17 +95,17 @@ export default class MegaMap extends React.Component {
 		});
 	}
 
-	createMapComponent = (star_id, vDate, scale) => {
-		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id}/>
+	createMapComponent = (star_id, vDate, scale, xPosTranslate, yPosTranslate) => {
+		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
 	}
 
 	createMapArray = () => {
 		var star = this.getPersonById('57d639cdd9a9db9e36353c9a');
-		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25);
+		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 500, 200);
 		this.state.mapArray.push(newComp);
 
 		star = this.getPersonById('57d31c66b189048209d53d6f');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .75);
+		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 500, 500);
 		this.state.mapArray.push(newComp);
 
 		this.setState({
@@ -128,6 +118,7 @@ export default class MegaMap extends React.Component {
 	}
 
 	componentDidMount = () => {
+		console.log('in mega componentDidMount');
 		this.createMapArray();
 	}
 
