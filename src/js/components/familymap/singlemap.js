@@ -244,7 +244,7 @@ export default class SingleMap extends React.Component {
 
 		// if a scale factor came in via props, that overrides anything else
 		if (this.props.scale) {
-
+			debugger;
 			// if there is also an xPosT and a yPosT, then move the map over too
 			if (this.props.xPosTranslate || this.props.yPosTranslate) {
 				// put in terinary operators so if the value comes over as undefined, that translates to 0, which means don't move the map on that axis
@@ -1467,6 +1467,7 @@ export default class SingleMap extends React.Component {
 	}
 
 	drawRelLine = (adoptive, p1, p2, color, relType) => {
+		debugger;
 		var lineStrArr = [];
 		var yControlPoint: number;
 		var line;

@@ -100,20 +100,22 @@ export default class MegaMap extends React.Component {
 	}
 
 	createMapArray = () => {
-		var star = this.getPersonById('57d639cdd9a9db9e36353c9a');
-		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 500, 200);
+		// var star = this.getPersonById('57d639cdd9a9db9e36353c9a');
+		var star = this.getPersonById('580594d381aa12e493d03435');
+		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 0, 0);
 		this.state.mapArray.push(newComp);
 
 		star = this.getPersonById('57d31c66b189048209d53d6f');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 500, 500);
+		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 300, 0);
+		this.state.mapArray.push(newComp);
+
+		star = this.getPersonById('57d38829ddcdc72d349f927a');
+		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 600, 0);
 		this.state.mapArray.push(newComp);
 
 		this.setState({
 			mapArray: this.state.mapArray
 		})
-
-		// var star = this.getPersonById('57d31c66b189048209d53d6f');
-		// mappArray.push(createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD'), .25));
 
 	}
 
