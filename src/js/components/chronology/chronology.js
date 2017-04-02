@@ -1,8 +1,10 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
 import ChronologyLineItem from './chronology-lineitem';
+import { relPath } from '../../functions/relpath';
 // import Something from './coloring';
 
 @connect((store, ownProps) => {
@@ -18,6 +20,7 @@ import ChronologyLineItem from './chronology-lineitem';
       return event
     }),
     people: store.people.people,
+    parentalRels: store.parentalRels.parentalRels,
   }
 })
 export default class Chronology extends React.Component {
@@ -31,6 +34,7 @@ export default class Chronology extends React.Component {
       ),
     };
   }
+
 
   sortEvents = (sortType) => {
     sortType = sortType || '';
@@ -142,13 +146,11 @@ export default class Chronology extends React.Component {
     this.setState({mappedEvents: mappedEvents, reverse : !this.state.reverse});
     return mappedEvents
   }
-  componentDidMount = () => {
-    $(window).scrollTop(0);
-  }
 
   render = () => {
     const { events, people } = this.props;
     const { reverse, mappedEvents }  = this.state;
+
 
     if(events) {
       return(
@@ -186,4 +188,15 @@ export default class Chronology extends React.Component {
     }
 
   }
+  componentDidUpdate = (prevProps, prevState) => {
+  // this will make the window scroll to the top when you open this page
+  ReactDOM.findDOMNode(this).scrollIntoView();
+
+  let starPerson = relPath('58e170627e653cef6c8f053c', this.props.people, this.props.parentalRels, this.props.events)
+  console.log('STARPERSON:',starPerson)
+  // when the props change is when we have data to show, so execute the sort at this time.
+  if (prevProps !== this.props) {
+    this.sortEvents('date');
+  }
+}
 }
