@@ -64,62 +64,74 @@ function getNodeEnds(startNode, people, parentalRels) {
 function populateTree(startNode, people, parentalRels) {
 	let cont = true;
 	let node = startNode;
+	// array to store nodes that have their dad line fully traversed
+	let dadCheck = [];
+	// array to store nodes that have their mom line fully traversed
+	let momCheck = [];
 	while (cont) {
 		// if we are at a node where the dad line and mom line have been checked
-		if (node.dc && node.mc) {
-			// if both have been checked, and there is not a mom and not a dad, then we know we are at the end of a branch, so add node to nodeEnds
-			// if (!node.mom && !node.dad) {
-			// 	nodeEnds.push(node);
-			// }
+		if (inDadCheck(node) && inMomCheck(node)) {
 
 			// if we are at the startNode, we are done checking the entire tree, so set continue to false
 			if (node === startNode) {
 				cont = false;
 			} else {
 				// else, we are done with both the mom line and dad line, so move up the tree.
-				// first, find out if where we currently are is this child nodes mom or dad, so we can set that flag on the node's child
+				// first, find out if where we currently are is this child nodes mom or dad, so we can add the node's child to the correct array, signifying that side being completely traversed
 				if (node === node.child.mom) {
-					node.child.mc = true;
+					momCheck.push(node.child);
 				} else {
-					node.child.dc = true;
+					dadCheck.push(node.child);
 				}
 				// this is what moves us up the tree
 				node = node.child;
 			}
 		// if the dad line for this node has not yet been checked
-		} else if (!node.dc) {
+		} else if (!inDadCheck(node)) {
 			// then if there is a dad for this node, move down to that node
 			if (node.dad) {
 				node = node.dad;
 			} else {
-				// there is not a dad for this node, so, see if there is a dad for this node
+				// there is not a dad for this node set yet, so, see if there is a dad for this node
 				if (getNodeParent(node, people, parentalRels, 'father')) {
 					// if there is a dad, then set the node for the next time through the loop to the dad
 					node = node.dad;
 				} else {
-					// if there is not a dada, then set the dad check flag to true
-					node.dc = true;
+					// if there is not a dad, then put this node in the array that the dad line for this node has been checked
+					dadCheck.push(node);
 				}
 			}
 		// if the mom line for this node has not yet been checked
-		} else if (!node.mc) {
+		} else if (!inMomCheck(node)) {
 			// then if there is a mom for this node, move down to that node
 			if (node.mom) {
 				node = node.mom;
 			} else {
 				// there is not a mom for this node, so, see if there is a mom for this node
 				if (getNodeParent(node, people, parentalRels, 'mother')) {
-					// if there is a dad, then set the node for the next time through the loop to the dad
+					// if there is a mom, then set the node for the next time through the loop to the mom
 					node = node.mom;
 				} else {
-					// if there is not a dada, then set the dad check flag to true
-					node.mc = true;
+					// if there is not a mom, then put this node in the array that the mom line for this node has been checked
+					momCheck.push(node);
 				}
 			}
 		}
 	}
 
-	console.log(startNode);
+	function inMomCheck(node) {
+		let _in = momCheck.find((n) => {
+			return n == node;
+		})
+		return !!_in;
+	}
+
+	function inDadCheck(node) {
+		let _in = dadCheck.find((n) => {
+			return n == node;
+		})
+		return !!_in;
+	}
 }
 
 function getParent(star, people, parentalRels, parentType) {

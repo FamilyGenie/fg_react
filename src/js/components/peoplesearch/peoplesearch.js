@@ -254,7 +254,7 @@ export default class PeopleSearch extends React.Component {
     if (prevProps !== this.props) {
       this.sortPeople('date');
       if (this.props.peopleTest.length && this.props.parentalRels.length) {
-        let star = relPath('58e0108bef3e900973642c67', this.props.peopleTest, this.props.parentalRels, this.props.events);
+        let star = relPath('57d427c1d9a9db9e36353c91', this.props.peopleTest, this.props.parentalRels, this.props.events);
         console.log("STAR: ", star);
       }
     }
