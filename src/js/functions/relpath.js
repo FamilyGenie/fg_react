@@ -3,31 +3,18 @@ function relPath(starId, people, parentalRels, events) {
 	let peopleMap = mapEventsToPeople(people, events);
 
 	let star = {
-		child: null,
 		person: peopleMap.find((person) => {return person._id == starId}),
-		dad: {},
-		mom: {}
 	};
 
-	// let cont = true;
-	// person = star;
-	// while (cont) {
-	//   getNodeParents()
-	// }
-	getNodeParents(star, people, parentalRels);
-	let endNodes = getNodeEnds(star);
-
-
-	console.log(endNodes);
+	populateTree(star, people, parentalRels);
 	return star;
 
 }
 
-function getNodeEnds(startNode) {
+function getNodeEnds(startNode, people, parentalRels) {
 	let nodeEnds = [];
 	let cont = true;
-	node = startNode;
-	debugger;
+	let node = startNode;
 	while (cont) {
 		// if we are at a node where the dad line and mom line have been checked
 		if (node.dc && node.mc) {
@@ -36,7 +23,7 @@ function getNodeEnds(startNode) {
 				nodeEnds.push(node);
 			}
 
-			// if we are at the startNode, we are done checking the entire tree, so set continue to false
+			// if we are at the startNode with both lines checked, we are done checking the entire tree, so set continue to false
 			if (node === startNode) {
 				cont = false;
 			} else {
@@ -70,6 +57,69 @@ function getNodeEnds(startNode) {
 			}
 		}
 	}
+
+	return nodeEnds;
+}
+
+function populateTree(startNode, people, parentalRels) {
+	let cont = true;
+	let node = startNode;
+	while (cont) {
+		// if we are at a node where the dad line and mom line have been checked
+		if (node.dc && node.mc) {
+			// if both have been checked, and there is not a mom and not a dad, then we know we are at the end of a branch, so add node to nodeEnds
+			// if (!node.mom && !node.dad) {
+			// 	nodeEnds.push(node);
+			// }
+
+			// if we are at the startNode, we are done checking the entire tree, so set continue to false
+			if (node === startNode) {
+				cont = false;
+			} else {
+				// else, we are done with both the mom line and dad line, so move up the tree.
+				// first, find out if where we currently are is this child nodes mom or dad, so we can set that flag on the node's child
+				if (node === node.child.mom) {
+					node.child.mc = true;
+				} else {
+					node.child.dc = true;
+				}
+				// this is what moves us up the tree
+				node = node.child;
+			}
+		// if the dad line for this node has not yet been checked
+		} else if (!node.dc) {
+			// then if there is a dad for this node, move down to that node
+			if (node.dad) {
+				node = node.dad;
+			} else {
+				// there is not a dad for this node, so, see if there is a dad for this node
+				if (getNodeParent(node, people, parentalRels, 'father')) {
+					// if there is a dad, then set the node for the next time through the loop to the dad
+					node = node.dad;
+				} else {
+					// if there is not a dada, then set the dad check flag to true
+					node.dc = true;
+				}
+			}
+		// if the mom line for this node has not yet been checked
+		} else if (!node.mc) {
+			// then if there is a mom for this node, move down to that node
+			if (node.mom) {
+				node = node.mom;
+			} else {
+				// there is not a mom for this node, so, see if there is a mom for this node
+				if (getNodeParent(node, people, parentalRels, 'mother')) {
+					// if there is a dad, then set the node for the next time through the loop to the dad
+					node = node.mom;
+				} else {
+					// if there is not a dada, then set the dad check flag to true
+					node.mc = true;
+				}
+			}
+		}
+	}
+
+	console.log(startNode);
 }
 
 function getParent(star, people, parentalRels, parentType) {
@@ -122,10 +172,33 @@ function mapEventsToPeople(people, events) {
 
 }
 
-function getNodeEnds(startNode, people, parentalRels) {
-	let nodeEnds = [];
+function getNodeParent(node, people, parentalRels, parentType) {
 
-	getNodeParents(startNode.mom, people, parentalRels)
+	if (parentType.toLowerCase() == 'father') {
+		let nodeFather = getParent(node.person, people, parentalRels, 'father');
+		if (nodeFather) {
+			node.dad = {};
+			node.dad.person = nodeFather;
+			node.dad.child = node;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	if (parentType.toLowerCase() == 'mother') {
+		let nodeMother = getParent(node.person, people, parentalRels, 'mother');
+		if (nodeMother) {
+			node.mom = {};
+			node.mom.person = nodeMother;
+			node.mom.child = node;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	return false;
 }
 
 function getNodeParents(node, people, parentalRels) {
@@ -133,13 +206,16 @@ function getNodeParents(node, people, parentalRels) {
 	let nodeFather = getParent(node.person, people, parentalRels, 'father');
 	if (nodeFather) {
 		node.dad.person = nodeFather;
+		node.dad.child = node;
 	}
 
 	let nodeMother = getParent(node.person, people, parentalRels, 'mother');
 	if (nodeMother) {
 		node.mom.person = nodeMother;
+		node.mom.child = node;
 	}
 
+	// if there is a nodeFather or a nodeMother found and set, then return true
 	if (nodeFather || nodeMother) {
 		return true;
 	} else {
