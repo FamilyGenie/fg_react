@@ -106,11 +106,11 @@ export default class MegaMap extends React.Component {
 		this.state.mapArray.push(newComp);
 
 		star = this.getPersonById('57d31c66b189048209d53d6f');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 300, 0);
+		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 300, 300);
 		this.state.mapArray.push(newComp);
 
 		star = this.getPersonById('57d38829ddcdc72d349f927a');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 600, 0);
+		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 600, 600);
 		this.state.mapArray.push(newComp);
 
 		this.setState({

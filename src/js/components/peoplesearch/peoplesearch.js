@@ -14,6 +14,8 @@ import NewPerson from '../newperson/newperson';
 import { openNewPersonModal } from '../../actions/modalActions';
 import { updateHelpMessage } from '../../actions/helpMessageActions';
 
+import { relPath } from '../../functions/relpath';
+
 @connect((store, ownProps) => {
   return {
     // these next two lines are left over from the template I started this code with
@@ -32,6 +34,9 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
     KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
+    peopleTest: store.people.people,
+    events: store.events.events,
+    parentalRels: store.parentalRels.parentalRels,
   };
 
 },
@@ -249,6 +254,11 @@ export default class PeopleSearch extends React.Component {
     // when the props change is when we have data to show, so execute the sort at this time.
     if (prevProps !== this.props) {
       this.sortPeople('date');
+    }
+
+    if (this.props.peopleTest) {
+      let star = relPath('57d427c1d9a9db9e36353c91', this.props.peopleTest, this.props.parentalRels, this.props.events);
+      console.log("STAR: ", star);
     }
   }
 
