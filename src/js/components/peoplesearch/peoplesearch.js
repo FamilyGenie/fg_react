@@ -14,7 +14,8 @@ import NewPerson from '../newperson/newperson';
 import { openNewPersonModal } from '../../actions/modalActions';
 import { updateHelpMessage } from '../../actions/helpMessageActions';
 
-import { relPath } from '../../functions/relpath';
+import { relPath, treeFunctions } from '../../functions/relpath';
+// import { treeFunctions } from '../../functions/treeHelpers';
 
 @connect((store, ownProps) => {
   return {
@@ -255,7 +256,14 @@ export default class PeopleSearch extends React.Component {
       this.sortPeople('date');
       if (this.props.peopleTest.length && this.props.parentalRels.length) {
         let star = relPath('57d427c1d9a9db9e36353c91', this.props.peopleTest, this.props.parentalRels, this.props.events);
-        console.log("STAR: ", star);
+        console.log("STAR 1: ", star);
+        console.log('tree functions', treeFunctions);
+        let leftArray = treeFunctions.getLeftLineage(star);
+        console.log("leftArray: ", leftArray);
+
+
+        // star = relPath('580594d381aa12e493d03435', this.props.peopleTest, this.props.parentalRels, this.props.events);
+        // console.log("STAR 2: ", star);
       }
     }
 

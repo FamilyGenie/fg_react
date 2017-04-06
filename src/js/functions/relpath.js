@@ -1,3 +1,5 @@
+import { treeFunctions } from './treeHelpers';
+
 function relPath(starId, people, parentalRels, events) {
 
 	let peopleMap = mapEventsToPeople(people, events);
@@ -236,4 +238,4 @@ function getNodeParents(node, people, parentalRels) {
 
 }
 
-export { relPath };
+export { relPath, treeFunctions };

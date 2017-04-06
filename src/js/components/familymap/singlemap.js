@@ -1467,7 +1467,6 @@ export default class SingleMap extends React.Component {
 	}
 
 	drawRelLine = (adoptive, p1, p2, color, relType) => {
-		debugger;
 		var lineStrArr = [];
 		var yControlPoint: number;
 		var line;
