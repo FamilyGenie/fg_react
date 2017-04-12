@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import SingleMap from './singlemap';
 import Legend from './legend';
+import { createTree, treeFunctions, getLeft } from '../../functions/relpath';
 
 @connect(
 	(store, ownProps) => {
@@ -39,12 +40,17 @@ import Legend from './legend';
 
 					return person;
 				}),
+			events:
+				store.events.events,
+			parentalRels:
+				store.parentalRels.parentalRels,
 		};
 	},
 )
 export default class MegaMap extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			// store this state value for display purposes
 			vDate: '',
@@ -52,14 +58,25 @@ export default class MegaMap extends React.Component {
 			legendShowing: false,
 			star_id: '',
 			zoom: 100,
+			fullName: '',
 			mapArray: [],
 		};
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		console.log('in mega componentDidUpdate');
-		if (prevProps !== this.props) {
-			const star = this.getPersonById(this.props.star_id);
+		if (this.props.people.length && this.props != prevProps) {
+			this.setNewState();
+		}
+		ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	componentDidMount = () => {
+		console.log('in megamap, componentDidMount');
+		this.setNewState();
+	}
+
+	setNewState = () => {
+		const star = this.getPersonById(this.props.star_id);
 			if (star) {
 				var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
@@ -67,11 +84,9 @@ export default class MegaMap extends React.Component {
 					star_id: star._id,
 					starAge: 18,
 					fullName: star.fName + ' ' + star.lName,
+					mapArray: this.createMapArray(star._id),
 				});
 			}
-			this.createMapArray();
-		}
-		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	getPersonById = (_id) => {
@@ -99,8 +114,8 @@ export default class MegaMap extends React.Component {
 		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
 	}
 
-	createMapArray = () => {
-		// var star = this.getPersonById('57d639cdd9a9db9e36353c9a');
+	createMapArray_old = (star_id) => {
+
 		var star = this.getPersonById('580594d381aa12e493d03435');
 		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 0, 0);
 		this.state.mapArray.push(newComp);
@@ -119,13 +134,24 @@ export default class MegaMap extends React.Component {
 
 	}
 
-	componentDidMount = () => {
-		console.log('in mega componentDidMount');
-		this.createMapArray();
+	createMapArray = (star_id) => {
+		let mapArray = [];
+		let tree = createTree(star_id, this.props.people, this.props.parentalRels, this.props.events);
+		console.log("Tree: ", tree);
+		let node = tree;
+		let newComp;
+		let xPos = 0;
+		while (node) {
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, xPos, 0);
+			mapArray.push(newComp);
+			xPos += 300;
+			node = getLeft(node);
+		}
+
+		return mapArray;
 	}
 
 	render = () => {
-		console.log('in megamap render with state: ', this.state);
 
 		return(
 			<div class="mainDiv">

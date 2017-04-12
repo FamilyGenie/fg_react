@@ -31,4 +31,4 @@ function getParent(node) {
 
 const treeFunctions = makeTreeFunctions(getLeft, getRight, getParent);
 
-export { treeFunctions };
+export { treeFunctions, getLeft, getRight, getParent };

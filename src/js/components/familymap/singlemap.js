@@ -89,7 +89,6 @@ export default class SingleMap extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
-			console.log('in singleMap componentDidUpdate with props: ', this.props.zoom, prevProps.zoom);
 			this.dateFilterString = this.props.vDate;
 			if (this.props.zoom > prevProps.zoom) {
 				this.zoomIn();
@@ -100,7 +99,6 @@ export default class SingleMap extends React.Component {
 				this.drawMap(this.mapStartX);
 			}
 		}
-		// ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	componentDidMount = () => {
@@ -155,7 +153,7 @@ export default class SingleMap extends React.Component {
 		// for map drawing
 		this.svg = d3.select('svg');
 		this.g = this.svg.append('g');
-		this.drawTicks();
+		// this.drawTicks();
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -244,7 +242,6 @@ export default class SingleMap extends React.Component {
 
 		// if a scale factor came in via props, that overrides anything else
 		if (this.props.scale) {
-			debugger;
 			// if there is also an xPosT and a yPosT, then move the map over too
 			if (this.props.xPosTranslate || this.props.yPosTranslate) {
 				// put in terinary operators so if the value comes over as undefined, that translates to 0, which means don't move the map on that axis

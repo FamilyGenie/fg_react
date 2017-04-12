@@ -24,6 +24,7 @@ import { setUserName } from '../../actions/authActions';
 export default class EnsureLoggedInContainer extends React.Component {
   constructor (props) {
     super(props);
+    console.log('in EnsureLoggedInContainer constructor');
 
     this.state = {
       // if the cookie exists, the user is logged in. The rest of the component will check userName for truthy or falsy to determine if user is logged in or not.
@@ -34,7 +35,7 @@ export default class EnsureLoggedInContainer extends React.Component {
 
   componentDidMount() {
     // const { dispatch, currentURL } = this.props
-
+    console.log('in EnsureLoggedInContainer componentDidMount');
     if (!this.state.userName) {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)

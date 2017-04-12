@@ -1,6 +1,6 @@
-import { treeFunctions } from './treeHelpers';
+import { treeFunctions, getLeft, getRight, getParent } from './treeHelpers';
 
-function relPath(starId, people, parentalRels, events) {
+function createTree(starId, people, parentalRels, events) {
 
 	let peopleMap = mapEventsToPeople(people, events);
 
@@ -136,7 +136,7 @@ function populateTree(startNode, people, parentalRels) {
 	}
 }
 
-function getParent(star, people, parentalRels, parentType) {
+function getParentLocal(star, people, parentalRels, parentType) {
 	let parentRel = parentalRels.find((parentalRel) => {
 		return (parentalRel.child_id === star._id && parentalRel.relationshipType.toLowerCase() === parentType && parentalRel.subType.toLowerCase() === 'biological');
 	})
@@ -189,7 +189,7 @@ function mapEventsToPeople(people, events) {
 function getNodeParent(node, people, parentalRels, parentType) {
 
 	if (parentType.toLowerCase() == 'father') {
-		let nodeFather = getParent(node.person, people, parentalRels, 'father');
+		let nodeFather = getParentLocal(node.person, people, parentalRels, 'father');
 		if (nodeFather) {
 			node.dad = {};
 			node.dad.person = nodeFather;
@@ -201,7 +201,7 @@ function getNodeParent(node, people, parentalRels, parentType) {
 	}
 
 	if (parentType.toLowerCase() == 'mother') {
-		let nodeMother = getParent(node.person, people, parentalRels, 'mother');
+		let nodeMother = getParentLocal(node.person, people, parentalRels, 'mother');
 		if (nodeMother) {
 			node.mom = {};
 			node.mom.person = nodeMother;
@@ -217,13 +217,13 @@ function getNodeParent(node, people, parentalRels, parentType) {
 
 function getNodeParents(node, people, parentalRels) {
 
-	let nodeFather = getParent(node.person, people, parentalRels, 'father');
+	let nodeFather = getParentLocal(node.person, people, parentalRels, 'father');
 	if (nodeFather) {
 		node.dad.person = nodeFather;
 		node.dad.child = node;
 	}
 
-	let nodeMother = getParent(node.person, people, parentalRels, 'mother');
+	let nodeMother = getParentLocal(node.person, people, parentalRels, 'mother');
 	if (nodeMother) {
 		node.mom.person = nodeMother;
 		node.mom.child = node;
@@ -238,4 +238,4 @@ function getNodeParents(node, people, parentalRels) {
 
 }
 
-export { relPath, treeFunctions };
+export { createTree, treeFunctions, getLeft, getRight, getParent };
