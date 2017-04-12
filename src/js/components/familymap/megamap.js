@@ -114,26 +114,6 @@ export default class MegaMap extends React.Component {
 		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
 	}
 
-	createMapArray_old = (star_id) => {
-
-		var star = this.getPersonById('580594d381aa12e493d03435');
-		var newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 0, 0);
-		this.state.mapArray.push(newComp);
-
-		star = this.getPersonById('57d31c66b189048209d53d6f');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 300, 300);
-		this.state.mapArray.push(newComp);
-
-		star = this.getPersonById('57d38829ddcdc72d349f927a');
-		newComp = this.createMapComponent(star._id, moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, 600, 600);
-		this.state.mapArray.push(newComp);
-
-		this.setState({
-			mapArray: this.state.mapArray
-		})
-
-	}
-
 	createMapArray = (star_id) => {
 		let mapArray = [];
 		let tree = createTree(star_id, this.props.people, this.props.parentalRels, this.props.events);
@@ -142,7 +122,7 @@ export default class MegaMap extends React.Component {
 		let newComp;
 		let xPos = 0;
 		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .25, xPos, 0);
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, 0);
 			mapArray.push(newComp);
 			xPos += 300;
 			node = getLeft(node);
@@ -155,8 +135,17 @@ export default class MegaMap extends React.Component {
 
 		return(
 			<div class="mainDiv">
-				<div>
-					<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
+				<div class="mainMap" id="mainMapHead">
+					<div class="mapHeader">
+						<div class="dateToggle">
+							<div class="zoom">
+								<p class="zoomHead">Zoom</p>
+								<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
+								<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
+							</div>
+						</div>
+						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
+					</div>
 				</div>
 				{this.state.mapArray}
 			</div>
