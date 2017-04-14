@@ -90,7 +90,7 @@ export default class Layout extends React.Component {
 						    <a class="navbarright" onClick={() => {this.redirect('/chronology/')}}> CHRONOLOGY </a>
 					    </li>
              <li class="dropdown">
-               <a onClick={() => {this.redirect('/importhome/')}}>
+               <a onClick={() => {this.redirect('/resetdatabase/')}}>
                 IMPORT MENU
                </a>
              </li>
@@ -107,14 +107,15 @@ export default class Layout extends React.Component {
 								<span class="caret"></span></a>
 			          <ul class="dropdown-menu">
 			            <li><a >Profile</a></li>
-			            <li><a onClick={() => {this.redirect('/resetdatabase')}}>Account Settings</a></li>
+			            <li><a onClick={() => {this.redirect('/importhome')}}>Account Settings</a></li>
 									<li><a onClick={() => {this.redirect('/auth/login')}}>Log In</a></li>
 			            <li><a onClick={() => {this.redirect('/auth/logout')}}>Log Out</a></li>
 			          </ul>
 			        </li>
 							<li>
 								<a class="navbarright">
-								<i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i></a>
+                  <i class="fa fa-question-circle-o fa-lg question" aria-hidden="true" onClick={this.toggleSideBar}></i>
+                </a>
 							</li>
 		        </ul>
 			    </div>
@@ -127,6 +128,7 @@ export default class Layout extends React.Component {
         <div class="mainHistory" id="history">
           <div class="help-menu">
             <div class="help-header">
+              <i class="fa fa-close fa-lg" aria-hidden="true" onClick={this.toggleSideBar}></i>
               <h3 class="history-title-1">Help Menu</h3>
             </div>
             <div>
