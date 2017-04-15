@@ -37,7 +37,7 @@ export default class PeopleDetailsLineItem extends React.Component {
 	}
 
 	openMap = () => {
-		hashHistory.push('/familymap/' + this.props.person._id);
+		hashHistory.push('/onemap/' + this.props.person._id);
 	}
 
 	render = () => {

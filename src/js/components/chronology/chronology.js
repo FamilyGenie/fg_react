@@ -149,6 +149,7 @@ export default class Chronology extends React.Component {
   }
 
   /***************************************************************/
+  // This function returns mom, mom's mom, mom's mom's mom, etc...
   maternalEvents = (starId) => {
     // get all _id of maternal relations 
     let mRels = maternalRelPath(starId, this.props.people, this.props.parentalRels);
@@ -163,6 +164,8 @@ export default class Chronology extends React.Component {
     console.log('maternal');
     console.log(this.state)
   }
+  
+  // This function returns dad, dad's dad, dad's dad's dad, etc...
   paternalEvents = (starId) => {
     let pRels = paternalRelPath(starId, this.props.people, this.props.parentalRels);
 
@@ -229,17 +232,9 @@ export default class Chronology extends React.Component {
 
   }
 
-
   componentDidUpdate = (prevProps, prevState) => {
     // this will make the window scroll to the top when you open this page
     ReactDOM.findDOMNode(this).scrollIntoView();
-
-    /***************************************************************/
-    let starPerson = relPath('58e9605084c4571eb90902f0', this.props.people, this.props.parentalRels, this.props.events);
-    let starPeople = treeFunctions.getLeftLineage(starPerson);
-    // console.log('STARPERSON:',starPerson)
-    // console.log('STARPEOPLE:', starPeople)
-    /***************************************************************/
 
     // when the props change is when we have data to show, so execute the sort at this time.
     if (prevProps !== this.props) {

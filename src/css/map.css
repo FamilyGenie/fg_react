@@ -141,10 +141,10 @@ html, body {
 .underLine {
   margin-top: 3px;
 }
-#mainMap {
+#mainMapHead {
   display: flex;
   flex-direction: column;
-  min-height: 800px;
+  min-height: 175px;
 }
 #legend {
   display: none;
@@ -219,8 +219,28 @@ html, body {
   }
   #ageInput {
     display: none;
+    height: 0;
   }
   .starAge2 {
     display: flex;
+  }
+  .map-header {
+    font-size: 1.5em;
+    padding-left: 20px;
+  }
+  .dateToggle {
+    width: 150px;
+  }
+  .starAgeLegend {
+    font-size: .6em;
+  }
+  .mapDateContents {
+    font-size: .6em;
+  }
+  .mapDateHeader, .mapDateText {
+    padding-top: 12px;
+  }
+  .textBox {
+    fill: #FFFFFF;
   }
 }

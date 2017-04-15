@@ -1,15 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
-
-import { fetchEvents } from '../actions/eventsActions';
-import { fetchPairBondRels } from '../actions/pairBondRelsActions';
-import { fetchParentalRels } from '../actions/parentalRelsActions';
-import { fetchPeople } from "../actions/peopleActions";
-import { fetchStagedPeople } from '../actions/stagedPeopleActions';
-import { fetchStagedEvents } from '../actions/stagedEventActions';
-import { fetchStagedParentalRels } from '../actions/stagedParentalRelActions';
-import { fetchStagedPairBondRels } from '../actions/stagedPairBondRelActions';
 import { logout } from '../actions/authActions';
 import PeopleSearch from './peoplesearch/peoplesearch';
 
@@ -21,21 +12,12 @@ import PeopleSearch from './peoplesearch/peoplesearch';
 export default class Layout extends React.Component {
 	constructor (props) {
 		super(props);
+
 		// this variable will store whether the modal window is open or not
 		this.state = {
 			historyBarShowing: false,
 			isLoggedIn: false,
 		};
-	}
-	componentWillMount() {
-		this.props.dispatch(fetchPeople());
-		this.props.dispatch(fetchEvents());
-		this.props.dispatch(fetchPairBondRels());
-		this.props.dispatch(fetchParentalRels());
-		this.props.dispatch(fetchStagedPeople());
-		this.props.dispatch(fetchStagedEvents());
-    this.props.dispatch(fetchStagedParentalRels());
-    this.props.dispatch(fetchStagedPairBondRels());
 	}
 
   // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
