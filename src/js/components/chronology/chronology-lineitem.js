@@ -10,6 +10,9 @@ import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
   (store, ownProps) => {
     return {
       event: ownProps.event,
+      // the color needs to be passed in here or the style will not take effect
+      color: ownProps.color,
+      colorFuncs: ownProps.colorFuncs,
     }
   },
   (dispatch) => {
@@ -44,7 +47,7 @@ export default class ChronologyLineItem extends React.Component {
   }
 
   render = () => {
-    const { event } = this.props;
+    const { event, color, colorFuncs } = this.props;
     const { modalIsOpen } = this.state;
 
     const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : '') );
@@ -52,8 +55,18 @@ export default class ChronologyLineItem extends React.Component {
 
 
     if (event) {
+
+      let mystyle;
+      try {
+        mystyle = {backgroundColor : color};
+      } catch (TypeError) {}
+
+
       return (<div>
-        <div class="staged-item">
+        <div class="staged-item" style={mystyle}>
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'black'}} onClick={() => {colorFuncs.colorEvents(event.person_id)}}></div>
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'blue'}} onClick={() => {colorFuncs.paternalEvents(event.person_id)}}></div>
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'red'}} onClick={() => {colorFuncs.maternalEvents(event.person_id)}}></div>
           <div class="stagedChronDate">
             <p class="stagedChron">{eventDateUser}</p>
           </div>
