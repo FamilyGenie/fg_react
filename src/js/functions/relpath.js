@@ -13,56 +13,6 @@ function createTree(starId, people, parentalRels, events) {
 
 }
 
-function getNodeEnds(startNode, people, parentalRels) {
-	let nodeEnds = [];
-	let cont = true;
-	let node = startNode;
-	while (cont) {
-		// if we are at a node where the dad line and mom line have been checked
-		if (node.dc && node.mc) {
-			// if both have been checked, and there is not a mom and not a dad, then we know we are at the end of a branch, so add node to nodeEnds
-			if (!node.mom && !node.dad) {
-				nodeEnds.push(node);
-			}
-
-			// if we are at the startNode with both lines checked, we are done checking the entire tree, so set continue to false
-			if (node === startNode) {
-				cont = false;
-			} else {
-				// else, we are done with both the mom line and dad line, so move up the tree.
-				// first, find out if where we currently are is this child nodes mom or dad, so we can set that flag on the node's child
-				if (node === node.child.mom) {
-					node.child.mc = true;
-				} else {
-					node.child.dc = true;
-				}
-				// this is what moves us up the tree
-				node = node.child;
-			}
-		// if the dad line for this node has not yet been checked
-		} else if (!node.dc) {
-			// then if there is a dad for this node, move down to that node
-			if (node.dad) {
-				node = node.dad;
-			} else {
-				// there is not a dad for this node, so we can set dad-check to true for this node
-				node.dc = true;
-			}
-		// if the mom line for this node has not yet been checked
-		} else if (!node.mc) {
-			// then if there is a mom for this node, move down to that node
-			if (node.mom) {
-				node = node.mom;
-			} else {
-				// there is not a mom for this node, so we can set mom-check to true for this node
-				node.mc = true;
-			}
-		}
-	}
-
-	return nodeEnds;
-}
-
 function populateTree(startNode, people, parentalRels) {
 	let cont = true;
 	let node = startNode;
@@ -242,8 +192,6 @@ function getNodeParents(node, people, parentalRels) {
 
 }
 
-export { createTree, treeFunctions, getLeft, getRight, getParent };
-
 /***** DRY ******/
 function maternalRelPath(starId, people, parentalRels) {
   /* return an array of _ids of the mothers of the star passed in */
@@ -263,9 +211,9 @@ function maternalRelPath(starId, people, parentalRels) {
     if (currentMother) {
       mothers.push(currentMother);
       starId = currentMother;
-    } else { 
+    } else {
       starId = null;
-      return mothers; 
+      return mothers;
     }
   }
 }
@@ -289,9 +237,9 @@ function paternalRelPath(starId, people, parentalRels) {
     if (currentFather) {
       fathers.push(currentFather);
       starId = currentFather;
-    } else { 
+    } else {
       starId = null;
-      return fathers; 
+      return fathers;
     }
   }
 }
@@ -306,4 +254,4 @@ function getAndColorEvents(starId, color, events) {
   });
 }
 
-export { relPath, treeFunctions, getEvents, paternalRelPath, maternalRelPath, getAndColorEvents };
+export { createTree, treeFunctions, getLeft, getRight, getParent, paternalRelPath, maternalRelPath, getAndColorEvents };
