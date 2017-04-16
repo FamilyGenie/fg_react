@@ -1,3 +1,5 @@
+// this file contains code that is currently under test
+
 import { treeFunctions, getLeft, getRight, getParent } from './treeHelpers';
 
 function createTree(starId, people, parentalRels, events) {

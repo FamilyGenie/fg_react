@@ -1,3 +1,4 @@
+// this file contains code that is currently under test.
 
 import { relPath } from './relpath';
 
@@ -30,7 +31,7 @@ function makeTreeFunctions(getLeft, getRight, getParent) {
 	}
 
   function getLeftTree(startNode) {
-    
+
   }
 
   function getRightTree(startNode) {
