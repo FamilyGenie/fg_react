@@ -34,7 +34,6 @@ export default class EnsureLoggedInContainer extends React.Component {
 
   componentDidMount() {
     // const { dispatch, currentURL } = this.props
-
     if (!this.state.userName) {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)

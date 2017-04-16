@@ -44,10 +44,12 @@ export function importPeopleAndEvents(importRelsAlso) {
 
         // after running import, refresh the store.
         // TODO: recieve the data through the response.data and append that information to the store.
+        console.log('******************');
         dispatch(fetchPeople());
         dispatch(fetchEvents());
         dispatch(fetchStagedPeople());
         dispatch(fetchStagedEvents());
+
         // if we need to import the Relationships also, call that here. The fetches to refresh the store will be done at the end of importRelationships, so only do that fetch if not also importing the relationships
         if (importRelsAlso) {
           dispatch(importRelationships());
@@ -70,10 +72,9 @@ export function importRelationships() {
       // after running import, refresh the store with data that was updated.
       // TODO: recieve the data through the response.data and append that information to the store.
       // why refreshing People here? Is the people collection updated when running this import?
+
       dispatch(fetchStagedParentalRels());
-      dispatch(fetchStagedPairBondRels());
       dispatch(fetchParentalRels());
-      dispatch(fetchPairBondRels());
       hashHistory.push('/');
       // we don't need to fetch relationships until they are all available, so the fetches will be done in the next function of importing stagedpairbondrels. Problem with this approach is you don't know which one will complete first - import parents or pairbonds. So putting the relevant fetches inside the .then of the import call
     })
@@ -87,7 +88,6 @@ export function importRelationships() {
         // after running import, refresh the store with data that was updated
         // TODO: recieve the data through the response.data and append that information to the store.
         // why refreshing People here? Is the people collection updated when running this import?
-        dispatch(fetchPeople());
         dispatch(fetchPairBondRels())
         dispatch(fetchStagedPairBondRels());
     })
@@ -242,7 +242,7 @@ export function importPerson(fName, mName, lName, sexAtBirth, birthDate, birthPl
             value: 'true'
           }
         }
-        
+
         updateStagedPerson(bodyUpdate1)
         updateStagedPerson(bodyUpdate2)
 			})

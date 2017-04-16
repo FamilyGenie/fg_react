@@ -33,7 +33,6 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
     modalIsOpen: store.modal.newPerson.modalIsOpen,
     KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
   };
-
 },
   (dispatch) => {
     return {
@@ -250,6 +249,7 @@ export default class PeopleSearch extends React.Component {
     if (prevProps !== this.props) {
       this.sortPeople('date');
     }
+
   }
 
   componentDidMount = () => {

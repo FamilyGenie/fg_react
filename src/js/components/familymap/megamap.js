@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import SingleMap from './singlemap';
 import Legend from './legend';
+import { createTree, treeFunctions, getLeft } from '../../functions/relpath';
 
 @connect(
 	(store, ownProps) => {
@@ -39,22 +40,17 @@ import Legend from './legend';
 
 					return person;
 				}),
+			events:
+				store.events.events,
+			parentalRels:
+				store.parentalRels.parentalRels,
 		};
 	},
-	(dispatch) => {
-		return {
-			openNewPersonModal: () => {
-				dispatch(openNewPersonModal());
-			},
-			setNewPersonModal: (child) => {
-				dispatch(setNewPersonModal(child));
-			}
-		}
-	}
 )
-export default class OneMap extends React.Component {
+export default class MegaMap extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			// store this state value for display purposes
 			vDate: '',
@@ -62,12 +58,33 @@ export default class OneMap extends React.Component {
 			legendShowing: false,
 			star_id: '',
 			zoom: 100,
+			fullName: '',
+			mapArray: [],
+		// 	svg: d3.select("body")
+  // 					.append("svg")
+  // 					.attr("width", "100%")
+  // 					.attr("height", "100%")
+  // 					.call(d3.behavior.zoom().on("zoom", function () {
+  //   					svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+  // 					}))
+  // 					.append("g")
 		};
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (prevProps !== this.props) {
-			const star = this.getPersonById(this.props.star_id);
+		if (this.props.people.length && this.props != prevProps) {
+			this.setNewState();
+		}
+		ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	componentDidMount = () => {
+		console.log('in megamap, componentDidMount');
+		this.setNewState();
+	}
+
+	setNewState = () => {
+		const star = this.getPersonById(this.props.star_id);
 			if (star) {
 				var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
 				this.setState({
@@ -75,10 +92,9 @@ export default class OneMap extends React.Component {
 					star_id: star._id,
 					starAge: 18,
 					fullName: star.fName + ' ' + star.lName,
+					mapArray: this.createMapArray(star._id),
 				});
 			}
-		}
-		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	getPersonById = (_id) => {
@@ -86,52 +102,6 @@ export default class OneMap extends React.Component {
 		return this.props.people.find(function(person){
 			return person._id === _id;
 		});
-	}
-
-    // this function will be called when the user hits the button to subtract a year and then re-draw the map
-	subtractYear = () => {
-		var vDate = moment(this.state.vDate).subtract(1,'year').format('YYYY-MM-DD');
-		var vStarAge = parseInt(this.state.starAge) - 1;
-		// also set the state variable
-		this.setState({
-			vDate: vDate,
-			starAge: vStarAge
-		});
-	}
-
-    // this function will be called when the user hits the button to add a year and then re-draw the map
-	addYear = () => {
-		var vDate = moment(this.state.vDate).add(1,'year').format('YYYY-MM-DD');
-		var vStarAge = parseInt(this.state.starAge) + 1;
-		// also set the state variable
-		this.setState({
-			vDate: vDate,
-			starAge: vStarAge
-		});
-	}
-
-	// this function is to make the input box for the age a "controlled component". Good information about it here: https://facebook.github.io/react/docs/forms.html
-	onAgeChange = (evt) => {
-		var star = this.getPersonById(this.props.star_id);
-		var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(evt.target.value,'y').format('YYYY-MM-DD');
-
-		this.setState({
-			vDate: vDate,
-			starAge: evt.target.value
-		});
-	}
-
-	toggleLegend = () => {
-		if(this.state.legendShowing === false) {
-			$("#legend").css({"display": "flex"});
-			$("#mainMap").css({"min-height": "1100px"});
-			this.setState({legendShowing: true});
-		}
-		if (this.state.legendShowing === true) {
-			$("#legend").css({"display": "none"});
-			$("#mainMap").css({"min-height": "800px"});
-			this.setState({legendShowing: false});
-		}
 	}
 
 	zoomOut = () => {
@@ -148,38 +118,45 @@ export default class OneMap extends React.Component {
 		});
 	}
 
+	createMapComponent = (star_id, vDate, scale, xPosTranslate, yPosTranslate) => {
+		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
+	}
+
+	createMapArray = (star_id) => {
+		let mapArray = [];
+		let tree = createTree(star_id, this.props.people, this.props.parentalRels, this.props.events);
+		console.log("Tree: ", tree);
+		let node = tree;
+		let newComp;
+		let xPos = 0;
+		while (node) {
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, 0);
+			mapArray.push(newComp);
+			xPos += 400;
+			node = getLeft(node);
+		}
+
+		return mapArray;
+	}
+
+
+
 	render = () => {
+
+		// d3.select("body")
+		// 	.append("svg")
+		// 	.attr("width", "100%")
+		// 	.attr("height", "100%")
+		// 	.call(d3.behavior.zoom().on("zoom", function () {
+		// 	svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+		// 	}))
+		// 	.append("g");
 
 		return(
 			<div class="mainDiv">
-				<div id="legend">
-					<Legend toggleLegend={this.toggleLegend}/>
-				</div>
 				<div class="mainMap" id="mainMapHead">
 					<div class="mapHeader">
 						<div class="dateToggle">
-							<div class="mapDate">
-								<div class="mapDateContents">
-									<p class="mapDateHeader">Family Map As Of:</p>
-									<p class="mapDateText">{this.state.vDate}</p>
-								</div>
-								<div class="starAgeLegend">
-									<p class="starAge">Star's Age:</p>
-									<input
-										id="ageInput"
-										class="form-control ageInput"
-										type="text"
-										value={this.state.starAge}
-										onChange={this.onAgeChange}
-									/>
-								<p class="starAge2">{this.state.starAge}</p>
-								<button type="button" class="btn btn-default btn-Legend" onClick={this.toggleLegend}>Legend</button>
-								</div>
-							</div>
-							<div class="mapArrow">
-								<i class="fa fa-arrow-circle-up buttonSize2 button2" onClick={this.addYear}></i>
-								<i class="fa fa-arrow-circle-down buttonSize2 button2" onClick={this.subtractYear.bind(this)}></i>
-							</div>
 							<div class="zoom">
 								<p class="zoomHead">Zoom</p>
 								<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
@@ -196,7 +173,7 @@ export default class OneMap extends React.Component {
 					>
 					</svg>
 				</div>
-				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate} zoom={this.state.zoom}/>
+				{this.state.mapArray}
 			</div>
 		)
 	}

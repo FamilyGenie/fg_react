@@ -5,7 +5,6 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import store from './store';
 
 import EnsureLoggedInContainer from './components/auth/ensure-loggedin-container';
-import FamilyMap from './components/familymap/familymap';
 import GedcomImport from './components/gedcomimport/upload-gedcom';
 import ImportDashboard from './components/gedcomimport/import-home';
 import Layout from './components/Layout'
@@ -20,6 +19,8 @@ import StagedParentalRelSearch from './components/gedcomimport/parentalrels/stag
 import Chronology from './components/chronology/chronology';
 import ResetDatabase from './components/gedcomimport/reset-db';
 import OneMap from './components/familymap/onemap';
+import MegaMap from './components/familymap/megamap';
+
 
 const app = document.getElementById('app');
 
@@ -50,6 +51,9 @@ ReactDOM.render(<Provider store={store}>
 	      		<Route path='/chronology' name='Chronology' component={Chronology}></Route>
 
 	      		<Route path='/onemap(/:star_id)' name='OneMap' component={OneMap}></Route>
+
+	      		<Route path='/megamap(/:star_id)' name='MegaMap' component={MegaMap}></Route>
+
 
 	      		<Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 

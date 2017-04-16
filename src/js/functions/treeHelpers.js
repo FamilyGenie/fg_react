@@ -1,3 +1,4 @@
+
 import { relPath } from './relpath';
 
 function makeTreeFunctions(getLeft, getRight, getParent) {
@@ -57,4 +58,4 @@ function getParent(node) {
 
 const treeFunctions = makeTreeFunctions(getLeft, getRight, getParent);
 
-export { treeFunctions };
+export { treeFunctions, getLeft, getRight, getParent };
