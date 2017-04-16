@@ -189,6 +189,13 @@ export default class OneMap extends React.Component {
 						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 					</div>
 				</div>
+				<div class="mainMap" id="mainMap">
+					<svg
+						width="1400"
+						height="1400"
+					>
+					</svg>
+				</div>
 				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate} zoom={this.state.zoom}/>
 			</div>
 		)

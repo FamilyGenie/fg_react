@@ -21,6 +21,8 @@ import NewPerson from '../newperson/newperson';
 				ownProps.zoom,
 			scale:
 				ownProps.scale,
+			svg:
+				ownProps.svg,
 			people:
 				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
@@ -51,7 +53,6 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log('in singlemap constructor: ', this.props);
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
@@ -110,9 +111,7 @@ export default class SingleMap extends React.Component {
 		if (people) {
 			return (
 			<div class="mainDiv">
-				<div id="legend">
-					<Legend toggleLegend={this.toggleLegend}/>
-				</div>
+			{/* Took this out and moved the <svg> component up to the parent level
 				<div class="mainMap" id="mainMap">
 					<svg
 						width="1400"
@@ -120,7 +119,7 @@ export default class SingleMap extends React.Component {
 					>
 					</svg>
 				</div>
-
+			*/}
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"

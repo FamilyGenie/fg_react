@@ -60,6 +60,14 @@ export default class MegaMap extends React.Component {
 			zoom: 100,
 			fullName: '',
 			mapArray: [],
+		// 	svg: d3.select("body")
+  // 					.append("svg")
+  // 					.attr("width", "100%")
+  // 					.attr("height", "100%")
+  // 					.call(d3.behavior.zoom().on("zoom", function () {
+  //   					svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+  // 					}))
+  // 					.append("g")
 		};
 	}
 
@@ -124,14 +132,25 @@ export default class MegaMap extends React.Component {
 		while (node) {
 			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, 0);
 			mapArray.push(newComp);
-			xPos += 300;
+			xPos += 400;
 			node = getLeft(node);
 		}
 
 		return mapArray;
 	}
 
+
+
 	render = () => {
+
+		// d3.select("body")
+		// 	.append("svg")
+		// 	.attr("width", "100%")
+		// 	.attr("height", "100%")
+		// 	.call(d3.behavior.zoom().on("zoom", function () {
+		// 	svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+		// 	}))
+		// 	.append("g");
 
 		return(
 			<div class="mainDiv">
@@ -146,6 +165,13 @@ export default class MegaMap extends React.Component {
 						</div>
 						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 					</div>
+				</div>
+				<div class="mainMap" id="mainMap">
+					<svg
+						width="1400"
+						height="1400"
+					>
+					</svg>
 				</div>
 				{this.state.mapArray}
 			</div>
