@@ -187,7 +187,7 @@ export default class PeopleSearch extends React.Component {
         <div id="family-content">
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
-                <p class="add">Add Family Members</p>
+                <p class="add">Add Person</p>
                 <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true">
                 </i>
             </div>

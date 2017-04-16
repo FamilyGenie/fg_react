@@ -162,7 +162,7 @@ constructor(props) {
 					<div class="PR-row-1">
 						<div class="PR-div">
 							<div class="PR-title">
-								Pair Bond Name
+								Paired With:
 							</div>
 							<div class="PR-drop-1">
 								<Select
