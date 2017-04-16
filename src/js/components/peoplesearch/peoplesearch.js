@@ -32,9 +32,6 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
     }),
     modalIsOpen: store.modal.newPerson.modalIsOpen,
     KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
-    peopleTest: store.people.people,
-    events: store.events.events,
-    parentalRels: store.parentalRels.parentalRels,
   };
 },
   (dispatch) => {
