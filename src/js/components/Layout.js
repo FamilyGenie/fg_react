@@ -16,21 +16,20 @@ export default class Layout extends React.Component {
 		// this variable will store whether the modal window is open or not
 		this.state = {
 			historyBarShowing: false,
-			isLoggedIn: false,
+			isLoggedIn: !!this.props.auth.userName,
 		};
 	}
 
-  // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
-  redirect = (url) => {
-	// only dispatch logout if we are trying to logout
-	if (url === '/auth/logout') {
-	  this.props.dispatch(logout());
-	  hashHistory.push('/auth/login');
+	// the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
+	redirect = (url) => {
+		// only dispatch logout if we are trying to logout
+		if (url === '/auth/logout') {
+			this.props.dispatch(logout());
+			hashHistory.push('/auth/login');
+		} else {
+			hashHistory.push(url);
+		}
 	}
-	else {
-	  hashHistory.push(url);
-	}
-  }
 
 	toggleSideBar = () => {
 		if(this.state.historyBarShowing === false) {
@@ -45,25 +44,20 @@ export default class Layout extends React.Component {
 		}
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		// if there is an update and there is now a userName in the store, than set the state so it triggers a rendering change.
+		if (prevProps != this.props) {
+			this.setState({
+				isLoggedIn: !!this.props.auth.userName
+			})
+		}
+	}
 
 	render() {
-		return (
-		<div>
-			<nav class="navbar navbar-default">
-				<div class="container-fluid">
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						{/* for the redirect function to work, we need to call an anonymous function onClick to prevent the function from being called by default (causing a loop through the endpoints).*/}
-						<a class="navbar-brand" onClick={() => {this.redirect('/')}}>
-							Family Genie <sup>&trade;</sup>
-						</a>
-					</div>
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		// if the user is logged in, then show all the menu options. Else show nothing
+		let menu = null;
+		if (this.state.isLoggedIn) {
+			menu = <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav navbar-right">
 							<li>
 								<a class="navbarright" onClick={() => {this.redirect('/')}}>FAMILY LIST</a>
@@ -91,6 +85,27 @@ export default class Layout extends React.Component {
 							</li>
 						</ul>
 					</div>
+		} else {
+			menu = <div></div>
+		}
+
+		return (
+		<div>
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						{/* for the redirect function to work, we need to call an anonymous function onClick to prevent the function from being called by default (causing a loop through the endpoints).*/}
+						<a class="navbar-brand" onClick={() => {this.redirect('/')}}>
+							Family Genie <sup>&trade;</sup>
+						</a>
+					</div>
+					{menu}
 				</div>
 			</nav>
 			<div class="layout">
