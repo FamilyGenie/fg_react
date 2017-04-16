@@ -61,6 +61,31 @@ function mapEventsToPeople(people, events) {
 //   }
 // }
 
+// function maternalRelPath(starId, people, parentalRels) {
+//   /* return an array of _ids of the mothers of the star passed in */
+//   let mothers = [];
+//   let currentMother;
+//   while (starId) {
+//     let currentMotherRel = parentalRels.find((pr) => {
+//       return (pr.child_id === starId && pr.relationshipType.toLowerCase() === 'mother');
+//     });
+//     try {
+//       currentMother = currentMotherRel.parent_id;
+//     }
+//     catch (TypeError) {
+//       currentMother = null;
+//     }
+
+//     if (currentMother) {
+//       mothers.push(currentMother);
+//       starId = currentMother;
+//     } else {
+//       starId = null;
+//       return mothers;
+//     }
+//   }
+// }
+//
 // function getAndColorEvents(starId, color, events) {
 //   console.log('in getandcolorevents')
 //   events.find((event) => {
@@ -71,4 +96,4 @@ function mapEventsToPeople(people, events) {
 //   });
 // }
 
-export { createTree, treeFunctions, getLeft, getRight, getParent, paternalRelPath, maternalRelPath, getAndColorEvents };
+export { mapEventsToPeople };
