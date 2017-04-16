@@ -21,6 +21,8 @@ import NewPerson from '../newperson/newperson';
 				ownProps.zoom,
 			scale:
 				ownProps.scale,
+			svg:
+				ownProps.svg,
 			people:
 				// make a deep copy of the people array - make an array that contains objects which are copies by value of the objects in the store.people.people array.
 				// Do this because we want to be able to modify people and add values to a person object that is used to draw the map, and we don't want to alter the state of the store. If we copied to an array with a reference to the people objects, then when we added key/value pairs, we would also be modifying the objects in the store, and not maintaining mutability
@@ -88,7 +90,6 @@ export default class SingleMap extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
-			console.log('in singleMap componentDidUpdate with props: ', this.props.zoom, prevProps.zoom);
 			this.dateFilterString = this.props.vDate;
 			if (this.props.zoom > prevProps.zoom) {
 				this.zoomIn();
@@ -99,7 +100,10 @@ export default class SingleMap extends React.Component {
 				this.drawMap(this.mapStartX);
 			}
 		}
-		// ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	componentDidMount = () => {
+		this.drawMap(this.mapStartX);
 	}
 
 	render = () => {
@@ -107,9 +111,7 @@ export default class SingleMap extends React.Component {
 		if (people) {
 			return (
 			<div class="mainDiv">
-				<div id="legend">
-					<Legend toggleLegend={this.toggleLegend}/>
-				</div>
+			{/* Took this out and moved the <svg> component up to the parent level
 				<div class="mainMap" id="mainMap">
 					<svg
 						width="1400"
@@ -117,7 +119,7 @@ export default class SingleMap extends React.Component {
 					>
 					</svg>
 				</div>
-
+			*/}
 				<Modal
 			      isOpen={newPersonModalIsOpen}
 			      contentLabel="Modal"
@@ -239,7 +241,15 @@ export default class SingleMap extends React.Component {
 
 		// if a scale factor came in via props, that overrides anything else
 		if (this.props.scale) {
-			this.g.attr('transform', 'scale(' + this.props.scale + ')');
+			// if there is also an xPosT and a yPosT, then move the map over too
+			if (this.props.xPosTranslate || this.props.yPosTranslate) {
+				// put in terinary operators so if the value comes over as undefined, that translates to 0, which means don't move the map on that axis
+				this.g.attr('transform', 'translate(' + (this.props.xPosTranslate ? this.props.xPosTranslate : 0) + ',' + (this.props.yPosTranslate ? this.props.yPosTranslate : 0) + ') scale(' + this.props.scale +  ')');
+			} else {
+				this.g.attr('transform', 'scale(' + this.props.scale + ')');
+
+			}
+
 			return;
 		}
 
@@ -639,7 +649,7 @@ export default class SingleMap extends React.Component {
 
 				// next, check to see if it is an adoptive relationship, because we'll draw the relationship line differently
 				if ( /[Aa]dopted/.test(pairBond.subTypeToStar) ) {
-					this.drawAdoptiveRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelLine(true, personOne, personTwo, pairBond.color, pairBond.relationshipType);
 					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
@@ -647,7 +657,7 @@ export default class SingleMap extends React.Component {
 					}
 				} else {
 					// this is not adopted parents to the star
-					this.drawRelLine(personOne, personTwo, pairBond.color, pairBond.relationshipType);
+					this.drawRelLine(false, personOne, personTwo, pairBond.color, pairBond.relationshipType);
 					this.drawRelText(personOne, personTwo, pairBond);
 					// if there is an endDate, then use it to compare to the dateFilterString. If there is not an end date, then the relationship did not end, and we want to put in "9999-99-99" so that it will always be greater than dateFilterString, thus returning false, and not drawing the hash marks
 					if ((pairBond.endDate ? pairBond.endDate.substr(0,10) : "9999-99-99") <= this.dateFilterString) {
@@ -1452,7 +1462,7 @@ export default class SingleMap extends React.Component {
 			.attr("fill", "black");
 	}
 
-	drawRelLine = (p1, p2, color, relType) => {
+	drawRelLine = (adoptive, p1, p2, color, relType) => {
 		var lineStrArr = [];
 		var yControlPoint: number;
 		var line;
@@ -1471,13 +1481,26 @@ export default class SingleMap extends React.Component {
 		lineStrArr.push(personOne.mapXPos);
 		lineStrArr.push(personOne.mapYPos - 40);
 		lineStrArr.push("C");
-		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
-		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
-		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
-			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+
+		// to calculate the control point, it depends on if we are drawing a relationship line between two people on the regular line or adoptive line
+		if (adoptive) {
+			if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+				yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
+			} else {
+				// yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+				yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 1);
+
+			}
 		} else {
-			yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+			// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
+			// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
+			if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
+				yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250);
+			} else {
+				yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
+			}
 		}
+
 		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
 		lineStrArr.push( yControlPoint + ",");
 		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
@@ -1489,6 +1512,7 @@ export default class SingleMap extends React.Component {
 		line = this.g
 		.append("path")
 		.attr("id","relline" + personTwo._id + personOne._id)
+		.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
 		.attr("d", lineStrArr.join(" "))
 		.attr("fill", "transparent");
 
@@ -1499,7 +1523,6 @@ export default class SingleMap extends React.Component {
 			.attr("stroke-width", 2);
 		} else if ( /\?/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1510,7 +1533,7 @@ export default class SingleMap extends React.Component {
 			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
 		} else if ( /Extra-Marital-Mated/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
+			// line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1518,21 +1541,19 @@ export default class SingleMap extends React.Component {
 			.style("text-anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
-			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+			.text("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
 		} else if ( /Extra-Marital/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
 			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("text anchor","middle") //place the text halfway on the arc
 			.style("fill", color)
 			.attr("startOffset", "50%")
 			.text("********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************");
 		} else if ( /Stranger/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1543,7 +1564,6 @@ export default class SingleMap extends React.Component {
 			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
 		} else if ( /Coersive/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1554,7 +1574,6 @@ export default class SingleMap extends React.Component {
 			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
 		} else if ( /Restitution/.test(relType) ) {
 			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1565,13 +1584,16 @@ export default class SingleMap extends React.Component {
 			.text("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		} else if ( /Mated/.test(relType) ) {
 			// get here if it is a mated relationship
-			line = line
-			.attr("stroke", color)
-			.attr("stroke-width", 2)
-			.style("stroke-dasharray", ("8,6"));
+			this.g
+			.append("text")
+			.append("textPath")
+			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
+			.style("text-anchor","middle") //place the text halfway on the arc
+			.style("fill", color)
+			.attr("startOffset", "50%")
+			.text("---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ---  ");
 		} else {
 			// get here Casual or Informal (need to move all Informals to Casual)
-			line = line
 			this.g
 			.append("text")
 			.append("textPath")
@@ -1582,150 +1604,6 @@ export default class SingleMap extends React.Component {
 			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
 		}
 
-		return line;
-	}
-
-	drawAdoptiveRelLine = (p1, p2, color, relType) => {
-		var lineStrArr = [];
-		var line;
-		var yControlPoint: number;
-		var personOne, personTwo;
-
-		// find out which person p1 or p2, is further to the left (has the lower mapXPos), that is the one to set as person1, so that the Bezier curve is drawn correctly. We set four point for the line, going from left to right.
-		if (p1.mapXPos < p2.mapXPos) {
-			personOne = p1;
-			personTwo = p2;
-		} else {
-			personOne = p2;
-			personTwo = p1;
-		}
-
-		// yControlPoint is the control point of the Bezier curve that connects the adoptive parents. The higher it is on the map, the higher the arc of the curve.
-		// the smaller the Y coordinate of the control point, the higher the control point is on the map, and thus the more arc in the line.
-		// check to see if the two people in the relationship are greater than 250 pixels from each other and change the equation for the line if so - so it arcs correctly
-		if (Math.abs(personOne.mapXPos - personTwo.mapXPos) > 250 ) {
-			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
-		} else {
-			// yControlPoint = (personTwo.mapYPos - 60) / ((personTwo.mapXPos - personOne.mapXPos) / 250 * 1.25);
-			yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 1);
-
-		}
-		// yControlPoint = 625 / Math.log10((personTwo.mapXPos - personOne.mapXPos) / 2);
-		lineStrArr.push("M");
-		// This is the beginning of the line, at the top of dad
-		lineStrArr.push(personOne.mapXPos + 0);
-		lineStrArr.push(personOne.mapYPos - 40);
-		lineStrArr.push("C");
-
-		// var lower = (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
-		// var value = Math.abs(mom.mapXPos - dad.mapXPos) / 8 * 2 + (mom.mapXPos < dad.mapXPos ? mom.mapXPos : dad.mapXPos);
-		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 2 + personOne.mapXPos);
-		lineStrArr.push(yControlPoint);
-
-		lineStrArr.push((personTwo.mapXPos - personOne.mapXPos) / 8 * 6 + personOne.mapXPos);
-		lineStrArr.push(yControlPoint);
-
-		// This is the end point of the line, at the top of mom
-		lineStrArr.push(personTwo.mapXPos - 0);
-		lineStrArr.push(personTwo.mapYPos - 40);
-
-		line = this.g
-			.append("path")
-			.attr("id","relline" + personTwo._id + personOne._id)
-			.attr("d", lineStrArr.join(" "))
-			.attr("fill", "transparent");
-
-		if ( /[Mm]arriage/.test(relType) ) {
-			// if it is a marriage, leave the line as a solid line
-			line = line
-			.attr("stroke", color)
-			.attr("stroke-width", 2);
-		} else if ( /\?/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
-		} else if ( /Extra-Marital-Mated/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-		} else if ( /Extra-Marital/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************");
-		} else if ( /Stranger/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-		} else if ( /Coersive/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>");
-		} else if ( /Restitution/.test(relType) ) {
-			// get here if there is a ? at the beginning of the relationship type, which is what is inserted if the parents did not exist when the map is drawn, and were created by the map algorithm locally so that the map could be drawn
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-		} else if ( /Mated/.test(relType) ) {
-			// get here if it is a mated relationship
-			line = line
-			.attr("stroke", color)
-			.attr("stroke-width", 2)
-			.style("stroke-dasharray", ("8,6"));
-		} else {
-			// get here Casual or Informal (need to move all Informals to Casual)
-			line = line
-			this.g
-			.append("text")
-			.append("textPath")
-			.attr("xlink:href", "#relline" + personTwo._id + personOne._id)
-			.style("text-anchor","middle") //place the text halfway on the arc
-			.style("fill", color)
-			.attr("startOffset", "50%")
-			.text("-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o-o");
-		}
-
-		// draw the line
 		return line;
 	}
 
