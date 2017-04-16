@@ -1,3 +1,6 @@
+
+import { relPath } from './relpath';
+
 function makeTreeFunctions(getLeft, getRight, getParent) {
 
 	function getLeftLineage(startNode) {
@@ -13,6 +16,30 @@ function makeTreeFunctions(getLeft, getRight, getParent) {
 
 	return {
 		getLeftLineage
+	}
+
+	function getRightLineage(startNode) {
+		let node = startNode;
+		let rightArray = [];
+		while (node) {
+			rightArray.push(node.person)
+			node = getRight(node);
+		}
+
+		return rightArray;
+	}
+
+  function getLeftTree(startNode) {
+    
+  }
+
+  function getRightTree(startNode) {
+
+  }
+
+	return {
+    getLeftLineage,
+		getRightLineage
 	}
 }
 

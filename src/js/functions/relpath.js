@@ -190,6 +190,7 @@ function getNodeParent(node, people, parentalRels, parentType) {
 
 	if (parentType.toLowerCase() == 'father') {
 		let nodeFather = getParentLocal(node.person, people, parentalRels, 'father');
+
 		if (nodeFather) {
 			node.dad = {};
 			node.dad.person = nodeFather;
@@ -202,6 +203,7 @@ function getNodeParent(node, people, parentalRels, parentType) {
 
 	if (parentType.toLowerCase() == 'mother') {
 		let nodeMother = getParentLocal(node.person, people, parentalRels, 'mother');
+
 		if (nodeMother) {
 			node.mom = {};
 			node.mom.person = nodeMother;
@@ -218,12 +220,14 @@ function getNodeParent(node, people, parentalRels, parentType) {
 function getNodeParents(node, people, parentalRels) {
 
 	let nodeFather = getParentLocal(node.person, people, parentalRels, 'father');
+
 	if (nodeFather) {
 		node.dad.person = nodeFather;
 		node.dad.child = node;
 	}
 
 	let nodeMother = getParentLocal(node.person, people, parentalRels, 'mother');
+
 	if (nodeMother) {
 		node.mom.person = nodeMother;
 		node.mom.child = node;
@@ -239,3 +243,67 @@ function getNodeParents(node, people, parentalRels) {
 }
 
 export { createTree, treeFunctions, getLeft, getRight, getParent };
+
+/***** DRY ******/
+function maternalRelPath(starId, people, parentalRels) {
+  /* return an array of _ids of the mothers of the star passed in */
+  let mothers = [];
+  let currentMother;
+  while (starId) {
+    let currentMotherRel = parentalRels.find((pr) => {
+      return (pr.child_id === starId && pr.relationshipType.toLowerCase() === 'mother');
+    });
+    try {
+      currentMother = currentMotherRel.parent_id;
+    }
+    catch (TypeError) {
+      currentMother = null;
+    }
+
+    if (currentMother) {
+      mothers.push(currentMother);
+      starId = currentMother;
+    } else { 
+      starId = null;
+      return mothers; 
+    }
+  }
+}
+
+/***** DRY ******/
+function paternalRelPath(starId, people, parentalRels) {
+  /* return an array of _ids of the mothers of the star passed in */
+  let fathers = [];
+  let currentFather;
+  while (starId) {
+    let currentFatherRel = parentalRels.find((pr) => {
+      return (pr.child_id === starId && pr.relationshipType.toLowerCase() === 'father');
+    });
+    try {
+      currentFather = currentFatherRel.parent_id;
+    }
+    catch (TypeError) {
+      currentFather = null;
+    }
+
+    if (currentFather) {
+      fathers.push(currentFather);
+      starId = currentFather;
+    } else { 
+      starId = null;
+      return fathers; 
+    }
+  }
+}
+
+function getAndColorEvents(starId, color, events) {
+  console.log('in getandcolorevents')
+  events.find((event) => {
+    if (event.person_id === starId) {
+      // call a dispatch to update the store, instead of overwriting
+      event.color = color;
+    }
+  });
+}
+
+export { relPath, treeFunctions, getEvents, paternalRelPath, maternalRelPath, getAndColorEvents };
