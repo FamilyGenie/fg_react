@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import ChronologyLineItem from './chronology-lineitem';
-import { maternalRelPath, paternalRelPath, getAndColorEvents  } from '../../functions/relpath';
+// import { maternalRelPath, paternalRelPath, getAndColorEvents  } from '../../functions/common';
 
 @connect((store, ownProps) => {
   return {
