@@ -5,6 +5,7 @@ import cookie from "react-cookie";
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
 
+import config from "../../config.js";
 import { importPeopleAndEvents } from '../../actions/importActions';
 
 const fgtoken = cookie.load('fg-access-token');
@@ -49,7 +50,7 @@ export default class GedcomImport extends React.Component {
           }
         }
       }
-      this.xhr_post(xhr, 'http://localhost:3500/uploads', formData)
+      this.xhr_post(xhr, config.api_url + '/uploads', formData)
     }
 
     importPeopleAndEvents = () => {
