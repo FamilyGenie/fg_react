@@ -88,3 +88,4 @@ export function deleteEvent(field, value) {
 	}
 
 }
+

@@ -79,8 +79,7 @@ export default class EventLineItem extends React.Component {
 						<div class="modalH">
 								Event Edit
 						</div>
-						<div class="buffer-modal">
-						</div>
+						<div class="buffer-modal"></div>
 						<EventLineItemEdit event={event} star={event.person_id} closeModal={this.closeModal}/>
 					</Modal>
 				</div>)

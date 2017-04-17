@@ -4,12 +4,15 @@ import Modal from 'react-modal';
 import moment from 'moment';
 
 import EventLineItemEdit from '../peopledetails/event-lineitem-edit';
-import { setModalEvent } from '../../actions/modalActions';
+import { setModalEvent, resetModalEvent } from '../../actions/modalActions';
 
 @connect(
   (store, ownProps) => {
     return {
       event: ownProps.event,
+      // the color needs to be passed in here or the style will not take effect
+      color: ownProps.color,
+      colorFuncs: ownProps.colorFuncs,
     }
   },
   (dispatch) => {
@@ -17,6 +20,9 @@ import { setModalEvent } from '../../actions/modalActions';
       setEvent: (event) => {
         dispatch(setModalEvent(event));
       },
+			resetEvent: () => {
+				dispatch(resetModalEvent());
+			},
     }
   }
 )
@@ -35,11 +41,13 @@ export default class ChronologyLineItem extends React.Component {
   }
 
   closeModal = () => {
+		// first call the action that will set the store.modal.event to empty string, so that the event currently set for the EventLineItemEdit is not accidentally opened the next time this modal is opened.
+		this.props.resetEvent();
     this.setState({modalIsOpen: false});
   }
 
   render = () => {
-    const { event } = this.props;
+    const { event, color, colorFuncs } = this.props;
     const { modalIsOpen } = this.state;
 
     const eventDateUser = ( event.eventDateUser ? event.eventDateUser : (event.eventDate ? event.eventDate.substr(0,10) : '') );
@@ -47,8 +55,21 @@ export default class ChronologyLineItem extends React.Component {
 
 
     if (event) {
+
+      let mystyle;
+      try {
+        mystyle = {backgroundColor : color};
+      } catch (TypeError) {}
+
+
       return (<div>
-        <div class="staged-item">
+        <div class="staged-item" style={mystyle}>
+          {/*}
+          This code is for the color events code that Eddie wrote, that I am disabling for now.
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'black'}} onClick={() => {colorFuncs.colorEvents(event.person_id)}}></div>
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'blue'}} onClick={() => {colorFuncs.paternalEvents(event.person_id)}}></div>
+          <div style={{height:10+'px', width:10+'px', backgroundColor:'red'}} onClick={() => {colorFuncs.maternalEvents(event.person_id)}}></div>
+        */}
           <div class="stagedChronDate">
             <p class="stagedChron">{eventDateUser}</p>
           </div>
@@ -69,14 +90,15 @@ export default class ChronologyLineItem extends React.Component {
           isOpen={modalIsOpen}
           contentLabel="Modal"
         >
-          <div class="row">
-            <div class="col-xs-12">
-              Event Edit
-            </div>
+          <div class="modalClose">
+            <i class="fa fa-window-close-o fa-2x" aria-hidden="true" onClick={this.closeModal}></i>
           </div>
-          <EventLineItemEdit event={event} star={event.person_id}/>
+          <div class="modalH">
+              Event Edit
+          </div>
+          <div class="buffer-modal"></div>
+          <EventLineItemEdit event={event} star={event.person_id} closeModal={this.closeModal}/>
           <div><p></p></div>
-          <button onClick={this.closeModal}>Close</button>
         </Modal>
 
       </div>)

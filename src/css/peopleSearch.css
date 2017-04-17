@@ -40,9 +40,9 @@
   background-color: #3B42AF;
   display: flex;
   flex-direction: row;
-  text-align: center;
+  text-align: right;
   cursor: pointer;
-  justify-content: center;
+  justify-content: flex-end;
 }
 #inner-search-titles {
   width: 68.5%;
@@ -135,12 +135,12 @@
 .date-div {
   margin-left: auto;
   margin-right: 35px;
-  width: 135px;
+  width: 200px;
 }
 .add {
   border-bottom: 0;
   border-top: 0;
-  font-size: 30px;
+  font-size: 20px;
   padding: 0;
   color: #E9EBEE;
   margin-bottom: auto;
@@ -187,7 +187,8 @@
 #create-person {
   color: white;
   margin-left: 15px;
-
+  font-size: 20px;
+  float: right;
 }
 .fa-pencil-square-o {
   border-bottom: 0;

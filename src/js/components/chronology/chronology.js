@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import ChronologyLineItem from './chronology-lineitem';
-// import Something from './coloring';
+// import { maternalRelPath, paternalRelPath, getAndColorEvents  } from '../../functions/common';
 
 @connect((store, ownProps) => {
   return {
@@ -19,6 +19,7 @@ import ChronologyLineItem from './chronology-lineitem';
       return event
     }),
     people: store.people.people,
+    parentalRels: store.parentalRels.parentalRels,
   }
 })
 export default class Chronology extends React.Component {
@@ -28,10 +29,12 @@ export default class Chronology extends React.Component {
       reverse: false,
       // initialize with unsorted events
       mappedEvents: this.props.events.map(event =>
-        <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
+        <ChronologyLineItem event={event} color={event.color} eventId={event._id} colorFuncs={this.colorFuncs} key={event._id}/>
       ),
     };
+    console.log('state has been set')
   }
+
 
   sortEvents = (sortType) => {
     sortType = sortType || '';
@@ -138,18 +141,16 @@ export default class Chronology extends React.Component {
     }
 
     var mappedEvents = sortedEvents.map(event =>
-      <ChronologyLineItem event={event} eventId={event._id} key={event._id}/>
+      <ChronologyLineItem event={event} color={event.color} eventId={event._id} colorFuncs={this.colorFuncs} key={event._id}/>
     );
     this.setState({mappedEvents: mappedEvents, reverse : !this.state.reverse});
     return mappedEvents
-  }
-  componentDidMount = () => {
-    $(window).scrollTop(0);
   }
 
   render = () => {
     const { events, people } = this.props;
     const { reverse, mappedEvents }  = this.state;
+
 
     if(events) {
       return(
@@ -173,7 +174,7 @@ export default class Chronology extends React.Component {
               <p><span onClick={() => this.sortEvents('place')} class="chronHeaderDate"> Place </span></p>
             </div>
             <div class="stagedHeaderReview">
-              <p>Review</p>
+              <p>Edit</p>
             </div>
           </div>
         <div class="staged-people-list">
@@ -197,4 +198,50 @@ export default class Chronology extends React.Component {
       this.sortEvents('date');
     }
   }
+
+  /***************************************************************/
+  // The code below here is currently not in use. Might use when we start color-coding events in the chronology window
+  // This function returns mom, mom's mom, mom's mom's mom, etc...
+  /*
+  maternalEvents = (starId) => {
+    // get all _id of maternal relations
+    let mRels = maternalRelPath(starId, this.props.people, this.props.parentalRels);
+    // map the events and set the state to display the events
+    for (let m in mRels) {
+      getAndColorEvents(mRels[m], 'red', this.props.events);
+    }
+    let mappedEvents = this.props.events.map(event =>
+      <ChronologyLineItem event={event} color={event.color} eventId={event._id} colorFuncs={this.colorFuncs} key={event._id}/>
+    );
+    this.setState({mappedEvents, reverse : !this.state.reverse});
+    console.log('maternal');
+    console.log(this.state)
+  }
+
+  // This function returns dad, dad's dad, dad's dad's dad, etc...
+  paternalEvents = (starId) => {
+    let pRels = paternalRelPath(starId, this.props.people, this.props.parentalRels);
+
+    for (let p in pRels) {
+      getAndColorEvents(pRels[p], 'blue', this.props.events);
+    }
+    let mappedEvents = this.props.events.map(event =>
+      <ChronologyLineItem event={event} color={event.color} eventId={event._id} colorFuncs={this.colorFuncs} key={event._id}/>
+    );
+    this.setState({mappedEvents, reverse : !this.state.reverse});
+    console.log('paternal');
+  }
+  colorEvents = (starId) => {
+    this.maternalEvents(starId)
+    this.paternalEvents(starId)
+    console.log('all');
+  }
+  colorFuncs = {
+    maternalEvents: this.maternalEvents,
+    paternalEvents: this.paternalEvents,
+    colorEvents: this.colorEvents
+  };
+  */
+  /***************************************************************/
+
 }

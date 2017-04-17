@@ -5,7 +5,6 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import store from './store';
 
 import EnsureLoggedInContainer from './components/auth/ensure-loggedin-container';
-import FamilyMap from './components/familymap/familymap';
 import GedcomImport from './components/gedcomimport/upload-gedcom';
 import ImportDashboard from './components/gedcomimport/import-home';
 import Layout from './components/Layout'
@@ -19,6 +18,7 @@ import StagedPairBondRelSearch from './components/gedcomimport/pairbondrels/stag
 import StagedParentalRelSearch from './components/gedcomimport/parentalrels/staged-parentalrelsearch';
 import Chronology from './components/chronology/chronology';
 import ResetDatabase from './components/gedcomimport/reset-db';
+import OneMap from './components/familymap/onemap';
 
 const app = document.getElementById('app');
 
@@ -36,8 +36,6 @@ ReactDOM.render(<Provider store={store}>
 
 				<Route path='/peopledetails(/:star_id)' name='People Details' component={PeopleDetails}></Route>
 
-				<Route path='/familymap(/:star_id)' name='Family Map' component={FamilyMap}></Route>
-
 				<Route path='/gedcomimport' name='GedcomImport' component={GedcomImport}></Route>
 
 				<Route path='/stagedpeoplesearch' name='Staged People Search' component={StagedPeopleSearch}></Route>
@@ -49,6 +47,8 @@ ReactDOM.render(<Provider store={store}>
 				<Route path='/stagedparentalrelsearch' name='Staged Parental Relationship Comparison' component={StagedParentalRelSearch}></Route>
 
 	      		<Route path='/chronology' name='Chronology' component={Chronology}></Route>
+
+	      		<Route path='/onemap(/:star_id)' name='OneMap' component={OneMap}></Route>
 
 	      		<Route path='/importhome' name='Import Dashboard' component={ImportDashboard}></Route>
 

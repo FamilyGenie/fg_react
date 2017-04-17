@@ -33,7 +33,6 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
     modalIsOpen: store.modal.newPerson.modalIsOpen,
     KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
   };
-
 },
   (dispatch) => {
     return {
@@ -188,7 +187,7 @@ export default class PeopleSearch extends React.Component {
         <div id="family-content">
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
-                <p class="add">Add Family Members</p>
+                <p class="add">Add Person</p>
                 <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true">
                 </i>
             </div>
@@ -250,6 +249,7 @@ export default class PeopleSearch extends React.Component {
     if (prevProps !== this.props) {
       this.sortPeople('date');
     }
+
   }
 
   componentDidMount = () => {
