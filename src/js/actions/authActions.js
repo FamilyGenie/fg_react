@@ -38,14 +38,14 @@ export function login(username, password, showMsg) {
 				dispatch({type: "LOGIN_SUCCESSFUL", payload: response.data});
 				hashHistory.push('/');
 				if (showMsg) {
-					msg.show('Successful Login. Welcome.');
+					alert('Successful Login. Welcome.');
 				}
 
 			})
 			.catch((err) => {
 				// this will show a message in the alert box that is on the login.js page
 				if (showMsg) {
-					msg.show('Invalid username or password');
+					alert('Invalid username or password.');
 				}
 				dispatch({type: "LOGIN_ERROR", payload: err})
 			})
