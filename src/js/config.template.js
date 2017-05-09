@@ -1,4 +1,3 @@
 export default {
-	api_url: "http://localhost:3500",
-	// api_url: "http://familygenie.me:3500"
+	api_url: (process.env.NODE_ENV == 'production' ? 'http://familygenie.me:3501' : 'http://localhost:3500')
 };
