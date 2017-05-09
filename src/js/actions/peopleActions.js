@@ -5,6 +5,7 @@ import config from '../config.js';
 import { deleteEvent } from './eventsActions';
 import { deletePairBondRel } from './pairBondRelsActions';
 import { deleteParentalRel } from './parentalRelsActions';
+import { logEvent } from './logActions';
 
 
 export function fetchPeople() {
@@ -14,6 +15,8 @@ export function fetchPeople() {
 		axios.get(config.api_url + "/api/v2/people", getAxiosConfig())
 			.then((response) => {
 				dispatch({type: "FETCH_PEOPLE_FULFILLED", payload: response.data})
+				dispatch(logEvent('GetAllPeople'));
+
 			})
 			.catch((err) => {
 				dispatch({type: "FETCH_PEOPLE_REJECTED", payload: err})
