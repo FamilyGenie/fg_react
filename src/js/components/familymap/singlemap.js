@@ -9,6 +9,8 @@ import Legend from './legend';
 import { openNewPersonModal, setNewPersonModal } from '../../actions/modalActions';
 
 import NewPerson from '../newperson/newperson';
+import { logEvent } from '../../actions/logActions';
+
 
 @connect(
 	(store, ownProps) => {
@@ -46,6 +48,9 @@ import NewPerson from '../newperson/newperson';
 			},
 			setNewPersonModal: (child) => {
 				dispatch(setNewPersonModal(child));
+			},
+			logEvent: (action) => {
+				dispatch(logEvent(action));
 			}
 		}
 	}
@@ -53,6 +58,8 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
+		this.props.logEvent('DrawingMap');
+
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
