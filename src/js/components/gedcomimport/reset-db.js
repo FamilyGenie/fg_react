@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
-import AlertContainer from 'react-alert';
 
 import {  clearSavedRecords, clearStagedRecords, importPeopleAndEvents, importRelationships } from '../../actions/importActions';
 
@@ -35,14 +34,6 @@ import { getAxiosConfig } from '../../actions/actionFunctions';
 
 export default class ResetDatabase extends React.Component {
 
-   alertOptions = {
-      offset: 15,
-      position: 'bottom left',
-      theme: 'light',
-      time: 0,
-      transition: 'scale'
-    };
-
   // this is specifically for the gedcom file upload process
   xhr_post = (xhrToSend, url, formData) => {
       xhrToSend.open("POST", url, true);
@@ -67,12 +58,9 @@ export default class ResetDatabase extends React.Component {
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            // msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
             alert('File upload successful. You should now click Run Import.');
-
             // TODO reload the store after processes have completed
           } else {
-            // msg.show('File upload unsuccessful', { type: 'error' })
             alert('File upload unsuccessful. Please contact support if you need assistance.');
 
           }
@@ -153,7 +141,6 @@ export default class ResetDatabase extends React.Component {
         </div>
 
       </div>
-      <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
     </div>
     )
   }
