@@ -67,10 +67,14 @@ export default class ResetDatabase extends React.Component {
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+            // msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+            alert('File upload successful. You should now click Run Import.');
+
             // TODO reload the store after processes have completed
           } else {
-            msg.show('File upload unsuccessful', { type: 'error' })
+            // msg.show('File upload unsuccessful', { type: 'error' })
+            alert('File upload unsuccessful. Please contact support if you need assistance.');
+
           }
         }
       }
