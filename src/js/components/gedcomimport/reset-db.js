@@ -69,8 +69,10 @@ export default class ResetDatabase extends React.Component {
           if (xhr.status === 200) {
             msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
             // TODO reload the store after processes have completed
+          } else if (xhr.response === 'LIMIT_FILE_SIZE') {
+            confirm('The file you uploaded exceeds 1Mb.\n If you would like to upload files larger than this, you will have to upgrade')
           } else {
-            msg.show('File upload unsuccessful', { type: 'error' })
+            alert('Sorry, file upload was NOT successful.')
           }
         }
       }
