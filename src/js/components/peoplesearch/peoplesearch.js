@@ -16,8 +16,10 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 
 @connect((store, ownProps) => {
   return {
-    user: store.user.user,
-    userFetched: store.user.fetched,
+    // these next two lines are left over from the template I started this code with
+    // user: store.user.user,
+    // userFetched: store.user.fetched,
+    // userName: store.auth.userName,
     people: store.people.people.map((person) => {
       var bDate = store.events.events.find((e) => {
         return (person._id === e.person_id && e.eventType.toLowerCase() === "birth");
@@ -31,7 +33,6 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
     modalIsOpen: store.modal.newPerson.modalIsOpen,
     KEYS_TO_FILTERS:['fName', 'lName', 'mName', 'eventDateUser', 'eventDate'],
   };
-
 },
   (dispatch) => {
     return {
@@ -47,8 +48,6 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 export default class PeopleSearch extends React.Component {
   constructor (props) {
     super(props);
-
-    this.props.updateHelpMessage('This is the family search page');
 
     this.state = {
       reverse: false,
@@ -188,7 +187,7 @@ export default class PeopleSearch extends React.Component {
         <div id="family-content">
           <div id="family">
             <div id="add-family" onClick={this.createNewPerson}>
-                <p class="add">Add Family Members</p>
+                <p class="add">Add Person</p>
                 <i class="fa fa-plus-square plus" id="create-person" aria-hidden="true">
                 </i>
             </div>
@@ -250,5 +249,10 @@ export default class PeopleSearch extends React.Component {
     if (prevProps !== this.props) {
       this.sortPeople('date');
     }
+
+  }
+
+  componentDidMount = () => {
+    this.props.updateHelpMessage('This is the family search page');
   }
 }

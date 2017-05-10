@@ -79,8 +79,11 @@ import { updateHelpMessage } from '../../actions/helpMessageActions';
 export default class PeopleDetails extends React.Component {
 constructor(props) {
 	super(props);
-	this.props.updateHelpMessage('This is the people details page');
 }
+
+	updateHelpMessage = () => {
+		this.props.updateHelpMessage('This is the people details page');
+	}
 
 	createPerson = () => {
 		this.props.createPerson();
@@ -197,5 +200,9 @@ constructor(props) {
 
 	componentDidUpdate() {
 		ReactDOM.findDOMNode(this).scrollIntoView();
+	}
+
+	componentDidMount() {
+		this.props.updateHelpMessage('This is the people details page');
 	}
 }

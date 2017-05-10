@@ -19,7 +19,7 @@ export default class PeopleSearchLineItem extends React.Component {
 	}
 
 	openMap = () => {
-    hashHistory.push('/familymap/' + this.props.person._id);
+    hashHistory.push('/onemap/' + this.props.person._id);
 	}
 
 	getUpdateDate = (field, displayDate, setDate) => {

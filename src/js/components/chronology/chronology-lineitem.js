@@ -64,9 +64,12 @@ export default class ChronologyLineItem extends React.Component {
 
       return (<div>
         <div class="staged-item" style={mystyle}>
+          {/*}
+          This code is for the color events code that Eddie wrote, that I am disabling for now.
           <div style={{height:10+'px', width:10+'px', backgroundColor:'black'}} onClick={() => {colorFuncs.colorEvents(event.person_id)}}></div>
           <div style={{height:10+'px', width:10+'px', backgroundColor:'blue'}} onClick={() => {colorFuncs.paternalEvents(event.person_id)}}></div>
           <div style={{height:10+'px', width:10+'px', backgroundColor:'red'}} onClick={() => {colorFuncs.maternalEvents(event.person_id)}}></div>
+        */}
           <div class="stagedChronDate">
             <p class="stagedChron">{eventDateUser}</p>
           </div>

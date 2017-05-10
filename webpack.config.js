@@ -13,11 +13,9 @@ module.exports = {
   // plugins: debug ? [] : [
   plugins: [
 
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     'NODE_ENV': '"production"'
-    //   }
-    // }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
+        }),
     // new webpack.optimize.UglifyJsPlugin({
     //   mangle: false,
     //   sourcemap: true,
