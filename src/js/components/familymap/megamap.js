@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import SingleMap from './singlemap';
 import Legend from './legend';
-import { createTree, treeFunctions, getLeft } from '../../functions/relpath';
+import { createTree, treeFunctions, getLeft, getRight } from '../../functions/relpath';
 
 @connect(
 	(store, ownProps) => {
@@ -60,12 +60,20 @@ export default class MegaMap extends React.Component {
 			zoom: 100,
 			fullName: '',
 			mapArray: [],
+			scale: .33,
 		};
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
+		console.log('in componentDidUpdate');
 		if (this.props.people.length && this.props != prevProps) {
+			console.log('in componentDidUpdate 2');
 			this.setNewState();
+		} else if (this.state.scale != prevState.scale) {
+			console.log('in componentDidUpdate 3');
+			this.setState({
+				mapArray: this.createMapArray(this.state.star_id)
+			})
 		}
 		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
@@ -85,6 +93,7 @@ export default class MegaMap extends React.Component {
 					starAge: 18,
 					fullName: star.fName + ' ' + star.lName,
 					mapArray: this.createMapArray(star._id),
+					scale: .33,
 				});
 			}
 	}
@@ -98,36 +107,65 @@ export default class MegaMap extends React.Component {
 
 	zoomOut = () => {
 		var zoom = this.state.zoom - 1;
-		this.setState({
-			zoom: zoom
-		});
+		// this.setState({
+		// 	zoom: zoom
+		// });
 	}
 
 	zoomIn = () => {
-		var zoom = this.state.zoom + 1;
+		console.log('in zoom: ', this.state.scale);
 		this.setState({
-			zoom: zoom
+			scale: 1
 		});
+		// var zoom = this.state.zoom + 1;
+		// this.setState({
+		// 	zoom: zoom
+		// });
 	}
 
 	createMapComponent = (star_id, vDate, scale, xPosTranslate, yPosTranslate) => {
-		return <SingleMap star_id={star_id} vDate={vDate} scale={scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
+		return <SingleMap star_id={star_id} vDate={vDate} scale={this.state.scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
 	}
 
 	createMapArray = (star_id) => {
 		let mapArray = [];
+		const startX = 500;
+		let moveX = 200;
+		let moveY = 200;
+
 		let tree = createTree(star_id, this.props.people, this.props.parentalRels, this.props.events);
 		console.log("Tree: ", tree);
+
+		// set node to the start of the tree, and then draw the single map for the head of the tree (which is the ID passed into this component through props)
 		let node = tree;
+		// first, draw the map for person whose megaMap it is
+		mapArray.push(this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, startX, yPos));
+		// set node to start of tree, and then getLeft, which gets node's mother
+
+		node = getLeft(node)
 		let newComp;
-		let xPos = 0;
+		let xPos = startX + moveX;
+		let yPos = moveY;
 		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, 0);
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos);
 			mapArray.push(newComp);
-			xPos += 400;
+			xPos += moveX;
+			yPos += moveY;
 			node = getLeft(node);
 		}
 
+		// go back to head of tree, and draw the father lines
+		node = tree;
+		node = getRight(node);
+		xPos = startX - moveX;
+		yPos = moveY;
+		while (node) {
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos);
+			mapArray.push(newComp);
+			xPos -= moveX;
+			yPos += moveY;
+			node = getRight(node);
+		}
 		return mapArray;
 	}
 
