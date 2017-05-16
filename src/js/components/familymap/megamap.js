@@ -65,17 +65,6 @@ export default class MegaMap extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		// console.log('in componentDidUpdate');
-		// if (this.props.people.length && this.props.events.length && this.props.parentalRels.length && this.props != prevProps) {
-		// 	console.log('in componentDidUpdate 2');
-		// 	this.setNewState();
-		// }
-		// else if (this.state.scale != prevState.scale) {
-		// 	console.log('in componentDidUpdate 3');
-		// 	this.setState({
-		// 		mapArray: this.createMapArray(this.state.star_id)
-		// 	})
-		// }
 		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
@@ -85,7 +74,6 @@ export default class MegaMap extends React.Component {
 	}
 
 	shouldComponentUpdate = (prevProps, prevState) => {
-		console.log('in shoud update: ', this.state.mapArray);
 		// if the mapArray has data, render the page
 		if (this.state.mapArray.length) {
 			return true;
@@ -101,18 +89,27 @@ export default class MegaMap extends React.Component {
 	}
 
 	setNewState = () => {
+
 		const star = this.getPersonById(this.props.star_id);
 			if (star) {
 				var vDate = moment(star.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD');
+
+				// all of this is to select the svg element from the render and pass it to singlemap.js. The childSvg and the call/zoom is to allow all the maps that will be drawn on the mega map dragable and zoomable. I could have put all this in the single map, but then it was a jittery exeperience. I found this solution and implemented it below: http://stackoverflow.com/questions/10988445/d3-behavior-zoom-jitters-shakes-jumps-and-bounces-when-dragging?rq=1
+				let svg = d3.select('svg');
+				let childSvg = svg.append('g');
+				svg.call(d3.zoom().on('zoom', function () {
+					console.log('zoom', d3.event);
+					var transform = d3.zoomTransform(this);
+					childSvg.attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
+				}));
 				this.setState({
 					vDate: vDate,
 					star_id: star._id,
 					starAge: 18,
 					fullName: star.fName + ' ' + star.lName,
-					mapArray: this.createMapArray(star._id),
+					mapArray: this.createMapArray(star._id, childSvg),
 					scale: .33,
 				});
-				console.log('end of setNewState');
 			}
 	}
 
@@ -125,9 +122,6 @@ export default class MegaMap extends React.Component {
 
 	zoomOut = () => {
 		var zoom = this.state.zoom - 1;
-		// this.setState({
-		// 	zoom: zoom
-		// });
 	}
 
 	zoomIn = () => {
@@ -135,17 +129,14 @@ export default class MegaMap extends React.Component {
 		this.setState({
 			scale: 1
 		});
-		// var zoom = this.state.zoom + 1;
-		// this.setState({
-		// 	zoom: zoom
-		// });
 	}
 
-	createMapComponent = (star_id, vDate, scale, xPosTranslate, yPosTranslate) => {
-		return <SingleMap star_id={star_id} vDate={vDate} scale={this.state.scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate}/>
+	createMapComponent = (star_id, vDate, scale, xPosTranslate, yPosTranslate, svg) => {
+		// the svg is passed into this function is actually a child g to the svg in the render. This is then passed to the singlemap component, so that component will put every map that is drawn onto the same g child. See the setNewState function comments for reasons why
+		return <SingleMap star_id={star_id} vDate={vDate} scale={this.state.scale} key={star_id} xPosTranslate={xPosTranslate} yPosTranslate={yPosTranslate} svg={svg}/>
 	}
 
-	createMapArray = (star_id) => {
+	createMapArray = (star_id, svg) => {
 		let mapArray = [];
 		const startX = 500;
 		let moveX = 200;
@@ -157,7 +148,7 @@ export default class MegaMap extends React.Component {
 		// set node to the start of the tree, and then draw the single map for the head of the tree (which is the ID passed into this component through props)
 		let node = tree;
 		// first, draw the map for person whose megaMap it is
-		mapArray.push(this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, startX, yPos));
+		mapArray.push(this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, startX, yPos, svg));
 		// set node to start of tree, and then getLeft, which gets node's mother
 
 		node = getLeft(node)
@@ -165,7 +156,7 @@ export default class MegaMap extends React.Component {
 		let xPos = startX + moveX;
 		let yPos = moveY;
 		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos);
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos, svg);
 			mapArray.push(newComp);
 			xPos += moveX;
 			yPos += moveY;
@@ -178,7 +169,7 @@ export default class MegaMap extends React.Component {
 		xPos = startX - moveX;
 		yPos = moveY;
 		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos);
+			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos, svg);
 			mapArray.push(newComp);
 			xPos -= moveX;
 			yPos += moveY;
@@ -191,29 +182,37 @@ export default class MegaMap extends React.Component {
 
 	render = () => {
 
-		return(
-			<div class="mainDiv">
-				<div class="mainMap" id="mainMapHead">
-					<div class="mapHeader">
-						<div class="dateToggle">
-							<div class="zoom">
-								<p class="zoomHead">Zoom</p>
-								<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
-								<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
+		// if (!this.state.mapArray.length) {
+		// 	return(
+		// 		<div class="mainDiv">
+		// 			<h3>Map Rendering</h3>
+		// 		</div>
+		// 	)
+		// } else {
+			return(
+				<div class="mainDiv">
+					<div class="mainMap" id="mainMapHead">
+						<div class="mapHeader">
+							<div class="dateToggle">
+								<div class="zoom">
+									<p class="zoomHead">Zoom</p>
+									<i class="fa fa-plus buttonSize3 button2" onClick={this.zoomIn}></i>
+									<i class="fa fa-minus buttonSize3 button2" onClick={this.zoomOut}></i>
+								</div>
 							</div>
+							<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 						</div>
-						<h1 class="map-header">{this.state.fullName}'s Family Map </h1>
 					</div>
+					<div class="mainMap" id="mainMap">
+						<svg
+							width="1400"
+							height="1400"
+						>
+						</svg>
+					</div>
+					{this.state.mapArray}
 				</div>
-				<div class="mainMap" id="mainMap">
-					<svg
-						width="1400"
-						height="1400"
-					>
-					</svg>
-				</div>
-				{this.state.mapArray}
-			</div>
-		)
+			)
+		// }
 	}
 }

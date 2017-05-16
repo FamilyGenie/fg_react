@@ -92,8 +92,8 @@ export default class SingleMap extends React.Component {
 	currentScale;
 
 	// global variables for svg / d3 map drawing
-	svg;
 	g;
+	gChild;
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
@@ -156,19 +156,10 @@ export default class SingleMap extends React.Component {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
-		// for map drawing
-		this.svg = d3.select('svg');
-		let gTemp = this.svg.append('g');
-		console.log('before call: ', this.svg, this.g);
-		// debugger;
-		this.svg.call(d3.zoom().on('zoom', function () {
-			console.log('zoom', d3.event);
-			var transform = d3.zoomTransform(this);
-			gTemp.attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
-		}));
-		// this.drawTicks();
-
-		this.g = gTemp;
+		// the svg parent comes in from the parent component. Create a new child g of that to draw this map in
+		// ******************************************
+		// TODO: onemap needs to be modified so that it passes in the parent svg component now, or else it will break.
+		this.g = this.props.svg.append('g');
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
