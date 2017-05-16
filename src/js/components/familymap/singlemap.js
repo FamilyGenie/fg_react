@@ -158,8 +158,17 @@ export default class SingleMap extends React.Component {
 
 		// for map drawing
 		this.svg = d3.select('svg');
-		this.g = this.svg.append('g');
+		let gTemp = this.svg.append('g');
+		console.log('before call: ', this.svg, this.g);
+		// debugger;
+		this.svg.call(d3.zoom().on('zoom', function () {
+			console.log('zoom', d3.event);
+			var transform = d3.zoomTransform(this);
+			gTemp.attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
+		}));
 		// this.drawTicks();
+
+		this.g = gTemp;
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));

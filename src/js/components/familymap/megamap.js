@@ -65,22 +65,39 @@ export default class MegaMap extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		console.log('in componentDidUpdate');
-		if (this.props.people.length && this.props != prevProps) {
-			console.log('in componentDidUpdate 2');
-			this.setNewState();
-		} else if (this.state.scale != prevState.scale) {
-			console.log('in componentDidUpdate 3');
-			this.setState({
-				mapArray: this.createMapArray(this.state.star_id)
-			})
-		}
+		// console.log('in componentDidUpdate');
+		// if (this.props.people.length && this.props.events.length && this.props.parentalRels.length && this.props != prevProps) {
+		// 	console.log('in componentDidUpdate 2');
+		// 	this.setNewState();
+		// }
+		// else if (this.state.scale != prevState.scale) {
+		// 	console.log('in componentDidUpdate 3');
+		// 	this.setState({
+		// 		mapArray: this.createMapArray(this.state.star_id)
+		// 	})
+		// }
 		ReactDOM.findDOMNode(this).scrollIntoView();
 	}
 
 	componentDidMount = () => {
 		console.log('in megamap, componentDidMount');
 		this.setNewState();
+	}
+
+	shouldComponentUpdate = (prevProps, prevState) => {
+		console.log('in shoud update: ', this.state.mapArray);
+		// if the mapArray has data, render the page
+		if (this.state.mapArray.length) {
+			return true;
+		} else if (this.props.people.length && this.props.events.length && this.
+			props.parentalRels.length && this.props !== prevProps) {
+			// else if there is enough data to create the mapArray, do that (and if props are different, so there is new data to create the map array with)
+			this.setNewState();
+			return false;
+		} else {
+			// else do not render
+			return false;
+		}
 	}
 
 	setNewState = () => {
@@ -95,6 +112,7 @@ export default class MegaMap extends React.Component {
 					mapArray: this.createMapArray(star._id),
 					scale: .33,
 				});
+				console.log('end of setNewState');
 			}
 	}
 
@@ -172,15 +190,6 @@ export default class MegaMap extends React.Component {
 
 
 	render = () => {
-
-		// d3.select("body")
-		// 	.append("svg")
-		// 	.attr("width", "100%")
-		// 	.attr("height", "100%")
-		// 	.call(d3.behavior.zoom().on("zoom", function () {
-		// 	svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-		// 	}))
-		// 	.append("g");
 
 		return(
 			<div class="mainDiv">
