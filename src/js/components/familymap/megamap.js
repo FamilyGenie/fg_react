@@ -69,7 +69,6 @@ export default class MegaMap extends React.Component {
 	}
 
 	componentDidMount = () => {
-		console.log('in megamap, componentDidMount');
 		this.setNewState();
 	}
 
@@ -98,7 +97,6 @@ export default class MegaMap extends React.Component {
 				let svg = d3.select('svg');
 				let childSvg = svg.append('g');
 				svg.call(d3.zoom().on('zoom', function () {
-					console.log('zoom', d3.event);
 					var transform = d3.zoomTransform(this);
 					childSvg.attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
 				}));
@@ -125,7 +123,6 @@ export default class MegaMap extends React.Component {
 	}
 
 	zoomIn = () => {
-		console.log('in zoom: ', this.state.scale);
 		this.setState({
 			scale: 1
 		});
@@ -182,13 +179,6 @@ export default class MegaMap extends React.Component {
 
 	render = () => {
 
-		// if (!this.state.mapArray.length) {
-		// 	return(
-		// 		<div class="mainDiv">
-		// 			<h3>Map Rendering</h3>
-		// 		</div>
-		// 	)
-		// } else {
 			return(
 				<div class="mainDiv">
 					<div class="mainMap" id="mainMapHead">

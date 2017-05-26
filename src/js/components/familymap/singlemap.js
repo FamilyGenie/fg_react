@@ -235,7 +235,6 @@ export default class SingleMap extends React.Component {
 		this.bringAllChildrenToFront();
 
 		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 0. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
-		// console.log('about to check for draw again: ', startX, this.getStartXPos(parentDistance, startX, startStartX));
 		if (startX === this.mapStartX) {
 			this.drawMap(this.getStartXPos(parentDistance, startX));
 		} else {
@@ -976,10 +975,8 @@ export default class SingleMap extends React.Component {
 						return false;
 					}
 					// TODO: We can instead just remove this record from the parentalRel array.
-					// console.log('before splice ', this.parentRels);
 					// var i = this.parentRels.indexOf(parentRel);
 					// this.parentRels.splice(i, 1);
-					// console.log('after splice ', this.parentRels);
 					// alert("There was a parent record for child: " + child.fName + " " + child.lName + "that had a blank value. That parent is not appearing on this map.");
 				}
 
@@ -1134,9 +1131,7 @@ export default class SingleMap extends React.Component {
 	}
 
 	drawCircle = (person) => {
-		if (person.fName === 'Thomas') {
-			console.log('draw thomas at: ', person.mapXPos);
-		}
+
 		let circle = this.g
 			.append("svg:a")
 			.append("circle")
