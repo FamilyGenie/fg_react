@@ -135,47 +135,49 @@ export default class MegaMap extends React.Component {
 
 	createMapArray = (star_id, svg) => {
 		let mapArray = [];
-		const startX = 500;
-		let moveX = 200;
+		const startX = 800;
+		let moveX = 400;
 		let moveY = 200;
 
+		// populate the tree, the function returns the first node in the tree.
 		let tree = createTree(star_id, this.props.people, this.props.parentalRels, this.props.events);
-		console.log("Tree: ", tree);
 
 		// set node to the start of the tree, and then draw the single map for the head of the tree (which is the ID passed into this component through props)
 		let node = tree;
+
 		// first, draw the map for person whose megaMap it is
-		mapArray.push(this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, startX, yPos, svg));
-		// set node to start of tree, and then getLeft, which gets node's mother
+		mapArray.push(this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, startX, 0, svg));
 
-		node = getLeft(node)
-		let newComp;
-		let xPos = startX + moveX;
-		let yPos = moveY;
-		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos, svg);
-			mapArray.push(newComp);
-			xPos += moveX;
-			yPos += moveY;
-			node = getLeft(node);
-		}
+		// set the generation value to 1. This is used to draw the maps down the page as more generations are drawn
+		let generation = 1;
+		this.drawMomAndDad(node, generation, svg, startX, moveX, moveY, mapArray, startX);
 
-		// go back to head of tree, and draw the father lines
-		node = tree;
-		node = getRight(node);
-		xPos = startX - moveX;
-		yPos = moveY;
-		while (node) {
-			newComp = this.createMapComponent(node.person._id, moment(node.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPos, yPos, svg);
-			mapArray.push(newComp);
-			xPos -= moveX;
-			yPos += moveY;
-			node = getRight(node);
-		}
+
 		return mapArray;
 	}
 
+	// this function is called inside createMapArray. It uses recursion. What it does is it finds the mom for the given node. It then prints the mom (if it exists), and then calls itself on the mom node. It then finds the dad. It prints the dad (if it exists), and then calls itself on the dad node.
+	drawMomAndDad = (node, generation, svg, startX, moveX, moveY, mapArray, xPos) => {
+		// set the new variables for x, y positions
+		let yPos = generation * moveY;
+		let xPosMom = xPos + moveX / generation;
+		let xPosDad = xPos - moveX / generation;
 
+		generation += 1;
+		let mom = getLeft(node);
+		if (mom) {
+			console.log('Push mom: ', mom.person.fName, xPosMom);
+			mapArray.push(this.createMapComponent(mom.person._id, moment(mom.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPosMom, yPos, svg));
+			this.drawMomAndDad(mom, generation, svg, startX, moveX, moveY, mapArray, xPosMom);
+		}
+
+		// draw dad of node, if exists
+		let dad = getRight(node);
+		if (dad) {
+			mapArray.push(this.createMapComponent(dad.person._id, moment(dad.person.birthDate.replace(/T.+/, ''), 'YYYY-MM-DD').add(18,'y').format('YYYY-MM-DD'), .33, xPosDad, yPos, svg));
+			this.drawMomAndDad(dad, generation, svg, startX, moveX, moveY, mapArray, xPosDad);
+		}
+	}
 
 	render = () => {
 
