@@ -9,6 +9,8 @@ import Legend from './legend';
 import { openNewPersonModal, setNewPersonModal } from '../../actions/modalActions';
 
 import NewPerson from '../newperson/newperson';
+import { logEvent } from '../../actions/logActions';
+
 
 @connect(
 	(store, ownProps) => {
@@ -46,6 +48,9 @@ import NewPerson from '../newperson/newperson';
 			},
 			setNewPersonModal: (child) => {
 				dispatch(setNewPersonModal(child));
+			},
+			logEvent: (action) => {
+				dispatch(logEvent(action));
 			}
 		}
 	}
@@ -53,6 +58,8 @@ import NewPerson from '../newperson/newperson';
 export default class SingleMap extends React.Component {
 	constructor(props) {
 		super(props);
+		this.props.logEvent('DrawingMap');
+
 	}
 
 	// these next four arrays will store the records that should show up on the map. The source for each is desscribed below.
@@ -85,8 +92,8 @@ export default class SingleMap extends React.Component {
 	currentScale;
 
 	// global variables for svg / d3 map drawing
-	svg;
 	g;
+	gChild;
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (prevProps !== this.props) {
@@ -149,10 +156,10 @@ export default class SingleMap extends React.Component {
 		// this function removes all the keys from the objects that contain information that is generated while creating the map. Clearing it all here because during Family Time Lapse, we want to be able to start a new map fresh without having to refresh the data from the database (so that it is faster).
 		this.clearMapData();
 
-		// for map drawing
-		this.svg = d3.select('svg');
-		this.g = this.svg.append('g');
-		// this.drawTicks();
+		// the svg parent comes in from the parent component. Create a new child g of that to draw this map in
+		// ******************************************
+		// TODO: onemap needs to be modified so that it passes in the parent svg component now, or else it will break.
+		this.g = this.props.svg.append('g');
 
 		// push the star onto the empty children array, because we know they will be a child on the map
 		this.children.push(this.getPersonById(this.props.star_id));
@@ -228,7 +235,6 @@ export default class SingleMap extends React.Component {
 		this.bringAllChildrenToFront();
 
 		// check to see if we need to redraw the map. Do this by calling the function that gets the starting x position. The map was first drawn with a starting xPos of 0. If that is now different, than redraw the map with the new starting position. If no parent on the map has a calculated xPos that is negative, than the function returns 500;
-		// console.log('about to check for draw again: ', startX, this.getStartXPos(parentDistance, startX, startStartX));
 		if (startX === this.mapStartX) {
 			this.drawMap(this.getStartXPos(parentDistance, startX));
 		} else {
@@ -969,10 +975,8 @@ export default class SingleMap extends React.Component {
 						return false;
 					}
 					// TODO: We can instead just remove this record from the parentalRel array.
-					// console.log('before splice ', this.parentRels);
 					// var i = this.parentRels.indexOf(parentRel);
 					// this.parentRels.splice(i, 1);
-					// console.log('after splice ', this.parentRels);
 					// alert("There was a parent record for child: " + child.fName + " " + child.lName + "that had a blank value. That parent is not appearing on this map.");
 				}
 
@@ -1127,9 +1131,7 @@ export default class SingleMap extends React.Component {
 	}
 
 	drawCircle = (person) => {
-		if (person.fName === 'Thomas') {
-			console.log('draw thomas at: ', person.mapXPos);
-		}
+
 		let circle = this.g
 			.append("svg:a")
 			.append("circle")

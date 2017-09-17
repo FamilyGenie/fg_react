@@ -62,7 +62,19 @@ export default class OneMap extends React.Component {
 			legendShowing: false,
 			star_id: '',
 			zoom: 100,
+			svg: null,
 		};
+	}
+
+	componentDidMount = () => {
+		// all of this is to select the svg element from the render and pass it to singlemap.js. The childSvg and the call/zoom is to allow all the maps that will be drawn on the mega map dragable and zoomable. I could have put all this in the single map, but then it was a jittery exeperience. I found this solution and implemented it below: http://stackoverflow.com/questions/10988445/d3-behavior-zoom-jitters-shakes-jumps-and-bounces-when-dragging?rq=1
+		let svg = d3.select('svg');
+		let childSvg = svg.append('g');
+		svg.call(d3.zoom().on('zoom', function () {
+			var transform = d3.zoomTransform(this);
+			childSvg.attr("transform", "translate(" + transform.x + "," + transform.y + ") scale(" + transform.k + ")");
+		}));
+		this.setState({ svg: childSvg});
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -149,7 +161,6 @@ export default class OneMap extends React.Component {
 	}
 
 	render = () => {
-
 		return(
 			<div class="mainDiv">
 				<div id="legend">
@@ -196,7 +207,7 @@ export default class OneMap extends React.Component {
 					>
 					</svg>
 				</div>
-				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate} zoom={this.state.zoom}/>
+				<SingleMap star_id={this.state.star_id} vDate={this.state.vDate} zoom={this.state.zoom} svg={this.state.svg}/>
 			</div>
 		)
 	}

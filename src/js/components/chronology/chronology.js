@@ -42,12 +42,22 @@ export default class Chronology extends React.Component {
     if (this.state.reverse) {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
+          // if there are values for both b.eventDate and a.eventDate
           if (b.eventDate && a.eventDate) {
+            // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
             return moment(b.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(a.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
+          // if there are no values for either, it doesn't matter if we return a positive or negative number
+          else if (!b.eventDate && !a.eventDate) {
+            return 1
+          }
+          // only get here if there is not a b value and not there is an a value
+          else if (!b.eventDate) {
+            return 1
+          }
+          // only get here if there is not an a value and there is a b value
           else {
-            return a.eventDate - b.eventDate;
+            return -1
           }
         });
       }
@@ -92,14 +102,33 @@ export default class Chronology extends React.Component {
     else {
       if (sortType === 'date') {
         sortedEvents = this.props.events.sort(function(a, b) {
-          // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
+          // if there are values for both b.eventDate and a.eventDate
           if (b.eventDate && a.eventDate) {
+            // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
             return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
           }
+          // if there are no values for either, it doesn't matter if we return a positive or negative number
+          else if (!b.eventDate && !a.eventDate) {
+            return 1
+          }
+          // only get here if there is not a b value and not there is an a value
+          else if (!b.eventDate) {
+            return -1
+          }
+          // only get here if there is not an a value and there is a b value
           else {
-            return a.eventDate - b.eventDate;
+            return 1
           }
         });
+        // sortedEvents = this.props.events.sort(function(a, b) {
+        //   // must call moment here to sort. Take the substr and format to handle moments auto-detect deprecation issue
+        //   if (b.eventDate && a.eventDate) {
+        //     return moment(a.eventDate.substr(0,10), 'YYYY-MM-DD') - moment(b.eventDate.substr(0,10), 'YYYY-MM-DD');
+        //   }
+        //   else {
+        //     return a.eventDate - b.eventDate;
+        //   }
+        // });
       }
       else if (sortType === 'type') {
         sortedEvents = this.props.events.sort(function(a, b) {

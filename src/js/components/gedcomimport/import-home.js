@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { hashHistory } from 'react-router';
-import AlertContainer from 'react-alert';
 
 import { importPeopleAndEvents, importRelationships } from '../../actions/importActions';
 import { fetchStagedPeople } from '../../actions/stagedPeopleActions';
@@ -61,14 +60,6 @@ import { getAxiosConfig } from '../../actions/actionFunctions';
 )
 export default class ImportDashboard extends React.Component {
 
-   alertOptions = {
-      offset: 15,
-      position: 'bottom left',
-      theme: 'light',
-      time: 0,
-      transition: 'scale'
-    };
-
   // the anonymous function passed into each newly created link should look similar to `<div onClick={() => {this.redirect('/')}}>CLICK</div>`
   redirect = (url) => {
     hashHistory.push(url);
@@ -116,10 +107,10 @@ export default class ImportDashboard extends React.Component {
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            msg.show('File upload successful. You should now click \'Run Import\'.', { type: 'success' })
+            alert('File upload successful. You should now click Run Import.');
             // TODO reload the store after processes have completed
           } else {
-            msg.show('File upload unsuccessful', { type: 'error' })
+            alert('File upload unsuccessful. Please contact support if you need assistance.');
           }
         }
       }
@@ -129,11 +120,11 @@ export default class ImportDashboard extends React.Component {
 
   importPeopleAndEvents = () => {
     this.props.importPeopleAndEvents();
-    msg.show('You have imported new documents. You should now review any duplicates before continuing.', { type: 'success' });
+    alert('You have imported new documents. You should now review any duplicates before continuing.');
   }
   importRelationships = () => {
     this.props.importRelationships();
-    msg.show('You have imported new relationships. You should now review them before continuing.', {type: 'success'})
+    alert('You have imported new relationships. You should now review them before continuing.');
   }
 
   clearDB = () => {
@@ -236,7 +227,7 @@ export default class ImportDashboard extends React.Component {
                   <p class="actionItem">{this.props.eventsImported.length}</p>
                 </div>
                 {/* // nested comment would not work here.
-                
+
                 <button class="btn button3" onClick={() => {this.redirect('/stagedeventsearch/')}}>Review</button>
               </div>
             </div>
@@ -346,7 +337,6 @@ export default class ImportDashboard extends React.Component {
           </div>
         </div>
       </div>
-      <AlertContainer ref={(a) => global.msg = a} {...this.alertOptions} />
     </div>);
   }
 }
